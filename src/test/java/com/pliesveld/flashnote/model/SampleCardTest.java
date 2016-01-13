@@ -161,4 +161,15 @@ public class SampleCardTest
         session.getTransaction().rollback();
     }
 
+    @Test
+    public void createCardCascadeAll()
+    {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+
+        FlashCard fc = new FlashCard(new Question("q"),new Answer("a"));
+        session.save(fc);
+        session.getTransaction().rollback();
+    }
 }
