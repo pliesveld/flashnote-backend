@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 @ComponentScan(basePackages = "com.pliesveld.flashnote")
-@PropertySource(value = { "classpath:database.properties" })
+@PropertySource(value = { "classpath:dev-datasource.properties" })
 public class SpringConfig
 {
     @Autowired
