@@ -7,8 +7,7 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class AbstractStatement
 {
-    @Lob
-    @Column(name = "CONTENT")
+    @Column(name = "CONTENT",length=65600)
     protected String content;
 
     public AbstractStatement() {

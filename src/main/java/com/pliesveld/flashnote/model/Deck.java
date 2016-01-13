@@ -1,17 +1,11 @@
 package com.pliesveld.flashnote.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderColumn;
-import javax.persistence.Table;;
+import javax.persistence.*;
+;
 
 @Entity
 @Table(name = "DECK")
@@ -22,10 +16,21 @@ public class Deck implements Serializable
     @Column(name = "DECK_ID")
     private Short id;
 
-    @OneToMany(orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
     @OrderColumn(name = "FLASHCARD_ORDER")
     @JoinTable(name = "DECK_FLASHCARD", joinColumns = @JoinColumn(name = "DECK_ID") , inverseJoinColumns = @JoinColumn(name = "FLASHCARD_ID") )
-    private List<FlashCard> flashCards;
+    private List<FlashCard> flashCards = null;
+
+    @Column(name="DECK_TITLE", length=177)
+    private String title;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public Short getId()
     {
@@ -35,6 +40,27 @@ public class Deck implements Serializable
     public void setId(Short id)
     {
         this.id = id;
+    }
+
+    public List<FlashCard> getFlashCards() {
+        return flashCards;
+    }
+
+    public void setFlashCards(List<FlashCard> flashCards) {
+        this.flashCards = flashCards;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        Deck other = (Deck) obj;
+        if (id == null) {
+            if (other.id != null) return false;
+        } else if (!id.equals(other.id)) return false;
+        return true;
     }
 
 }
