@@ -3,20 +3,25 @@ package com.pliesveld.flashnote.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "FLASHCARD", uniqueConstraints = { @UniqueConstraint(columnNames = { "QUESTION_ID", "ANSWER_ID" }) })
+@Table(name = "FLASHCARD")
 public class FlashCard
 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "FLASHCARD_ID")
-    private Integer id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "QUESTION_ID", nullable = false)
+    @EmbeddedId
+    private FlashCardPrimaryKey id;
+
+    @ManyToOne(cascade = {CascadeType.ALL},
+            targetEntity = com.pliesveld.flashnote.model.Question.class)
+    @JoinColumn(name = "QUESTION_ID",
+            nullable = false, insertable = false, updatable = false,
+            foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT,name = "FK_QUESTION"))
     private Question question;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ANSWER_ID", nullable = false)
+    @ManyToOne(cascade = {CascadeType.ALL},
+            targetEntity = com.pliesveld.flashnote.model.Answer.class)
+    @JoinColumn(name = "ANSWER_ID",
+            nullable = false, insertable = false, updatable = false,
+            foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT,name = "FK_ANSWER"))
     private Answer answer;
 
     @Override
@@ -36,32 +41,30 @@ public class FlashCard
         return id.hashCode();
     }
 
-    public Integer getId() {
-
-        return id;
+    public FlashCard() {
+        id = new FlashCardPrimaryKey();
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public FlashCard(Integer questionId,Integer answerId) {
+        id = new FlashCardPrimaryKey(questionId,answerId);
     }
+
+
+    public FlashCard(Question question, Answer answer) {
+        this(question.getId(), answer.getId());
+        this.question = question;
+        this.answer = answer;
+    }
+
 
     public Question getQuestion() {
         return question;
     }
 
-    public void setQuestion(Question question) {
-        this.question = question;
-    }
 
     public Answer getAnswer() {
         return answer;
     }
 
-    public void setAnswer(Answer answer) {
-        this.answer = answer;
-    }
-
-    public FlashCard() {
-    }
 
 }

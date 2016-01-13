@@ -2,6 +2,7 @@ package com.pliesveld.flashnote.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 import javax.persistence.*;
@@ -16,12 +17,20 @@ public class Deck implements Serializable
     @Column(name = "DECK_ID")
     private Short id;
 
-    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(cascade = {CascadeType.ALL})
     @OrderColumn(name = "FLASHCARD_ORDER")
     @JoinTable(name = "DECK_FLASHCARD",
+            foreignKey = @ForeignKey(name = "FK_DECK"),
+
             joinColumns = {@JoinColumn(name = "DECK_ID")},
-            inverseJoinColumns = {@JoinColumn(name = "FLASHCARD_ID")} )
-    private List<FlashCard> flashCards = null;
+
+            inverseForeignKey = @ForeignKey(name = "FK_FLASHCARD"),
+            inverseJoinColumns = {
+                            @JoinColumn(name = "QUESTION_ID"),
+                            @JoinColumn(name = "ANSWER_ID")
+            }
+    )
+    private List<FlashCard> flashCards = new ArrayList<>();
 
     @Column(name="DECK_TITLE", length=177)
     private String title;

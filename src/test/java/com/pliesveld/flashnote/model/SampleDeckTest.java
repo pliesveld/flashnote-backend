@@ -3,6 +3,7 @@ package com.pliesveld.flashnote.model;
 import com.pliesveld.config.SpringTestConfig;
 import org.hibernate.*;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -85,7 +86,7 @@ public class SampleDeckTest
 
         }
 
-        session.getTransaction().commit();
+        session.getTransaction().rollback();
     }
 
 
@@ -122,21 +123,30 @@ public class SampleDeckTest
         int a_no = 0;
         int q_no = 0;
 
+        {
+            Criteria crit = session.createCriteria(FlashCard.class);
+            crit.setProjection(Projections.rowCount());
+            assertEquals("Database should have 0 flashcards",0,((Long)crit.uniqueResult()).intValue());
+        }
+
 
         Deck deck = new Deck();
         deck.setTitle("This is an example Deck.");
 
         List<FlashCard> list = new LinkedList<>();
         do {
-            FlashCard fc = new FlashCard();
+
 
             Answer ans = new Answer();
             ans.setContent(String.format("This is an answer no %d", a_no++));
-            fc.setAnswer(ans);
+            session.save(ans);
 
             Question que = new Question();
             que.setContent(String.format("This is question no %d", q_no++));
-            fc.setQuestion(que);
+            session.save(que);
+
+
+            FlashCard fc = new FlashCard(que,ans);
 
             session.save(fc);
             list.add(fc);
@@ -159,9 +169,8 @@ public class SampleDeckTest
         }
 
 
-        deck.getFlashCards().remove(2);
-
-        session.save(deck);
+        FlashCard fc_removed = deck.getFlashCards().remove(2);
+        session.delete(fc_removed);
 
         {
             Criteria crit = session.createCriteria(FlashCard.class);
@@ -171,9 +180,93 @@ public class SampleDeckTest
 
         session.getTransaction().commit();
 
-
     }
 
+
+    @Test
+    public void deckOfOneQuestionTwoAnswers()
+    {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        Question question = new Question();
+        question.setContent("Question?");
+
+        Answer answer1 = new Answer();
+        answer1.setContent("This is the first answer");
+        Answer answer2 = new Answer();
+        answer1.setContent("This is the second answer");
+
+        session.save(question);
+        session.save(answer1);
+        session.save(answer2);
+
+        FlashCard fc1 = new FlashCard(question,answer1);
+
+        FlashCard fc2 = new FlashCard(question,answer2);
+
+        Deck deck = new Deck();
+        deck.getFlashCards().add(fc1);
+        deck.getFlashCards().add(fc2);
+
+        session.save(fc1);
+        session.save(fc2);
+
+        session.save(deck);
+
+        {
+            Criteria crit = session.createCriteria(FlashCard.class);
+            crit.setProjection(Projections.rowCount());
+            assertEquals("Database should have 2 flashcards",2,((Long)crit.uniqueResult()).intValue());
+        }
+
+        {
+            Criteria crit = session.createCriteria(Question.class);
+            crit.setProjection(Projections.rowCount());
+            assertEquals("Database should have 1 question",1,((Long)crit.uniqueResult()).intValue());
+        }
+
+        {
+            Criteria crit = session.createCriteria(Answer.class);
+            crit.setProjection(Projections.rowCount());
+            assertEquals("Database should have 2 answers",2,((Long)crit.uniqueResult()).intValue());
+        }
+        session.getTransaction().rollback();
+/*
+        FlashCard fc_returned = deck.getFlashCards().remove(1);
+        session.delete(fc_returned);
+
+        session.getTransaction().commit();
+
+
+        {
+            Criteria crit = session.createCriteria(Deck.class);
+            crit.setProjection(Projections.rowCount());
+            assertEquals("Database should have 1 deck",1,((Long)crit.uniqueResult()).intValue());
+        }
+
+        {
+            Criteria crit = session.createCriteria(Question.class);
+            crit.setProjection(Projections.rowCount());
+            assertEquals("Database should have 1 question",1,((Long)crit.uniqueResult()).intValue());
+        }
+
+        {
+            Criteria crit = session.createCriteria(FlashCard.class);
+            crit.setProjection(Projections.rowCount());
+            assertEquals("Database should have 1 flashcards",1,((Long)crit.uniqueResult()).intValue());
+        }
+
+        {
+            Criteria crit = session.createCriteria(Answer.class);
+            crit.setProjection(Projections.rowCount());
+            assertEquals("Database should have 1 answers",1,((Long)crit.uniqueResult()).intValue());
+        }
+*/
+
+
+
+    }
 
 }
 
