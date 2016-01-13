@@ -16,6 +16,10 @@ public class Answer extends AbstractStatement implements Serializable
     public Answer() {
     }
 
+    public Answer(String content) {
+        setContent(content);
+    }
+
     public Integer getId()
     {
         return id;

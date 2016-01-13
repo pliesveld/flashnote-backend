@@ -16,6 +16,10 @@ public class Question extends AbstractStatement implements Serializable
     public Question() {
     }
 
+    public Question(String content) {
+        setContent(content);
+    }
+
     public Integer getId()
     {
         return id;
