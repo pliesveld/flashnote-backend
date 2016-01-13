@@ -2,18 +2,14 @@ package com.pliesveld.flashnote.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "QUESTION")
 public class Question extends AbstractStatement implements Serializable
 {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "QUESTION_ID")
     protected Integer id;
 

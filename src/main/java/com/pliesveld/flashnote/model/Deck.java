@@ -12,13 +12,15 @@ import javax.persistence.*;
 public class Deck implements Serializable
 {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "DECK_ID")
     private Short id;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
     @OrderColumn(name = "FLASHCARD_ORDER")
-    @JoinTable(name = "DECK_FLASHCARD", joinColumns = @JoinColumn(name = "DECK_ID") , inverseJoinColumns = @JoinColumn(name = "FLASHCARD_ID") )
+    @JoinTable(name = "DECK_FLASHCARD",
+            joinColumns = {@JoinColumn(name = "DECK_ID")},
+            inverseJoinColumns = {@JoinColumn(name = "FLASHCARD_ID")} )
     private List<FlashCard> flashCards = null;
 
     @Column(name="DECK_TITLE", length=177)
