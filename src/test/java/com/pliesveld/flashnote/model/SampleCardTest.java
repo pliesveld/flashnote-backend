@@ -16,9 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = com.pliesveld.flashnote.spring.SpringConfig.class, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = com.pliesveld.config.SpringTestConfig.class, loader = AnnotationConfigContextLoader.class)
 public class SampleCardTest
 {
     @Autowired
@@ -122,6 +123,26 @@ public class SampleCardTest
         session.beginTransaction();
         Category category = session.get(Category.class, (short) 1);
         assertNull(category);
+        session.getTransaction().rollback();
+    }
+
+    @Test 
+    public void testQuestion()
+    {
+        Session session = sessionFactory.openSession();
+        assertNotNull(session);
+        session.beginTransaction();
+        Question q = new Question();
+        q.setContent("This is a question?");
+//        Integer q_id = (Integer) session.save(q);
+        Answer a = new Answer();
+        a.setContent("This is an answer.");
+//        Integer a_id = (Integer) session.save(a);
+
+        FlashCard fc = new FlashCard();
+        fc.setQuestion(q);
+        fc.setAnswer(a);
+        session.save(fc);
         session.getTransaction().rollback();
     }
 
