@@ -89,7 +89,7 @@ public class DDLExport
 
                 .build();
 
-        String filename_export = "db-init.sql";
+        String filename_export = System.getProperty("user.dir") + "/src/main/resources/sql/" + "db-init.sql";
 
         new SchemaExport((MetadataImplementor) metadata).setOutputFile(filename_export).setDelimiter(";")
                 .setFormat(true).setHaltOnError(true).create(NONE);
