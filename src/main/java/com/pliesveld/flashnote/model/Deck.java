@@ -35,7 +35,22 @@ public class Deck implements Serializable
     private List<FlashCard> flashCards = new ArrayList<>();
 
     @Column(name="DECK_TITLE", length=177)
-    private String title;
+    private String title = "Untitled";
+
+    public Deck(FlashCard... cards) {
+        for(FlashCard fc : cards)
+        {
+            flashCards.add(fc);
+        }
+    }
+
+
+    public Deck(String title,FlashCard... flashCards) {
+        this(flashCards);
+        this.title = title;
+
+    }
+
 
     public String getTitle() {
         return title;
@@ -76,4 +91,8 @@ public class Deck implements Serializable
         return true;
     }
 
+    @Override
+    public int hashCode() {
+        return (id == null) ? 0 : id.hashCode();
+    }
 }
