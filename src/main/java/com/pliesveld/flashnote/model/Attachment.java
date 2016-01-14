@@ -1,17 +1,22 @@
 package com.pliesveld.flashnote.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="ATTACHMENT")
-public class Attachment {
+public class Attachment implements Serializable {
+
     @Id
     @GeneratedValue
     @Column(name = "ATTACHMENT_ID")
     Integer id;
 
     @Column(name="CONTENT_TYPE",length=16)
-    String contentType;
+    @Convert(converter=AttachmentTypeConverter.class)
+    AttachmentType contentType;
 
     @Column(name="FILENAME", length=48)
     String fileName;
@@ -27,11 +32,11 @@ public class Attachment {
         this.id = id;
     }
 
-    public String getContentType() {
+    public AttachmentType getContentType() {
         return contentType;
     }
 
-    public void setContentType(String contentType) {
+    public void setContentType(AttachmentType contentType) {
         this.contentType = contentType;
     }
 
@@ -67,4 +72,7 @@ public class Attachment {
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
+
+
+
 }

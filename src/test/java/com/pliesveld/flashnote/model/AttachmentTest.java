@@ -71,7 +71,8 @@ public class AttachmentTest
 
     @Test
     public void testStorage() throws IOException, IllegalAccessException {
-        String expected_type = "image/jpeg";
+        AttachmentType expected_type = AttachmentType.AUDIO;
+
         String expected_file = "puppy.jpg";
         String resource_dir = ClassLoader.getSystemResource(".").getPath();
 //        System.out.println("dir: " + resource_dir);
@@ -81,7 +82,7 @@ public class AttachmentTest
         byte[] photoBytes = readBytesFromFile(new ClassPathResource(expected_file).getFile().getAbsolutePath());
 
         Attachment attachment = new Attachment();
-        attachment.setContentType("image/jpeg");
+        attachment.setContentType(expected_type);
         attachment.setFileName("puppy.jpg");
         attachment.setFileData(photoBytes);
         Serializable id = session.save(attachment);
