@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.Serializable;
 import java.util.Set;
 
 import org.hibernate.Session;
@@ -142,6 +143,54 @@ public class SampleCardTest
         session.save(fc);
         session.getTransaction().rollback();
     }
+
+    @Test
+    public void testAnswerModifications()
+    {
+        Session session = sessionFactory.openSession();
+        assertNotNull(session);
+        session.beginTransaction();
+
+        final String ANSWER_ORIG = "original answer.";
+        final String ANSWER_MODIFIED = "modified answer.";
+
+        assertNotNull(session);
+        session.beginTransaction();
+        Question q = new Question("This is a question?");
+        Question q2 = new Question("This is a question?");
+
+        Serializable q_id = session.save(q);
+        Serializable q2_id = session.save(q2);
+
+        Answer a = new Answer();
+        a.setContent(ANSWER_ORIG);
+        Serializable a_id = session.save(a);
+
+        FlashCard fc = new FlashCard(q,a);
+        Serializable fc_id = session.save(fc);
+
+        FlashCard fc2 = new FlashCard(q2,a);
+        Serializable fc2_id = session.save(fc2);
+
+        Answer a_loaded = session.load(Answer.class,a_id);
+        a_loaded.setContent(ANSWER_MODIFIED);
+
+        assertEquals("Loaded answer does not change content of original reference",ANSWER_MODIFIED,a.getContent());
+        assertEquals("Referenced flashcard answer does not change original",ANSWER_MODIFIED,fc.getAnswer().getContent());
+
+        //session.update(a_loaded);
+
+        assertEquals("After answer updated, original reference to flashcard does not match modified",ANSWER_MODIFIED,fc.getAnswer().getContent());
+        assertEquals("After answer updated, original reference to flashcard does not match modified",ANSWER_MODIFIED,fc2.getAnswer().getContent());
+
+        FlashCard fc3 = session.load(FlashCard.class,fc2_id);
+
+        assertEquals("After answer updated, loaded flashcard does not match modified",ANSWER_MODIFIED,fc3.getAnswer().getContent());
+
+        session.getTransaction().rollback();
+    }
+
+
 
     @Test
     public void testQuestionCascade()
