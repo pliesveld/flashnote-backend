@@ -1,12 +1,10 @@
 package com.pliesveld.flashnote.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "STUDENT")
@@ -17,11 +15,26 @@ public class Student implements Serializable
     @Column(name = "STUDENT_ID")
     private Integer id;
 
+    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @JoinTable(name="STUDENT_DECK"
+        ,joinColumns =  @JoinColumn(name="STUDENT_ID",foreignKey = @ForeignKey(name = "FK_STUDENT"))
+        ,foreignKey =                                              @ForeignKey(name="FK_STUDENT")
+        ,inverseJoinColumns =   @JoinColumn(name="DECK_ID",foreignKey = @ForeignKey(name = "FK_STUDENT_DECK"))
+        ,inverseForeignKey =                                            @ForeignKey(name="FK_STUDENT_DECK")
+        ,uniqueConstraints = {@UniqueConstraint(columnNames = {"DECK_ID"},  name="UNIQUE_DECK")}
+    )
+
+    private Set<Deck> decks = new HashSet<>();
+
     @Column(name = "STUDENT_NAME", nullable = false, length = 32)
     private String name;
 
     public Student() {
         // TODO Auto-generated constructor stub
+    }
+
+    public Student(String student) {
+        this.name = student;
     }
 
     public Integer getId()
@@ -44,13 +57,20 @@ public class Student implements Serializable
         this.name = name;
     }
 
+    public Set<Deck> getDecks() {
+        return decks;
+    }
+
+    public void setDecks(Set<Deck> decks) {
+        this.decks = decks;
+    }
+
     @Override
     public int hashCode()
     {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
         return result;
     }
 

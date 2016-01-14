@@ -29,6 +29,8 @@ public class Deck implements Serializable
                             @JoinColumn(name = "QUESTION_ID"),
                             @JoinColumn(name = "ANSWER_ID")
             }
+            ,uniqueConstraints = {@UniqueConstraint(name="UNIQUE_FLASHCARD",columnNames = {"QUESTION_ID","ANSWER_ID"})}
+
     )
     private List<FlashCard> flashCards = new ArrayList<>();
 
