@@ -6,7 +6,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "CATEGORY")
+@Table(name = "CATEGORY",
+        uniqueConstraints = @UniqueConstraint(name = "UNIQUE_CATEGORY_NAME",columnNames = {"CATEGORY_NAME"}))
 public class Category implements Serializable
 {
     @Id
@@ -14,18 +15,18 @@ public class Category implements Serializable
     @Column(name = "CATEGORY_ID")
     private Short id;
 
-    @Column(name = "CATEGORY_NAME", unique = true, length = 17, nullable = false)
+    @Column(name = "CATEGORY_NAME", length = 17, nullable = false)
     private String name;
 
-    @Column(name = "CATEGORY_DESC", nullable = false)
+    @Column(name = "CATEGORY_DESC", length=512, nullable = false)
     private String description;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "CATEGORY_PARENT_ID")
+    @JoinColumn(name = "CATEGORY_PARENT_ID", foreignKey = @ForeignKey(name="FK_CATEGORY_PARENT"))
     private Category parentCategory;
 
     @OneToMany
-    @JoinColumn(name = "CATEGORY_ID")
+    @JoinColumn(name = "CATEGORY_ID", foreignKey = @ForeignKey(name="FK_CATEGORY"))
     private Set<Category> childCategories = new HashSet<>();
 
     public Category() {
