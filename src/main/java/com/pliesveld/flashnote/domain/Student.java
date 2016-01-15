@@ -1,10 +1,9 @@
-package com.pliesveld.flashnote.model;
+package com.pliesveld.flashnote.domain;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.persistence.*;
 
 @Entity
 @Table(name = "STUDENT")

@@ -1,7 +1,6 @@
-package com.pliesveld.flashnote.model;
+package com.pliesveld.flashnote.domain;
 
 import javax.persistence.Column;
-import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass

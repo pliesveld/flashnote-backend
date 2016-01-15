@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.model;
+package com.pliesveld.flashnote.domain;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,8 +9,8 @@ import java.util.Map;
 public enum AttachmentType
 {
     AUDIO   (1, "audio/ogg",        ".opus"),
-    IMAGE   (2, "image/jpg",        ".jpg"),
-    DOC     (3, "application/pdf",  ".pdf");
+    IMAGE   (10, "image/jpg",        ".jpg"),
+    DOC     (100, "application/pdf",  ".pdf");
 
     private int id;
     private String mime;

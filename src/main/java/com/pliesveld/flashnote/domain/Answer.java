@@ -1,8 +1,7 @@
-package com.pliesveld.flashnote.model;
-
-import java.io.Serializable;
+package com.pliesveld.flashnote.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "ANSWER")

@@ -1,7 +1,10 @@
-package com.pliesveld.flashnote.model;
+package com.pliesveld.flashnote.domain;
 
 import com.pliesveld.config.SpringTestConfig;
-import org.hibernate.*;
+import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,8 +14,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -46,11 +51,8 @@ public class StudentDeckTest
         Session session = sessionFactory.openSession();
         session.beginTransaction().begin();
         {
-            Query query = session.createQuery("SELECT count(*) FROM com.pliesveld.flashnote.model.Deck");
             Criteria crit = session.createCriteria(Deck.class);
             crit.setProjection(Projections.rowCount());
-
-            Long count = (Long)query.uniqueResult();
             assertEquals("Deck is zero", 0, ((Long) crit.uniqueResult()).intValue());
         }
 
@@ -74,7 +76,7 @@ public class StudentDeckTest
 
         }
 
-        session.getTransaction().commit();
+        session.getTransaction().rollback();
     }
 
 
@@ -180,6 +182,7 @@ public class StudentDeckTest
         assertTrue(s1 != s2);
 
         assertTrue(student1.getName().equals(student2.getName()));
+        assertTrue(student1.getName() == copy_student1.getName()); //questionable
         assertTrue(student1.getName() == student2.getName());
 
         assertTrue(copy_student1.getName().equals(student1.getName()));
@@ -198,5 +201,61 @@ public class StudentDeckTest
         session.getTransaction().rollback();
     }
 
+    @Test
+    public void studentDeckIdentityTest()
+    {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        Student student1 = new Student("student");
+
+        HashSet<Deck> student_decks = new LinkedHashSet<>();
+
+        student_decks.addAll(Arrays.asList(
+                new Deck(new FlashCard(new Question("Que1"), new Answer("Ans1"))),
+                new Deck(new FlashCard(new Question("Que2"), new Answer("Ans2"))),
+                new Deck(new FlashCard(new Question("Que3"), new Answer("Ans3")))
+        ));
+
+        student1.setDecks(student_decks);
+
+        Serializable s1 = session.save(student1);
+
+
+        Student copy_student1 = session.load(Student.class,s1);
+
+        Set<?> set_orig = student1.getDecks();
+        Set<?> set_copy = copy_student1.getDecks();
+
+        assertFalse(set_orig.isEmpty());
+        assertEquals(set_orig.size(),set_copy.size());
+
+        assertEquals(set_orig,set_copy);
+        assertEquals(set_copy,set_orig);
+
+        FlashCard fc_specific = (((Deck) set_copy.iterator().next()).getFlashCards().iterator().next());
+
+        // does original reference hold after persisting
+        //assertTrue(set_copy.contains(fc_specific)); //no
+
+//        assertTrue(set_orig.contains(fc_specific));
+
+
+
+        int orig_size = set_copy.size();
+
+        set_copy.remove(fc_specific);
+        session.delete(fc_specific);
+
+        int next_size = set_orig.size();
+        assertEquals(orig_size, next_size);
+        assertEquals(next_size, orig_size);
+
+        assertEquals(set_orig.size(), set_copy.size());
+
+
+        //Set<?> set_copy = copy_student1.getDecks();
+
     }
+}
 

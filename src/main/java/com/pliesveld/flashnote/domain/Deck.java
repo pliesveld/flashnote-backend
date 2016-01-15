@@ -1,11 +1,10 @@
-package com.pliesveld.flashnote.model;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+package com.pliesveld.flashnote.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 ;
 
 @Entity

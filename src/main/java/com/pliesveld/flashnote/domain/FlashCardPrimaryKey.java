@@ -1,6 +1,7 @@
-package com.pliesveld.flashnote.model;
+package com.pliesveld.flashnote.domain;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 /**

@@ -1,9 +1,5 @@
 package com.pliesveld.flashnote.spring;
 
-import java.util.Properties;
-
-import javax.sql.DataSource;
-
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,8 +12,12 @@ import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.sql.DataSource;
+import java.util.Properties;
+
 @Configuration
 @EnableTransactionManagement
+
 @ComponentScan(basePackages = "com.pliesveld.flashnote")
 @PropertySource(value = { "classpath:dev-datasource.properties" })
 public class SpringConfig
@@ -30,7 +30,7 @@ public class SpringConfig
     {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan(new String[] { "com.pliesveld.flashnote.model" });
+        sessionFactory.setPackagesToScan(new String[] { "com.pliesveld.flashnote.domain" });
         sessionFactory.setHibernateProperties(hibernateProperties());
         return sessionFactory;
     }

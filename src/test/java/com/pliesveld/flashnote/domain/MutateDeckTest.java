@@ -1,18 +1,16 @@
-package com.pliesveld.flashnote.model;
+package com.pliesveld.flashnote.domain;
 
 import com.pliesveld.config.SpringTestConfig;
 import org.hibernate.*;
 import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,23 +18,10 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = SpringTestConfig.class, loader = AnnotationConfigContextLoader.class)
-@Transactional
-public class SampleDeckTest
+public class MutateDeckTest
 {
     @Autowired
     SessionFactory sessionFactory;
-
-    @Before
-    public void setup()
-    {
-        /*
-         * ApplicationContext ctx = new
-         * AnnotationConfigApplicationContext(SpringConfig.class);
-         * LocalSessionFactoryBean sfb = (LocalSessionFactoryBean)
-         * ctx.getBean("&sessionFactory"); sessionFactory =
-         * sfb.getConfiguration().buildSessionFactory();
-         */
-    }
 
     @Test
     public void sessionFactoryWired()
@@ -61,7 +46,7 @@ public class SampleDeckTest
         Session session = sessionFactory.openSession();
         session.beginTransaction().begin();
         {
-            Query query = session.createQuery("SELECT count(*) FROM com.pliesveld.flashnote.model.Deck");
+            Query query = session.createQuery("SELECT count(*) FROM com.pliesveld.flashnote.domain.Deck");
             Long count = (Long)query.uniqueResult();
             assertTrue("Deck is zero",count == 0);
         }
@@ -86,7 +71,7 @@ public class SampleDeckTest
 
         }
 
-        session.getTransaction().rollback();
+        session.getTransaction().commit();
     }
 
 
@@ -134,17 +119,15 @@ public class SampleDeckTest
         deck.setTitle("This is an example Deck.");
 
         List<FlashCard> list = new LinkedList<>();
+
+        Question que = new Question();
+        que.setContent("This is a question?");
+        session.save(que);
+
         do {
-
-
             Answer ans = new Answer();
-            ans.setContent(String.format("This is an answer no %d", a_no++));
+            ans.setContent(String.format("%d", a_no++));
             session.save(ans);
-
-            Question que = new Question();
-            que.setContent(String.format("This is question no %d", q_no++));
-            session.save(que);
-
 
             FlashCard fc = new FlashCard(que,ans);
 
@@ -168,105 +151,63 @@ public class SampleDeckTest
             assertEquals("Database should have 1 deck",1,((Long)crit.uniqueResult()).intValue());
         }
 
-
-        FlashCard fc_removed = deck.getFlashCards().remove(2);
-        session.delete(fc_removed);
+        Serializable deck_id = deck.getId();
 
         {
-            Criteria crit = session.createCriteria(FlashCard.class);
-            crit.setProjection(Projections.rowCount());
-            assertEquals("Database should have 4 flashcards",4,((Long)crit.uniqueResult()).intValue());
+            Deck deck2 = session.load(Deck.class,deck_id);
+            assertEquals("Decks should be equal",deck,deck2);
+
+            assertNotNull("Loading a deck had a null list",deck2.getFlashCards());
+            assertFalse("Loaded deck should have elements",deck2.getFlashCards().isEmpty());
+            assertEquals("Loaded deck should have 5 elements", 5, deck2.getFlashCards().size());
+
+
+            List<FlashCard> deck_list = deck2.getFlashCards();
+
+            String expected_string[] = {"0","1","2","3","4"};
+
+            int j = 0;
+            for(FlashCard fc : deck_list)
+            {
+                assertEquals("Fetched answer differed", expected_string[j], fc.getAnswer().getContent());
+                j++;
+            }
+
+            FlashCard fc_move = deck_list.remove(1);
+            deck_list.add(fc_move);
+            session.saveOrUpdate(deck2);
+
         }
 
-        session.getTransaction().commit();
-
-    }
-
-
-    @Test
-    public void deckOfOneQuestionTwoAnswers()
-    {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-
-        Question question = new Question();
-        question.setContent("Question?");
-
-        Answer answer1 = new Answer();
-        answer1.setContent("This is the first answer");
-        Answer answer2 = new Answer();
-        answer1.setContent("This is the second answer");
-
-        session.save(question);
-        session.save(answer1);
-        session.save(answer2);
-
-        FlashCard fc1 = new FlashCard(question,answer1);
-
-        FlashCard fc2 = new FlashCard(question,answer2);
-
-        Deck deck = new Deck();
-        deck.getFlashCards().add(fc1);
-        deck.getFlashCards().add(fc2);
-
-        session.save(fc1);
-        session.save(fc2);
-
-        session.save(deck);
+        deck = null;
 
         {
-            Criteria crit = session.createCriteria(FlashCard.class);
-            crit.setProjection(Projections.rowCount());
-            assertEquals("Database should have 2 flashcards",2,((Long)crit.uniqueResult()).intValue());
+            Deck deck3 = session.load(Deck.class,deck_id);
+
+            assertNotNull("Loading a deck had a null list",deck3.getFlashCards());
+            assertFalse("Loaded deck should have elements",deck3.getFlashCards().isEmpty());
+            assertEquals("Loaded deck should have 5 elements",5,deck3.getFlashCards().size());
+
+
+            List<FlashCard> deck_list = deck3.getFlashCards();
+
+            String expected_string[] = {"0","2","3","4","1"};
+
+            int j = 0;
+            for(FlashCard fc : deck_list)
+            {
+                assertEquals("Fetched answer differed", expected_string[j], fc.getAnswer().getContent());
+                j++;
+            }
+
         }
 
-        {
-            Criteria crit = session.createCriteria(Question.class);
-            crit.setProjection(Projections.rowCount());
-            assertEquals("Database should have 1 question",1,((Long)crit.uniqueResult()).intValue());
-        }
 
-        {
-            Criteria crit = session.createCriteria(Answer.class);
-            crit.setProjection(Projections.rowCount());
-            assertEquals("Database should have 2 answers",2,((Long)crit.uniqueResult()).intValue());
-        }
+
         session.getTransaction().rollback();
-/*
-        FlashCard fc_returned = deck.getFlashCards().remove(1);
-        session.delete(fc_returned);
-
-        session.getTransaction().commit();
-
-
-        {
-            Criteria crit = session.createCriteria(Deck.class);
-            crit.setProjection(Projections.rowCount());
-            assertEquals("Database should have 1 deck",1,((Long)crit.uniqueResult()).intValue());
-        }
-
-        {
-            Criteria crit = session.createCriteria(Question.class);
-            crit.setProjection(Projections.rowCount());
-            assertEquals("Database should have 1 question",1,((Long)crit.uniqueResult()).intValue());
-        }
-
-        {
-            Criteria crit = session.createCriteria(FlashCard.class);
-            crit.setProjection(Projections.rowCount());
-            assertEquals("Database should have 1 flashcards",1,((Long)crit.uniqueResult()).intValue());
-        }
-
-        {
-            Criteria crit = session.createCriteria(Answer.class);
-            crit.setProjection(Projections.rowCount());
-            assertEquals("Database should have 1 answers",1,((Long)crit.uniqueResult()).intValue());
-        }
-*/
-
-
-
     }
+
+
 
 }
 

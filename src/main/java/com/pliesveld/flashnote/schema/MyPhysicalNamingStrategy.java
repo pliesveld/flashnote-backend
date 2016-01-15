@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.persistence;
+package com.pliesveld.flashnote.schema;
 
 import org.hibernate.boot.model.naming.Identifier;
 import org.hibernate.boot.model.naming.PhysicalNamingStrategy;

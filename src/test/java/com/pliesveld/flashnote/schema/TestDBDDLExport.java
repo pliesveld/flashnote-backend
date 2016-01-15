@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.persistence;
+package com.pliesveld.flashnote.schema;
 
 import com.pliesveld.config.SpringTestConfig;
 import org.apache.commons.lang3.reflect.FieldUtils;

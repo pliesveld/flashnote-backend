@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.model;
+package com.pliesveld.flashnote.domain;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

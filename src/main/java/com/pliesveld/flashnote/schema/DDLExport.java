@@ -1,7 +1,6 @@
-package com.pliesveld.flashnote.persistence;
+package com.pliesveld.flashnote.schema;
 
-import static org.hibernate.tool.hbm2ddl.Target.NONE;
-
+import com.pliesveld.flashnote.spring.SpringConfig;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
@@ -16,7 +15,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 
-import com.pliesveld.flashnote.spring.SpringConfig;
+import static org.hibernate.tool.hbm2ddl.Target.NONE;
 
 /**
  * Generates database schemas for annotated classes. Requires dialects and
