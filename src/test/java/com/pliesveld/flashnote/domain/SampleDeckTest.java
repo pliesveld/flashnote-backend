@@ -46,19 +46,18 @@ public class SampleDeckTest
     @Test
     public void sessionHasCurrent()
     {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         assertNotNull(session);
 
         assertTrue(session.isOpen());
         assertTrue(session.isConnected());
-        session.close();
     }
 
     @Test
     public void verifyEmpty()
     {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction().begin();
+        Session session = sessionFactory.getCurrentSession();
+        
         {
             Query query = session.createQuery("SELECT count(*) FROM com.pliesveld.flashnote.domain.Deck");
             Long count = (Long)query.uniqueResult();
@@ -85,38 +84,14 @@ public class SampleDeckTest
 
         }
 
-        session.getTransaction().rollback();
-    }
 
-
-    private void clearDeck()
-    {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction().begin();
-        SQLQuery sql;
-
-        sql = session.createSQLQuery("DELETE FROM DECK_FLASHCARD;");
-        sql.executeUpdate();
-
-        sql = session.createSQLQuery("DELETE FROM DECK;");
-        sql.executeUpdate();
-
-        sql = session.createSQLQuery("DELETE FROM FLASHCARD;");
-        sql.executeUpdate();
-
-        sql = session.createSQLQuery("DELETE FROM QUESTION;");
-        sql.executeUpdate();
-        sql = session.createSQLQuery("DELETE FROM ANSWER;");
-        sql.executeUpdate();
-
-        session.getTransaction().commit();
     }
 
     @Test
     public void createDeck()
     {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
+
 
         int i = 1;
         int a_no = 0;
@@ -177,7 +152,7 @@ public class SampleDeckTest
             assertEquals("Database should have 4 flashcards",4,((Long)crit.uniqueResult()).intValue());
         }
 
-        session.getTransaction().commit();
+
 
     }
 
@@ -185,8 +160,8 @@ public class SampleDeckTest
     @Test
     public void deckOfOneQuestionTwoAnswers()
     {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
+
 
         Question question = new Question();
         question.setContent("Question?");
@@ -230,7 +205,7 @@ public class SampleDeckTest
             crit.setProjection(Projections.rowCount());
             assertEquals("Database should have 2 answers",2,((Long)crit.uniqueResult()).intValue());
         }
-        session.getTransaction().rollback();
+
 /*
         FlashCard fc_returned = deck.getFlashCards().remove(1);
         session.delete(fc_returned);

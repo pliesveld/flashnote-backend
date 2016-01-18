@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -23,6 +24,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = SpringTestConfig.class, loader = AnnotationConfigContextLoader.class)
+@Transactional
 public class StudentDeckTest
 {
     @Autowired
@@ -37,19 +39,18 @@ public class StudentDeckTest
     @Test
     public void sessionHasCurrent()
     {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         assertNotNull(session);
 
         assertTrue(session.isOpen());
         assertTrue(session.isConnected());
-        session.close();
     }
 
     @Test
     public void verifyEmpty()
     {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction().begin();
+        Session session = sessionFactory.getCurrentSession();
+
         {
             Criteria crit = session.createCriteria(Deck.class);
             crit.setProjection(Projections.rowCount());
@@ -76,59 +77,32 @@ public class StudentDeckTest
 
         }
 
-        session.getTransaction().rollback();
-    }
-
-
-    private void clearDeck()
-    {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction().begin();
-        SQLQuery sql;
-
-        sql = session.createSQLQuery("DELETE FROM DECK_FLASHCARD;");
-        sql.executeUpdate();
-
-        sql = session.createSQLQuery("DELETE FROM DECK;");
-        sql.executeUpdate();
-
-        sql = session.createSQLQuery("DELETE FROM FLASHCARD;");
-        sql.executeUpdate();
-
-        sql = session.createSQLQuery("DELETE FROM QUESTION;");
-        sql.executeUpdate();
-        sql = session.createSQLQuery("DELETE FROM ANSWER;");
-        sql.executeUpdate();
-
-        session.getTransaction().commit();
     }
 
     @Test
     public void createStudentDeck()
     {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+       Session session = sessionFactory.getCurrentSession();
 
-        Student student = new Student();
-        student.setName("Student");
+       Student student = new Student();
+       student.setName("Student");
 
-        Deck deck = new Deck();
-        deck.getFlashCards().add(new FlashCard(new Question("q"),new Answer("a")));
-        session.save(deck);
+       Deck deck = new Deck();
+       deck.getFlashCards().add(new FlashCard(new Question("q"),new Answer("a")));
+       session.save(deck);
 
         //student.addDeck(deck);
 
-        session.getTransaction().rollback();
     }
 
     @Test
     public void createStudentDeckCascade()
     {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
 
         Student student = new Student();
         student.setName("Student");
+        student.setEmail("student@example.com");
 
         Deck deck = new Deck();
         deck.getFlashCards().add(new FlashCard(new Question("q"),new Answer("a")));
@@ -154,19 +128,19 @@ public class StudentDeckTest
         assertNotNull(fc.getQuestion());
         assertNotNull(fc.getAnswer());
 
-
-        session.getTransaction().rollback();
     }
 
 
     @Test
     public void studentIdentityTest()
     {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
 
         Student student1 = new Student("student");
         Student student2 = new Student("student");
+
+        student1.setEmail("student1@example.com");
+        student2.setEmail("student2@example.com");
 
         Serializable s1 = session.save(student1);
         Serializable s2 = session.save(student2);
@@ -198,16 +172,15 @@ public class StudentDeckTest
 
         assertTrue(copy_student1.getName().equals(student1.getName()));
 
-        session.getTransaction().rollback();
     }
 
     @Test
     public void studentDeckIdentityTest()
     {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
 
         Student student1 = new Student("student");
+        student1.setEmail("student1@example.com");
 
         HashSet<Deck> student_decks = new LinkedHashSet<>();
 

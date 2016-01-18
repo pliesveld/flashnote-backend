@@ -35,14 +35,6 @@ public class AttachmentTest
         assertNotNull(sessionFactory);
         session = sessionFactory.getCurrentSession();
         assertNotNull(session);
-        session.beginTransaction();
-    }
-
-    @After
-    public void teardownSession()
-    {
-        session.getTransaction().rollback();
-        session.close();
     }
 
     private static byte[] readBytesFromFile(String filePath) throws IOException, IllegalAccessException {

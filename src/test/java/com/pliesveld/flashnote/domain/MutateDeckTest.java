@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -18,6 +19,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = SpringTestConfig.class, loader = AnnotationConfigContextLoader.class)
+@Transactional
 public class MutateDeckTest
 {
     @Autowired
@@ -32,19 +34,18 @@ public class MutateDeckTest
     @Test
     public void sessionHasCurrent()
     {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         assertNotNull(session);
 
         assertTrue(session.isOpen());
         assertTrue(session.isConnected());
-        session.close();
     }
 
     @Test
     public void verifyEmpty()
     {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction().begin();
+        Session session = sessionFactory.getCurrentSession();
+
         {
             Query query = session.createQuery("SELECT count(*) FROM com.pliesveld.flashnote.domain.Deck");
             Long count = (Long)query.uniqueResult();
@@ -74,35 +75,11 @@ public class MutateDeckTest
         session.getTransaction().commit();
     }
 
-
-    private void clearDeck()
-    {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction().begin();
-        SQLQuery sql;
-
-        sql = session.createSQLQuery("DELETE FROM DECK_FLASHCARD;");
-        sql.executeUpdate();
-
-        sql = session.createSQLQuery("DELETE FROM DECK;");
-        sql.executeUpdate();
-
-        sql = session.createSQLQuery("DELETE FROM FLASHCARD;");
-        sql.executeUpdate();
-
-        sql = session.createSQLQuery("DELETE FROM QUESTION;");
-        sql.executeUpdate();
-        sql = session.createSQLQuery("DELETE FROM ANSWER;");
-        sql.executeUpdate();
-
-        session.getTransaction().commit();
-    }
-
     @Test
     public void createDeck()
     {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
+        
 
         int i = 1;
         int a_no = 0;
@@ -204,7 +181,7 @@ public class MutateDeckTest
 
 
 
-        session.getTransaction().rollback();
+        
     }
 
 

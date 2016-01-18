@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -17,6 +18,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = com.pliesveld.config.SpringTestConfig.class, loader = AnnotationConfigContextLoader.class)
+@Transactional
 public class SampleCardTest
 {
     @Autowired
@@ -43,31 +45,30 @@ public class SampleCardTest
     @Test
     public void sessionHasCurrent()
     {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         assertNotNull(session);
 
         assertTrue(session.isOpen());
         assertTrue(session.isConnected());
-        session.close();
     }
 
     @Test
     public void generateCategoryEmpty()
     {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         assertNotNull(session);
         session.beginTransaction();
         Category category = session.get(Category.class, (short) 1);
         assertNull(category);
-        session.getTransaction().rollback();
+         
     }
 
     @Test
     public void generateCategorySingle()
     {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         assertNotNull(session);
-        session.beginTransaction();
+
 
         Category category = new Category();
         category.setName("ROOT");
@@ -79,15 +80,15 @@ public class SampleCardTest
 
         assertEquals("Retrieved same as persisted", category.getName(), category_retrieved.getName());
 
-        session.getTransaction().rollback();
+         
     }
 
     @Test
     public void generateCategoryHierarchy()
     {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         assertNotNull(session);
-        session.beginTransaction();
+
 
         Category category = new Category();
         category.setName("ROOT");
@@ -109,24 +110,24 @@ public class SampleCardTest
         assertEquals("Retrieved same as persisted", category.getName(), category_retrieved.getName());
         assertEquals("Child Retrieved same as persisted", chld.getName(), chld_retrieved.getName());
 
-        session.getTransaction().rollback();
+         
     }
 
     @Test
     public void generateCategoryTestEmpty()
     {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         assertNotNull(session);
         session.beginTransaction();
         Category category = session.get(Category.class, (short) 1);
         assertNull(category);
-        session.getTransaction().rollback();
+         
     }
 
     @Test 
     public void testQuestion()
     {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         assertNotNull(session);
         session.beginTransaction();
         Question q = new Question();
@@ -138,13 +139,13 @@ public class SampleCardTest
 
         FlashCard fc = new FlashCard(q,a);
         session.save(fc);
-        session.getTransaction().rollback();
+         
     }
 
     @Test
     public void testAnswerModifications()
     {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         assertNotNull(session);
         session.beginTransaction();
 
@@ -184,7 +185,7 @@ public class SampleCardTest
 
         assertEquals("After answer updated, loaded flashcard does not match modified",ANSWER_MODIFIED,fc3.getAnswer().getContent());
 
-        session.getTransaction().rollback();
+         
     }
 
 
@@ -192,9 +193,9 @@ public class SampleCardTest
     @Test
     public void testQuestionCascade()
     {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         assertNotNull(session);
-        session.beginTransaction();
+
         Question q = new Question();
         q.setContent("This is a question?");
 //        Integer q_id = (Integer) session.save(q);
@@ -204,18 +205,18 @@ public class SampleCardTest
 
         FlashCard fc = new FlashCard(q,a);
         session.save(fc);
-        session.getTransaction().rollback();
+         
     }
 
     @Test
     public void createCardCascadeAll()
     {
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+        Session session = sessionFactory.getCurrentSession();
+
 
 
         FlashCard fc = new FlashCard(new Question("q"),new Answer("a"));
         session.save(fc);
-        session.getTransaction().rollback();
+         
     }
 }
