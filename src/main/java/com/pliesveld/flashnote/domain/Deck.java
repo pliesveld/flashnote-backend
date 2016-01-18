@@ -9,12 +9,15 @@ import java.util.List;
 
 @Entity
 @Table(name = "DECK")
+@NamedQueries(
+        @NamedQuery(name = "Deck.count", query = "SELECT COUNT(d) FROM Deck d")
+)
 public class Deck implements Serializable
 {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "DECK_ID")
-    private Short id;
+    private Integer id;
 
     @OneToMany(cascade = {CascadeType.ALL})
     @OrderColumn(name = "FLASHCARD_ORDER")
@@ -59,12 +62,12 @@ public class Deck implements Serializable
         this.title = title;
     }
 
-    public Short getId()
+    public Integer getId()
     {
         return id;
     }
 
-    public void setId(Short id)
+    public void setId(Integer id)
     {
         this.id = id;
     }

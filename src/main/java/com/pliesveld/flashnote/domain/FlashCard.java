@@ -4,6 +4,9 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "FLASHCARD")
+@NamedQueries(
+        @NamedQuery(name = "FlashCard.count", query = "SELECT COUNT(f) FROM FlashCard f")
+)
 public class FlashCard
 {
 

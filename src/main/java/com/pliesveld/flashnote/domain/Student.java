@@ -7,10 +7,23 @@ import java.util.Set;
 
 @Entity
 @Table(name = "STUDENT")
+@NamedQueries(value = {
+        @NamedQuery(name = "Student.findByStudentId",
+                query = "SELECT OBJECT(s) FROM Student s WHERE s.id = :id"),
+        @NamedQuery(name = "Student.findByStudentEmail",
+                query = "SELECT OBJECT(s) FROM Student s WHERE s.email = :email"),
+        @NamedQuery(name = "Student.count",
+                query = "SELECT COUNT(s) FROM Student s")
+})
+@SecondaryTable(name="STUDENT_ACCOUNT",
+        pkJoinColumns = @PrimaryKeyJoinColumn(name="STUDENT_ID"),
+        foreignKey = @ForeignKey(name="FK_STUDENT_SECONDARY"),
+        uniqueConstraints = @UniqueConstraint(name = "UNIQUE_EMAIL", columnNames = {"STUDENT_EMAIL"})
+)
 public class Student implements Serializable
 {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "STUDENT_ID")
     private Integer id;
 
@@ -22,14 +35,18 @@ public class Student implements Serializable
         ,inverseForeignKey =                                            @ForeignKey(name="FK_STUDENT_DECK")
         ,uniqueConstraints = {@UniqueConstraint(columnNames = {"DECK_ID"},  name="UNIQUE_DECK")}
     )
-
     private Set<Deck> decks = new HashSet<>();
 
-    @Column(name = "STUDENT_NAME", nullable = false, length = 32)
+    @Column(name = "STUDENT_NAME",  length = 32, nullable = false)
     private String name;
 
+    @Column(name = "STUDENT_EMAIL", length = 48, nullable = false, unique = true,table = "STUDENT_ACCOUNT")
+    private String email;
+
+    @Column(name = "STUDENT_PASSWORD",nullable = true,table = "STUDENT_ACCOUNT")
+    private String password;
+
     public Student() {
-        // TODO Auto-generated constructor stub
     }
 
     public Student(String student) {
@@ -54,6 +71,22 @@ public class Student implements Serializable
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Set<Deck> getDecks() {
