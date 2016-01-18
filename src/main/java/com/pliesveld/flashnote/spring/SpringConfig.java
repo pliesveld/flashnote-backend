@@ -17,8 +17,11 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-
-@ComponentScan(basePackages = "com.pliesveld.flashnote")
+@ComponentScan(basePackages = {
+        "com.pliesveld.config.test",
+        "com.pliesveld.flashnote.service",
+        "com.pliesveld.flashnote.dao",
+})
 @PropertySource(value = { "classpath:dev-datasource.properties" })
 public class SpringConfig
 {
@@ -46,6 +49,7 @@ public class SpringConfig
         return dataSource;
     }
 
+    // TODO: http://www.jpab.org/Hibernate.html
     private Properties hibernateProperties()
     {
         Properties properties = new Properties();

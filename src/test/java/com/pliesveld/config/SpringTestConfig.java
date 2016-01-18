@@ -1,20 +1,13 @@
 package com.pliesveld.config;
 
 import org.hibernate.SessionFactory;
-import org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.ClassRelativeResourceLoader;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -24,7 +17,11 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@ComponentScan(basePackages = "com.pliesveld.config.test")
+@ComponentScan(basePackages = {
+        "com.pliesveld.config.test",
+        "com.pliesveld.flashnote.service",
+        "com.pliesveld.flashnote.dao",
+})
 @PropertySource(value = { "classpath:test-datasource.properties" })
 public class SpringTestConfig
 {
@@ -39,7 +36,7 @@ public class SpringTestConfig
     {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
-        sessionFactory.setPackagesToScan(new String[] { "com.pliesveld.flashnote.model" });
+        sessionFactory.setPackagesToScan(new String[] { "com.pliesveld.flashnote.domain" });
         sessionFactory.setHibernateProperties(hibernateProperties());
         return sessionFactory;
     }
