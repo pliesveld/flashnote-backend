@@ -39,6 +39,9 @@ public class Deck implements Serializable
     @Column(name="DECK_TITLE", length=177)
     private String title = "Untitled";
 
+    public Deck() {
+    }
+
     public Deck(FlashCard... cards) {
         for(FlashCard fc : cards)
         {
