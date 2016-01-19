@@ -12,6 +12,15 @@ public class Question extends AbstractStatement implements Serializable
     @Column(name = "QUESTION_ID")
     protected Integer id;
 
+    @Column(name = "QUESTION_TITLE")
+    private String title;
+
+    @PrePersist
+    public void prePersist() {
+        if(title == null)
+            title = "Untitled Question.";
+    }
+
     public Question() {
     }
 
