@@ -23,7 +23,7 @@ import java.util.Properties;
         "com.pliesveld.flashnote.dao",
 })
 @PropertySource(value = { "classpath:dev-datasource.properties" })
-public class SpringConfig
+public class SpringRootConfig
 {
     @Autowired
     private Environment environment;

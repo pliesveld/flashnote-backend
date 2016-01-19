@@ -4,7 +4,8 @@ import com.pliesveld.flashnote.dao.StudentDao;
 import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.domain.Student;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
  * Created by happs on 1/15/16.
  */
 
-@Component(value = "studentService")
+@Service(value = "studentService")
 public class StudentServiceImpl implements StudentService {
 
     @Autowired
@@ -54,6 +55,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional
     public Iterable<Student> findAll() {
         return studentDao.findAll();
     }

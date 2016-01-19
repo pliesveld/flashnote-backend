@@ -1,6 +1,6 @@
 package com.pliesveld.flashnote.schema;
 
-import com.pliesveld.flashnote.spring.SpringConfig;
+import com.pliesveld.flashnote.spring.SpringRootConfig;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
@@ -33,7 +33,7 @@ public class DDLExport
 
     public static void main(String[] args) throws IllegalAccessException
     {
-        ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringConfig.class);
+        ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringRootConfig.class);
 
         Environment properties = ctx.getBean(Environment.class);
 
