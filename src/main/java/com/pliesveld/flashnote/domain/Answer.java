@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class Answer extends AbstractStatement implements Serializable
 {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "ANSWER_ID")
     protected Integer id;
 

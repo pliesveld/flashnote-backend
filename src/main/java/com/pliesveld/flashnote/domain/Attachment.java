@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class Attachment implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ATTACHMENT_ID")
     Integer id;
 
@@ -19,7 +19,7 @@ public class Attachment implements Serializable {
     @Column(name="FILENAME", length=48)
     String fileName;
 
-    @Column(name="FILE_DATA")
+    @Column(name="FILE_DATA", length=3145728)
     byte[] fileData;
 
     public Integer getId() {

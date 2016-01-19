@@ -27,6 +27,38 @@ public class FlashCard
             foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT,name = "FK_ANSWER"))
     private Answer answer;
 
+
+    public FlashCard() {
+        id = new FlashCardPrimaryKey();
+    }
+
+    public FlashCard(Integer questionId,Integer answerId) {
+        id = new FlashCardPrimaryKey(questionId,answerId);
+    }
+
+    public FlashCardPrimaryKey getId() {
+        return id;
+    }
+
+    public void setId(FlashCardPrimaryKey id) {
+        this.id = id;
+    }
+
+    public FlashCard(Question question, Answer answer) {
+        this(question.getId(), answer.getId());
+        this.question = question;
+        this.answer = answer;
+    }
+
+    public Question getQuestion() {
+        return question;
+    }
+
+
+    public Answer getAnswer() {
+        return answer;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -42,31 +74,6 @@ public class FlashCard
     @Override
     public int hashCode() {
         return id == null ? 0 : id.hashCode();
-    }
-
-    public FlashCard() {
-        id = new FlashCardPrimaryKey();
-    }
-
-    public FlashCard(Integer questionId,Integer answerId) {
-        id = new FlashCardPrimaryKey(questionId,answerId);
-    }
-
-
-    public FlashCard(Question question, Answer answer) {
-        this(question.getId(), answer.getId());
-        this.question = question;
-        this.answer = answer;
-    }
-
-
-    public Question getQuestion() {
-        return question;
-    }
-
-
-    public Answer getAnswer() {
-        return answer;
     }
 
 

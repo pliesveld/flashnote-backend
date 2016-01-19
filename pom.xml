@@ -43,6 +43,13 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.8.8</version>
+        </dependency>
+
+
         <!-- SPRING FRAMEWORK -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -84,6 +91,13 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>${servletapi.version}</version>
+        </dependency>
+
+        <!-- Spring Data JPA -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>1.9.2.RELEASE</version>
         </dependency>
 
 
@@ -174,6 +188,7 @@
             <artifactId>log4j-slf4j-impl</artifactId>
             <version>${log4j.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
@@ -188,11 +203,13 @@
         </dependency>
 
         <!--HIBERNATE LOGGER (log4j)-->
+        <!--
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.6</version>
         </dependency>
+        -->
 
     </dependencies>
 
@@ -255,5 +272,28 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+   <repository>
+      <id>com.springsource.repository.maven.snapshot</id>
+      <url>http://maven.springframework.org/snapshot/</url>
+      <snapshots><enabled>true</enabled></snapshots>
+   </repository>
+<repository>
+    <id>com.springsource.repository.bundles.release</id>
+    <name>SpringSource Enterprise Bundle Repository - SpringSource Bundle Releases</name>
+    <url>http://repository.springsource.com/maven/bundles/release</url>
+</repository>
+<repository>
+    <id>com.springsource.repository.bundles.external</id>
+    <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
+    <url>http://repository.springsource.com/maven/bundles/external</url>
+</repository>
+ <repository>
+   <id>maven2</id>
+   <url>http://repo1.maven.org/maven2</url>
+  </repository>
+    </repositories>
+
 
 </project>

@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.spring;
+package com.pliesveld.spring;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -26,16 +26,18 @@ import java.util.Properties;
         "com.pliesveld.flashnote.service",
         "com.pliesveld.flashnote.repository"
 })
-@PropertySource(value = {"classpath:dev-datasource.properties"})
+@PropertySource(value = { "classpath:test-datasource.properties" })
 @EnableJpaRepositories({"com.pliesveld.flashnote.repository"})
-public class SpringRootConfig {
+public class SpringTestConfig
+{
     private static final String PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN = "entitymanager.packages.to.scan";
 
     @Autowired
     private Environment environment;
 
     @Bean
-    public DataSource dataSource() {
+    public DataSource dataSource()
+    {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
         dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
@@ -44,8 +46,8 @@ public class SpringRootConfig {
         return dataSource;
     }
 
-    // TODO: http://www.jpab.org/Hibernate.html
-    private Properties hibernateProperties() {
+    private Properties hibernateProperties()
+    {
         Properties properties = new Properties();
         properties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
         properties.put("hibernate.show_sql", environment.getRequiredProperty("hibernate.show_sql"));
@@ -53,7 +55,6 @@ public class SpringRootConfig {
         properties.put("hibernate.hbm2ddl.auto", environment.getRequiredProperty("hibernate.hbm2ddl.auto"));
         return properties;
     }
-
 
     @Bean
     @Autowired
@@ -88,16 +89,26 @@ public class SpringRootConfig {
     }
 
 
+/*  // for autowiring EntityManager
+    @Bean
+    public PersistenceAnnotationBeanPostProcessor persistenceAnnotationBeanPostProcessor()
+    {
+        return new PersistenceAnnotationBeanPostProcessor().;
+    }
+    */
+
+
     /*
     @Bean
     public LocalSessionFactoryBean sessionFactory()
     {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-        sessionFactory.setDataSource(dataSource());
+        sessionFactory.setDataSource(dataSource);
         sessionFactory.setPackagesToScan(new String[] { "com.pliesveld.flashnote.domain" });
         sessionFactory.setHibernateProperties(hibernateProperties());
         return sessionFactory;
     }
+
 
     @Bean
     @Autowired
@@ -107,5 +118,4 @@ public class SpringRootConfig {
         txManager.setSessionFactory(s);
         return txManager;
     }*/
-
 }

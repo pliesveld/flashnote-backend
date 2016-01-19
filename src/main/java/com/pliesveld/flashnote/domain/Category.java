@@ -11,9 +11,9 @@ import java.util.Set;
 public class Category implements Serializable
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "CATEGORY_ID")
-    private Short id;
+    private Integer id;
 
     @Column(name = "CATEGORY_NAME", length = 17, nullable = false)
     private String name;
@@ -58,12 +58,12 @@ public class Category implements Serializable
         childCategories.add(childCategory);
     }
 
-    public Short getId()
+    public Integer getId()
     {
         return id;
     }
 
-    public void setId(Short id)
+    public void setId(Integer id)
     {
         this.id = id;
     }

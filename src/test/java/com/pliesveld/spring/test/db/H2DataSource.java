@@ -1,4 +1,4 @@
-package com.pliesveld.config.test.db;
+package com.pliesveld.spring.test.db;
 
 import org.h2.tools.Server;
 import org.springframework.context.annotation.Bean;

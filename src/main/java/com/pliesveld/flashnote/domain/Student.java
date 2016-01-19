@@ -1,5 +1,7 @@
 package com.pliesveld.flashnote.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -23,11 +25,12 @@ import java.util.Set;
 public class Student implements Serializable
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "STUDENT_ID")
     private Integer id;
 
     @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @JsonIgnore
     @JoinTable(name="STUDENT_DECK"
         ,joinColumns =  @JoinColumn(name="STUDENT_ID",foreignKey = @ForeignKey(name = "FK_STUDENT"))
         ,foreignKey =                                              @ForeignKey(name="FK_STUDENT")
