@@ -7,13 +7,9 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
-import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import java.text.SimpleDateFormat;
 
@@ -22,7 +18,11 @@ import java.text.SimpleDateFormat;
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan({"com.pliesveld.flashnote.web.controller","com.pliesveld.flashnote.web.domain"})
+@ComponentScan({
+        "com.pliesveld.flashnote.web.controller",
+        "com.pliesveld.flashnote.web.domain",
+        "com.pliesveld.flashnote.web.handler"
+})
 @PropertySource(value = { "classpath:application.properties" })
 public class SpringWebConfig extends WebMvcConfigurerAdapter{
 

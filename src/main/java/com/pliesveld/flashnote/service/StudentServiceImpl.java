@@ -2,7 +2,7 @@ package com.pliesveld.flashnote.service;
 
 import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.domain.Student;
-import com.pliesveld.flashnote.exception.StudentNotFound;
+import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,23 +72,23 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    @Transactional(rollbackFor = StudentNotFound.class)
-    public Student delete(int id) throws StudentNotFound {
+    @Transactional(rollbackFor = StudentNotFoundException.class)
+    public Student delete(int id) throws StudentNotFoundException {
         Student deletedStudent = studentRepository.findOne(id);
         if(deletedStudent == null)
-            throw new StudentNotFound();
+            throw new StudentNotFoundException();
 
         studentRepository.delete(deletedStudent);
         return deletedStudent;
     }
 
     @Override
-    @Transactional(rollbackFor = StudentNotFound.class)
-    public Student update(Student student) throws StudentNotFound {
+    @Transactional(rollbackFor = StudentNotFoundException.class)
+    public Student update(Student student) throws StudentNotFoundException {
         Student updatedStudent = studentRepository.findOne(student.getId());
 
         if(updatedStudent == null)
-            throw new StudentNotFound();
+            throw new StudentNotFoundException();
 
         updatedStudent.setName(student.getName());
         updatedStudent.setEmail(student.getEmail());

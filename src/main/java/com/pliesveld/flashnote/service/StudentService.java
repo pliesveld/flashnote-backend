@@ -2,7 +2,7 @@ package com.pliesveld.flashnote.service;
 
 import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.domain.Student;
-import com.pliesveld.flashnote.exception.StudentNotFound;
+import com.pliesveld.flashnote.exception.StudentNotFoundException;
 
 import java.util.List;
 
@@ -11,9 +11,9 @@ public interface StudentService {
     CREATE_RESULT       create(String name,String email,String password);
 
     Student             create(Student student);
-    Student             delete(int id)          throws StudentNotFound;
-    Student             update(Student student) throws StudentNotFound;
-    Student             findById(int id);
+    Student             delete(int id)          throws StudentNotFoundException;
+    Student             update(Student student) throws StudentNotFoundException;
+    Student             findById(int id)        throws StudentNotFoundException;
     Long                count();
     Iterable<Student>   findAll();
     List<Deck>          findDecksByOwner(int id);

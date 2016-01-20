@@ -1,8 +1,11 @@
 package com.pliesveld.flashnote.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -40,9 +43,11 @@ public class Student implements Serializable
     )
     private Set<Deck> decks = new HashSet<>();
 
+    @Size(min = 3,max = 32,message = "Name must be between 3 and 32 letters") @NotNull
     @Column(name = "STUDENT_NAME",  length = 32, nullable = false)
     private String name;
 
+    @Email(message = "Invalid email address") @NotNull @Size(min = 5,max = 48,message = "Name must be between 5 and 48 letters")
     @Column(name = "STUDENT_EMAIL", length = 48, nullable = false, unique = true,table = "STUDENT_ACCOUNT")
     private String email;
 
