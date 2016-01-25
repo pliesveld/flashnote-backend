@@ -1,6 +1,6 @@
 package com.pliesveld.flashnote.web.handler;
 
-import com.pliesveld.flashnote.exception.ResourceNotFoundException;
+import com.pliesveld.flashnote.exception.ResourceRepositoryException;
 import com.pliesveld.flashnote.web.dto.error.ErrorDetail;
 import com.pliesveld.flashnote.web.dto.error.ValidationError;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -22,16 +22,18 @@ import java.util.List;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException rnfe, HttpServletRequest request)
+
+    @ExceptionHandler(ResourceRepositoryException.class)
+    public ResponseEntity<?> handleResourceNotFoundException(ResourceRepositoryException rnfe, HttpServletRequest request)
     {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimeStamp(new Date().getTime());
-        errorDetail.setStatus(HttpStatus.NOT_FOUND.value());
-        errorDetail.setTitle("Resource Not Found");
+        HttpStatus status = rnfe.getRepositoryStatus();
+        errorDetail.setStatus(status.value());
+        errorDetail.setTitle(rnfe.getRepositoryMessage());
         errorDetail.setDetail(rnfe.getMessage());
         errorDetail.setDeveloperMessage(rnfe.getClass().getSimpleName());
-        return new ResponseEntity<>(errorDetail,null,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorDetail,null,status);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
