@@ -51,8 +51,22 @@ public class Student implements Serializable
     @Column(name = "STUDENT_EMAIL", length = 48, nullable = false, unique = true,table = "STUDENT_ACCOUNT")
     private String email;
 
-    @Column(name = "STUDENT_PASSWORD",nullable = true,table = "STUDENT_ACCOUNT")
+    @NotNull
+    @Size(min = 1, max = 60)
+//    @Length(min=60,max = 60)
+    @Column(name = "STUDENT_PASSWORD",length = 60,nullable = true,table = "STUDENT_ACCOUNT")
     private String password;
+
+    @Column(name="STUDENT_ROLE",length=16,table = "STUDENT_ACCOUNT")
+    @Convert(converter=StudentTypeConverter.class)
+    private StudentType role;
+
+    @PrePersist
+    public void prePersist() {
+        if(role == null)
+            role = StudentType.USER;
+    }
+
 
     public Student() {
     }
@@ -103,6 +117,14 @@ public class Student implements Serializable
 
     public void setDecks(Set<Deck> decks) {
         this.decks = decks;
+    }
+
+    public StudentType getRole() {
+        return role;
+    }
+
+    public void setRole(StudentType role) {
+        this.role = role;
     }
 
     @Override
