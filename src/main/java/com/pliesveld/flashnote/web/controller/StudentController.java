@@ -2,6 +2,7 @@ package com.pliesveld.flashnote.web.controller;
 
 
 import com.pliesveld.flashnote.domain.Student;
+import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.service.StudentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,9 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -22,7 +25,17 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
+    private Student verifyStudent(int id) throws StudentNotFoundException
+    {
+        Student student = studentService.findById(id);
+        if(student == null)
+            throw new StudentNotFoundException(id);
+
+        return student;
+    }
+
     @RequestMapping(value="/list", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Iterable<Student>> listdata()
     {
         logger.info("Retrieving list of all students");
@@ -31,7 +44,7 @@ public class StudentController {
     }
 
     @RequestMapping(value="",method=RequestMethod.POST)
-    public ResponseEntity<?> createStudent(@RequestBody Student student)
+    public ResponseEntity<?> createStudent(@Valid @RequestBody Student student)
     {
         student = studentService.create(student);
         logger.info("Created student: " + student);
@@ -50,9 +63,8 @@ public class StudentController {
     public ResponseEntity<?> getStudent(@PathVariable Integer id)
     {
         logger.info("Getting student by id " + id);
-        Student student = studentService.findById(id);
-        HttpStatus status = (student == null ? HttpStatus.NOT_FOUND : HttpStatus.OK);
-        return new ResponseEntity<>(studentService.findById(id),status);
+        Student student = verifyStudent(id);
+        return new ResponseEntity<>(student,HttpStatus.OK);
     }
 
 

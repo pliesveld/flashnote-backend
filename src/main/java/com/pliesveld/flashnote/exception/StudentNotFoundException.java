@@ -1,27 +1,15 @@
 package com.pliesveld.flashnote.exception;
 
+import java.io.Serializable;
+
 public class StudentNotFoundException extends ResourceNotFoundException {
-    public StudentNotFoundException(int id) {
-        this("Student not found: " + id);
+
+    public StudentNotFoundException(Serializable id) {
+        super(id);
     }
 
-    public StudentNotFoundException() {
-        super();
-    }
-
-    public StudentNotFoundException(String message) {
-        super(message);
-    }
-
-    public StudentNotFoundException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public StudentNotFoundException(Throwable cause) {
-        super(cause);
-    }
-
-    protected StudentNotFoundException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    @Override
+    public String getRepositoryMessage() {
+        return "Student not found: " + getRepositoryId();
     }
 }

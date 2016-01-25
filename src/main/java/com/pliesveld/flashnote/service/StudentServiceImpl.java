@@ -2,6 +2,8 @@ package com.pliesveld.flashnote.service;
 
 import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.domain.Student;
+import com.pliesveld.flashnote.exception.ResourceNotFoundException;
+import com.pliesveld.flashnote.exception.StudentCreateException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.repository.StudentRepository;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,7 @@ public class StudentServiceImpl implements StudentService {
     StudentRepository studentRepository;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = StudentCreateException.class)
     public CREATE_RESULT create(String name, String email, String password) {
         Student student = new Student();
         student.setName(name);
@@ -39,7 +41,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = ResourceNotFoundException.class)
     public List<Deck> findDecksByOwner(int id) {
         Student student = findById(id);
         List<Deck> deck_ids = new ArrayList<>();
@@ -76,7 +78,7 @@ public class StudentServiceImpl implements StudentService {
     public Student delete(int id) throws StudentNotFoundException {
         Student deletedStudent = studentRepository.findOne(id);
         if(deletedStudent == null)
-            throw new StudentNotFoundException();
+            throw new StudentNotFoundException(id);
 
         studentRepository.delete(deletedStudent);
         return deletedStudent;
@@ -88,7 +90,7 @@ public class StudentServiceImpl implements StudentService {
         Student updatedStudent = studentRepository.findOne(student.getId());
 
         if(updatedStudent == null)
-            throw new StudentNotFoundException();
+            throw new StudentNotFoundException(student.getId());
 
         updatedStudent.setName(student.getName());
         updatedStudent.setEmail(student.getEmail());
