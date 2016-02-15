@@ -72,7 +72,7 @@
         </dependency>
 
 
-        <!-- SPRING FRAMEWORK -->
+        <!-- SPRING FRAMEWORK
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
@@ -108,6 +108,7 @@
             <artifactId>spring-webmvc</artifactId>
             <version>${spring.version}</version>
         </dependency>
+        -->
 
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -230,12 +231,13 @@
 
 
         <!--HIBERNATE LOGGER (log4j)-->
-
+        <!--
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.6</version>
         </dependency>
+        -->
 
 
     </dependencies>
@@ -307,10 +309,10 @@
 
     <repositories>
         <repository>
-            <id>com.springsource.repository.maven.snapshot</id>
-            <url>http://maven.springframework.org/snapshot/</url>
+            <id>com.springsource.repository.maven.release</id>
+            <url>http://maven.springframework.org/release/</url>
             <snapshots>
-                <enabled>true</enabled>
+                <enabled>false</enabled>
             </snapshots>
         </repository>
         <repository>
