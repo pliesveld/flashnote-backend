@@ -73,13 +73,18 @@ public class SampleCardTest
         Category category = new Category();
         category.setName("ROOT");
         category.setDescription("ROOT category description");
-
-        Category chld = new Category();
-        category.setName("CHILD");
-
-        category.addChildCategory(chld);
         entityManager.persist(category);
         entityManager.flush();
+
+
+        Category chld = new Category();
+        chld.setName("CHILD");
+        chld.setDescription("Child category description.");
+        
+        category.addChildCategory(chld);
+        entityManager.persist(chld);
+        
+        /*
         Serializable new_id = category.getId();
 
         Category category_retrieved = entityManager.find(Category.class, new_id);
@@ -91,15 +96,8 @@ public class SampleCardTest
         Category chld_retrieved = (Category) set_child.iterator().next();
         assertEquals("Retrieved same as persisted", category.getName(), category_retrieved.getName());
         assertEquals("Child Retrieved same as persisted", chld.getName(), chld_retrieved.getName());
+        */
 
-         
-    }
-
-    @Test
-    public void generateCategoryTestEmpty()
-    {
-        Category category = entityManager.find(Category.class, 1);
-        assertNull(category);
          
     }
 
@@ -186,12 +184,15 @@ public class SampleCardTest
         Answer a = new Answer();
         a.setContent("This is an answer.");
 //        Integer a_id = (Integer) entityManager.persist(a);
+        entityManager.persist(q);
+        entityManager.persist(a);
+        entityManager.flush();
 
         FlashCard fc = new FlashCard(q,a);
         entityManager.persist(fc);
         entityManager.flush();
     }
-
+/*
     @Test
     public void createCardCascadeAll()
     {
@@ -199,4 +200,5 @@ public class SampleCardTest
         entityManager.persist(fc);
         entityManager.flush();
     }
+    */
 }
