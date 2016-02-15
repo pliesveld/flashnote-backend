@@ -19,6 +19,7 @@
         <hibernate.version>5.0.7.Final</hibernate.version>
         <spring.version>4.2.4.RELEASE</spring.version>
         <postgresql.version>9.4-1204-jdbc42</postgresql.version>
+        <security.version>4.0.3.RELEASE</security.version>
         <commons.lang.version>3.4</commons.lang.version>
         <commons.collections.version>4.1</commons.collections.version>
         <log4j.version>2.4</log4j.version>
@@ -110,6 +111,24 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${security.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${security.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-acl</artifactId>
+            <version>${security.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>${servletapi.version}</version>
@@ -149,11 +168,20 @@
             <version>${hibernate.version}</version>
         </dependency>
 
+        <!-- JPA bindings for hibernate -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>${hibernate.version}</version>
         </dependency>
+
+        <!-- Hibernate support for java8 date/time -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-java8</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.hibernate.javax.persistence</groupId>

@@ -1,8 +1,7 @@
 package com.pliesveld.flashnote.domain;
 
-import com.pliesveld.config.SpringTestConfig;
-import org.hibernate.*;
-import org.hibernate.criterion.Projections;
+import com.pliesveld.spring.SpringTestConfig;
+import com.pliesveld.flashnote.service.CardService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,78 +20,39 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = SpringTestConfig.class, loader = AnnotationConfigContextLoader.class)
-@Transactional
 public class MutateDeckTest
 {
+    @PersistenceContext
+    EntityManager entityManager;
+
     @Autowired
-    SessionFactory sessionFactory;
+    CardService cardService;
 
     @Test
-    public void sessionFactoryWired()
+    public void entityManagerWired()
     {
-        assertNotNull(sessionFactory);
-    }
-
-    @Test
-    public void sessionHasCurrent()
-    {
-        Session session = sessionFactory.getCurrentSession();
-        assertNotNull(session);
-
-        assertTrue(session.isOpen());
-        assertTrue(session.isConnected());
+        assertNotNull(entityManager);
     }
 
     @Test
     public void verifyEmpty()
     {
-        Session session = sessionFactory.getCurrentSession();
-
-        {
-            Query query = session.createQuery("SELECT count(*) FROM com.pliesveld.flashnote.domain.Deck");
-            Long count = (Long)query.uniqueResult();
-            assertTrue("Deck is zero",count == 0);
-        }
-
-        {
-            Criteria crit = session.createCriteria(Deck.class);
-            crit.setProjection(Projections.rowCount());
-            Long count_long = (Long)crit.uniqueResult();
-            int count = count_long.intValue();
-            assertEquals("Database rows should be empty",0,count);
-        }
-
-        Class<?>[] classArray = {Student.class,Question.class,Answer.class,FlashCard.class,Deck.class,Category.class};
-
-        for(Class<?> tableClass : classArray)
-        {
-            Criteria crit = session.createCriteria(tableClass);
-            crit.setProjection(Projections.rowCount());
-            Long count_long = (Long)crit.uniqueResult();
-            int count = count_long.intValue();
-            assertEquals("Database rows should be empty",0,count);
-
-        }
-
-        session.getTransaction().commit();
+        assertEquals("Deck count should be zero", 0, ((Long) cardService.countDecks()).intValue());
+        assertEquals("Question count should be zero", 0, ((Long) cardService.countQuestions()).intValue());
+        assertEquals("Answer count should be zero", 0, ((Long) cardService.countAnswers()).intValue());
+        assertEquals("FlashCard count should be zero", 0, ((Long) cardService.countFlashCards()).intValue());
+        // TODO: Student, Attachment, Category
     }
 
     @Test
+    @Transactional
     public void createDeck()
     {
-        Session session = sessionFactory.getCurrentSession();
-        
-
         int i = 1;
         int a_no = 0;
         int q_no = 0;
 
-        {
-            Criteria crit = session.createCriteria(FlashCard.class);
-            crit.setProjection(Projections.rowCount());
-            assertEquals("Database should have 0 flashcards",0,((Long)crit.uniqueResult()).intValue());
-        }
-
+        assertEquals("FlashCard count should be zero",0,((Long)cardService.countFlashCards()).intValue());
 
         Deck deck = new Deck();
         deck.setTitle("This is an example Deck.");
@@ -99,39 +61,33 @@ public class MutateDeckTest
 
         Question que = new Question();
         que.setContent("This is a question?");
-        session.save(que);
+        entityManager.persist(que);
 
         do {
             Answer ans = new Answer();
             ans.setContent(String.format("%d", a_no++));
-            session.save(ans);
+            entityManager.persist(ans);
 
             FlashCard fc = new FlashCard(que,ans);
 
-            session.save(fc);
+            entityManager.persist(fc);
+            entityManager.flush();
             list.add(fc);
 
         } while(i++ < 5);
 
         deck.setFlashCards(list);
-        session.save(deck);
+        entityManager.persist(deck);
+        entityManager.flush();
 
-        {
-            Criteria crit = session.createCriteria(FlashCard.class);
-            crit.setProjection(Projections.rowCount());
-            assertEquals("Database should have 5 flashcards",5,((Long)crit.uniqueResult()).intValue());
-        }
+        assertEquals("FlashCard count should be five", 5, ((Long) cardService.countFlashCards()).intValue());
 
-        {
-            Criteria crit = session.createCriteria(Deck.class);
-            crit.setProjection(Projections.rowCount());
-            assertEquals("Database should have 1 deck",1,((Long)crit.uniqueResult()).intValue());
-        }
+        assertEquals("Deck count should be one",1,((Long)cardService.countDecks()).intValue());
 
         Serializable deck_id = deck.getId();
 
         {
-            Deck deck2 = session.load(Deck.class,deck_id);
+            Deck deck2 = entityManager.find(Deck.class, deck_id);
             assertEquals("Decks should be equal",deck,deck2);
 
             assertNotNull("Loading a deck had a null list",deck2.getFlashCards());
@@ -152,14 +108,13 @@ public class MutateDeckTest
 
             FlashCard fc_move = deck_list.remove(1);
             deck_list.add(fc_move);
-            session.saveOrUpdate(deck2);
-
+            entityManager.merge(deck2);
         }
 
         deck = null;
 
         {
-            Deck deck3 = session.load(Deck.class,deck_id);
+            Deck deck3 = entityManager.find(Deck.class, deck_id);
 
             assertNotNull("Loading a deck had a null list",deck3.getFlashCards());
             assertFalse("Loaded deck should have elements",deck3.getFlashCards().isEmpty());

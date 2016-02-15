@@ -33,7 +33,6 @@ public class Student implements Serializable
     private Integer id;
 
     @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
-    @JsonIgnore
     @JoinTable(name="STUDENT_DECK"
         ,joinColumns =  @JoinColumn(name="STUDENT_ID",foreignKey = @ForeignKey(name = "FK_STUDENT"))
         ,foreignKey =                                              @ForeignKey(name="FK_STUDENT")
@@ -53,7 +52,6 @@ public class Student implements Serializable
 
     @NotNull
     @Size(min = 1, max = 60)
-//    @Length(min=60,max = 60)
     @Column(name = "STUDENT_PASSWORD",length = 60,nullable = true,table = "STUDENT_ACCOUNT")
     private String password;
 
@@ -66,7 +64,6 @@ public class Student implements Serializable
         if(role == null)
             role = StudentType.USER;
     }
-
 
     public Student() {
     }

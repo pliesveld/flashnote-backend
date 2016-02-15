@@ -1,9 +1,11 @@
 package com.pliesveld.flashnote.web.controller;
 
 
+import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.service.StudentService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +18,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Set;
 
 @RestController
-@RequestMapping("/student")
+@RequestMapping("/students")
 public class StudentController {
     final Logger logger = LoggerFactory.getLogger(StudentController.class);
 
@@ -55,8 +58,18 @@ public class StudentController {
                 .path("/{id}")
                 .buildAndExpand(student.getId())
                 .toUri();
+
         responseHeaders.setLocation(newStudentUri);
         return new ResponseEntity<>(null,responseHeaders,HttpStatus.CREATED);
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> removeStudent(@PathVariable Integer id)
+    {
+        logger.info("Deleting student with id " + id);
+        studentService.delete(id);
+        return new ResponseEntity<>(null,HttpStatus.OK);
     }
 
     @RequestMapping(value="/{id}", method = RequestMethod.GET)
@@ -66,6 +79,26 @@ public class StudentController {
         Student student = verifyStudent(id);
         return new ResponseEntity<>(student,HttpStatus.OK);
     }
+
+    @RequestMapping(value="/{id}/decks", method = RequestMethod.GET)
+    public ResponseEntity<?> listDecks(@PathVariable Integer id)
+    {
+        logger.info("Listing decks of student by id " + id);
+        Student student = verifyStudent(id);
+        Set<Deck> decks = student.getDecks();
+        return new ResponseEntity<>(decks,HttpStatus.OK);
+    }
+
+    /*
+    @RequestMapping(value="/{id}/decks/{deckid}", method = RequestMethod.GET)
+    public ResponseEntity<?> listDecks(@PathVariable Integer id, @PathVariable Integer deckid)
+    {
+        logger.info("Getting student by id " + id);
+        Student student = verifyStudent(id);
+        return new ResponseEntity<>(student,HttpStatus.OK);
+    }
+    */
+
 
 
 

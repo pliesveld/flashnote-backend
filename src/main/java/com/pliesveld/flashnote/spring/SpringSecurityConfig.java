@@ -41,7 +41,28 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        http
+                .csrf()
+                .disable()
+                .authorizeRequests()
+                .antMatchers("/resources/**").permitAll()
+                .antMatchers("/sign-up").permitAll()
+                .antMatchers("/sign-in").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .loginPage("/")
+                .loginProcessingUrl("/loginprocess")
+                .failureUrl("/mobile/app/sign-in?loginFailure=true")
+                .permitAll();
+        /*.and()
+                .rememberMe().rememberMeServices(tokenBasedRememberMeService);
+*/
+
+
 //        super.configure(http);
+        /*
         http
                 .httpBasic().realmName("FlashNotes")
                 .and()
@@ -50,15 +71,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/resources/**","/student/**").permitAll()
-                .antMatchers("/pencil/**").authenticated();
+                .antMatchers("/resources/**").permitAll()
+                .antMatchers("/deck/**","/students/**").authenticated();
+                */
 
-        /*
-                .and()
-                .httpBasic()
-                .realmName("FlashNotes")
-                .and
-                .csrf()
-                .disable();*/
+
     }
 }

@@ -8,6 +8,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
+import java.io.File;
+
 import com.pliesveld.flashnote.spring.SpringRootConfig;
 import com.pliesveld.flashnote.spring.SpringWebConfig;
 import org.springframework.web.WebApplicationInitializer;
@@ -15,7 +17,10 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-public class SpringWebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer implements WebApplicationInitializer{
+public class SpringWebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer implements WebApplicationInitializer {
+
+    private int maxUploadSizeInMb = 5 * 1024 * 1024; // 5 MB
+
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
@@ -31,12 +36,35 @@ public class SpringWebInitializer extends AbstractAnnotationConfigDispatcherServ
     protected String[] getServletMappings() {
         return new String[] { "/" };
     }
+    /*
+//TODO: http://joshlong.com/jl/blogPost/simplified_web_configuration_with_spring.html
+     *
+     *     @Override
+     *         protected Filter[] getServletFilters() {
+     *                 return new Filter[]{new HiddenHttpMethodFilter(), new MultipartFilter(), new OpenEntityManagerInViewFilter()};
+     *                     }
+
+// notifies session creation / destruction
+    @Override
+    protected void registerDispatcherServlet(ServletContext servletContext) {
+        super.registerDispatcherServlet(servletContext);
+
+        servletContext.addListener(new HttpSessionEventPublisher());
+
+    }
+
+
+
+     *
+     */
 
     @Override
     protected void customizeRegistration(ServletRegistration.Dynamic registration) {
         // additional configuration, here for MultipartConfig
         super.customizeRegistration(registration);
-        MultipartConfigElement multipartConf = new MultipartConfigElement("", 200000L, -1L, 0);
+        String uploadDirectory = ""; //ServiceConfiguration.CRM_STORAGE_UPLOADS_DIRECTORY;
+
+        MultipartConfigElement multipartConf = new MultipartConfigElement(uploadDirectory, maxUploadSizeInMb, maxUploadSizeInMb*2, maxUploadSizeInMb/2);
         registration.setMultipartConfig(multipartConf);
     }
 
@@ -64,7 +92,6 @@ public class SpringWebInitializer extends AbstractAnnotationConfigDispatcherServ
         ServletRegistration.Dynamic registration = servletContext.addServlet("dispatcher",new DispatcherServlet());
         registration.setLoadOnStartup(1);
         registration.addMapping("/");
-
     }
 
 }

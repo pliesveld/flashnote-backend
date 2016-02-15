@@ -1,6 +1,6 @@
 package com.pliesveld.flashnote.schema;
 
-import com.pliesveld.config.SpringTestConfig;
+import com.pliesveld.spring.SpringTestConfig;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;

@@ -1,9 +1,10 @@
 package com.pliesveld.flashnote.domain;
 
-import com.pliesveld.config.SpringTestConfig;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.junit.After;
+import com.pliesveld.spring.SpringTestConfig;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,17 +25,13 @@ import static org.junit.Assert.*;
 @Transactional
 public class AttachmentTest
 {
-    @Autowired
-    protected SessionFactory sessionFactory;
-
-    Session session;
+    @PersistenceContext
+    protected EntityManager entityManager;
 
     @Before
     public void setupSession()
     {
-        assertNotNull(sessionFactory);
-        session = sessionFactory.getCurrentSession();
-        assertNotNull(session);
+        assertNotNull(entityManager);
     }
 
     private static byte[] readBytesFromFile(String filePath) throws IOException, IllegalAccessException {
@@ -72,9 +69,11 @@ public class AttachmentTest
         attachment.setContentType(expected_type);
         attachment.setFileName("puppy.jpg");
         attachment.setFileData(photoBytes);
-        Serializable id = session.save(attachment);
+        entityManager.persist(attachment);
+        entityManager.flush();
+        Serializable id = attachment.getId();
 
-        Attachment attachment2 = session.load(Attachment.class,id);
+        Attachment attachment2 = entityManager.find(Attachment.class,id);
         assertNotNull(attachment2.getContentType());
         assertNotNull(attachment2.getFileName());
         assertEquals(expected_type,attachment2.getContentType());

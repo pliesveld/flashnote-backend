@@ -8,8 +8,8 @@ import java.util.Map;
  */
 public enum AttachmentType
 {
-    AUDIO   (1, "audio/ogg",        ".opus"),
-    IMAGE   (10, "image/jpg",        ".jpg"),
+    AUDIO   (1, "audio/wav",          ".wav"),
+    IMAGE   (10, "image/jpg",         ".jpg"),
     DOC     (100, "application/pdf",  ".pdf");
 
     private int id;

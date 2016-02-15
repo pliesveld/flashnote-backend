@@ -36,8 +36,11 @@ public class Deck implements Serializable
     )
     private List<FlashCard> flashCards = new ArrayList<>();
 
-    @Column(name="DECK_TITLE", length=177)
+    @Column(name = "DECK_TITLE", length=177)
     private String title = "Untitled";
+
+    @ManyToOne
+    private Category category;
 
     public Deck() {
     }
@@ -49,13 +52,10 @@ public class Deck implements Serializable
         }
     }
 
-
     public Deck(String title,FlashCard... flashCards) {
         this(flashCards);
         this.title = title;
-
     }
-
 
     public String getTitle() {
         return title;
@@ -81,6 +81,14 @@ public class Deck implements Serializable
 
     public void setFlashCards(List<FlashCard> flashCards) {
         this.flashCards = flashCards;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     @Override

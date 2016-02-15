@@ -19,8 +19,8 @@ import java.text.SimpleDateFormat;
 @Configuration
 @EnableWebMvc
 @ComponentScan({
-        "com.pliesveld.flashnote.web.controller",
         "com.pliesveld.flashnote.web.domain",
+        "com.pliesveld.flashnote.web.controller",
         "com.pliesveld.flashnote.web.handler"
 })
 @PropertySource(value = { "classpath:application.properties" })

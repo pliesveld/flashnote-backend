@@ -1,7 +1,6 @@
 package com.pliesveld.flashnote.service;
 
-import com.pliesveld.config.SpringTestConfig;
-import com.pliesveld.flashnote.dao.StudentDao;
+import com.pliesveld.spring.SpringTestConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,30 +21,27 @@ import static org.junit.Assert.assertEquals;
 public class StudentServiceTest {
 
     @Autowired
-    StudentServiceImpl studentService;
+    StudentService studentService;
 
     @Test
     public void sanityCheck()
     {
-        StudentDao studentDao = studentService.getDao();
-        assertEquals("Database should have zero students",0,studentDao.getCount());
+        assertEquals("Database should have zero students",0,studentService.count().hashCode());
     }
 
     @Test
     public void accoutCreation()
     {
-        StudentDao studentDao = studentService.getDao();
-        assertEquals("Database should have 0 student",0,studentDao.getCount());
+        assertEquals("Database should have 0 student",0,studentService.count().hashCode());
         StudentService.CREATE_RESULT result = studentService.create("Student1","student@example.com","password");
         assertEquals(result,StudentService.CREATE_RESULT.SUCCESS);
-        assertEquals("Database should have 1 student",1,studentDao.getCount());
+        assertEquals("Database should have 1 student",1,studentService.count().hashCode());
     }
 
     @Test
     public void accoutCreationDuplicate()
     {
-       StudentDao studentDao = studentService.getDao();
-        assertEquals("Database should have 1 student",0,studentDao.getCount());
+        assertEquals("Database should have 1 student",0,studentService.count().hashCode());
 
         StudentService.CREATE_RESULT result = studentService.create("Student2","student2@example.com","password");
         assertEquals(result,StudentService.CREATE_RESULT.SUCCESS);
@@ -53,7 +49,7 @@ public class StudentServiceTest {
         assertEquals(result2,StudentService.CREATE_RESULT.EMAIL_TAKEN);
 
 
-        assertEquals("Database should have 1 student",1,studentDao.getCount());
+        assertEquals("Database should have 1 student",1,studentService.count().hashCode());
     }
 
 }

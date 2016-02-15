@@ -1,7 +1,8 @@
 package com.pliesveld.flashnote.domain;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,12 +18,12 @@ import java.util.Set;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = com.pliesveld.config.SpringTestConfig.class, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = com.pliesveld.spring.SpringTestConfig.class, loader = AnnotationConfigContextLoader.class)
 @Transactional
 public class SampleCardTest
 {
-    @Autowired
-    SessionFactory sessionFactory;
+    @PersistenceContext
+    EntityManager entityManager;
 
     @Before
     public void setup()
@@ -30,35 +31,23 @@ public class SampleCardTest
         /*
          * ApplicationContext ctx = new
          * AnnotationConfigApplicationContext(SpringConfig.class);
-         * LocalSessionFactoryBean sfb = (LocalSessionFactoryBean)
-         * ctx.getBean("&sessionFactory"); sessionFactory =
-         * sfb.getConfiguration().buildSessionFactory();
+         * LocalEntityManagerFactoryBean sfb = (LocalEntityManagerFactoryBean)
+         * ctx.getBean("&entityManager"); entityManager =
+         * sfb.getConfiguration().buildEntityManagerFactory();
          */
     }
 
     @Test
-    public void sessionFactoryWired()
+    public void entityManagerWired()
     {
-        assertNotNull(sessionFactory);
+        assertNotNull(entityManager);
     }
 
-    @Test
-    public void sessionHasCurrent()
-    {
-        Session session = sessionFactory.getCurrentSession();
-        assertNotNull(session);
-
-        assertTrue(session.isOpen());
-        assertTrue(session.isConnected());
-    }
 
     @Test
     public void generateCategoryEmpty()
     {
-        Session session = sessionFactory.getCurrentSession();
-        assertNotNull(session);
-        session.beginTransaction();
-        Category category = session.get(Category.class, (short) 1);
+        Category category = entityManager.find(Category.class, 1);
         assertNull(category);
          
     }
@@ -66,30 +55,21 @@ public class SampleCardTest
     @Test
     public void generateCategorySingle()
     {
-        Session session = sessionFactory.getCurrentSession();
-        assertNotNull(session);
-
-
         Category category = new Category();
         category.setName("ROOT");
         category.setDescription("ROOT category description");
-        Short new_id = (Short) session.save(category);
+        entityManager.persist(category);
+        entityManager.flush();
+        Serializable new_id = category.getId();
 
-        Category category_retrieved = session.get(Category.class, new_id);
+        Category category_retrieved = entityManager.find(Category.class, new_id);
         assertNotNull(category_retrieved);
-
         assertEquals("Retrieved same as persisted", category.getName(), category_retrieved.getName());
-
-         
     }
 
     @Test
     public void generateCategoryHierarchy()
     {
-        Session session = sessionFactory.getCurrentSession();
-        assertNotNull(session);
-
-
         Category category = new Category();
         category.setName("ROOT");
         category.setDescription("ROOT category description");
@@ -98,9 +78,11 @@ public class SampleCardTest
         category.setName("CHILD");
 
         category.addChildCategory(chld);
-        Short new_id = (Short) session.save(category);
+        entityManager.persist(category);
+        entityManager.flush();
+        Serializable new_id = category.getId();
 
-        Category category_retrieved = session.get(Category.class, new_id);
+        Category category_retrieved = entityManager.find(Category.class, new_id);
         assertNotNull(category_retrieved);
         Set<?> set_child = category_retrieved.getChildCategories();
         assertNotNull(set_child);
@@ -116,10 +98,7 @@ public class SampleCardTest
     @Test
     public void generateCategoryTestEmpty()
     {
-        Session session = sessionFactory.getCurrentSession();
-        assertNotNull(session);
-        session.beginTransaction();
-        Category category = session.get(Category.class, (short) 1);
+        Category category = entityManager.find(Category.class, 1);
         assertNull(category);
          
     }
@@ -127,50 +106,58 @@ public class SampleCardTest
     @Test 
     public void testQuestion()
     {
-        Session session = sessionFactory.getCurrentSession();
-        assertNotNull(session);
-        session.beginTransaction();
         Question q = new Question();
         q.setContent("This is a question?");
-        Integer q_id = (Integer) session.save(q);
+        entityManager.persist(q);
+        entityManager.flush();
+        Integer q_id = q.getId();
+
         Answer a = new Answer();
         a.setContent("This is an answer.");
-        Integer a_id = (Integer) session.save(a);
+
+        entityManager.persist(a);
+        entityManager.flush();
+        Integer a_id = a.getId();
 
         FlashCard fc = new FlashCard(q,a);
-        session.save(fc);
+        entityManager.persist(fc);
          
     }
 
     @Test
     public void testAnswerModifications()
     {
-        Session session = sessionFactory.getCurrentSession();
-        assertNotNull(session);
-        session.beginTransaction();
-
         final String ANSWER_ORIG = "original answer.";
         final String ANSWER_MODIFIED = "modified answer.";
 
-        assertNotNull(session);
-        session.beginTransaction();
+
         Question q = new Question("This is a question?");
         Question q2 = new Question("This is a question?");
 
-        Serializable q_id = session.save(q);
-        Serializable q2_id = session.save(q2);
+        entityManager.persist(q);
+        entityManager.persist(q2);
+        entityManager.flush();
+
+        Serializable q_id = q.getId();
+        Serializable q2_id = q2.getId();
 
         Answer a = new Answer();
         a.setContent(ANSWER_ORIG);
-        Serializable a_id = session.save(a);
+        entityManager.persist(a);
+        entityManager.flush();
+        Serializable a_id = a.getId();
 
         FlashCard fc = new FlashCard(q,a);
-        Serializable fc_id = session.save(fc);
+        entityManager.persist(fc);
+        entityManager.flush();
+        Serializable fc_id = fc.getId();
 
         FlashCard fc2 = new FlashCard(q2,a);
-        Serializable fc2_id = session.save(fc2);
+        entityManager.persist(fc2);
+        entityManager.flush();
+        Serializable fc2_id = fc2.getId();
 
-        Answer a_loaded = session.load(Answer.class,a_id);
+        Answer a_loaded = entityManager.find(Answer.class,a_id);
         a_loaded.setContent(ANSWER_MODIFIED);
 
         assertEquals("Loaded answer does not change content of original reference",ANSWER_MODIFIED,a.getContent());
@@ -181,7 +168,7 @@ public class SampleCardTest
         assertEquals("After answer updated, original reference to flashcard does not match modified",ANSWER_MODIFIED,fc.getAnswer().getContent());
         assertEquals("After answer updated, original reference to flashcard does not match modified",ANSWER_MODIFIED,fc2.getAnswer().getContent());
 
-        FlashCard fc3 = session.load(FlashCard.class,fc2_id);
+        FlashCard fc3 = entityManager.find(FlashCard.class,fc2_id);
 
         assertEquals("After answer updated, loaded flashcard does not match modified",ANSWER_MODIFIED,fc3.getAnswer().getContent());
 
@@ -193,30 +180,23 @@ public class SampleCardTest
     @Test
     public void testQuestionCascade()
     {
-        Session session = sessionFactory.getCurrentSession();
-        assertNotNull(session);
-
         Question q = new Question();
         q.setContent("This is a question?");
-//        Integer q_id = (Integer) session.save(q);
+//        Integer q_id = (Integer) entityManager.persist(q);
         Answer a = new Answer();
         a.setContent("This is an answer.");
-//        Integer a_id = (Integer) session.save(a);
+//        Integer a_id = (Integer) entityManager.persist(a);
 
         FlashCard fc = new FlashCard(q,a);
-        session.save(fc);
-         
+        entityManager.persist(fc);
+        entityManager.flush();
     }
 
     @Test
     public void createCardCascadeAll()
     {
-        Session session = sessionFactory.getCurrentSession();
-
-
-
         FlashCard fc = new FlashCard(new Question("q"),new Answer("a"));
-        session.save(fc);
-         
+        entityManager.persist(fc);
+        entityManager.flush();
     }
 }
