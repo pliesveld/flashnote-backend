@@ -5,6 +5,7 @@ import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.service.StudentService;
+import com.pliesveld.flashnote.web.dto.StudentDTO;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,8 +48,15 @@ public class StudentController {
     }
 
     @RequestMapping(value="",method=RequestMethod.POST)
-    public ResponseEntity<?> createStudent(@Valid @RequestBody Student student)
+    public ResponseEntity<?> createStudent(@Valid @RequestBody StudentDTO studentdto)
     {
+        
+        Student student = new Student();
+        student.setName(studentdto.getName());
+        student.setEmail(studentdto.getEmail());
+        student.setPassword(studentdto.getPassword());
+        student.setRole(studentdto.getRole());
+        
         student = studentService.create(student);
         logger.info("Created student: " + student);
 
