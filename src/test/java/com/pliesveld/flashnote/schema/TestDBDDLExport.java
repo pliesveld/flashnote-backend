@@ -1,7 +1,9 @@
 package com.pliesveld.flashnote.schema;
 
+import com.pliesveld.flashnote.spring.SpringRootConfig;
 import com.pliesveld.spring.SpringTestConfig;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl;
@@ -10,12 +12,21 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.boot.spi.MetadataImplementor;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 
 import static org.hibernate.tool.hbm2ddl.Target.NONE;
+
+import java.util.Properties;
+
+import javax.sql.DataSource;
 
 /**
  * Generates database schemas for annotated classes. Requires dialects and
@@ -24,16 +35,63 @@ import static org.hibernate.tool.hbm2ddl.Target.NONE;
  *
  */
 
+@org.springframework.context.annotation.Configuration
+@PropertySource(value = {"classpath:test-datasource.properties"})
 public class TestDBDDLExport
 {
+    
+    @Autowired
+    Environment environment;
 
     public void DDLExport()
     {
     }
+    
+    // TODO: http://www.jpab.org/Hibernate.html
+    private Properties hibernateProperties() {
+        Properties properties = new Properties();
+        properties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
+        properties.put("hibernate.show_sql", environment.getRequiredProperty("hibernate.show_sql"));
+        properties.put("hibernate.format_sql", environment.getRequiredProperty("hibernate.format_sql"));
+        properties.put("hibernate.hbm2ddl.auto", environment.getRequiredProperty("hibernate.hbm2ddl.auto"));
+        return properties;
+    }
+
+
+    @Bean
+    public DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
+        dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
+        dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
+        dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
+        return dataSource;
+    }
+
+    @Bean
+    public LocalSessionFactoryBean sessionFactory()
+    {
+        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+        sessionFactory.setDataSource(dataSource());
+        sessionFactory.setPackagesToScan(new String[] { "com.pliesveld.flashnote.domain" });
+        sessionFactory.setHibernateProperties(hibernateProperties());
+        return sessionFactory;
+    }
+
+    @Bean
+    @Autowired
+    public HibernateTransactionManager transactionManager(SessionFactory s)
+    {
+        HibernateTransactionManager txManager = new HibernateTransactionManager();
+        txManager.setSessionFactory(s);
+        return txManager;
+    }
+   
 
     public static void main(String[] args) throws IllegalAccessException
     {
-        ApplicationContext ctx = new AnnotationConfigApplicationContext(SpringTestConfig.class);
+        
+        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(SpringRootConfig.class,TestDBDDLExport.class);
 
         Environment properties = ctx.getBean(Environment.class);
 
@@ -45,26 +103,10 @@ public class TestDBDDLExport
 
         displayProfile(ctx);
 
-        MetadataSources metadataSources = (MetadataSources) FieldUtils.readField(configuration, "metadataSources",
-                true);
+        MetadataSources metadataSources = (MetadataSources) FieldUtils.readField(configuration, "metadataSources", true);
 
-        /*
-         * StandardServiceRegistry registry =
-         * configuration.getStandardServiceRegistryBuilder().build();
-         * StandardServiceRegistry registry = new
-         * StandardServiceRegistryBuilder()
-         * .applySetting("hibernate.connection.driver_class",
-         * properties.getRequiredProperty("jdbc.driverClassName"))
-         * .applySetting("hibernate.connection.url",
-         * properties.getRequiredProperty("jdbc.url"))
-         * .applySetting("hibernate.connection.username",
-         * properties.getRequiredProperty("jdbc.username"))
-         * .applySetting("hibernate.connection.password",
-         * properties.getRequiredProperty("jdbc.password"))
-         * .applySetting("hibernate.dialect",
-         * properties.getRequiredProperty("hibernate.dialect")).build();
-         */
-
+        
+        
         StandardServiceRegistryBuilder ssr_builder = configuration.getStandardServiceRegistryBuilder();
 
         ssr_builder
@@ -89,12 +131,11 @@ public class TestDBDDLExport
                 .build();
 
         String filename_export = System.getProperty("user.dir") + "/src/test/resources/sql/" + "test-db-init.sql";
-        //String filename_export = SpringTestConfig.class.getClassLoader().getResource(".").getPath() + "test-db-init.sql";
 
         new SchemaExport((MetadataImplementor) metadata).setOutputFile(filename_export).setDelimiter(";")
                 .setFormat(true).setHaltOnError(true).create(NONE);
 
-        System.out.println("Exported DDL SQL to : " + filename_export);
+        System.out.println("Exported:" + filename_export);
     }
 
     private static void displayProfile(ApplicationContext ctx)
