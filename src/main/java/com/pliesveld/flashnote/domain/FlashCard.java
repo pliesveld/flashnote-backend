@@ -86,28 +86,20 @@ public class FlashCard implements Comparable<FlashCard>
     }
 
     @Override
-    public int compareTo(FlashCard o) { // TODO: move logic to FlashCardPrimaryKey
-        if(id == null || o.id == null)
+    public int compareTo(FlashCard o) {
+        if(this.id == null)
         {
-           return 1;
-        }
-        
-        if(id.getAnswerId() == null || id.getAnswerId() == null)
-        {
+            if(o.id == null)
+                return 0;
             return 1;
         }
         
-        if(o.id.getAnswerId() == null || o.id.getAnswerId() == null)
+        if(o.id == null)
         {
             return -1;
         }
         
-        if(id.getQuestionId().equals(o.id.getQuestionId()))
-        {
-            return id.getAnswerId().compareTo(o.id.getAnswerId());
-        }
-        
-        return id.getQuestionId().compareTo(o.id.getQuestionId());
+        return this.id.compareTo(o.id);
     }
 
 
