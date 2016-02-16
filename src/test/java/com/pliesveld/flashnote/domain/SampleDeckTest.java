@@ -57,6 +57,41 @@ public class SampleDeckTest
     }
 
     @Test
+    public void deckOfOneQuestionTwoAnswers()
+    {
+        Question question = new Question();
+        question.setContent("Question?");
+
+        Answer answer1 = new Answer();
+        answer1.setContent("This is the first answer");
+        Answer answer2 = new Answer();
+        answer1.setContent("This is the second answer");
+
+        entityManager.persist(question);
+        entityManager.persist(answer1);
+        entityManager.persist(answer2);
+
+        FlashCard fc1 = new FlashCard(question,answer1);
+
+        FlashCard fc2 = new FlashCard(question,answer2);
+
+        Deck deck = new Deck();
+        deck.getFlashCards().add(fc1);
+        deck.getFlashCards().add(fc2);
+
+        entityManager.persist(fc1);
+        entityManager.persist(fc2);
+
+        entityManager.persist(deck);
+
+
+        assertEquals("FlashCard count should be 2",2,((Long)cardService.countFlashCards()).intValue());
+        assertEquals("Question count should be 1",1,((Long)cardService.countQuestions()).intValue());
+        assertEquals("Answer count should be 2",2,((Long)cardService.countAnswers()).intValue());
+
+    }
+    
+    @Test
     public void createDeck()
     {
         int i = 1;
@@ -92,86 +127,17 @@ public class SampleDeckTest
         deck.setFlashCards(list);
         entityManager.persist(deck);
 
+        assertEquals("Question count should be 5",5,((Long)cardService.countQuestions()).intValue());
+        assertEquals("Answer count should be 5",5,((Long)cardService.countAnswers()).intValue());
         assertEquals("FlashCard count should be 5",5,((Long)cardService.countFlashCards()).intValue());
         assertEquals("Deck count should be 1",1,((Long)cardService.countDecks()).intValue());
-
-
-        FlashCard fc_removed = deck.getFlashCards().remove(2);
-        entityManager.remove(fc_removed);
-
-        assertEquals("FlashCard count should be 4",4,((Long)cardService.countFlashCards()).intValue());
+        
+        assertEquals("Deck size should be 5",5,deck.getFlashCards().size());
     }
-
-
-    @Test
-    public void deckOfOneQuestionTwoAnswers()
-    {
-        Question question = new Question();
-        question.setContent("Question?");
-
-        Answer answer1 = new Answer();
-        answer1.setContent("This is the first answer");
-        Answer answer2 = new Answer();
-        answer1.setContent("This is the second answer");
-
-        entityManager.persist(question);
-        entityManager.persist(answer1);
-        entityManager.persist(answer2);
-
-        FlashCard fc1 = new FlashCard(question,answer1);
-
-        FlashCard fc2 = new FlashCard(question,answer2);
-
-        Deck deck = new Deck();
-        deck.getFlashCards().add(fc1);
-        deck.getFlashCards().add(fc2);
-
-        entityManager.persist(fc1);
-        entityManager.persist(fc2);
-
-        entityManager.persist(deck);
-
-
-        assertEquals("FlashCard count should be 2",2,((Long)cardService.countFlashCards()).intValue());
-        assertEquals("Question count should be 1",1,((Long)cardService.countQuestions()).intValue());
-        assertEquals("Answer count should be 2",2,((Long)cardService.countAnswers()).intValue());
-
-
-/*
-        FlashCard fc_returned = deck.getFlashCards().remove(1);
-        session.delete(fc_returned);
-
-        session.getTransaction().commit();
-
-
-        {
-            Criteria crit = session.createCriteria(Deck.class);
-            crit.setProjection(Projections.rowCount());
-            assertEquals("Database should have 1 deck",1,((Long)crit.uniqueResult()).intValue());
-        }
-
-        {
-            Criteria crit = session.createCriteria(Question.class);
-            crit.setProjection(Projections.rowCount());
-            assertEquals("Database should have 1 question",1,((Long)crit.uniqueResult()).intValue());
-        }
-
-        {
-            Criteria crit = session.createCriteria(FlashCard.class);
-            crit.setProjection(Projections.rowCount());
-            assertEquals("Database should have 1 flashcards",1,((Long)crit.uniqueResult()).intValue());
-        }
-
-        {
-            Criteria crit = session.createCriteria(Answer.class);
-            crit.setProjection(Projections.rowCount());
-            assertEquals("Database should have 1 answers",1,((Long)crit.uniqueResult()).intValue());
-        }
-*/
+    
 
 
 
-    }
 
 }
 
