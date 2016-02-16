@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 
 @Embeddable
-public class FlashCardPrimaryKey implements Serializable {
+public class FlashCardPrimaryKey implements Serializable, Comparable<FlashCardPrimaryKey> {
 
     @Column(name = "QUESTION_ID",nullable = false)
     private Integer questionId;
@@ -21,8 +21,8 @@ public class FlashCardPrimaryKey implements Serializable {
     }
 
     public FlashCardPrimaryKey(Integer questionId, Integer answerId) {
-        this.questionId = questionId;
-        this.answerId = answerId;
+        setQuestionId(questionId);
+        setAnswerId(answerId);
     }
 
     public Integer getQuestionId() {
@@ -31,6 +31,14 @@ public class FlashCardPrimaryKey implements Serializable {
 
     public Integer getAnswerId() {
         return answerId;
+    }
+       
+    protected void setQuestionId(Integer questionId) {
+        this.questionId = questionId;
+    }
+
+    protected void setAnswerId(Integer answerId) {
+        this.answerId = answerId;
     }
 
     @Override
@@ -50,5 +58,28 @@ public class FlashCardPrimaryKey implements Serializable {
             return 0;
         return answerId.hashCode() + questionId.hashCode();
     }
+
+    @Override
+    public int compareTo(FlashCardPrimaryKey o) {
+        if(this.questionId == null || this.answerId == null)
+        {
+            if(o.questionId == null || o.answerId == null)
+                return 0;
+            return -1;
+        }
+        
+        if(o.questionId == null || o.answerId == null)
+            return 1;
+        
+        if(this.questionId.equals(o.questionId))
+            return this.answerId.compareTo(o.answerId);
+        return this.questionId.compareTo(o.questionId);
+    }
+
+    @Override
+    public String toString() {
+        return "FlashCardPrimaryKey [questionId=" + questionId + ", answerId=" + answerId + "]";
+    }
+    
 }
 
