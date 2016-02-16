@@ -20,6 +20,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = SpringTestConfig.class, loader = AnnotationConfigContextLoader.class)
+@Transactional
 public class MutateDeckTest
 {
     @PersistenceContext
@@ -43,6 +44,60 @@ public class MutateDeckTest
         assertEquals("FlashCard count should be zero", 0, ((Long) cardService.countFlashCards()).intValue());
         // TODO: Student, Attachment, Category
     }
+    
+    @Test
+    public void modifyDeck()
+    {
+        int i = 1;
+        int a_no = 0;
+        int q_no = 0;
+
+        assertEquals("FlashCard count should be zero",0,((Long)cardService.countFlashCards()).intValue());
+
+
+        Deck deck = new Deck();
+        deck.setTitle("This is an example Deck.");
+
+        List<FlashCard> list = new LinkedList<>();
+        do {
+
+
+            Answer ans = new Answer();
+            ans.setContent(String.format("This is an answer no %d", a_no++));
+            entityManager.persist(ans);
+
+            Question que = new Question();
+            que.setContent(String.format("This is question no %d", q_no++));
+            entityManager.persist(que);
+
+
+            FlashCard fc = new FlashCard(que,ans);
+            entityManager.persist(fc);
+            
+            list.add(fc);
+
+        } while(i++ < 5);
+
+        deck.setFlashCards(list);
+        entityManager.persist(deck);
+        entityManager.flush();
+
+        assertEquals("Question count should be 5",5,((Long)cardService.countQuestions()).intValue());
+        assertEquals("Answer count should be 5",5,((Long)cardService.countAnswers()).intValue());
+        assertEquals("FlashCard count should be 5",5,((Long)cardService.countFlashCards()).intValue());
+        assertEquals("Deck count should be 1",1,((Long)cardService.countDecks()).intValue());
+
+        assertEquals("Deck size should be 5",5,deck.getFlashCards().size());
+
+        FlashCard fc_removed = deck.getFlashCards().remove(2);
+        entityManager.remove(fc_removed);
+       
+
+        assertEquals("Deck size should be 4",4,deck.getFlashCards().size());
+        assertEquals("FlashCard count should be 4",4,((Long)cardService.countFlashCards()).intValue());
+    }
+
+    
 
     @Test
     @Transactional
