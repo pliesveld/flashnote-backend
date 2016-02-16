@@ -127,7 +127,23 @@ public class SampleCardTest
 
 
     @Test
-    public void testQuestionCascade()
+    public void testFlashCardCascade()
+    {
+        Question q = new Question();
+        q.setContent("This is a question?");
+//        Integer q_id = (Integer) entityManager.persist(q);
+        Answer a = new Answer();
+        a.setContent("This is an answer.");
+//        Integer a_id = (Integer) entityManager.persist(a);
+
+        FlashCard fc = new FlashCard(q,a);
+        entityManager.persist(fc);
+        entityManager.flush();
+    }
+    
+    
+    @Test
+    public void testFlashCardCascadeWithPersist()
     {
         Question q = new Question();
         q.setContent("This is a question?");
