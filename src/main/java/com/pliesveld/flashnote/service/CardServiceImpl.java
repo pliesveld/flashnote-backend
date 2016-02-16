@@ -3,14 +3,21 @@ package com.pliesveld.flashnote.service;
 import com.pliesveld.flashnote.domain.Answer;
 import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.domain.FlashCard;
+import com.pliesveld.flashnote.domain.FlashCardPrimaryKey;
 import com.pliesveld.flashnote.domain.Question;
+import com.pliesveld.flashnote.exception.FlashCardCreateException;
+import com.pliesveld.flashnote.exception.QuestionNotFoundException;
+import com.pliesveld.flashnote.exception.ResourceRepositoryException;
 import com.pliesveld.flashnote.repository.AnswerRepository;
 import com.pliesveld.flashnote.repository.DeckRepository;
 import com.pliesveld.flashnote.repository.FlashCardRepository;
 import com.pliesveld.flashnote.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import javax.transaction.NotSupportedException;
 
@@ -57,14 +64,42 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public FlashCard create(Question question, Answer answer) throws NotSupportedException {
-        throw new NotSupportedException();
+    @Transactional
+    public FlashCard createFlashCard(Question question, Answer answer) {
+                   
+        FlashCard fc = new FlashCard(question,answer);
+        flashCardRepository.save(fc);
+        return fc;
+    }
+
+    @Override
+    @Transactional
+    public FlashCard createFlashCardReferecingQuestion(int questionId, Answer answer) throws QuestionNotFoundException {
+        if(!questionRepository.exists(questionId))
+            throw new QuestionNotFoundException(questionId);
+
+        if(!answerRepository.exists(answer.getId()))
+        {
+            answer.setId(null);
+            answerRepository.save(answer);
+        } else {
+            FlashCard fc = flashCardRepository.findOne(new FlashCardPrimaryKey(questionId, answer.getId()));
+            if(fc != null)
+                throw new FlashCardCreateException(fc.getId());
+        }
+
+        Question question = questionRepository.getOne(questionId);
+        return createFlashCard(question,answer);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Iterable<Deck> findDeckBy(int id) throws NotSupportedException {
-        throw new NotSupportedException();
+    public List<FlashCard> findFlashCardsByContainingQuestionId(int questionId) throws QuestionNotFoundException {
+        if(!questionRepository.exists(questionId))
+            throw new QuestionNotFoundException(questionId);
+
+        return flashCardRepository.findAllByQuestion(questionId);
     }
+
+    
 }
