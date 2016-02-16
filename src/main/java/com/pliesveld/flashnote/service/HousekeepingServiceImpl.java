@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class HousekeepingServiceImpl implements HousekeepingService {
 
+    /*
     @Value("${newaccount.expiration.days}")
     private int accountExpirationDays;
 
@@ -19,6 +20,8 @@ public class HousekeepingServiceImpl implements HousekeepingService {
 
     @Value("${index.expiration.days}")
     private int indexDeckCollection;
+    
+    */
 
     @Override
     @Scheduled(cron = "0 0 0 * * ?")
