@@ -2,13 +2,20 @@ package com.pliesveld.flashnote.domain;
 
 import javax.persistence.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
+
 @Entity
+@EntityListeners(value = { LogEntityListener.class })
 @Table(name = "FLASHCARD")
 @NamedQueries(
         @NamedQuery(name = "FlashCard.count", query = "SELECT COUNT(f) FROM FlashCard f")
 )
 public class FlashCard implements Comparable<FlashCard>
 {
+    static final Logger LOG = LoggerFactory.getLogger(FlashCard.class);
 
     @EmbeddedId
     private FlashCardPrimaryKey id;
@@ -18,6 +25,7 @@ public class FlashCard implements Comparable<FlashCard>
     @JoinColumn(name = "QUESTION_ID",
             nullable = false, insertable = false, updatable = false,
             foreignKey = @ForeignKey(name = "FK_QUESTION"))
+    @MapsId("questionId")
     private Question question;
 
     @ManyToOne(cascade = {CascadeType.ALL},
@@ -25,6 +33,7 @@ public class FlashCard implements Comparable<FlashCard>
     @JoinColumn(name = "ANSWER_ID",
             nullable = false, insertable = false, updatable = false,
             foreignKey = @ForeignKey(name = "FK_ANSWER"))
+    @MapsId("answerId")
     private Answer answer;
 
 
@@ -102,4 +111,17 @@ public class FlashCard implements Comparable<FlashCard>
     }
 
 
+    @PrePersist
+    public void debugIdPre()
+    {
+        LOG.debug("prepersist; id = " + this.id);
+        LOG.debug("prepersist; id = " + this.getId());
+    }
+    
+    @PostPersist
+    public void debugIdPost()
+    {
+        LOG.debug("postpersist; id = " + this.id);
+        LOG.debug("postpersist; id = " + this.getId());
+    }
 }
