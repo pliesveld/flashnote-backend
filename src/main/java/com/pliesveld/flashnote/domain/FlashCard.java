@@ -7,7 +7,7 @@ import javax.persistence.*;
 @NamedQueries(
         @NamedQuery(name = "FlashCard.count", query = "SELECT COUNT(f) FROM FlashCard f")
 )
-public class FlashCard
+public class FlashCard implements Comparable<FlashCard>
 {
 
     @EmbeddedId
@@ -74,6 +74,31 @@ public class FlashCard
     @Override
     public int hashCode() {
         return id == null ? 0 : id.hashCode();
+    }
+
+    @Override
+    public int compareTo(FlashCard o) { // TODO: move logic to FlashCardPrimaryKey
+        if(id == null || o.id == null)
+        {
+           return 1;
+        }
+        
+        if(id.getAnswerId() == null || id.getAnswerId() == null)
+        {
+            return 1;
+        }
+        
+        if(o.id.getAnswerId() == null || o.id.getAnswerId() == null)
+        {
+            return -1;
+        }
+        
+        if(id.getQuestionId().equals(o.id.getQuestionId()))
+        {
+            return id.getAnswerId().compareTo(o.id.getAnswerId());
+        }
+        
+        return id.getQuestionId().compareTo(o.id.getQuestionId());
     }
 
 

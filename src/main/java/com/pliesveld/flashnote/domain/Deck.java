@@ -19,8 +19,8 @@ public class Deck implements Serializable
     @Column(name = "DECK_ID")
     private Integer id;
 
-    @OneToMany(cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    @OrderColumn(name = "FLASHCARD_ORDER",updatable=false)
+    @OneToMany(cascade = {CascadeType.ALL})
+//    @OrderColumn(name = "FLASHCARD_ORDER",updatable=false)
     @JoinTable(name = "DECK_FLASHCARD",
             foreignKey = @ForeignKey(name = "FK_DECK"),
 
