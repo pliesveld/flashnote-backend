@@ -19,8 +19,8 @@ public class Deck implements Serializable
     @Column(name = "DECK_ID")
     private Integer id;
 
-    @OneToMany(cascade = {CascadeType.ALL})
-    @OrderColumn(name = "FLASHCARD_ORDER")
+    @OneToMany(cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @OrderColumn(name = "FLASHCARD_ORDER",updatable=false)
     @JoinTable(name = "DECK_FLASHCARD",
             foreignKey = @ForeignKey(name = "FK_DECK"),
 
@@ -28,10 +28,10 @@ public class Deck implements Serializable
 
             inverseForeignKey = @ForeignKey(name = "FK_FLASHCARD"),
             inverseJoinColumns = {
-                            @JoinColumn(name = "QUESTION_ID"),
-                            @JoinColumn(name = "ANSWER_ID")
+                            @JoinColumn(table = "QUESTION",  name = "QUESTION_ID", foreignKey= @ForeignKey(name="FK_DECK_FLASHCARD_QUESTION_ID")),
+                            @JoinColumn(table = "ANSWER",    name = "ANSWER_ID",   foreignKey= @ForeignKey(name="FK_DECK_FLASHCARD_ANSWER_ID"))
             }
-            ,uniqueConstraints = {@UniqueConstraint(name="UNIQUE_FLASHCARD",columnNames = {"QUESTION_ID","ANSWER_ID"})}
+            /*,uniqueConstraints = {@UniqueConstraint(name="UNIQUE_FLASHCARD",columnNames = {"QUESTION_ID","ANSWER_ID"})}*/
 
     )
     private List<FlashCard> flashCards = new ArrayList<>();

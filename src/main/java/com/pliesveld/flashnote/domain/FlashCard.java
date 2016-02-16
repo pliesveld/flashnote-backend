@@ -17,14 +17,14 @@ public class FlashCard
             targetEntity = com.pliesveld.flashnote.domain.Question.class)
     @JoinColumn(name = "QUESTION_ID",
             nullable = false, insertable = false, updatable = false,
-            foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT,name = "FK_QUESTION"))
+            foreignKey = @ForeignKey(name = "FK_QUESTION"))
     private Question question;
 
     @ManyToOne(cascade = {CascadeType.ALL},
             targetEntity = com.pliesveld.flashnote.domain.Answer.class)
     @JoinColumn(name = "ANSWER_ID",
             nullable = false, insertable = false, updatable = false,
-            foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT,name = "FK_ANSWER"))
+            foreignKey = @ForeignKey(name = "FK_ANSWER"))
     private Answer answer;
 
 
