@@ -84,23 +84,29 @@ public class StudentDeckTest
         Student student = entityManager.find(Student.class, sid);
         assertNotNull(student);
         
+
         Deck deck = entityManager.find(Deck.class,did);
         
-        student.getDecks().remove(deck);
+        
         
         FlashCard fc = deck.getFlashCards().get(0);
         
         Question que = fc.getQuestion();
         Answer ans = fc.getAnswer();
+
+        entityManager.remove(fc);
         
         entityManager.remove(que);
         entityManager.remove(ans);
         
-        entityManager.remove(fc);
+
         
+
         entityManager.remove(deck);
-        entityManager.merge(student);
+        
+        student.getDecks().clear();
         entityManager.flush();
+        
     }
 
 }

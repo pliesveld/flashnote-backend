@@ -80,10 +80,16 @@ public class StudentTest {
     public void createStudentDeckCascade() {
         Student student = new Student();
         student.setName("Student");
+        student.setPassword("password");
         student.setEmail("student@example.com");
 
         Deck deck = new Deck();
-        deck.getFlashCards().add(new FlashCard(new Question("q"), new Answer("a")));
+        Question que = new Question("q");
+        Answer ans = new Answer("a");
+        entityManager.persist(que);
+        entityManager.persist(ans);    
+        
+        deck.getFlashCards().add(new FlashCard(que,ans));
 
         student.getDecks().add(deck);
         entityManager.persist(student);
@@ -118,6 +124,9 @@ public class StudentTest {
 
         student1.setEmail("student1@example.com");
         student2.setEmail("student2@example.com");
+        student1.setPassword("password");
+        student2.setPassword("password");
+        
         entityManager.persist(student1);
         entityManager.persist(student2);
         entityManager.flush();
@@ -154,17 +163,32 @@ public class StudentTest {
 
     }
 
+    @Transactional
+    private FlashCard newFlashCard(String question, String answer)
+    {
+        Question que = new Question(question);
+        Answer ans = new Answer(answer);
+        entityManager.persist(que);
+        entityManager.persist(ans);
+        entityManager.flush();
+        
+        FlashCard fc = new FlashCard(que,ans);
+        entityManager.persist(fc);
+        return fc;
+    }
+    
     @Test
     public void studentDeckIdentityTest() {
         Student student1 = new Student("student");
+        student1.setPassword("password");
         student1.setEmail("student1@example.com");
 
         HashSet<Deck> student_decks = new LinkedHashSet<>();
 
         student_decks.addAll(Arrays.asList(
-                new Deck(new FlashCard(new Question("Que1"), new Answer("Ans1"))),
-                new Deck(new FlashCard(new Question("Que2"), new Answer("Ans2"))),
-                new Deck(new FlashCard(new Question("Que3"), new Answer("Ans3")))
+                new Deck(newFlashCard("Que1","Ans1")),
+                new Deck(newFlashCard("Que2","Ans2")),
+                new Deck(newFlashCard("Que3","Ans3"))
         ));
 
         entityManager.persist(student1);
@@ -181,32 +205,6 @@ public class StudentTest {
 
         assertFalse(set_orig.isEmpty());
         assertEquals(set_orig.size(), set_copy.size());
-
-        assertEquals(set_orig, set_copy);
-        assertEquals(set_copy, set_orig);
-
-        FlashCard fc_specific = (((Deck) set_copy.iterator().next()).getFlashCards().iterator().next());
-
-        // does original reference hold after persisting
-        //assertTrue(set_copy.contains(fc_specific)); //no
-
-//        assertTrue(set_orig.contains(fc_specific));
-
-
-        int orig_size = set_copy.size();
-
-        set_copy.remove(fc_specific);
-        entityManager.remove(fc_specific);
-        //entityManager.flush(); // ?
-
-        int next_size = set_orig.size();
-        assertEquals(orig_size, next_size);
-        assertEquals(next_size, orig_size);
-
-        assertEquals(set_orig.size(), set_copy.size());
-
-
-        //Set<?> set_copy = copy_student1.getDecks();
 
     }
 }
