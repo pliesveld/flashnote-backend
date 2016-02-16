@@ -2,10 +2,13 @@ package com.pliesveld.flashnote.service;
 
 import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.domain.Student;
+import com.pliesveld.flashnote.domain.StudentType;
 import com.pliesveld.flashnote.exception.ResourceNotFoundException;
 import com.pliesveld.flashnote.exception.StudentCreateException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.repository.StudentRepository;
+
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,19 +28,27 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     @Transactional(rollbackFor = StudentCreateException.class)
-    public CREATE_RESULT create(String name, String email, String password) {
+    public Student create(String name, String email, String password) throws StudentCreateException {
+        
+        Student other = studentRepository.findOneByEmail(email);
+
+        if(other != null)
+            throw new StudentCreateException(email);
+
+        
         Student student = new Student();
         student.setName(name);
         student.setEmail(email);
         student.setPassword(password);
+        student.setRole(StudentType.USER);
 
-        Student other = studentRepository.findOneByEmail(email);
-        if(other != null)
-            return CREATE_RESULT.EMAIL_TAKEN;
+        try {
+            student = studentRepository.save(student);
+        } catch(DataAccessException cdae) {
+            throw new StudentCreateException("Could not create student account");
+        }
 
-
-        studentRepository.save(student);
-        return CREATE_RESULT.SUCCESS;
+        return student;
     }
 
     @Override
@@ -68,7 +79,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     @Transactional
-    public Student create(Student student) {
+    public Student create(Student student) throws StudentCreateException {
         Student createdStudent = student;
         return studentRepository.save(createdStudent);
     }

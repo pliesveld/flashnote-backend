@@ -50,14 +50,8 @@ public class StudentController {
     @RequestMapping(value="",method=RequestMethod.POST)
     public ResponseEntity<?> createStudent(@Valid @RequestBody StudentDTO studentdto)
     {
+        Student student = studentService.create(studentdto.getName(),studentdto.getEmail(),studentdto.getPassword());
         
-        Student student = new Student();
-        student.setName(studentdto.getName());
-        student.setEmail(studentdto.getEmail());
-        student.setPassword(studentdto.getPassword());
-        student.setRole(studentdto.getRole());
-        
-        student = studentService.create(student);
         logger.info("Created student: " + student);
 
         HttpHeaders responseHeaders = new HttpHeaders();

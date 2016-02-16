@@ -8,8 +8,8 @@ import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import java.util.List;
 
 public interface StudentService {
-    enum CREATE_RESULT {EMAIL_TAKEN, INVALID_TOKENS, INSECURE_PASSWORD, SUCCESS }
-    CREATE_RESULT       create(String name,String email,String password);
+
+    Student             create(String name,String email,String password) throws StudentCreateException;
 
     Student             create(Student student) throws StudentCreateException;
     Student             delete(int id)          throws StudentNotFoundException;

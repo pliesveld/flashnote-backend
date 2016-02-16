@@ -17,9 +17,9 @@ public class StudentCreateException extends ResourceRepositoryException {
 
     @Override
     public HttpStatus getRepositoryStatus() {
-        return null;
+        return EXCEPTION_STATUS_IM_USED;
     }
-
+    
     public StudentCreateException(Serializable id) {
         super(id);
     }
