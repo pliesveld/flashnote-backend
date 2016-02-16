@@ -1,6 +1,9 @@
 package com.pliesveld.flashnote.domain;
 
 import javax.persistence.*;
+
+import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +15,7 @@ import java.util.List;
 @NamedQueries(
         @NamedQuery(name = "Deck.count", query = "SELECT COUNT(d) FROM Deck d")
 )
+@EntityListeners(value = { LogEntityListener.class })
 public class Deck implements Serializable
 {
     @Id

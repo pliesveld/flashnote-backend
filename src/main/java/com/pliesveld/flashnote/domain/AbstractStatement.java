@@ -3,6 +3,7 @@ package com.pliesveld.flashnote.domain;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -10,6 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @MappedSuperclass
+@EntityListeners(value = { LogEntityListener.class })
 public abstract class AbstractStatement
 {
     @Column(name = "CONTENT",length=65600)
