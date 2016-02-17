@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration xmlns:log4j="http://jakarta.apache.org/log4j/" configDebug="true">
+<Configuration xmlns:log4j="http://jakarta.apache.org/log4j/" configDebug="true" monitorInterval="30">
   <Properties>
     <Property name="filename">log/hibernate.log</Property>
     <Property name="servicefilename">log/service.log</Property>
@@ -8,19 +8,23 @@
 
   <Appenders>
     <Console name="CONSOLE" target="SYSTEM_OUT">
-      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+    	<PatternLayout>
+      		<MarkerPatternSelector defaultPattern="[%-5level] %c{1.} %msg%n">
+        		<PatternMatch key="FLOW" pattern="[%-5level] %c{1.} ====== %C{1.}.%M:%L %msg ======%n"/>
+    	  	</MarkerPatternSelector>
+	    </PatternLayout>
     </Console>
 
     <File name="FileHibernate" fileName="${filename}" append="false">
-      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+      <PatternLayout pattern="[%t] %-5level %logger{2.1.} - %msg%n"/>
     </File>
 
     <File name="FileService" fileName="${servicefilename}" append="false">
-        <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        <PatternLayout pattern="[%t] %-5level %logger{2.1.} - %msg%n"/>
     </File>
 
     <File name="FileSpring" fileName="${springfilename}" append="false">
-        <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        <PatternLayout pattern="%-5level %msg%n"/>
     </File>
 
   </Appenders>
