@@ -2,9 +2,6 @@ package com.pliesveld.flashnote.domain;
 
 import javax.persistence.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
 
 @Entity
@@ -15,7 +12,8 @@ import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
 )
 public class FlashCard implements Comparable<FlashCard>
 {
-    static final Logger LOG = LoggerFactory.getLogger(FlashCard.class);
+    private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger();
+
 
     @EmbeddedId
     private FlashCardPrimaryKey id;

@@ -22,6 +22,9 @@ import java.util.List;
 
 @Service(value = "studentService")
 public class StudentServiceImpl implements StudentService {
+    
+    private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger();
+
 
     @Resource
     StudentRepository studentRepository;

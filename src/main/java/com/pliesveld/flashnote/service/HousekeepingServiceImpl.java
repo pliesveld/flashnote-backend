@@ -10,6 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public class HousekeepingServiceImpl implements HousekeepingService {
+    
+    private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger();
+
 
     /*
     @Value("${newaccount.expiration.days}")

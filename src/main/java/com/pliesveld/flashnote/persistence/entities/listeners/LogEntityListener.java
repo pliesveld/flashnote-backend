@@ -8,11 +8,8 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class LogEntityListener {
-    static final Logger LOG = LoggerFactory.getLogger(LogEntityListener.class);
+    private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger();
     
     @PrePersist
     private void logPrePersist(Object object)

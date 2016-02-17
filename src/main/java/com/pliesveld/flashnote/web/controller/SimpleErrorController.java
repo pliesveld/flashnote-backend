@@ -16,6 +16,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/error")
 public class SimpleErrorController implements ErrorController {
+    private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger();
+
 
     private final ErrorAttributes errorAttributes;
 

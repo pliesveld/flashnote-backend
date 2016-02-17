@@ -7,8 +7,6 @@ import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.service.StudentService;
 import com.pliesveld.flashnote.web.dto.StudentDTO;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,7 +22,8 @@ import java.util.Set;
 @RestController
 @RequestMapping("/students")
 public class StudentController {
-    final Logger logger = LoggerFactory.getLogger(StudentController.class);
+    
+    private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger();
 
     @Autowired
     private StudentService studentService;
@@ -42,7 +41,7 @@ public class StudentController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Iterable<Student>> listdata()
     {
-        logger.info("Retrieving list of all students");
+        LOG.info("Retrieving list of all students");
         Iterable<Student> allStudents = studentService.findAll();
         return new ResponseEntity<>(allStudents, HttpStatus.OK);
     }
@@ -52,7 +51,7 @@ public class StudentController {
     {
         Student student = studentService.create(studentdto.getName(),studentdto.getEmail(),studentdto.getPassword());
         
-        logger.info("Created student: " + student);
+        LOG.info("Created student: " + student);
 
         HttpHeaders responseHeaders = new HttpHeaders();
         URI newStudentUri = ServletUriComponentsBuilder
@@ -69,7 +68,7 @@ public class StudentController {
     @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> removeStudent(@PathVariable Integer id)
     {
-        logger.info("Deleting student with id " + id);
+        LOG.info("Deleting student with id " + id);
         studentService.delete(id);
         return new ResponseEntity<>(null,HttpStatus.OK);
     }
@@ -77,7 +76,7 @@ public class StudentController {
     @RequestMapping(value="/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getStudent(@PathVariable Integer id)
     {
-        logger.info("Getting student by id " + id);
+        LOG.info("Getting student by id " + id);
         Student student = verifyStudent(id);
         return new ResponseEntity<>(student,HttpStatus.OK);
     }
@@ -85,7 +84,7 @@ public class StudentController {
     @RequestMapping(value="/{id}/decks", method = RequestMethod.GET)
     public ResponseEntity<?> listDecks(@PathVariable Integer id)
     {
-        logger.info("Listing decks of student by id " + id);
+        LOG.info("Listing decks of student by id " + id);
         Student student = verifyStudent(id);
         Set<Deck> decks = student.getDecks();
         return new ResponseEntity<>(decks,HttpStatus.OK);
@@ -95,7 +94,7 @@ public class StudentController {
     @RequestMapping(value="/{id}/decks/{deckid}", method = RequestMethod.GET)
     public ResponseEntity<?> listDecks(@PathVariable Integer id, @PathVariable Integer deckid)
     {
-        logger.info("Getting student by id " + id);
+        LOG.info("Getting student by id " + id);
         Student student = verifyStudent(id);
         return new ResponseEntity<>(student,HttpStatus.OK);
     }

@@ -1,30 +1,25 @@
 package com.pliesveld.flashnote.web.controller;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.pliesveld.flashnote.domain.Deck;
-import com.pliesveld.flashnote.domain.Student;
-import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.service.CardService;
 import com.pliesveld.flashnote.service.StudentService;
 import com.pliesveld.flashnote.web.dto.CardStatistics;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/decks")
 public class DeckController {
-    final Logger logger = LoggerFactory.getLogger(DeckController.class);
+    private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger();
 
     @Autowired
     private StudentService studentService;
@@ -35,7 +30,7 @@ public class DeckController {
     @RequestMapping(value="/count", method = RequestMethod.GET)
     public ResponseEntity<CardStatistics> entity_counts()
     {
-        logger.info("Retrieving counts of all decks");
+        LOG.info("Retrieving counts of all decks");
         CardStatistics cardStatistics = new CardStatistics();
         cardStatistics.setDeckCount(cardService.countDecks());
         cardStatistics.setFlashCardCount(cardService.countFlashCards());
@@ -44,6 +39,13 @@ public class DeckController {
         return new ResponseEntity<>(cardStatistics,HttpStatus.OK);
     }
 
+    @RequestMapping(value="/{id}", method = RequestMethod.GET)
+    @ResponseBody @ResponseStatus(code = HttpStatus.OK)
+    public Deck retrieve_deck(@PathVariable("id") int id)
+    {
+        Deck deck = cardService.getDeckById(id);
+        return deck;
+    }
 
 /*
 Alternatives to apache.commons.collections
