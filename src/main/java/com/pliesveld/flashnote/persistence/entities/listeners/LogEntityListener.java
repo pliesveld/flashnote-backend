@@ -14,46 +14,42 @@ public class LogEntityListener {
     @PrePersist
     private void logPrePersist(Object object)
     {
-        LOG.debug("Persisting " + object);
+        LOG.trace("Persisting " + object);
     }
 
     @PostPersist
     private void logPostPersist(Object object)
     {
-        LOG.debug("Persisted " + object);
+        LOG.trace("Persisted " + object);
     }
     
     @PostLoad
     private void logLoad(Object object)
     {
-        LOG.debug("Loading " + object);
+        LOG.trace("Loading " + object);
     }
     
     @PreUpdate
     private void logPreUpdate(Object object)
     {
-        LOG.debug("Updating " + object);
+        LOG.trace("Updating " + object);
     }
     
     @PostUpdate
     private void logPostUpdate(Object object)
     {
-        LOG.debug("Updated " + object);
+        LOG.trace("Updated " + object);
     }
     
     @PreRemove
     private void logPreRemove(Object object)
     {
-        LOG.debug("Removing " + object);
+        LOG.trace("Removing " + object);
     }
 
     @PostRemove
     private void logPostRemove(Object object)
     {
-        LOG.debug("Removed " + object);
+        LOG.trace("Removed " + object);
     }
-
-
-    
-
 }
