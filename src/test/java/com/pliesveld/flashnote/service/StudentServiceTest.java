@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 @ContextConfiguration(classes = SpringTestConfig.class, loader = AnnotationConfigContextLoader.class)
 @Transactional
 public class StudentServiceTest {
+    private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger();
 
     @Autowired
     StudentService studentService;
