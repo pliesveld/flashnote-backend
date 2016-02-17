@@ -5,6 +5,7 @@ import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.domain.FlashCard;
 import com.pliesveld.flashnote.domain.FlashCardPrimaryKey;
 import com.pliesveld.flashnote.domain.Question;
+import com.pliesveld.flashnote.exception.DeckNotFoundException;
 import com.pliesveld.flashnote.exception.FlashCardCreateException;
 import com.pliesveld.flashnote.exception.QuestionNotFoundException;
 import com.pliesveld.flashnote.exception.ResourceRepositoryException;
@@ -26,6 +27,8 @@ import javax.transaction.NotSupportedException;
  */
 @Service(value = "cardService")
 public class CardServiceImpl implements CardService {
+    
+    private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger();
 
     @Autowired
     QuestionRepository questionRepository;
@@ -101,5 +104,15 @@ public class CardServiceImpl implements CardService {
         return flashCardRepository.findAllByQuestion(questionId);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Deck findDeckById(int id) throws DeckNotFoundException {
+        Deck deck = deckRepository.findOne(id);
+        if(deck == null)
+            throw new DeckNotFoundException(id);
+        
+        return deck;
+    }
+    
     
 }
