@@ -1,37 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration xmlns:log4j="http://jakarta.apache.org/log4j/" configDebug="true">
   <Properties>
-      <Property name="filename">log/hibernate.log</Property>
-      <Property name="servicefilename">log/service.log</Property>
-      <Property name="springfilename">log/spring.log</Property>
+    <Property name="filename">log/hibernate.log</Property>
+    <Property name="servicefilename">log/service.log</Property>
+    <Property name="springfilename">log/spring.log</Property>
   </Properties>
 
-    <Appenders>
+  <Appenders>
     <Console name="CONSOLE" target="SYSTEM_OUT">
       <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
     </Console>
+
     <File name="FileHibernate" fileName="${filename}" append="false">
       <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
     </File>
+
     <File name="FileService" fileName="${servicefilename}" append="false">
         <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
     </File>
+
     <File name="FileSpring" fileName="${springfilename}" append="false">
         <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
     </File>
 
-    </Appenders>
+  </Appenders>
+
   <Loggers>
-    <logger name="com.pliesveld.flashnote" level="TRACE" additivity="false">
+    <logger name="com.pliesveld.flashnote" level="DEBUG" additivity="false">
         <AppenderRef ref="FileService"/>
         <AppenderRef ref="CONSOLE"/>
     </logger>
+
   	<logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
   		<AppenderRef ref="FileHibernate"/>
   	</logger>
-  	<logger name="org.springframework" level="INFO" additivity="false">
+
+  	<logger name="org.springframework" level="WARN" additivity="false">
   		<AppenderRef ref="FileSpring"/>
   	</logger>
+
+  	<logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="INFO" additivity="false">
+ 	  <AppenderRef ref="CONSOLE"/>
+  	</logger>
+
     <Root level="WARN">
       <AppenderRef ref="CONSOLE"/>
     </Root>

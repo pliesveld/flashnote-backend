@@ -22,7 +22,7 @@
 
     </Appenders>
   <Loggers>
-    <logger name="com.pliesveld.flashnote" level="TRACE" additivity="false">
+    <logger name="com.pliesveld.flashnote" level="DEBUG" additivity="false">
         <!-- <AppenderRef ref="FileService"/>  -->
         <AppenderRef ref="CONSOLE"/>
     </logger>
@@ -31,7 +31,6 @@
 		<AppenderRef ref="CONSOLE"/>
   	</logger>
   	<logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
-  		<!-- <AppenderRef ref="FileHibernate"/>  -->
 		<AppenderRef ref="CONSOLE"/>
   	</logger>
   	<logger name="org.springframework" level="WARN" additivity="false">
