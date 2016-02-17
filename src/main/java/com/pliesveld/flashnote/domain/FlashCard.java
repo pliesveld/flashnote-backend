@@ -99,19 +99,4 @@ public class FlashCard implements Comparable<FlashCard>
         
         return this.id.compareTo(o.id);
     }
-
-
-    @PrePersist
-    public void debugIdPre()
-    {
-        LOG.debug("prepersist; id = " + this.id);
-        LOG.debug("prepersist; id = " + this.getId());
-    }
-    
-    @PostPersist
-    public void debugIdPost()
-    {
-        LOG.debug("postpersist; id = " + this.id);
-        LOG.debug("postpersist; id = " + this.getId());
-    }
 }
