@@ -7,7 +7,6 @@ import com.pliesveld.flashnote.exception.ResourceNotFoundException;
 import com.pliesveld.flashnote.exception.StudentCreateException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.repository.StudentRepository;
-
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,13 +78,14 @@ public class StudentServiceImpl implements StudentService {
     public Iterable<Student> findAll() {
         return studentRepository.findAll();
     }
-
+/*
     @Override
     @Transactional
     public Student create(Student student) throws StudentCreateException {
         Student createdStudent = student;
         return studentRepository.save(createdStudent);
     }
+    */
 
     @Override
     @Transactional(rollbackFor = StudentNotFoundException.class)

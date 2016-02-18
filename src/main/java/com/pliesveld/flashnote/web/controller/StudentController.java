@@ -6,7 +6,6 @@ import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.service.StudentService;
 import com.pliesveld.flashnote.web.dto.StudentDTO;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -39,15 +38,15 @@ public class StudentController {
 
     @RequestMapping(value="/list", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Iterable<Student>> listdata()
+    public ResponseEntity<Iterable<Student>> getAllStudents()
     {
         LOG.info("Retrieving list of all students");
         Iterable<Student> allStudents = studentService.findAll();
         return new ResponseEntity<>(allStudents, HttpStatus.OK);
     }
 
-    @RequestMapping(value="",method=RequestMethod.POST)
-    public ResponseEntity<?> createStudent(@Valid @RequestBody StudentDTO studentdto)
+    @RequestMapping(value="",method = RequestMethod.POST)
+    public ResponseEntity<Void> createStudent(@Valid @RequestBody StudentDTO studentdto)
     {
         Student student = studentService.create(studentdto.getName(),studentdto.getEmail(),studentdto.getPassword());
         

@@ -11,7 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 
 
-public class EmailGenerator
+public class StudentGenerator
 {
 
     private static final Logger LOG = LogManager.getLogger();
@@ -78,6 +78,7 @@ public class EmailGenerator
         Student student  = new Student();
         student.setName(random_name);
         student.setEmail(random_email);
+        student.setPassword("password");
         student.setRole(StudentType.USER);
         return student;
     }

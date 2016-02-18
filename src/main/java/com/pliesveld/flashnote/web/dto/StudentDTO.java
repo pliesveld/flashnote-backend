@@ -1,13 +1,12 @@
 package com.pliesveld.flashnote.web.dto;
 
-import java.io.Serializable;
+import com.pliesveld.flashnote.domain.Student;
+import com.pliesveld.flashnote.domain.StudentType;
+import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.Email;
-
-import com.pliesveld.flashnote.domain.StudentType;
+import java.io.Serializable;
 
 /**
  * Subset of student model for account creation
@@ -15,16 +14,28 @@ import com.pliesveld.flashnote.domain.StudentType;
 
 public class StudentDTO implements Serializable
 {
-    @Size(min = 3,max = 32,message = "Name must be between 3 and 32 letters") @NotNull
+    @Size(min = 3,max = 32) @NotNull
     private String name;
     
-    @Email(message = "Invalid email address") @NotNull @Size(min = 5,max = 48,message = "Name must be between 5 and 48 letters")
+    @Email @NotNull @Size(min = 5,max = 48)
     private String email;
     
     @Size(min = 1, max = 60) @NotNull
     private String password;
 
     public StudentDTO() {
+    }
+
+    public static StudentDTO convert(Student student)
+    {
+        if(student == null)
+            throw new NullPointerException("student argument was null");
+
+        StudentDTO studentDTO = new StudentDTO();
+        studentDTO.setName(student.getName());
+        studentDTO.setEmail(student.getEmail());
+        studentDTO.setPassword(student.getPassword());
+        return studentDTO;
     }
 
     public String getName()

@@ -11,7 +11,7 @@ public interface StudentService {
 
     Student             create(String name,String email,String password) throws StudentCreateException;
 
-    Student             create(Student student) throws StudentCreateException;
+    //Student             create(Student student) throws StudentCreateException;
     Student             delete(int id)          throws StudentNotFoundException;
     Student             update(Student student) throws StudentNotFoundException;
     Student             findById(int id)        throws StudentNotFoundException;
