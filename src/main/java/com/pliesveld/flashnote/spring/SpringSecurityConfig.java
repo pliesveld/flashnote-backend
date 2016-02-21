@@ -1,5 +1,7 @@
 package com.pliesveld.flashnote.spring;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -23,6 +25,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 @Configuration
 public class SpringSecurityConfig {
+    private static final Logger LOG = LogManager.getLogger();
+
 
     @Profile("default")
     @EnableWebSecurity
@@ -36,11 +40,10 @@ public class SpringSecurityConfig {
         
         @Override
         protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-            //super.configure(auth);
-    
             auth.userDetailsService(userDetailsService)
                     .passwordEncoder(new PlaintextPasswordEncoder());
-    
+        }
+
             /* TODO: Encode password, salt with BCrypt hash
             // http://stackoverflow.com/questions/30805877/spring-authenticationmanagerbuilder-password-hashing
                     .passwordEncoder(new BCryptPasswordEncoder());
@@ -53,15 +56,14 @@ public class SpringSecurityConfig {
                     .usersByUsernameQuery("select student_email,student_password from student_account where student_email=?")
                     .authoritiesByUsernameQuery("select student_email,role from student_account where student_email=?");
             */
-        }
-    
+
         @Override
         public void configure(WebSecurity web) throws Exception 
         {
             web
                 .ignoring()
                 .antMatchers("/resources/**");
-        };
+        }
         
         @Override
         protected void configure(HttpSecurity http) throws Exception {
@@ -77,7 +79,7 @@ public class SpringSecurityConfig {
                     .authorizeRequests()
                     .antMatchers("/resources/**").permitAll()
                     .antMatchers("/deck/**","/students/**").permitAll();
-    
+
     
     /*
             http
@@ -124,15 +126,16 @@ public class SpringSecurityConfig {
     @EnableWebSecurity
     @EnableAutoConfiguration(exclude = SecurityAutoConfiguration.class)
     @EnableGlobalMethodSecurity(prePostEnabled = true)
-    @ConditionalOnExpression("${my.security.enabled:false}")
+    @ConditionalOnExpression("!${my.security.enabled:false}")
     protected static class LocalWebSecurity extends WebSecurityConfigurerAdapter {
+
         @Override
         protected void configure(AuthenticationManagerBuilder auth) throws Exception {
             auth
                 .inMemoryAuthentication()
                     .withUser("student").password("student").roles("USER")
                     .and()
-                    .withUser("admin").password("admin").roles("USER","ADMIN");
+                    .withUser("admin").password("admin").roles("USER","ADMIN").authorities("ADMIN");
         }
         
         @Override
@@ -145,6 +148,26 @@ public class SpringSecurityConfig {
         
         @Override
         protected void configure(HttpSecurity http) throws Exception {
+
+
+            http
+                    .httpBasic().realmName("FlashNotes")
+                    .and()
+                    .csrf().disable()
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
+                    .authorizeRequests()
+                    .antMatchers("/resources/**").permitAll()
+                    .antMatchers("/deck/**","/students/**").permitAll()
+                    .anyRequest().authenticated();
+        }
+
+        /*
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+
+
             http 
                 .csrf().disable()
                 .authorizeRequests()
@@ -155,7 +178,7 @@ public class SpringSecurityConfig {
                 .formLogin().loginPage("/login.html").permitAll()
                 .and()
                 .logout().permitAll();
-        }
+        }*/
     }
 
 }
