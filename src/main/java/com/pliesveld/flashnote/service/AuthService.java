@@ -7,19 +7,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-@Component
+@Service
+@Transactional(rollbackFor = UsernameNotFoundException.class)
 public class AuthService implements UserDetailsService {
-    final static Logger logger = LoggerFactory.getLogger(AuthService.class);
+    final static Logger LOG = LoggerFactory.getLogger(AuthService.class);
 
     @Autowired
     private StudentRepository studentRepository;
@@ -27,22 +27,65 @@ public class AuthService implements UserDetailsService {
     @Override
     @Transactional(rollbackFor = UsernameNotFoundException.class)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        LOG.info("Looking up email address: " + username);
         Student student = studentRepository.findOneByEmail(username);
-        logger.info("Student: " + student);
+        LOG.info("Email: " + username + " -> " + student);
 
         if(student == null)
         {
             throw new UsernameNotFoundException(String.format("Student with an email address of %s does not exist",username));
         }
 
-        logger.info(" pass " + student.getPassword() + " email " + student.getEmail());
+        LOG.info(" pass " + student.getPassword() + " email " + student.getEmail());
 
-        List<GrantedAuthority> authorities = new ArrayList<>();
+        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(student.getRole().name());
+        return new CustomUserDetails(student,authorities);
 
-        authorities = AuthorityUtils.createAuthorityList(student.getRole().name());
+//        UserDetails userDetails = new User(student.getEmail(),student.getPassword(),authorities);
+//        LOG.info("userdetails pass: " + userDetails.getPassword() + " username " + userDetails.getUsername() + " authorities " + authorities);
+//        return userDetails;
+    }
 
-        UserDetails userDetails = new User(student.getEmail(),student.getPassword(),authorities);
-        logger.info("userdetails pass: " + userDetails.getPassword() + " username " + userDetails.getUsername() + " authorities " + authorities);
-        return userDetails;
+    @Transactional(rollbackFor = UsernameNotFoundException.class)
+    private final static class CustomUserDetails extends Student implements UserDetails {
+
+        private List<GrantedAuthority> authorities;
+/*
+        private CustomUserDetails(Student user) {
+            super(user);
+        }
+*/
+        public CustomUserDetails(Student student, List<GrantedAuthority> authorities) {
+            super(student);
+            this.authorities = authorities;
+        }
+
+        @Override
+        public Collection<? extends GrantedAuthority> getAuthorities() {
+                return authorities;
+        }
+
+        @Override
+        public String getUsername() {
+            return getEmail();
+        }
+
+        public boolean isAccountNonExpired() {
+            return true;
+        }
+
+        public boolean isAccountNonLocked() {
+            return true;
+        }
+
+        public boolean isCredentialsNonExpired() {
+            return true;
+        }
+
+        public boolean isEnabled() {
+            return true;
+        }
+
+        private static final long serialVersionUID = 5639683223516504866L;
     }
 }
