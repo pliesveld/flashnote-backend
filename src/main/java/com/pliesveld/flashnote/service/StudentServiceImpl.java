@@ -7,6 +7,8 @@ import com.pliesveld.flashnote.exception.ResourceNotFoundException;
 import com.pliesveld.flashnote.exception.StudentCreateException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.repository.StudentRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,15 +17,10 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by happs on 1/15/16.
- */
-
 @Service(value = "studentService")
 public class StudentServiceImpl implements StudentService {
     
-    private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger();
-
+    private static final Logger LOG = LogManager.getLogger();
 
     @Resource
     StudentRepository studentRepository;
@@ -57,35 +54,28 @@ public class StudentServiceImpl implements StudentService {
     @Transactional(rollbackFor = ResourceNotFoundException.class)
     public List<Deck> findDecksByOwner(int id) {
         Student student = findById(id);
-        List<Deck> deck_ids = new ArrayList<>();
-
-        for(Deck deck : student.getDecks())
-        {
-            deck_ids.add(deck);
-        }
-        return deck_ids;
-
+        List<Deck> decks = new ArrayList<>();
+        student.getDecks().forEach(decks::add);
+        return decks;
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Student findById(int id) {
         return studentRepository.findOne(id);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Iterable<Student> findAll() {
         return studentRepository.findAll();
     }
-/*
+
     @Override
-    @Transactional
-    public Student create(Student student) throws StudentCreateException {
-        Student createdStudent = student;
-        return studentRepository.save(createdStudent);
+    @Transactional(readOnly = true)
+    public Student findByEmail(String email) {
+        return studentRepository.findOneByEmail(email);
     }
-    */
 
     @Override
     @Transactional(rollbackFor = StudentNotFoundException.class)

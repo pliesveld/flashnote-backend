@@ -1,11 +1,12 @@
 package com.pliesveld.flashnote.web.controller;
 
 
-import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.service.StudentService;
 import com.pliesveld.flashnote.web.dto.StudentDTO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,13 +17,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/students")
 public class StudentController {
     
-    private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
     @Autowired
     private StudentService studentService;
@@ -80,14 +80,7 @@ public class StudentController {
         return new ResponseEntity<>(student,HttpStatus.OK);
     }
 
-    @RequestMapping(value="/{id}/decks", method = RequestMethod.GET)
-    public ResponseEntity<?> listDecks(@PathVariable Integer id)
-    {
-        LOG.info("Listing decks of student by id " + id);
-        Student student = verifyStudent(id);
-        Set<Deck> decks = student.getDecks();
-        return new ResponseEntity<>(decks,HttpStatus.OK);
-    }
+
 
     /*
     @RequestMapping(value="/{id}/decks/{deckid}", method = RequestMethod.GET)

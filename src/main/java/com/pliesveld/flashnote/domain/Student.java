@@ -31,7 +31,7 @@ public class Student implements Serializable
     @Column(name = "STUDENT_ID")
     private Integer id;
 
-    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH})
     @JoinTable(name="STUDENT_DECK"
         ,joinColumns =  @JoinColumn(name="STUDENT_ID",foreignKey = @ForeignKey(name = "FK_STUDENT"))
         ,foreignKey =                                              @ForeignKey(name="FK_STUDENT")
@@ -56,6 +56,7 @@ public class Student implements Serializable
 
     @Column(name="STUDENT_ROLE",length=16,table = "STUDENT_ACCOUNT")
     @Convert(converter=StudentTypeConverter.class)
+    @Basic(fetch = FetchType.EAGER)
     private StudentType role;
 
     @PrePersist
@@ -67,8 +68,17 @@ public class Student implements Serializable
     public Student() {
     }
 
-    public Student(String student) {
-        this.name = student;
+    public Student(String name) {
+        this.name = name;
+    }
+
+    public Student(Student student) {
+        this.name = student.name;
+        this.email = student.email;
+        this.password = student.password;
+        this.decks = student.decks;
+        this.id = student.id;
+        this.role = student.role;
     }
 
     public Integer getId()
