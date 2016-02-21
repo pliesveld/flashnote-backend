@@ -1,20 +1,21 @@
 package com.pliesveld.flashnote.domain;
 
+import org.springframework.http.MediaType;
+
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by happs on 1/14/16.
- */
 public enum AttachmentType
 {
-    AUDIO   (1, "audio/wav",          ".wav"),
-    IMAGE   (10, "image/jpg",         ".jpg"),
-    DOC     (100, "application/pdf",  ".pdf");
+    AUDIO   (1,  "audio/wav",          MediaType.APPLICATION_OCTET_STREAM, ".wav"),
+    IMAGE   (10, "image/jpeg",         MediaType.IMAGE_JPEG,               ".jpg"),
+    DOC     (100, "application/pdf",   MediaType.APPLICATION_OCTET_STREAM, ".pdf");
 
-    private int id;
-    private String mime;
-    private String extension;
+
+    private final int id;
+    private final String mime;
+    private final MediaType mediatype;
+    private final String extension;
 
     private final static Map<Integer,AttachmentType> intToEnum = new HashMap<>();
 
@@ -25,7 +26,7 @@ public enum AttachmentType
         }
     }
 
-    AttachmentType(int id,String mime, String extension) { this.id = id; this.mime = mime; this.extension = extension;}
+    AttachmentType(int id,String mime, MediaType mediatype, String extension) { this.id = id; this.mime = mime; this.mediatype = mediatype; this.extension = extension;}
 
     public String getMime() {
         return mime;
@@ -37,6 +38,10 @@ public enum AttachmentType
 
     public int getId() {
         return id;
+    }
+
+    public MediaType getMediatype() {
+        return mediatype;
     }
 
     public static AttachmentType fromInteger(Integer id)
@@ -54,7 +59,17 @@ public enum AttachmentType
         return false;
     }
 
-    public static AttachmentType fileTypeOf(String filename)
+    public static AttachmentType fileTypeFromMime(String mime) throws IllegalArgumentException
+    {
+        for(AttachmentType type : values())
+        {
+            if(mime.equals(type.getMime()))
+                return type;
+        }
+        throw new IllegalArgumentException("Unsupported type: " + mime);
+    }
+
+    public static AttachmentType fileTypeOfExtension(String filename) throws IllegalArgumentException
     {
         for(AttachmentType type : values())
         {
@@ -63,5 +78,4 @@ public enum AttachmentType
         }
         throw new IllegalArgumentException("Unsupported type: " + filename);
     }
-
 }

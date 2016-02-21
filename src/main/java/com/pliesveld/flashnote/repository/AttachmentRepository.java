@@ -1,7 +1,7 @@
 package com.pliesveld.flashnote.repository;
 
 import com.pliesveld.flashnote.domain.Attachment;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface AttachmentRepository extends JpaRepository<Attachment,Integer> {
+public interface AttachmentRepository extends CrudRepository<Attachment,Integer> {
 }
