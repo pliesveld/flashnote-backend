@@ -21,10 +21,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Maps business exceptions to meaningful error messages
+ * Maps business exceptions to meaningful error responses
+ * Provides exception details for database integrity violations
+ * Provides details for data validation errors
  */
-
-
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
