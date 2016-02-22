@@ -15,10 +15,10 @@ public class Category implements Serializable
     @Column(name = "CATEGORY_ID")
     private Integer id;
 
-    @Column(name = "CATEGORY_NAME", length = 17, nullable = false)
+    @Column(name = "CATEGORY_NAME", length = 34, nullable = false)
     private String name;
 
-    @Column(name = "CATEGORY_DESC", length=512, nullable = false)
+    @Column(name = "CATEGORY_DESC", length = 512, nullable = false)
     private String description;
 
     @ManyToOne(cascade = CascadeType.ALL)
