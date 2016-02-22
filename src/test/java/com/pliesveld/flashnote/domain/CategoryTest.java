@@ -1,26 +1,23 @@
 package com.pliesveld.flashnote.domain;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.Serializable;
-import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = com.pliesveld.spring.SpringTestConfig.class, loader = AnnotationConfigContextLoader.class)
 @Transactional
-public class SampleCategoryTest
+public class CategoryTest
 {
     @PersistenceContext
     EntityManager entityManager;
