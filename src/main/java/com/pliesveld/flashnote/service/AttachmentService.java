@@ -11,15 +11,15 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface AttachmentService {
-    Attachment          findAttachmentById(int id)        throws AttachmentNotFoundException;
+    Attachment          findAttachmentById(int id)              throws AttachmentNotFoundException;
 
     @Transactional(rollbackFor = StudentNotFoundException.class)
     Attachment delete(int id) throws AttachmentNotFoundException;
 
-    AttachmentHeader    findAttachmentHeaderById(int id)  throws AttachmentNotFoundException;
-
-    void                removeAttachmentById(int id)      throws AttachmentNotFoundException;
-    List<Attachment>    findAttachmentByStudent(int id)   throws StudentNotFoundException;
+    void                removeAttachmentById(int id)            throws AttachmentNotFoundException;
+    List<Attachment>    findAttachmentByStudent(int id)         throws StudentNotFoundException;
 
     Attachment storeAttachment(String name, MultipartFile file) throws AttachmentUploadException;
+
+    AttachmentHeader findAttachmentHeaderById(int id)           throws AttachmentNotFoundException;
 }

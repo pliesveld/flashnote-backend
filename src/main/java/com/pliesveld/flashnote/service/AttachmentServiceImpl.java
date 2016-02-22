@@ -15,9 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +22,6 @@ import java.util.List;
 @Service(value = "attachmentService")
 public class AttachmentServiceImpl implements AttachmentService {
     private static final Logger LOG = LogManager.getLogger();
-
-    @PersistenceContext
-    EntityManager em;
 
     @Autowired
     AttachmentRepository attachmentRepository;
@@ -82,8 +76,7 @@ public class AttachmentServiceImpl implements AttachmentService {
         Attachment attachment = new Attachment();
         String fileContentType = file.getContentType();
 
-        LOG.debug("storing attachment.  argument name = {}, MultipartFile name = {}, MultipartFile orig name = ",
-                name,file.getName(),file.getOriginalFilename());
+        LOG.debug("Storing attachment {} {}", file.getContentType(),file.getSize());
 
         if(name == null)
         {
@@ -120,11 +113,8 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = AttachmentNotFoundException.class)
     public AttachmentHeader findAttachmentHeaderById(int id) throws AttachmentNotFoundException {
-        TypedQuery<AttachmentHeader> query = em.createNamedQuery("Attachment.findHeaderByAttachmentId",AttachmentHeader.class);
-        query.setParameter("id",id);
-        AttachmentHeader header = query.getSingleResult();
-        return header;
+        return attachmentRepository.findAttachmentHeaderById(id);
     }
 }

@@ -3,17 +3,35 @@ package com.pliesveld.flashnote.web.handler;
 import com.pliesveld.flashnote.exception.ResourceRepositoryException;
 import com.pliesveld.flashnote.web.dto.error.ErrorDetail;
 import com.pliesveld.flashnote.web.dto.error.ValidationError;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.ConversionNotSupportedException;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.http.converter.HttpMessageNotWritableException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentConversionNotSupportedException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -27,6 +45,7 @@ import java.util.List;
  */
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+    private static final Logger LOG = LogManager.getLogger();
 
     @ExceptionHandler(ResourceRepositoryException.class)
     public ResponseEntity<?> handleResourceNotFoundException(ResourceRepositoryException rnfe, HttpServletRequest request)
@@ -62,10 +81,41 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDetail,null,HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @Override
+    protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        ErrorDetail errorDetail = new ErrorDetail();
+        errorDetail.setTimeStamp(new Date().getTime());
+        errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
 
+        errorDetail.setTitle("Request parameters");
+        errorDetail.setDetail("Parameter validation failed: " + ex.getParameterName() + " type: " + ex.getParameterType());
 
-    //   @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidationError(MethodArgumentNotValidException manve, HttpServletRequest request)
+        request.getHeaderNames().forEachRemaining((s) -> errorDetail.getHeaders().put(s,request.getHeader(s)));
+
+        errorDetail.setDeveloperMessage(ex.getMessage());
+
+        return handleExceptionInternal(ex, errorDetail, headers, status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleConversionNotSupported(ConversionNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        ErrorDetail errorDetail = new ErrorDetail();
+        errorDetail.setTimeStamp(new Date().getTime());
+        errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
+        errorDetail.setDetail(ex.getMessage());
+
+        if(ex instanceof MethodArgumentConversionNotSupportedException)
+        {
+            MethodArgumentConversionNotSupportedException macnse = (MethodArgumentConversionNotSupportedException) ex;
+            errorDetail.setDeveloperMessage("name: " + macnse.getName() + " parameter: " + macnse.getParameter().getContainingClass().getSimpleName() );
+        }
+
+        LOG.debug("handleConversionNotSupported");
+        return handleExceptionInternal(ex, errorDetail, headers, status, request);
+    }
+
+    @ExceptionHandler(MultipartException.class)
+    public ResponseEntity<?> handleMultipartError(MultipartException me, HttpServletRequest request)
     {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimeStamp(new Date().getTime());
@@ -75,25 +125,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         {
             requestPath = request.getRequestURI();
         }
-        errorDetail.setTitle("Validation Failed");
-        errorDetail.setDetail("Input validation failed");
-        errorDetail.setDeveloperMessage(manve.getClass().getSimpleName());
+        errorDetail.setTitle("Multipart");
+        errorDetail.setDetail("Multipart validation failure");
+        errorDetail.setDeveloperMessage(me.getClass().getSimpleName());
 
-        List<FieldError> fieldErrors = manve.getBindingResult().getFieldErrors();
-        for(FieldError fe : fieldErrors)
+        if(me instanceof MaxUploadSizeExceededException)
         {
-            List<ValidationError> validationErrorList = errorDetail.getErrors().get(fe.getField());
-
-            if(validationErrorList == null)
-            {
-                validationErrorList = new ArrayList<ValidationError>();
-                errorDetail.getErrors().put(fe.getField(),validationErrorList);
-            }
-            ValidationError validationError = new ValidationError();
-            validationError.setCode(fe.getCode());
-            validationError.setMessage(fe.getDefaultMessage());
-            validationErrorList.add(validationError);
-
+            MaxUploadSizeExceededException musee = (MaxUploadSizeExceededException) me;
+            errorDetail.setDeveloperMessage(musee.getClass().getSimpleName());
+            errorDetail.setDetail("Upload exceeded " + musee.getMaxUploadSize());
         }
 
         return new ResponseEntity<>(errorDetail,null,HttpStatus.BAD_REQUEST);
@@ -112,6 +152,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        LOG.debug("handleMethodARgumentNotValid");
 
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimeStamp(new Date().getTime());
@@ -138,5 +179,77 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
         }
         return handleExceptionInternal(ex, errorDetail, headers, status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        LOG.debug("handleExceptionInternal");
+        return super.handleExceptionInternal(ex, body, headers, status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleNoSuchRequestHandlingMethod(NoSuchRequestHandlingMethodException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        LOG.debug("handleNoSuchRequestHanldingMethod");
+        return super.handleNoSuchRequestHandlingMethod(ex, headers, status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        LOG.debug("handleHttpRequestMethodNotSupported");
+        return super.handleHttpRequestMethodNotSupported(ex, headers, status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        LOG.debug("handleHttpMediaTypeNotSupported");
+        return super.handleHttpMediaTypeNotSupported(ex, headers, status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        LOG.debug("handleHttpMediaTypeNotAcceptable");
+        return super.handleHttpMediaTypeNotAcceptable(ex, headers, status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMissingPathVariable(MissingPathVariableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        LOG.debug("handleMissingPathVariable");
+        return super.handleMissingPathVariable(ex, headers, status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleServletRequestBindingException(ServletRequestBindingException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        LOG.debug("handleServletRequestBindingException");
+        return super.handleServletRequestBindingException(ex, headers, status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        LOG.debug("handleTypeMismatch");
+        return super.handleTypeMismatch(ex, headers, status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotWritable(HttpMessageNotWritableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        LOG.debug("handleHttpMessageNotWritable");
+        return super.handleHttpMessageNotWritable(ex, headers, status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMissingServletRequestPart(MissingServletRequestPartException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        LOG.debug("handleMissingServletRequestPart");
+        return super.handleMissingServletRequestPart(ex, headers, status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        LOG.debug("handleBindException");
+        return super.handleBindException(ex, headers, status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        LOG.debug("handleNoHandlerFoundException");
+        return super.handleNoHandlerFoundException(ex, headers, status, request);
     }
 }

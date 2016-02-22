@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -23,7 +24,7 @@ import java.net.URI;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/attachment")
+@RequestMapping("/attachments")
 @MultipartConfig(location = "/tmp/upload",
         fileSizeThreshold = 1024*1024, // The file size in bytes after which the file will be temporarily stored on disk
         maxFileSize = 1024*1024*5,     // Maximum file size of each file
@@ -41,21 +42,27 @@ public class AttachmentController  {
     @Autowired
     private AttachmentService attachmentService;
 
-    @RequestMapping(value="/new", method = RequestMethod.POST)
+    @RequestMapping(value="", method = RequestMethod.POST)
     public ResponseEntity<?> handleFileupload(
-            @RequestParam("name") String name, @RequestParam("file") MultipartFile file,
+            @RequestParam("file") MultipartFile file,
             HttpServletRequest request) throws AttachmentUploadException
     {
         Principal principal = request.getUserPrincipal();
-        LOG.info("Uploading attachment from: " + request.getRemoteAddr() + " filename: " + name + " originalname: " + file.getOriginalFilename() );
 
-        Attachment attachment = attachmentService.storeAttachment(name, file);
+        final String DEFAULT_FILENAME = "unamed.file";
+        String fileName = StringUtils.hasText(file.getName()) ? file.getName() :
+                        StringUtils.hasText(file.getOriginalFilename()) ? file.getOriginalFilename() :
+                                DEFAULT_FILENAME;
+
+        LOG.info("Uploading attachment from: " + request.getRemoteAddr() + " filename: " + fileName + " size: " + file.getSize() );
+
+        Attachment attachment = attachmentService.storeAttachment(fileName, file);
 
         HttpHeaders responseHeaders = new HttpHeaders();
 
         URI newStudentUri = ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path("attachment/{id}")
+                .fromCurrentRequest()
+                .path("/{id}")
                 .buildAndExpand(attachment.getId())
                 .toUri();
 
