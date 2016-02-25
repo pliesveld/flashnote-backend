@@ -38,7 +38,7 @@ public class Attachment extends AbstractDatedEntity implements Serializable {
         this.id = id;
     }
 
-    public AttachmentType getContentType() {
+    public AttachmentType getAttachmentType() {
         return contentType;
     }
 

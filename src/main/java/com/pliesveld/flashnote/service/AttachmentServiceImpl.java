@@ -2,10 +2,8 @@ package com.pliesveld.flashnote.service;
 
 import com.pliesveld.flashnote.domain.Attachment;
 import com.pliesveld.flashnote.domain.AttachmentHeader;
-import com.pliesveld.flashnote.domain.AttachmentType;
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.exception.AttachmentNotFoundException;
-import com.pliesveld.flashnote.exception.AttachmentUploadException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.repository.AttachmentRepository;
 import org.apache.logging.log4j.LogManager;
@@ -13,9 +11,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +25,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Autowired
     StudentService studentService;
+
 
     private Student verifyStudent(int id) throws StudentNotFoundException
     {
@@ -72,31 +70,10 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Override
     @Transactional
-    public Attachment storeAttachment(String name, MultipartFile file) {
-        Attachment attachment = new Attachment();
-        String fileContentType = file.getContentType();
+    public Attachment storeAttachment(Attachment attachment) {
 
-        LOG.debug("Storing attachment {} {}", file.getContentType(),file.getSize());
-
-        if(name == null)
-        {
-            throw new AttachmentUploadException("argument name was null.");
-        }
-
-        try {
-            AttachmentType attachmentType = AttachmentType.fileTypeFromMime(fileContentType);
-            attachment.setContentType(attachmentType);
-            attachment.setFileName(name);
-        } catch(IllegalArgumentException | NullPointerException e) {
-            LOG.warn("Unknown file content type: " + fileContentType);
-            throw new AttachmentUploadException("Invalid content type " + fileContentType);
-        }
-
-        try {
-            attachment.setFileData(file.getBytes());
-        } catch (IOException e) {
-            throw new AttachmentUploadException("Error uploading file",e);
-        }
+        LOG.debug("Storing attachment {} {} {}", attachment.getAttachmentType(),
+                attachment.getFileName(),attachment.getMimeType());
 
         return attachmentRepository.save(attachment);
     }
@@ -116,5 +93,11 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Transactional(rollbackFor = AttachmentNotFoundException.class)
     public AttachmentHeader findAttachmentHeaderById(int id) throws AttachmentNotFoundException {
         return attachmentRepository.findAttachmentHeaderById(id);
+    }
+
+    @Override
+    public Integer testValidation(@NotNull Integer arg) {
+        LOG.debug("arg = " + arg);
+        return arg;
     }
 }

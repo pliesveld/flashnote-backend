@@ -5,21 +5,27 @@ import com.pliesveld.flashnote.domain.AttachmentHeader;
 import com.pliesveld.flashnote.exception.AttachmentNotFoundException;
 import com.pliesveld.flashnote.exception.AttachmentUploadException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
+import com.pliesveld.flashnote.web.validator.ValidAttachment;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
+@Validated
 public interface AttachmentService {
-    Attachment          findAttachmentById(int id)              throws AttachmentNotFoundException;
+    Attachment          findAttachmentById(int id)                        throws AttachmentNotFoundException;
+
+    @Transactional
+    Attachment storeAttachment(@ValidAttachment Attachment attachment)    throws AttachmentUploadException;
 
     @Transactional(rollbackFor = StudentNotFoundException.class)
-    Attachment delete(int id) throws AttachmentNotFoundException;
+    Attachment delete(int id)                                             throws AttachmentNotFoundException;
 
-    void                removeAttachmentById(int id)            throws AttachmentNotFoundException;
-    List<Attachment>    findAttachmentByStudent(int id)         throws StudentNotFoundException;
+    void                removeAttachmentById(int id)                      throws AttachmentNotFoundException;
+    List<Attachment>    findAttachmentByStudent(int id)                   throws StudentNotFoundException;
 
-    Attachment storeAttachment(String name, MultipartFile file) throws AttachmentUploadException;
+    AttachmentHeader findAttachmentHeaderById(int id)                     throws AttachmentNotFoundException;
 
-    AttachmentHeader findAttachmentHeaderById(int id)           throws AttachmentNotFoundException;
+    Integer testValidation(@NotNull Integer arg);
 }

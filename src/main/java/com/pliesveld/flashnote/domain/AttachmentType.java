@@ -1,16 +1,16 @@
 package com.pliesveld.flashnote.domain;
 
 import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public enum AttachmentType
 {
-    AUDIO   (1,  "audio/wav",          MediaType.APPLICATION_OCTET_STREAM, ".wav"),
-    IMAGE   (10, "image/jpeg",         MediaType.IMAGE_JPEG,               ".jpg"),
-    DOC     (100, "application/pdf",   MediaType.APPLICATION_OCTET_STREAM, ".pdf");
-
+    AUDIO       (1,  "audio/wav",                   MediaType.APPLICATION_OCTET_STREAM, ".wav"),
+    IMAGE       (10, "image/jpeg",                   MediaType.IMAGE_JPEG,               ".jpg"),
+    DOC         (100, MediaType.TEXT_PLAIN_VALUE,   MediaType.TEXT_PLAIN,               ".txt");
 
     private final int id;
     private final String mime;
@@ -28,9 +28,7 @@ public enum AttachmentType
 
     AttachmentType(int id,String mime, MediaType mediatype, String extension) { this.id = id; this.mime = mime; this.mediatype = mediatype; this.extension = extension;}
 
-    public String getMime() {
-        return mime;
-    }
+    public String getMime() { return this.mime; };
 
     public String getExtension() {
         return extension;
@@ -49,31 +47,31 @@ public enum AttachmentType
         return intToEnum.get(id);
     }
 
-    public static boolean isFilenameSupported(String filename)
+    public boolean supportsMimeType(String type)
     {
-        for(AttachmentType type : values())
-        {
-            if(filename.endsWith(type.getExtension()))
-                return true;
-        }
-        return false;
+        return mime.equalsIgnoreCase(type);
     }
 
-    public static AttachmentType fileTypeFromMime(String mime) throws IllegalArgumentException
+    public boolean supportsFilenameBySuffix(String filename)
+    {
+        return StringUtils.endsWithIgnoreCase(filename, this.getExtension());
+    }
+
+    public static AttachmentType valueOfMime(String mime) throws IllegalArgumentException
     {
         for(AttachmentType type : values())
         {
-            if(mime.equals(type.getMime()))
+            if(type.supportsMimeType(mime))
                 return type;
         }
-        throw new IllegalArgumentException("Unsupported type: " + mime);
+        return null;
     }
 
-    public static AttachmentType fileTypeOfExtension(String filename) throws IllegalArgumentException
+    public static AttachmentType valueOfFileSuffix(String filename) throws IllegalArgumentException
     {
         for(AttachmentType type : values())
         {
-            if(filename.endsWith(type.getExtension()))
+            if(type.supportsFilenameBySuffix(filename))
                 return type;
         }
         throw new IllegalArgumentException("Unsupported type: " + filename);

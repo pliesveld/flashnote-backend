@@ -1,6 +1,7 @@
 package com.pliesveld.flashnote.web.handler;
 
 import com.pliesveld.flashnote.exception.ResourceRepositoryException;
+import com.pliesveld.flashnote.web.dto.error.ConstraintErrorDetail;
 import com.pliesveld.flashnote.web.dto.error.ErrorDetail;
 import com.pliesveld.flashnote.web.dto.error.ValidationError;
 import org.apache.logging.log4j.LogManager;
@@ -34,6 +35,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -136,6 +139,26 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             errorDetail.setDetail("Upload exceeded " + musee.getMaxUploadSize());
         }
 
+        return new ResponseEntity<>(errorDetail,null,HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<?> handleConstraintViolation(ConstraintViolationException e)
+    {
+        ConstraintErrorDetail errorDetail = new ConstraintErrorDetail();
+        errorDetail.setTimeStamp(new Date().getTime());
+        errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
+
+        List<ValidationError> validationErrors = errorDetail.getErrors();
+        for(ConstraintViolation violation : e.getConstraintViolations())
+        {
+            //LOG.debug("violation -> " + violation);
+            ValidationError error = new ValidationError();
+            error.setCode(violation.getRootBeanClass().getSimpleName());
+            error.setMessage(violation.getMessage());
+            validationErrors.add(error);
+
+        }
         return new ResponseEntity<>(errorDetail,null,HttpStatus.BAD_REQUEST);
     }
 

@@ -3,6 +3,7 @@ package com.pliesveld.flashnote.web.controller;
 
 import com.pliesveld.flashnote.domain.Attachment;
 import com.pliesveld.flashnote.domain.AttachmentHeader;
+import com.pliesveld.flashnote.domain.AttachmentType;
 import com.pliesveld.flashnote.exception.AttachmentUploadException;
 import com.pliesveld.flashnote.service.AttachmentService;
 import com.pliesveld.flashnote.service.CardService;
@@ -20,14 +21,15 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.net.URI;
 import java.security.Principal;
 
 @RestController
 @RequestMapping("/attachments")
 @MultipartConfig(location = "/tmp/upload",
-        fileSizeThreshold = 1024*1024, // The file size in bytes after which the file will be temporarily stored on disk
-        maxFileSize = 1024*1024*5,     // Maximum file size of each file
+        fileSizeThreshold = 1024*1024*5*5, // The file size in bytes after which the file will be temporarily stored on disk
+        maxFileSize = 1024*1024*5*5,     // Maximum file size of each file
         maxRequestSize = 1024*1024*5*5 // Total files must be below this request size
 )
 public class AttachmentController  {
@@ -41,6 +43,7 @@ public class AttachmentController  {
 
     @Autowired
     private AttachmentService attachmentService;
+
 
     @RequestMapping(value="", method = RequestMethod.POST)
     public ResponseEntity<?> handleFileupload(
@@ -56,7 +59,20 @@ public class AttachmentController  {
 
         LOG.info("Uploading attachment from: " + request.getRemoteAddr() + " filename: " + fileName + " size: " + file.getSize() );
 
-        Attachment attachment = attachmentService.storeAttachment(fileName, file);
+
+        Attachment attachment = new Attachment();
+        String fileContentType = file.getContentType();
+        AttachmentType attachmentType = AttachmentType.valueOfMime(fileContentType);
+        attachment.setContentType(attachmentType);
+        attachment.setFileName(fileName);
+
+        try {
+            attachment.setFileData(file.getBytes());
+        } catch (IOException e) {
+            throw new AttachmentUploadException("Error uploading file",e);
+        }
+
+        attachment = attachmentService.storeAttachment(attachment);
 
         HttpHeaders responseHeaders = new HttpHeaders();
 
@@ -76,7 +92,7 @@ public class AttachmentController  {
         Attachment attachment = attachmentService.findAttachmentById(id);
 
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setContentType(attachment.getContentType().getMediatype());
+        responseHeaders.setContentType(attachment.getAttachmentType().getMediatype());
         responseHeaders.setDate(attachment.getModifiedOn().toEpochMilli());
         return new ResponseEntity<>(attachment.getFileData(),responseHeaders,HttpStatus.OK);
     }
@@ -98,6 +114,14 @@ public class AttachmentController  {
     public void deleteAttachment(@PathVariable("id") int id)
     {
         attachmentService.delete(id);
+    }
+
+    @RequestMapping(value="/test", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public void testValidation()
+    {
+        Integer ret = attachmentService.testValidation(null);
+        LOG.debug("returned " + ret);
     }
 
     public AttachmentService getAttachmentService() {
