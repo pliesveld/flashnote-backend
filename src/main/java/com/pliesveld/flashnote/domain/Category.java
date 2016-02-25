@@ -25,7 +25,7 @@ public class Category implements Serializable
     @JoinColumn(name = "CATEGORY_PARENT_ID", foreignKey = @ForeignKey(name="FK_CATEGORY_PARENT"))
     private Category parentCategory;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "CATEGORY_ID", foreignKey = @ForeignKey(name="FK_CATEGORY"))
     private Set<Category> childCategories = new HashSet<>();
 
