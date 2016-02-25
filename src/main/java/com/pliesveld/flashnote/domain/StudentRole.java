@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public enum StudentType
+public enum StudentRole
 {
     USER          (1,       "A simple student",     "Provides basic access for creating and reviewing flashnotes."),
     PREMIUM       (10,      "An A+ student",        "Advanced features for supporting members.  Increased storage; Group management; Non-expiring flashnotes."),
@@ -16,9 +16,9 @@ public enum StudentType
     private String name;
     private String description;
 
-    private final static Map<Integer,StudentType> intToEnum = new HashMap<>();
+    private final static Map<Integer,StudentRole> intToEnum = new HashMap<>();
 
-    StudentType(int id, String name, String description) {
+    StudentRole(int id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -49,13 +49,13 @@ public enum StudentType
     }
 
     static {
-        for(StudentType type : values())
+        for(StudentRole type : values())
         {
             intToEnum.put(type.getId(),type);
         }
     }
 
-    public static StudentType fromInteger(Integer id)
+    public static StudentRole fromInteger(Integer id)
     {
         return intToEnum.get(id);
     }

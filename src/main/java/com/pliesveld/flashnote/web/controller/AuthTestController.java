@@ -3,10 +3,11 @@ package com.pliesveld.flashnote.web.controller;
 
 import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.domain.Student;
+import com.pliesveld.flashnote.security.CurrentUser;
+import com.pliesveld.flashnote.security.StudentPrincipal;
 import com.pliesveld.flashnote.service.CardService;
 import com.pliesveld.flashnote.service.StudentService;
 import com.pliesveld.flashnote.web.dto.StudentDTO;
-import com.pliesveld.flashnote.web.security.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -32,10 +33,10 @@ public class AuthTestController {
 
     @RequestMapping(value="/mine", method = RequestMethod.GET)
     @ResponseBody
-    public List<Deck> retrieve_mydecks(@CurrentUser Student student)
+    public List<Deck> retrieve_mydecks(@CurrentUser StudentPrincipal studentDetails)
     {
-        LOG.info("UserDetails " + student);
-        List<Deck> decks = studentService.findDecksByOwner(student.getId());
+        LOG.info("UserDetails " + studentDetails);
+        List<Deck> decks = studentService.findDecksByOwner(studentDetails.getId());
         return decks;
     }
 
@@ -50,11 +51,10 @@ public class AuthTestController {
 
     @RequestMapping(value="/byAuth2", method = RequestMethod.GET)
     @ResponseBody
-    public StudentDTO listDecks2(@AuthenticationPrincipal Student student)
+    public StudentDTO listDecks2(@AuthenticationPrincipal StudentPrincipal studentPrincipal)
     {
-        LOG.info("Student " + student);
-
-        return StudentDTO.convert(student);
+        LOG.info("StudentPrincipal " + studentPrincipal);
+        return StudentDTO.convert(studentPrincipal);
     }
 
     @RequestMapping(value="/byAuth3", method = RequestMethod.GET)

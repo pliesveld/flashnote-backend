@@ -1,7 +1,7 @@
 package com.pliesveld.flashnote.web.dto;
 
 import com.pliesveld.flashnote.domain.Student;
-import com.pliesveld.flashnote.domain.StudentType;
+import com.pliesveld.flashnote.domain.StudentRole;
 import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.NotNull;
@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
- * Subset of student model for account creation
+ * Subset of studentDetails model for account creation
  */
 
 public class StudentDTO implements Serializable
@@ -29,12 +29,16 @@ public class StudentDTO implements Serializable
     public static StudentDTO convert(Student student)
     {
         if(student == null)
-            throw new NullPointerException("student argument was null");
+            throw new NullPointerException("studentDetails argument was null");
 
         StudentDTO studentDTO = new StudentDTO();
-        studentDTO.setName(student.getName());
+//        studentDTO.setName(studentDetails.getName());
         studentDTO.setEmail(student.getEmail());
         studentDTO.setPassword(student.getPassword());
+
+        if(student.getStudentDetails() != null)
+            studentDTO.setName(student.getStudentDetails().getName());
+
         return studentDTO;
     }
 
@@ -64,8 +68,8 @@ public class StudentDTO implements Serializable
         this.password = password;
     }
 
-    public StudentType getRole() {
-        return StudentType.USER;
+    public StudentRole getRole() {
+        return StudentRole.USER;
     }
 
 }

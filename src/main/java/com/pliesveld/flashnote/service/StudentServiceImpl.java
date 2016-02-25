@@ -2,10 +2,12 @@ package com.pliesveld.flashnote.service;
 
 import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.domain.Student;
-import com.pliesveld.flashnote.domain.StudentType;
+import com.pliesveld.flashnote.domain.StudentDetails;
+import com.pliesveld.flashnote.domain.StudentRole;
 import com.pliesveld.flashnote.exception.ResourceNotFoundException;
 import com.pliesveld.flashnote.exception.StudentCreateException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
+import com.pliesveld.flashnote.repository.StudentDetailsRepository;
 import com.pliesveld.flashnote.repository.StudentRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,6 +27,9 @@ public class StudentServiceImpl implements StudentService {
     @Resource
     StudentRepository studentRepository;
 
+    @Resource
+    StudentDetailsRepository studentDetailsRepository;
+
     @Override
     @Transactional(rollbackFor = StudentCreateException.class)
     public Student create(String name, String email, String password) throws StudentCreateException {
@@ -33,18 +38,23 @@ public class StudentServiceImpl implements StudentService {
 
         if(other != null)
             throw new StudentCreateException(email);
-
         
+        StudentDetails studentDetails = new StudentDetails();
+        studentDetails.setName(name);
+
         Student student = new Student();
-        student.setName(name);
         student.setEmail(email);
         student.setPassword(password);
-        student.setRole(StudentType.USER);
+        student.setRole(StudentRole.USER);
+
+        student.setStudentDetails(studentDetails);
+        studentDetails.setStudent(student);
 
         try {
             student = studentRepository.save(student);
+            studentDetails = studentDetailsRepository.save(studentDetails);
         } catch(DataAccessException cdae) {
-            throw new StudentCreateException("Could not create student account");
+            throw new StudentCreateException("Could not create studentDetails account");
         }
 
         return student;
@@ -53,22 +63,22 @@ public class StudentServiceImpl implements StudentService {
     @Override
     @Transactional(rollbackFor = ResourceNotFoundException.class)
     public List<Deck> findDecksByOwner(int id) {
-        Student student = findById(id);
+        StudentDetails studentDetails = findById(id);
         List<Deck> decks = new ArrayList<>();
-        student.getDecks().forEach(decks::add);
+        studentDetails.getDecks().forEach(decks::add);
         return decks;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Student findById(int id) {
-        return studentRepository.findOne(id);
+    public StudentDetails findById(int id) {
+        return studentDetailsRepository.findOne(id);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Iterable<Student> findAll() {
-        return studentRepository.findAll();
+    public Iterable<StudentDetails> findAll() {
+        return studentDetailsRepository.findAll();
     }
 
     @Override
@@ -79,32 +89,30 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     @Transactional(rollbackFor = StudentNotFoundException.class)
-    public Student delete(int id) throws StudentNotFoundException {
-        Student deletedStudent = studentRepository.findOne(id);
-        if(deletedStudent == null)
+    public StudentDetails delete(int id) throws StudentNotFoundException {
+        StudentDetails deletedStudentDetails = studentDetailsRepository.findOne(id);
+        if(deletedStudentDetails == null)
             throw new StudentNotFoundException(id);
 
-        studentRepository.delete(deletedStudent);
-        return deletedStudent;
+        studentDetailsRepository.delete(deletedStudentDetails);
+        return deletedStudentDetails;
     }
 
     @Override
     @Transactional(rollbackFor = StudentNotFoundException.class)
-    public Student update(Student student) throws StudentNotFoundException {
-        Student updatedStudent = studentRepository.findOne(student.getId());
+    public StudentDetails update(StudentDetails studentDetails) throws StudentNotFoundException {
+        StudentDetails updatedStudentDetails = studentDetailsRepository.findOne(studentDetails.getId());
 
-        if(updatedStudent == null)
-            throw new StudentNotFoundException(student.getId());
+        if(updatedStudentDetails == null)
+            throw new StudentNotFoundException(studentDetails.getId());
 
-        updatedStudent.setName(student.getName());
-        updatedStudent.setEmail(student.getEmail());
-        updatedStudent.setPassword(student.getPassword());
-        return updatedStudent;
+        updatedStudentDetails.setName(studentDetails.getName());
+        return updatedStudentDetails;
     }
 
     @Override
     @Transactional(readOnly = true)
     public Long count() {
-        return studentRepository.count();
+        return studentDetailsRepository.count();
     }
 }

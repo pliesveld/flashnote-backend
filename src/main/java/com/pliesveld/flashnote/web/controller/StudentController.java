@@ -2,6 +2,7 @@ package com.pliesveld.flashnote.web.controller;
 
 
 import com.pliesveld.flashnote.domain.Student;
+import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.service.StudentService;
 import com.pliesveld.flashnote.web.dto.StudentDTO;
@@ -27,36 +28,36 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-    private Student verifyStudent(int id) throws StudentNotFoundException
+    private StudentDetails verifyStudent(int id) throws StudentNotFoundException
     {
-        Student student = studentService.findById(id);
-        if(student == null)
+        StudentDetails studentDetails = studentService.findById(id);
+        if(studentDetails == null)
             throw new StudentNotFoundException(id);
 
-        return student;
+        return studentDetails;
     }
 
     @RequestMapping(value="/list", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Iterable<Student>> getAllStudents()
+    public ResponseEntity<Iterable<StudentDetails>> getAllStudents()
     {
         LOG.info("Retrieving list of all students");
-        Iterable<Student> allStudents = studentService.findAll();
+        Iterable<StudentDetails> allStudents = studentService.findAll();
         return new ResponseEntity<>(allStudents, HttpStatus.OK);
     }
 
     @RequestMapping(value="",method = RequestMethod.POST)
     public ResponseEntity<Void> createStudent(@Valid @RequestBody StudentDTO studentdto)
     {
-        Student student = studentService.create(studentdto.getName(),studentdto.getEmail(),studentdto.getPassword());
+        Student studentDetails = studentService.create(studentdto.getName(),studentdto.getEmail(),studentdto.getPassword());
         
-        LOG.info("Created student: " + student);
+        LOG.info("Created studentDetails: " + studentDetails);
 
         HttpHeaders responseHeaders = new HttpHeaders();
         URI newStudentUri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(student.getId())
+                .buildAndExpand(studentDetails.getId())
                 .toUri();
 
         responseHeaders.setLocation(newStudentUri);
@@ -75,9 +76,9 @@ public class StudentController {
     @RequestMapping(value="/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getStudent(@PathVariable Integer id)
     {
-        LOG.info("Getting student by id " + id);
-        Student student = verifyStudent(id);
-        return new ResponseEntity<>(student,HttpStatus.OK);
+        LOG.info("Getting studentDetails by id " + id);
+        StudentDetails studentDetails = verifyStudent(id);
+        return new ResponseEntity<>(studentDetails,HttpStatus.OK);
     }
 
 
@@ -87,7 +88,7 @@ public class StudentController {
     public ResponseEntity<?> listDecks(@PathVariable Integer id, @PathVariable Integer deckid)
     {
         LOG.info("Getting student by id " + id);
-        Student student = verifyStudent(id);
+        StudentDetails student = verifyStudent(id);
         return new ResponseEntity<>(student,HttpStatus.OK);
     }
     */

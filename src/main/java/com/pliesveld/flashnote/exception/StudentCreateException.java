@@ -12,7 +12,7 @@ public class StudentCreateException extends ResourceRepositoryException {
 
     @Override
     public String getRepositoryMessage() {
-        return "Student already exists: " + getRepositoryId();
+        return "StudentDetails already exists: " + getRepositoryId();
     }
 
     @Override

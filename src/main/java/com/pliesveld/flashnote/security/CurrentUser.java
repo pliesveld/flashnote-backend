@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.web.security;
+package com.pliesveld.flashnote.security;
 
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

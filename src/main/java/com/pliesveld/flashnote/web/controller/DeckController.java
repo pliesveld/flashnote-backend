@@ -1,28 +1,22 @@
 package com.pliesveld.flashnote.web.controller;
 
 
-import java.net.URI;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.domain.FlashCard;
-import com.pliesveld.flashnote.domain.Student;
+import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.exception.DeckNotFoundException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.service.CardService;
 import com.pliesveld.flashnote.service.StudentService;
 import com.pliesveld.flashnote.web.dto.CardStatistics;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/deck")
@@ -35,13 +29,13 @@ public class DeckController {
     @Autowired
     private CardService cardService;
     
-    private Student verifyStudent(int id) throws StudentNotFoundException
+    private StudentDetails verifyStudent(int id) throws StudentNotFoundException
     {
-        Student student = studentService.findById(id);
-        if(student == null)
+        StudentDetails studentDetails = studentService.findById(id);
+        if(studentDetails == null)
             throw new StudentNotFoundException(id);
 
-        return student;
+        return studentDetails;
     }
     
     private Deck verifyDeck(int id) throws DeckNotFoundException

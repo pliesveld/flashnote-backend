@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.service;
+package com.pliesveld.flashnote.security;
 
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.repository.StudentRepository;
@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -39,53 +38,11 @@ public class AuthService implements UserDetailsService {
         LOG.info(" pass " + student.getPassword() + " email " + student.getEmail());
 
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(student.getRole().name());
-        return new CustomUserDetails(student,authorities);
+        return new StudentPrincipal(student,authorities);
 
 //        UserDetails userDetails = new User(student.getEmail(),student.getPassword(),authorities);
 //        LOG.info("userdetails pass: " + userDetails.getPassword() + " username " + userDetails.getUsername() + " authorities " + authorities);
 //        return userDetails;
     }
 
-    @Transactional(rollbackFor = UsernameNotFoundException.class)
-    private final static class CustomUserDetails extends Student implements UserDetails {
-
-        private List<GrantedAuthority> authorities;
-/*
-        private CustomUserDetails(Student user) {
-            super(user);
-        }
-*/
-        public CustomUserDetails(Student student, List<GrantedAuthority> authorities) {
-            super(student);
-            this.authorities = authorities;
-        }
-
-        @Override
-        public Collection<? extends GrantedAuthority> getAuthorities() {
-                return authorities;
-        }
-
-        @Override
-        public String getUsername() {
-            return getEmail();
-        }
-
-        public boolean isAccountNonExpired() {
-            return true;
-        }
-
-        public boolean isAccountNonLocked() {
-            return true;
-        }
-
-        public boolean isCredentialsNonExpired() {
-            return true;
-        }
-
-        public boolean isEnabled() {
-            return true;
-        }
-
-        private static final long serialVersionUID = 5639683223516504866L;
-    }
 }

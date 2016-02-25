@@ -2,7 +2,7 @@ package com.pliesveld.flashnote.service;
 
 import com.pliesveld.flashnote.domain.Attachment;
 import com.pliesveld.flashnote.domain.AttachmentHeader;
-import com.pliesveld.flashnote.domain.Student;
+import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.exception.AttachmentNotFoundException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.repository.AttachmentRepository;
@@ -27,13 +27,13 @@ public class AttachmentServiceImpl implements AttachmentService {
     StudentService studentService;
 
 
-    private Student verifyStudent(int id) throws StudentNotFoundException
+    private StudentDetails verifyStudent(int id) throws StudentNotFoundException
     {
-        Student student = studentService.findById(id);
-        if(student == null)
+        StudentDetails studentDetails = studentService.findById(id);
+        if(studentDetails == null)
             throw new StudentNotFoundException(id);
 
-        return student;
+        return studentDetails;
     }
 
     private Attachment verifyAttachment(int id) throws AttachmentNotFoundException
@@ -64,7 +64,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Transactional(readOnly = true)
     public List<Attachment> findAttachmentByStudent(int id) throws StudentNotFoundException {
 
-        Student student = verifyStudent(id);
+        StudentDetails studentDetails = verifyStudent(id);
         return new ArrayList<Attachment>();
     }
 
