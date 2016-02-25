@@ -1,5 +1,6 @@
 package com.pliesveld.flashnote.service;
 
+import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.exception.StudentCreateException;
 import com.pliesveld.spring.SpringTestConfig;
 import org.junit.Test;
@@ -19,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = SpringTestConfig.class, loader = AnnotationConfigContextLoader.class)
 @Transactional
-public class StudentServiceTest {
+public class StudentDetailsServiceTest {
     private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger();
 
     @Autowired
@@ -42,7 +43,7 @@ public class StudentServiceTest {
     @Test(expected = StudentCreateException.class)
     public void accoutCreationDuplicate()
     {
-        assertEquals("Database should have 1 student",0,studentService.count().hashCode());
+        assertEquals("Database should have 0 student",0,studentService.count().hashCode());
 
         studentService.create("Student2","student2@example.com","password");
         studentService.create("Student2","student2@example.com","password");
@@ -50,4 +51,13 @@ public class StudentServiceTest {
         assertEquals("Database should have 1 student",1,studentService.count().hashCode());
     }
 
+    @Test
+    public void accountCreationAndRemoval()
+    {
+        assertEquals("Database should have 0 student",0,studentService.count().hashCode());
+        Student student = studentService.create("Student1","student@example.com","password");
+        assertEquals("Database should have 1 student",1,studentService.count().hashCode());
+        studentService.delete(student.getId());
+        assertEquals("Database should have 0 student",0,studentService.count().hashCode());
+    }
 }

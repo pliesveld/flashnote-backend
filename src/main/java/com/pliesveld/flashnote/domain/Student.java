@@ -16,10 +16,9 @@ public class Student {
     @Column(name = "STUDENT_ID")
     private Integer id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @PrimaryKeyJoinColumn
     private StudentDetails studentDetails;
-
 
     @NotNull
     @Size(min = 5,max = 48)
