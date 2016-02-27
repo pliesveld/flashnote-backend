@@ -64,8 +64,8 @@ public class CategoryTest
         assertEquals(set_child.size(), 1);
 
         Category chld_retrieved = (Category) set_child.iterator().next();
-        assertEquals("Retrieved same as persisted", category.getName(), category_retrieved.getName());
-        assertEquals("Child Retrieved same as persisted", chld.getName(), chld_retrieved.getName());
+        assertEquals("Retrieved same as persisted", category.getTitle(), category_retrieved.getTitle());
+        assertEquals("Child Retrieved same as persisted", chld.getTitle(), chld_retrieved.getTitle());
         */
 
          

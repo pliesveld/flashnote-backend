@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @MappedSuperclass
-public abstract class AbstractStatement extends AbstractDatedEntity
+public abstract class AbstractStatement extends AbstractAuditableEntity
 {
     @Column(name = "CONTENT",length=65600)
     protected String content;

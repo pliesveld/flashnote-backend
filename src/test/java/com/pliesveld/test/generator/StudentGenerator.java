@@ -2,7 +2,8 @@ package com.pliesveld.test.generator;
 
 
 import com.pliesveld.flashnote.domain.Student;
-import com.pliesveld.flashnote.domain.StudentType;
+import com.pliesveld.flashnote.domain.StudentDetails;
+import com.pliesveld.flashnote.domain.StudentRole;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -70,16 +71,19 @@ public class StudentGenerator
 
     static public Student randomizedStudent()
     {
-        StudentType random_role = randomValue(StudentType.values());
+        StudentRole random_role = randomValue(StudentRole.values());
         int rand_num = ThreadLocalRandom.current().nextInt(0,1000);
         String random_name = String.format("%s%d",randomValue(GIRL_NAMES),rand_num);
         String random_email = random_name.concat("@" + randomValue(DOMAIN_NAMES));
 
-        Student student  = new Student();
-        student.setName(random_name);
+        StudentDetails studentDetails = new StudentDetails();
+        studentDetails.setName(random_name);
+
+        Student student = new Student();
+        student.setStudentDetails(studentDetails);
         student.setEmail(random_email);
         student.setPassword("password");
-        student.setRole(StudentType.USER);
+        student.setRole(StudentRole.ROLE_USER);
         return student;
     }
 

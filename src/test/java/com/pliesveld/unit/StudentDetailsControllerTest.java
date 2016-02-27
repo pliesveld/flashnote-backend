@@ -2,6 +2,7 @@ package com.pliesveld.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pliesveld.flashnote.domain.Student;
+import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.service.StudentService;
 import com.pliesveld.flashnote.spring.FlashnoteContainerApplication;
 import com.pliesveld.flashnote.web.controller.StudentController;
@@ -43,7 +44,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 @SpringApplicationConfiguration(classes = FlashnoteContainerApplication.class)
 @ContextConfiguration(classes = { MockServletContext.class,SpringTestConfig.class }, loader = AnnotationConfigContextLoader.class)
 @WebAppConfiguration
-public class StudentControllerTest {
+public class StudentDetailsControllerTest {
     private static final Logger LOG = LogManager.getLogger();
 
     @Mock
@@ -64,7 +65,7 @@ public class StudentControllerTest {
 
     @Test
     public void getAllStudentsEmpty() throws Exception {
-        when(studentService.findAll()).thenReturn(new ArrayList<Student>());
+        when(studentService.findAll()).thenReturn(new ArrayList<StudentDetails>());
         mockMvc.perform(get("/students/list"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("[]"));
@@ -77,7 +78,7 @@ public class StudentControllerTest {
         StudentDTO studentDTO = StudentDTO.convert(student);
 
         final String JSON_DATA = mapper.writeValueAsString(studentDTO);
-        // LOG.info(JSON_DATA);
+        LOG.info(JSON_DATA);
         when(studentService.create(any(String.class),any(String.class),any(String.class))).thenReturn(student);
         MvcResult result = mockMvc.perform(post("/students")
                 .accept(MediaType.APPLICATION_JSON)

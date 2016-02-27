@@ -2,6 +2,7 @@ package com.pliesveld.unit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pliesveld.flashnote.domain.Student;
+import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.service.StudentService;
 import com.pliesveld.flashnote.web.controller.StudentController;
 import com.pliesveld.flashnote.web.dto.StudentDTO;
@@ -68,14 +69,14 @@ public class StudentControllerTestMock {
         ReflectionTestUtils.setField(studentController,"studentService",studentService);
 
         /*
-            When the mocked method findAll() is invoked, the an empty ArrayList<Student> is returned.
+            When the mocked method findAll() is invoked, the an empty ArrayList<StudentDetails> is returned.
          */
-        when(studentService.findAll()).thenReturn(new ArrayList<Student>());
+        when(studentService.findAll()).thenReturn(new ArrayList<StudentDetails>());
 
         /*
             Invoke the Controller methods that depend on the mocked objects.
          */
-        ResponseEntity<Iterable<Student>> allStudentsEntry = studentController.getAllStudents();
+        ResponseEntity<Iterable<StudentDetails>> allStudentsEntry = studentController.getAllStudents();
 
         /*
             Checks that the underlying mocked dependency invoked the method findAll once.
@@ -87,7 +88,7 @@ public class StudentControllerTestMock {
             Asserts that the response returned Iteration of student elements was zero.
          */
         assertEquals(HttpStatus.OK,allStudentsEntry.getStatusCode());
-        List<Student> target = new ArrayList<>();
+        List<StudentDetails> target = new ArrayList<>();
         allStudentsEntry.getBody().forEach(target::add);
         assertEquals(0,target.size());
     }

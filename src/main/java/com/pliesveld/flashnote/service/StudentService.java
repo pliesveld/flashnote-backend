@@ -19,7 +19,10 @@ public interface StudentService {
     //StudentDetails             create(StudentDetails studentDetails) throws StudentCreateException;
     StudentDetails delete(int id)          throws StudentNotFoundException;
     StudentDetails update(StudentDetails studentDetails) throws StudentNotFoundException;
-    StudentDetails findById(int id)        throws StudentNotFoundException;
+
+    StudentDetails findStudentDetailsById(int id)        throws StudentNotFoundException;
+    Student findStudentById(int id)                      throws StudentNotFoundException;
+
     Long                count();
     Iterable<StudentDetails>   findAll();
     List<Deck>          findDecksByOwner(int id);

@@ -28,13 +28,13 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
-    private StudentDetails verifyStudent(int id) throws StudentNotFoundException
+    private Student verifyStudent(int id) throws StudentNotFoundException
     {
-        StudentDetails studentDetails = studentService.findById(id);
-        if(studentDetails == null)
+        Student student = studentService.findStudentById(id);
+        if(student == null)
             throw new StudentNotFoundException(id);
 
-        return studentDetails;
+        return student;
     }
 
     @RequestMapping(value="/list", method = RequestMethod.GET)
@@ -64,7 +64,7 @@ public class StudentController {
         return new ResponseEntity<>(null,responseHeaders,HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('USER')")
     @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> removeStudent(@PathVariable Integer id)
     {
@@ -77,8 +77,9 @@ public class StudentController {
     public ResponseEntity<?> getStudent(@PathVariable Integer id)
     {
         LOG.info("Getting studentDetails by id " + id);
-        StudentDetails studentDetails = verifyStudent(id);
-        return new ResponseEntity<>(studentDetails,HttpStatus.OK);
+        Student student = verifyStudent(id);
+        StudentDTO studentDTO = StudentDTO.convert(student);
+        return new ResponseEntity<>(studentDTO,HttpStatus.OK);
     }
 
 

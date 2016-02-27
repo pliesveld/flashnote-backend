@@ -88,9 +88,9 @@ public class AttachmentTest
         {
             assertNotNull(id);
             Attachment attachment2 = entityManager.find(Attachment.class,id);
-            assertNotNull(attachment2.getContentType());
+            assertNotNull(attachment2.getAttachmentType());
             assertNotNull(attachment2.getFileName());
-            assertEquals(expected_type,attachment2.getContentType());
+            assertEquals(expected_type,attachment2.getAttachmentType());
             assertEquals(expected_file,attachment2.getFileName());
             assertNotNull(attachment2.getFileData());
 
@@ -100,7 +100,7 @@ public class AttachmentTest
             // TODO: verify files match
 
             creationTime = attachment2.getModifiedOn();
-            attachmentType = attachment2.getContentType();
+            attachmentType = attachment2.getAttachmentType();
             length = attachment2.getFileLength();
 
             entityManager.clear();

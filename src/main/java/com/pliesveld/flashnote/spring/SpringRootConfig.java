@@ -24,7 +24,8 @@ import java.util.Properties;
 @EnableTransactionManagement
 @ComponentScan(basePackages = {
         "com.pliesveld.flashnote.service",
-        "com.pliesveld.flashnote.repository"
+        "com.pliesveld.flashnote.repository",
+        "com.pliesveld.flashnote.security"
 })
 @PropertySource(value = {"classpath:dev-datasource.properties"})
 @EnableJpaRepositories({"com.pliesveld.flashnote.repository"})

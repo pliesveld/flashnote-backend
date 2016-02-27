@@ -1,5 +1,7 @@
 package com.pliesveld.flashnote.domain;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
@@ -17,6 +19,7 @@ public class Student {
     private Integer id;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action= OnDeleteAction.CASCADE)
     @PrimaryKeyJoinColumn
     private StudentDetails studentDetails;
 
@@ -49,7 +52,7 @@ public class Student {
     @PrePersist
     public void prePersist() {
         if(role == null)
-            role = StudentRole.USER;
+            role = StudentRole.ROLE_USER;
     }
 
     public Integer getId() { return id; }

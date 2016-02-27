@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import java.io.Serializable;
 import java.time.Instant;
 
 /**
@@ -12,7 +13,8 @@ import java.time.Instant;
  * they were last modified
  */
 @MappedSuperclass
-public abstract class AbstractDatedEntity {
+public abstract class AbstractAuditableEntity<U,PK extends Serializable>  {
+
     @Column(name = "CREATED")
     protected Instant createdOn;
 

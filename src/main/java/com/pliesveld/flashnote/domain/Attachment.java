@@ -10,7 +10,7 @@ import java.io.Serializable;
         @NamedQuery(name = "Attachment.findHeaderByAttachmentId",
                 query = "SELECT NEW com.pliesveld.flashnote.domain.AttachmentHeader(a.contentType, a.fileLength, a.modifiedOn) FROM Attachment a WHERE a.id = :id")
 })
-public class Attachment extends AbstractDatedEntity implements Serializable {
+public class Attachment extends AbstractAuditableEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

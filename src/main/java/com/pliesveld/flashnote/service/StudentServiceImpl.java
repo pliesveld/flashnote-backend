@@ -45,7 +45,7 @@ public class StudentServiceImpl implements StudentService {
         Student student = new Student();
         student.setEmail(email);
         student.setPassword(password);
-        student.setRole(StudentRole.USER);
+        student.setRole(StudentRole.ROLE_USER);
 
         student.setStudentDetails(studentDetails);
         studentDetails.setStudent(student);
@@ -63,7 +63,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     @Transactional(rollbackFor = ResourceNotFoundException.class)
     public List<Deck> findDecksByOwner(int id) {
-        StudentDetails studentDetails = findById(id);
+        StudentDetails studentDetails = findStudentDetailsById(id);
         List<Deck> decks = new ArrayList<>();
         studentDetails.getDecks().forEach(decks::add);
         return decks;
@@ -71,8 +71,14 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     @Transactional(readOnly = true)
-    public StudentDetails findById(int id) {
+    public StudentDetails findStudentDetailsById(int id) {
         return studentDetailsRepository.findOne(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Student findStudentById(int id) {
+        return studentRepository.findOne(id);
     }
 
     @Override

@@ -1,35 +1,40 @@
-package com.pliesveld.flashnote.servlet3;
+package com.pliesveld.flashnote.spring;
 
 /**
  * Created by happs on 1/18/16.
  */
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.WebApplicationInitializer;
+import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 
-import java.io.File;
-
-import com.pliesveld.flashnote.spring.SpringRootConfig;
-import com.pliesveld.flashnote.spring.SpringWebConfig;
-import org.springframework.web.WebApplicationInitializer;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.servlet.DispatcherServlet;
-import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
-
+@Configuration
+@EnableAutoConfiguration
+@ComponentScan
 public class SpringWebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer implements WebApplicationInitializer {
+    private static final Logger LOG = LogManager.getLogger();
 
     private int maxUploadSizeInMb = 5 * 1024 * 1024; // 5 MB
 
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[] { SpringRootConfig.class };
+        return new Class[] { SpringSecurityConfig.class };
     }
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[] { SpringWebConfig.class };
+        return new Class[] {SpringRootConfig.class, SpringWebConfig.class };
     }
 
     @Override
@@ -41,7 +46,7 @@ public class SpringWebInitializer extends AbstractAnnotationConfigDispatcherServ
      *
      *     @Override
      *         protected Filter[] getServletFilters() {
-     *                 return new Filter[]{new HiddenHttpMethodFilter(), new MultipartFilter(), new OpenEntityManagerInViewFilter()};
+     *                 return new Filter[]{ new MultipartFilter(),new HiddenHttpMethodFilter(), new OpenEntityManagerInViewFilter()};
      *                     }
 
 // notifies session creation / destruction
@@ -63,6 +68,7 @@ public class SpringWebInitializer extends AbstractAnnotationConfigDispatcherServ
         // additional configuration, here for MultipartConfig
         super.customizeRegistration(registration);
         String uploadDirectory = ""; //ServiceConfiguration.CRM_STORAGE_UPLOADS_DIRECTORY;
+        LOG.debug("Configuring MultiPartFilter witn an upload capacity of {}",maxUploadSizeInMb );
 
         MultipartConfigElement multipartConf = new MultipartConfigElement(uploadDirectory, maxUploadSizeInMb, maxUploadSizeInMb*2, maxUploadSizeInMb/2);
         registration.setMultipartConfig(multipartConf);
@@ -71,7 +77,10 @@ public class SpringWebInitializer extends AbstractAnnotationConfigDispatcherServ
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);
-        //servletContext.setInitParameter("spring.profiles.active", "hsql");
+
+        String profile = System.getProperty("spring.profiles.active", "default");
+        LOG.info("Servlet startuping with profile " + profile);
+        servletContext.setInitParameter("spring.profiles.active", profile);
 
 /*
         // Create the root Spring application context

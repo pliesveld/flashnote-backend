@@ -1,26 +1,28 @@
 package com.pliesveld.flashnote.domain;
 
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public enum StudentRole
 {
-    USER          (1,       "A simple student",     "Provides basic access for creating and reviewing flashnotes."),
-    PREMIUM       (10,      "An A+ student",        "Advanced features for supporting members.  Increased storage; Group management; Non-expiring flashnotes."),
-    MODERATOR     (100,     "Class Narc",           "Citizens entrusted with the responsibility to maintain law and order."),
-    ADMIN         (200,     "Principle",            "Administrator");
+    ROLE_ACCOUNT   (1,           "Student applicant",    "Limited access to services.  Cannot create new resources."),
+    ROLE_USER          (10,      "A simple student",     "Provides basic access for creating and reviewing flashnotes."),
+    ROLE_PREMIUM       (50,      "An A+ student",        "Advanced features for supporting members.  Increased storage; Group management; Non-expiring flashnotes."),
+    ROLE_MODERATOR     (100,     "Class Narc",           "Citizens entrusted with the responsibility to maintain law and order."),
+    ROLE_ADMIN         (200,     "Principle",            "Administrator");
 
-    private int id;
-    private String name;
-    private String description;
+    final private int id;
+    final private String title;
+    final private String description;
 
     private final static Map<Integer,StudentRole> intToEnum = new HashMap<>();
 
-    StudentRole(int id, String name, String description) {
+    StudentRole(int id, String title, String description) {
         this.id = id;
-        this.name = name;
+        this.title = title;
         this.description = description;
     }
 
@@ -28,24 +30,12 @@ public enum StudentRole
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public String getTitle() {
+        return title;
     }
 
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     static {
@@ -58,5 +48,15 @@ public enum StudentRole
     public static StudentRole fromInteger(Integer id)
     {
         return intToEnum.get(id);
+    }
+
+    public static Collection<StudentRole> allRoles()
+    {
+        return intToEnum.values();
+    }
+
+    @Override
+    final public String toString() {
+        return super.toString();
     }
 }

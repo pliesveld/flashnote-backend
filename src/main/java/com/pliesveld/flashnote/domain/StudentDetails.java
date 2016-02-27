@@ -1,5 +1,8 @@
 package com.pliesveld.flashnote.domain;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -15,6 +18,7 @@ public class StudentDetails implements Serializable
     private Integer id;
 
     @MapsId
+    @OnDelete(action= OnDeleteAction.CASCADE)
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "STUDENT_ID")
     private Student student;

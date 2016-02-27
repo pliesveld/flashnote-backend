@@ -29,7 +29,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     private StudentDetails verifyStudent(int id) throws StudentNotFoundException
     {
-        StudentDetails studentDetails = studentService.findById(id);
+        StudentDetails studentDetails = studentService.findStudentDetailsById(id);
         if(studentDetails == null)
             throw new StudentNotFoundException(id);
 

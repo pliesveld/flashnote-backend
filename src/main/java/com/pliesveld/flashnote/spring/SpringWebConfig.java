@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 @Configuration
 @EnableWebMvc
 @ComponentScan({
+        "com.pliesveld.flashnote.security",
         "com.pliesveld.flashnote.web.service",
         "com.pliesveld.flashnote.web.controller",
         "com.pliesveld.flashnote.web.handler",

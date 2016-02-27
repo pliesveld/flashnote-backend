@@ -23,6 +23,9 @@ public class StudentDTO implements Serializable
     @Size(min = 1, max = 60) @NotNull
     private String password;
 
+    @NotNull
+    private StudentRole role = StudentRole.ROLE_ACCOUNT;
+
     public StudentDTO() {
     }
 
@@ -32,7 +35,7 @@ public class StudentDTO implements Serializable
             throw new NullPointerException("studentDetails argument was null");
 
         StudentDTO studentDTO = new StudentDTO();
-//        studentDTO.setName(studentDetails.getName());
+//        studentDTO.setName(studentDetails.getTitle());
         studentDTO.setEmail(student.getEmail());
         studentDTO.setPassword(student.getPassword());
 
@@ -68,8 +71,6 @@ public class StudentDTO implements Serializable
         this.password = password;
     }
 
-    public StudentRole getRole() {
-        return StudentRole.USER;
-    }
+    public StudentRole getRole() { return this.role; }
 
 }
