@@ -8,7 +8,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.Instant;
 
 /**
@@ -24,7 +23,7 @@ import java.time.Instant;
  */
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class AbstractAuditableEntity<U,PK extends Serializable> {
+public abstract class AbstractAuditableEntity extends DomainBaseEntity {
 
     @Column(name = "CREATED")
     @Convert(converter = InstantConverter.class)

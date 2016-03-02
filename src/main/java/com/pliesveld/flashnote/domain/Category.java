@@ -1,6 +1,6 @@
 package com.pliesveld.flashnote.domain;
 
-import org.springframework.data.jpa.domain.AbstractAuditable;
+import com.pliesveld.flashnote.domain.base.AbstractAuditableEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -10,7 +10,7 @@ import java.util.Set;
 @Entity
 @Table(name = "CATEGORY",
         uniqueConstraints = @UniqueConstraint(name = "UNIQUE_CATEGORY_NAME",columnNames = {"CATEGORY_NAME"}))
-public class Category extends AbstractAuditable implements Serializable
+public class Category extends AbstractAuditableEntity implements Serializable
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
