@@ -3,9 +3,9 @@ package com.pliesveld.flashnote.web.controller;
 
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.domain.StudentDetails;
+import com.pliesveld.flashnote.domain.dto.StudentDTO;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.service.StudentService;
-import com.pliesveld.flashnote.web.dto.StudentDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

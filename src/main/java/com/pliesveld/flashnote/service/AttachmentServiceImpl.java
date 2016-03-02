@@ -1,8 +1,8 @@
 package com.pliesveld.flashnote.service;
 
 import com.pliesveld.flashnote.domain.Attachment;
-import com.pliesveld.flashnote.domain.AttachmentHeader;
 import com.pliesveld.flashnote.domain.StudentDetails;
+import com.pliesveld.flashnote.domain.dto.AttachmentHeader;
 import com.pliesveld.flashnote.exception.AttachmentNotFoundException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.repository.AttachmentRepository;

@@ -1,6 +1,6 @@
 package com.pliesveld.flashnote.repository;
 
-import com.pliesveld.flashnote.domain.AttachmentHeader;
+import com.pliesveld.flashnote.domain.dto.AttachmentHeader;
 
 /**
  * Created by happs on 2/21/16.

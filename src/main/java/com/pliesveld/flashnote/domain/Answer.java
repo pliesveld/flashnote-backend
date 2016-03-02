@@ -1,5 +1,7 @@
 package com.pliesveld.flashnote.domain;
 
+import com.pliesveld.flashnote.domain.base.AbstractStatement;
+
 import javax.persistence.*;
 import java.io.Serializable;
 

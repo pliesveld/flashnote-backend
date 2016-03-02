@@ -1,6 +1,6 @@
 package com.pliesveld.flashnote.repository;
 
-import com.pliesveld.flashnote.domain.AttachmentHeader;
+import com.pliesveld.flashnote.domain.dto.AttachmentHeader;
 import com.pliesveld.flashnote.exception.AttachmentNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 

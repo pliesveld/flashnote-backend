@@ -1,7 +1,11 @@
 package com.pliesveld.flashnote.spring;
 
+import com.pliesveld.flashnote.service.DateTimeService;
+import com.pliesveld.flashnote.service.DateTimeServiceImpl;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
 @ComponentScan(basePackages = {
@@ -11,7 +15,12 @@ import org.springframework.context.annotation.Configuration;
 })
 public class SpringRootConfig {
 
-
+    @Profile({Profiles.PRODUCTION, Profiles.DEVELOPMENT})
+    @Bean
+    DateTimeService currentTimeDateTimeService()
+    {
+        return new DateTimeServiceImpl();
+    }
 
 
     /*

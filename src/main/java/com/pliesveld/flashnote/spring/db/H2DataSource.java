@@ -2,18 +2,17 @@ package com.pliesveld.flashnote.spring.db;
 
 import org.h2.tools.Server;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.orm.jpa.JpaDialect;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
+import org.springframework.orm.jpa.vendor.HibernateJpaDialect;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -30,7 +29,7 @@ import java.util.Properties;
         "com.pliesveld.flashnote.repository"
 })
 @PropertySource(value = { "classpath:test-datasource.properties" })
-@EnableJpaRepositories({"com.pliesveld.flashnote.repository"})
+@EnableJpaRepositories({ "com.pliesveld.flashnote.repository" })
 public class H2DataSource {
 
     private static final String PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN = "entitymanager.packages.to.scan";
@@ -51,15 +50,14 @@ public class H2DataSource {
 
     }
 
-
     // TODO: http://www.jpab.org/Hibernate.html
     private Properties hibernateProperties() {
         Properties properties = new Properties();
-        properties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
-        properties.put("hibernate.show_sql", environment.getRequiredProperty("hibernate.show_sql"));
-        properties.put("hibernate.format_sql", environment.getRequiredProperty("hibernate.format_sql"));
+        properties.put("hibernate.dialect",         environment.getRequiredProperty("hibernate.dialect"));
+        properties.put("hibernate.show_sql",        environment.getRequiredProperty("hibernate.show_sql"));
+        properties.put("hibernate.format_sql",      environment.getRequiredProperty("hibernate.format_sql"));
         properties.put("hibernate.use_sql_comments",environment.getRequiredProperty("hibernate.use_sql_comments"));
-        properties.put("hibernate.hbm2ddl.auto", environment.getRequiredProperty("hibernate.hbm2ddl.auto"));
+        properties.put("hibernate.hbm2ddl.auto",    environment.getRequiredProperty("hibernate.hbm2ddl.auto"));
         return properties;
     }
 
@@ -84,9 +82,17 @@ public class H2DataSource {
         entityManagerFactoryBean.afterPropertiesSet();
         return entityManagerFactoryBean.getObject();
     }
-    
 
-    
+    @Bean
+    @Autowired
+    public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+        JpaTransactionManager txManager = new JpaTransactionManager();
+        JpaDialect jpaDialect = new HibernateJpaDialect();
+        txManager.setEntityManagerFactory(entityManagerFactory);
+        txManager.setJpaDialect(jpaDialect);
+        return txManager;
+    }
+
     // Start WebServer, access http://localhost:8082
     @Bean(initMethod = "start", destroyMethod = "stop")
     public Server startDBManager() throws SQLException {

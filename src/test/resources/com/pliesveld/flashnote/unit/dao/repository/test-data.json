@@ -1,0 +1,44 @@
+[
+    {"_class":"com.pliesveld.flashnote.domain.Student",
+        "id" : "1",
+        "studentDetails" : null,
+        "email" : "account@example.com",
+        "password" : "password",
+        "role" : "ROLE_ACCOUNT"
+    },
+    {"_class":"com.pliesveld.flashnote.domain.Student",
+        "id" : "2",
+        "studentDetails" : null,
+        "email" : "user@example.com",
+        "password" : "password",
+        "role" : "ROLE_USER"
+    },
+    {"_class":"com.pliesveld.flashnote.domain.Student",
+        "id" : "3",
+        "studentDetails" : null,
+        "email" : "premium@example.com",
+        "password" : "password",
+        "role" : "ROLE_PREMIUM"
+    },
+    {"_class":"com.pliesveld.flashnote.domain.Student",
+        "id" : "4",
+        "studentDetails" : null,
+        "email" : "moderator@example.com",
+        "password" : "password",
+        "role" : "ROLE_MODERATOR"
+    },
+    {"_class":"com.pliesveld.flashnote.domain.Student",
+        "id" : "5",
+        "studentDetails" : null,
+        "email" : "admin@example.com",
+        "password" : "password",
+        "role" : "ROLE_ADMIN"
+    },
+    {"_class":"com.pliesveld.flashnote.domain.Student",
+        "id" : "6",
+        "studentDetails" : null,
+        "email" : "student@example.com",
+        "password" : "password",
+        "role" : "ROLE_USER"
+    }
+]

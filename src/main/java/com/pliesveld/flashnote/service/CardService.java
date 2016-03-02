@@ -10,8 +10,6 @@ import com.pliesveld.flashnote.exception.QuestionNotFoundException;
 
 import java.util.List;
 
-import javax.transaction.NotSupportedException;
-
 public interface CardService {
 
     Long countQuestions();

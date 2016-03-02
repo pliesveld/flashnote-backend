@@ -1,5 +1,8 @@
 package com.pliesveld.flashnote.domain;
 
+import com.pliesveld.flashnote.domain.base.AbstractAuditableEntity;
+import com.pliesveld.flashnote.domain.converter.AttachmentTypeConverter;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -8,7 +11,7 @@ import java.io.Serializable;
 @Table(name="ATTACHMENT")
 @NamedQueries(value = {
         @NamedQuery(name = "Attachment.findHeaderByAttachmentId",
-                query = "SELECT NEW com.pliesveld.flashnote.domain.AttachmentHeader(a.contentType, a.fileLength, a.modifiedOn) FROM Attachment a WHERE a.id = :id")
+                query = "SELECT NEW com.pliesveld.flashnote.domain.dto.AttachmentHeader(a.contentType, a.fileLength, a.modifiedOn) FROM Attachment a WHERE a.id = :id")
 })
 public class Attachment extends AbstractAuditableEntity implements Serializable {
 
@@ -18,7 +21,7 @@ public class Attachment extends AbstractAuditableEntity implements Serializable 
     Integer id;
 
     @Column(name = "CONTENT_TYPE",length=16)    @NotNull
-    @Convert(converter=AttachmentTypeConverter.class)
+    @Convert(converter = AttachmentTypeConverter.class)
     AttachmentType contentType;
 
     @Column(name = "FILENAME", length=48)       @NotNull

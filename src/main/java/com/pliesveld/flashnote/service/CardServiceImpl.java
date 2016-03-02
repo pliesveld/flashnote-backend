@@ -1,26 +1,18 @@
 package com.pliesveld.flashnote.service;
 
-import com.pliesveld.flashnote.domain.Answer;
-import com.pliesveld.flashnote.domain.Deck;
-import com.pliesveld.flashnote.domain.FlashCard;
-import com.pliesveld.flashnote.domain.FlashCardPrimaryKey;
-import com.pliesveld.flashnote.domain.Question;
+import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.exception.DeckNotFoundException;
 import com.pliesveld.flashnote.exception.FlashCardCreateException;
 import com.pliesveld.flashnote.exception.QuestionNotFoundException;
-import com.pliesveld.flashnote.exception.ResourceRepositoryException;
 import com.pliesveld.flashnote.repository.AnswerRepository;
 import com.pliesveld.flashnote.repository.DeckRepository;
 import com.pliesveld.flashnote.repository.FlashCardRepository;
 import com.pliesveld.flashnote.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import javax.transaction.NotSupportedException;
 
 /**
  * Created by happs on 1/19/16.

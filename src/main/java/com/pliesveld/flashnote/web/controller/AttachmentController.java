@@ -2,8 +2,8 @@ package com.pliesveld.flashnote.web.controller;
 
 
 import com.pliesveld.flashnote.domain.Attachment;
-import com.pliesveld.flashnote.domain.AttachmentHeader;
 import com.pliesveld.flashnote.domain.AttachmentType;
+import com.pliesveld.flashnote.domain.dto.AttachmentHeader;
 import com.pliesveld.flashnote.exception.AttachmentUploadException;
 import com.pliesveld.flashnote.service.AttachmentService;
 import com.pliesveld.flashnote.service.CardService;
