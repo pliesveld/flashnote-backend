@@ -25,7 +25,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.mapping.SimpleAttributes2GrantedAuthoritiesMapper;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
@@ -42,12 +41,6 @@ import java.util.Collection;
 })
 public class SpringSecurityConfig {
     private static final Logger LOG = LogManager.getLogger();
-
-    @Bean
-    SimpleAttributes2GrantedAuthoritiesMapper simpleAttributes2GrantedAuthoritiesMapper()
-    {
-        return new SimpleAttributes2GrantedAuthoritiesMapper();
-    }
 
     @Bean
     public RoleHierarchyImpl roleHierarchy() {
@@ -73,8 +66,8 @@ public class SpringSecurityConfig {
         return roleHierarchy;
     }
 
-    @Profile("default")
     @Configuration
+    @Profile(Profiles.AUTH)
     @EnableGlobalAuthentication
     @EnableAutoConfiguration(exclude = SecurityAutoConfiguration.class)
     @ConditionalOnExpression("!${my.security.enabled:false}")

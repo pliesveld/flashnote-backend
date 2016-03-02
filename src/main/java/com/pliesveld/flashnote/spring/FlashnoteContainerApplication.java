@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application-local.properties")
 public class FlashnoteContainerApplication {
 
 	public static void main(String[] args) {

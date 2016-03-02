@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat;
         "com.pliesveld.flashnote.web.validator"
 
 })
-@PropertySource(value = { "classpath:application.properties" })
+@PropertySource(value = { "classpath:application-local.properties" })
 public class SpringWebConfig extends WebMvcConfigurerAdapter{
 
 

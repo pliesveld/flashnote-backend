@@ -17,14 +17,13 @@ package com.pliesveld.flashnote.spring;
  */
 public class Profiles {
     public static final String PRODUCTION = "production";
-    public static final String DEVELOPMENT = "development";
+    public static final String LOCAL = "local";
 
     public static final String AUTH = "security";
     public static final String NO_AUTH = "!security";
 
-    public static final String INTEGRATION_TEST = "h2";
-    public static final String NOT_INTEGRATION_TEST = "!h2";
-
+    public static final String INTEGRATION_TEST = "integration-test";
+    public static final String NOT_INTEGRATION_TEST = "!integration-test";
 
     private Profiles() {} // prevent instantiation
 }

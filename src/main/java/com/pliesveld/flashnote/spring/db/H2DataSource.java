@@ -1,5 +1,6 @@
 package com.pliesveld.flashnote.spring.db;
 
+import com.pliesveld.flashnote.spring.Profiles;
 import org.h2.tools.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
@@ -21,7 +22,7 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.Properties;
 
-@Profile("h2")
+@Profile(Profiles.INTEGRATION_TEST)
 @Configuration
 @EnableTransactionManagement
 @ComponentScan(basePackages = {
@@ -37,7 +38,6 @@ public class H2DataSource {
     @Autowired
     private Environment environment;
 
-    // jdbc:h2:mem:testdb
     @Bean
     public DataSource dataSource() {
 

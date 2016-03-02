@@ -1,5 +1,6 @@
 package com.pliesveld.flashnote.spring.db;
 
+import com.pliesveld.flashnote.spring.Profiles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
@@ -17,7 +18,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-@Profile("default")
+@Profile(Profiles.LOCAL)
 @Configuration
 @EnableTransactionManagement
 @ComponentScan(basePackages = {
