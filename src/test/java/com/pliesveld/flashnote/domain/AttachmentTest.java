@@ -1,15 +1,13 @@
 package com.pliesveld.flashnote.domain;
 
-import com.pliesveld.spring.SpringTestConfig;
+import com.pliesveld.spring.DefaultTestAnnotations;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -22,7 +20,7 @@ import java.time.Instant;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = SpringTestConfig.class, loader = AnnotationConfigContextLoader.class)
+@DefaultTestAnnotations
 @Transactional
 public class AttachmentTest
 {

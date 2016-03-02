@@ -2,13 +2,11 @@ package com.pliesveld.flashnote.service;
 
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.exception.StudentCreateException;
-import com.pliesveld.spring.SpringTestConfig;
+import com.pliesveld.spring.DefaultTestAnnotations;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.assertEquals;
@@ -18,7 +16,7 @@ import static org.junit.Assert.assertEquals;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = SpringTestConfig.class, loader = AnnotationConfigContextLoader.class)
+@DefaultTestAnnotations
 @Transactional
 public class StudentDetailsServiceTest {
     private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger();

@@ -3,15 +3,13 @@ package com.pliesveld.flashnote.service;
 import com.pliesveld.flashnote.domain.Category;
 import com.pliesveld.flashnote.exception.CategorySearchException;
 import com.pliesveld.flashnote.repository.CategoryRepository;
-import com.pliesveld.spring.SpringTestConfig;
+import com.pliesveld.spring.DefaultTestAnnotations;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
@@ -25,7 +23,7 @@ import static org.junit.Assert.assertNotNull;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = SpringTestConfig.class, loader = AnnotationConfigContextLoader.class)
+@DefaultTestAnnotations
 @Transactional
 public class CategoryServiceTest {
     private static final Logger LOG = LogManager.getLogger();

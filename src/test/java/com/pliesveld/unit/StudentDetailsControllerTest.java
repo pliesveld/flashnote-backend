@@ -21,6 +21,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
@@ -41,6 +42,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
+@ActiveProfiles("h2")
 @SpringApplicationConfiguration(classes = FlashnoteContainerApplication.class)
 @ContextConfiguration(classes = { MockServletContext.class,SpringTestConfig.class }, loader = AnnotationConfigContextLoader.class)
 @WebAppConfiguration
