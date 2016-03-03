@@ -1,12 +1,20 @@
 package com.pliesveld.flashnote.schema;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.util.StringUtils;
 
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -15,6 +23,7 @@ import java.sql.Statement;
 @Configuration
 @PropertySource(value = {"classpath:dev-datasource.properties"})
 public class DropCreateDatabase {
+    private static final Logger LOG = LogManager.getLogger();
 
     @Value("${jdbc.driverClassName}")
     private String JDBC_DRIVER = "org.postgresql.Driver";
@@ -30,8 +39,17 @@ public class DropCreateDatabase {
 
     private String DB_NAME = "learners";
 
+    @Value("${db.init.sql:sql/db-init.sql}")
+    private String DB_INIT = "";
+
     @Autowired
     Environment environment;
+
+    /* so that Spring knows how to interpret ${} */
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyConfigIn() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 
     public DropCreateDatabase()
     {
@@ -52,7 +70,7 @@ public class DropCreateDatabase {
         int last_slash = jdbcURL.lastIndexOf("/") + 1;
 
         String db = jdbcURL.substring(last_slash);
-        System.out.println("db: " + db);
+        LOG.info("db: " + db);
         DB_NAME = db;
 
         String newJdbcUrl = jdbcURL.substring(0,last_slash);
@@ -67,8 +85,8 @@ public class DropCreateDatabase {
     public void main_real(String[] args) {
         initFromEnvironment(environment);
         DB_URL = trimDB(DB_URL);
-        System.out.println("JDBC: " + JDBC_DRIVER);
-        System.out.println("DB_URL: " + DB_URL);
+        LOG.info("JDBC: " + JDBC_DRIVER);
+        LOG.info("DB_URL: " + DB_URL);
         Connection conn = null;
         Statement stmt = null;
 
@@ -77,21 +95,39 @@ public class DropCreateDatabase {
             Class.forName(JDBC_DRIVER);
 
             //STEP 3: Open a connection
-            System.out.println("Connecting to a selected database: " + DB_URL);
+            LOG.info("Connecting to a selected database: " + DB_URL);
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
-            System.out.println("Connected database successfully...");
+            LOG.info("Connected database successfully...");
 
             //STEP 4: Execute a query
-            System.out.println("Deleting database...");
+            LOG.info("Deleting database...");
             stmt = conn.createStatement();
 
             String sql = "DROP DATABASE " + DB_NAME;
             stmt.executeUpdate(sql);
-            System.out.println("Database deleted successfully...");
+            LOG.info("Database deleted successfully...");
 
             sql = "CREATE DATABASE learners";
             stmt.executeUpdate(sql);
-            System.out.println("Database created successfully...");
+            LOG.info("Database created successfully...");
+
+            if(StringUtils.hasText(DB_INIT))
+            {
+                LOG.info(DB_INIT == null);
+                LOG.info(DB_INIT.equals(""));
+                LOG.info(DB_INIT.length());
+                LOG.info(DB_INIT);
+                Resource resource = new ClassPathResource(DB_INIT);
+                if(!resource.exists())
+                {
+                    LOG.error("Could not find {}",DB_INIT);
+                } else {
+                    LOG.info("Running db init", DB_INIT);
+                    Files.lines(resource.getFile().toPath()).filter(s -> !s.startsWith("--")).forEach(System.out::println);
+                }
+
+
+            }
 
         } catch (SQLException se) {
             //Handle errors for JDBC

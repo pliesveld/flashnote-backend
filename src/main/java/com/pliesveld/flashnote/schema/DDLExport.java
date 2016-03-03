@@ -1,7 +1,11 @@
 package com.pliesveld.flashnote.schema;
 
-import com.pliesveld.flashnote.spring.SpringRootConfig;
+import com.pliesveld.flashnote.spring.Profiles;
+import com.pliesveld.flashnote.spring.db.PersistenceContext;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.hibernate.PropertyValueException;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
@@ -12,17 +16,19 @@ import org.hibernate.boot.spi.MetadataImplementor;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
-
 import java.util.Properties;
 
 import static org.hibernate.tool.hbm2ddl.Target.NONE;
@@ -38,9 +44,34 @@ import static org.hibernate.tool.hbm2ddl.Target.NONE;
 @PropertySource(value = {"classpath:dev-datasource.properties"})
 public class DDLExport
 {
+    private static final Logger LOG = LogManager.getLogger();
+
+    @Value("${entitymanager.packages.to.scan}")
+    String PROPERTY_NAME_ENTITY_PACKAGES;
+
+    @Value("${schema.export.file:db-init.sql}")
+    String DIR_EXPORT_FILE;
+
+    @Value("${schema.export.dir:/src/main/resources/sql/}")
+    String DIR_EXPORT_PATH;
+
+    @Value("${schema.export.root:#{systemProperties['user.dir']}}")
+    String DIR_EXPORT_ROOT;
+
+    @Value("${schema.export.format:false}")
+    boolean FORMAT_EXPORT_OUTPUT;
 
     @Autowired
     Environment environment;
+
+    /* so that Spring knows how to interpret ${} */
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertyConfigIn() {
+        PropertySourcesPlaceholderConfigurer pspc = new PropertySourcesPlaceholderConfigurer();
+//        pspc.setEnvironment(environment);
+        return pspc;
+    }
+
 
     public void DDLExport()
     {
@@ -70,9 +101,11 @@ public class DDLExport
     @Bean
     public LocalSessionFactoryBean sessionFactory()
     {
+        if(!StringUtils.hasText(PROPERTY_NAME_ENTITY_PACKAGES))
+            throw new PropertyValueException("Could not find entities to scan","entitymanager.packages.to.scan",PROPERTY_NAME_ENTITY_PACKAGES);
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan(new String[] { "com.pliesveld.flashnote.domain" });
+        sessionFactory.setPackagesToScan(new String[] { PROPERTY_NAME_ENTITY_PACKAGES });
         sessionFactory.setHibernateProperties(hibernateProperties());
         return sessionFactory;
     }
@@ -86,20 +119,30 @@ public class DDLExport
         return txManager;
     }
 
-    public static void main(String[] args) throws IllegalAccessException
+
+    public static void main(String[] args) throws IllegalAccessException {
+        System.setProperty("spring.profiles.active", Profiles.LOCAL);
+        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
+
+        ctx.register(PersistenceContext.class,DDLExport.class);
+        ctx.refresh();
+
+        DDLExport ddlExport = ctx.getBean(DDLExport.class);
+        ddlExport.displayProfile(ctx);
+        ddlExport.real_main(args,ctx);
+    }
+
+
+    public void real_main(String[] args,AnnotationConfigApplicationContext ctx) throws IllegalAccessException
     {
-        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(SpringRootConfig.class,DDLExport.class);
-
-
-        Environment properties = ctx.getBean(Environment.class);
 
         LocalSessionFactoryBean sfb = (LocalSessionFactoryBean) ctx.getBean("&sessionFactory");
-        System.out.println("sfb: " + sfb);
+        LOG.info("sfb: " + sfb);
 
         Configuration configuration = sfb.getConfiguration();
-        System.out.println("cfg: " + configuration);
+        LOG.info("cfg: " + configuration);
 
-        displayProfile(ctx);
+
 
         MetadataSources metadataSources = (MetadataSources) FieldUtils.readField(configuration, "metadataSources",
                 true);
@@ -125,11 +168,11 @@ public class DDLExport
 
         ssr_builder
                 .applySetting("hibernate.connection.driver_class",
-                        properties.getRequiredProperty("jdbc.driverClassName"))
-                .applySetting("hibernate.connection.url", properties.getRequiredProperty("jdbc.url"))
-                .applySetting("hibernate.connection.username", properties.getRequiredProperty("jdbc.username"))
-                .applySetting("hibernate.connection.password", properties.getRequiredProperty("jdbc.password"))
-                .applySetting("hibernate.dialect", properties.getRequiredProperty("hibernate.dialect"));
+                        environment.getRequiredProperty("jdbc.driverClassName"))
+                .applySetting("hibernate.connection.url", environment.getRequiredProperty("jdbc.url"))
+                .applySetting("hibernate.connection.username", environment.getRequiredProperty("jdbc.username"))
+                .applySetting("hibernate.connection.password", environment.getRequiredProperty("jdbc.password"))
+                .applySetting("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
 
         // metadataSources.addAnnotatedClass(Object.class)
 
@@ -144,27 +187,33 @@ public class DDLExport
 
                 .build();
 
-        String filename_export = System.getProperty("user.dir") + "/src/main/resources/sql/" + "db-init.sql";
+        LOG.debug("export root {}", DIR_EXPORT_ROOT);
+        LOG.debug("export path {}", DIR_EXPORT_PATH);
+        LOG.debug("export file {}", DIR_EXPORT_FILE);
+
+        //String filename_export = System.getProperty("user.dir") + "/src/main/resources/sql/" + "db-init.sql";
+        String filename_export = DIR_EXPORT_ROOT + DIR_EXPORT_PATH + DIR_EXPORT_FILE;
 
         new SchemaExport((MetadataImplementor) metadata).setOutputFile(filename_export).setDelimiter(";")
-                .setFormat(true).setHaltOnError(true).create(NONE);
+                .setFormat(FORMAT_EXPORT_OUTPUT).setHaltOnError(true).create(NONE);
 
-        System.out.println("Exported:" + filename_export);
+        LOG.info("Exported:" + filename_export);
     }
 
-    private static void displayProfile(ApplicationContext ctx)
+    private void displayProfile(ApplicationContext ctx)
     {
-        System.out.println("ApplicationContext: " + ctx.getDisplayName());
+        LOG.info("ApplicationContext: " + ctx.getDisplayName());
 
         StringBuilder sb = new StringBuilder();
 
         String[] profiles = (ctx.getEnvironment().getActiveProfiles().length > 0
                 ? ctx.getEnvironment().getActiveProfiles() : ctx.getEnvironment().getDefaultProfiles());
 
+
         for (String profile : profiles)
             sb.append(profile);
 
-        System.out.println("Exporting Schema for profile: " + sb.toString());
+        LOG.info("Exporting Schema for profile: " + sb.toString());
     }
 
 }
