@@ -1,8 +1,5 @@
 package com.pliesveld.flashnote.domain;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -17,8 +14,8 @@ public class StudentDetails implements Serializable
 
     @MapsId
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "STUDENT_ID")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "STUDENT_ID", foreignKey = @ForeignKey(name = "FK_STUDENT"))
+    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private Student student;
 
     @Size(min = 3,max = 32)

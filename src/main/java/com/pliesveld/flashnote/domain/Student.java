@@ -1,8 +1,6 @@
 package com.pliesveld.flashnote.domain;
 
 import com.pliesveld.flashnote.domain.converter.StudentRoleConverter;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
@@ -21,7 +19,7 @@ public class Student {
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @PrimaryKeyJoinColumn
-    @OnDelete(action= OnDeleteAction.CASCADE)
+    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private StudentDetails studentDetails;
 
     @NotNull
