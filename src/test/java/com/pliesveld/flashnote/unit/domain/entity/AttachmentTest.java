@@ -30,13 +30,20 @@ public class AttachmentTest {
     AbstractStatement createQuestion()
     {
         Question que = new Question();
+        que.setTitle("Title");
         que.setContent("Question.");
         return que;
     }
 
+    AbstractStatement createAnswer()
+    {
+        Answer ans = new Answer();
+        ans.setContent("Answer.");
+        return ans;
+    }
 
     @Test
-    public void testAttachmentPersistance()
+    public void testAttachmentQuestionPersistance()
     {
         AbstractStatement stmt = createQuestion();
         AbstractAttachment attch = createAttachment();
@@ -45,6 +52,39 @@ public class AttachmentTest {
         attch.setStatement(stmt);
         em.persist(attch);
         em.flush();
+    }
 
+    @Test
+    public void testAttachmentQuestionCascadePersistance()
+    {
+        AbstractStatement stmt = createQuestion();
+        AbstractAttachment attch = createAttachment();
+
+        attch.setStatement(stmt);
+        em.persist(attch);
+        em.flush();
+    }
+
+    @Test
+    public void testAttachmentAnswerPersistance()
+    {
+        AbstractStatement stmt = createAnswer();
+        AbstractAttachment attch = createAttachment();
+
+        em.persist(stmt);
+        attch.setStatement(stmt);
+        em.persist(attch);
+        em.flush();
+    }
+
+    @Test
+    public void testAttachmentAnswerCascadePersistance()
+    {
+        AbstractStatement stmt = createAnswer();
+        AbstractAttachment attch = createAttachment();
+
+        attch.setStatement(stmt);
+        em.persist(attch);
+        em.flush();
     }
 }

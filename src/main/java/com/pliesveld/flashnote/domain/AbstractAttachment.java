@@ -25,7 +25,7 @@ public abstract class AbstractAttachment extends AbstractAuditableEntity {
     @Convert(converter = AttachmentTypeConverter.class)
     AttachmentType contentType;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "STATEMENT_ID", referencedColumnName = "STATEMENT_ID",foreignKey = @ForeignKey(name = "FK_ATTACHMENT_STATEMENT"))
     AbstractStatement statement;
 

@@ -23,4 +23,12 @@ public class Question extends AbstractStatement implements Serializable
     public Question(String content) {
         setContent(content);
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 }
