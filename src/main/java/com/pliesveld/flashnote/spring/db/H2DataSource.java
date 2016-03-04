@@ -1,7 +1,6 @@
 package com.pliesveld.flashnote.spring.db;
 
 import com.pliesveld.flashnote.spring.Profiles;
-import org.h2.tools.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.sql.SQLException;
 import java.util.Properties;
 
 @Profile(Profiles.INTEGRATION_TEST)
@@ -93,10 +91,11 @@ public class H2DataSource {
         return txManager;
     }
 
+    /*
     // Start WebServer, access http://localhost:8082
     @Bean(initMethod = "start", destroyMethod = "stop")
     public Server startDBManager() throws SQLException {
         return Server.createWebServer();
-    }
+    }*/
 
 }
