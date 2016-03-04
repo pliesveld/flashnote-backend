@@ -5,7 +5,7 @@ import com.pliesveld.flashnote.domain.AttachmentType;
 import java.time.Instant;
 
 /**
- * DTO for Attachment entity.  Used in JPL named queries to retrieve header information of attachment
+ * DTO for AttachmentBinary entity.  Used in JPL named queries to retrieve header information of attachment
  */
 public class AttachmentHeader {
     AttachmentType contentType;

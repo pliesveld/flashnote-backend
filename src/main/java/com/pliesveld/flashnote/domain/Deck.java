@@ -11,7 +11,9 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "DECK")
+@Table(name = "DECK",
+        indexes = { @Index(name = "IDX_DECK_AUTHOR_ID",
+                           columnList = "STUDENT_ID") })
 @NamedQueries(
         @NamedQuery(name = "Deck.count", query = "SELECT COUNT(d) FROM Deck d")
 )
@@ -24,6 +26,7 @@ public class Deck extends DomainBaseEntity implements Serializable
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "STUDENT_ID", foreignKey = @ForeignKey(name = "FK_DECK_AUTHOR"))
     private StudentDetails author;
 
     @OneToMany(cascade = {CascadeType.ALL})
@@ -47,14 +50,17 @@ public class Deck extends DomainBaseEntity implements Serializable
     private String title = "Untitled";
 
     @ManyToOne
+    @JoinColumn(name = "CATEGORY_ID", foreignKey = @ForeignKey(name = "FK_DECK_CATEGORY"))
     private Category category;
 
+    public Deck() {}
+
     public Deck(StudentDetails author) {
-        this.author = author;
+        setAuthor(author);
     }
 
     public Deck(StudentDetails author, FlashCard... cards) {
-        this.author = author;
+        this(author);
         for(FlashCard fc : cards)
         {
             flashCards.add(fc);

@@ -41,12 +41,17 @@ public class FlashCard extends DomainBaseEntity implements Comparable<FlashCard>
     }
 
     public FlashCard(Integer questionId,Integer answerId) {
+        /*
+        if(questionId == null || answerId == null)
+        {
+            throw new NullPointerException(String.format("Cannot pass a null %s",questionId == answerId ? "question or answer" : questionId == null ? "question" : "answer"));
+        }
+        */
+
         id = new FlashCardPrimaryKey(questionId,answerId);
     }
 
-    public FlashCardPrimaryKey getId() {
-        return id;
-    }
+    public FlashCardPrimaryKey getId()        { return id; }
 
     public void setId(FlashCardPrimaryKey id) {
         this.id = id;
@@ -54,18 +59,14 @@ public class FlashCard extends DomainBaseEntity implements Comparable<FlashCard>
 
     public FlashCard(Question question, Answer answer) {
         this(question.getId(), answer.getId());
+
         this.question = question;
         this.answer = answer;
     }
 
-    public Question getQuestion() {
-        return question;
-    }
+    public Question getQuestion()             { return question; }
 
-
-    public Answer getAnswer() {
-        return answer;
-    }
+    public Answer getAnswer()                 { return answer; }
 
     @Override
     public boolean equals(Object o) {

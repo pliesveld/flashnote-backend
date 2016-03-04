@@ -55,7 +55,7 @@ public class StudentDetailsTest {
         assertEquals("Question count should be zero", 0, ((Long) cardService.countQuestions()).intValue());
         assertEquals("Answer count should be zero", 0, ((Long) cardService.countAnswers()).intValue());
         assertEquals("FlashCard count should be zero", 0, ((Long) cardService.countFlashCards()).intValue());
-        // TODO: StudentDetails, Attachment, Category
+        // TODO: StudentDetails, AttachmentBinary, Category
     }
 
     Student student;
