@@ -1,10 +1,13 @@
 package com.pliesveld.flashnote.unit.domain.entity;
 
 import com.pliesveld.flashnote.domain.*;
+import com.pliesveld.flashnote.repository.DeckRepository;
 import com.pliesveld.flashnote.repository.StudentDetailsRepository;
 import com.pliesveld.flashnote.repository.StudentRepository;
 import com.pliesveld.flashnote.service.CardService;
 import com.pliesveld.flashnote.unit.spring.DefaultTestAnnotations;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,10 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -27,6 +27,8 @@ import static org.junit.Assert.*;
 @DefaultTestAnnotations
 @Transactional
 public class StudentDetailsTest {
+    private static final Logger LOG = LogManager.getLogger();
+
     @PersistenceContext
     EntityManager entityManager;
 
@@ -38,6 +40,9 @@ public class StudentDetailsTest {
 
     @Autowired
     StudentRepository studentRepository;
+
+    @Autowired
+    DeckRepository deckRepository;
 
     @Test
     public void entityManagerWired() {
@@ -57,6 +62,13 @@ public class StudentDetailsTest {
     Student student1;
     Student student2;
 
+    StudentDetails studentDetails;
+    StudentDetails studentDetails1;
+    StudentDetails studentDetails2;
+
+    Serializable student_id = null;
+    Serializable student1_id = null;
+    Serializable student2_id = null;
 
     @Before
     public void createStudent()
@@ -76,6 +88,28 @@ public class StudentDetailsTest {
         student2.setPassword("password");
         entityManager.persist(student2);
 
+        studentDetails = new StudentDetails();
+        student.setStudentDetails(studentDetails);
+        studentDetails.setStudent(student);
+        studentDetails.setName("studentDetails");
+        entityManager.persist(studentDetails);
+
+        studentDetails1 = new StudentDetails();
+        student1.setStudentDetails(studentDetails1);
+        studentDetails1.setStudent(student1);
+        studentDetails1.setName("studentDetails1");
+        entityManager.persist(studentDetails1);
+
+        studentDetails2 = new StudentDetails();
+        student2.setStudentDetails(studentDetails2);
+        studentDetails2.setStudent(student2);
+        studentDetails2.setName("studentDetails2");
+        entityManager.persist(studentDetails2);
+        entityManager.flush();
+
+        student_id = student.getId();
+        student1_id = student1.getId();
+        student2_id = student2.getId();
     }
 
     @After
@@ -84,14 +118,19 @@ public class StudentDetailsTest {
         student = null;
         student1 = null;
         student2 = null;
+        studentDetails = null;
+        studentDetails1 = null;
+        studentDetails2 = null;
+        student_id = null;
+        student1_id = null;
+        student2_id = null;
     }
 
     @Test
     public void createStudentDeck() {
 
-        StudentDetails studentDetails = new StudentDetails();
-        studentDetails.setName("StudentDetails");
-
+        StudentDetails studentDetails = entityManager.find(StudentDetails.class,student_id);
+        assertNotNull(studentDetails);
 
         Question q = new Question("q");
         Answer a = new Answer("a");
@@ -100,7 +139,7 @@ public class StudentDetailsTest {
         FlashCard fc = new FlashCard(q, a);
         entityManager.persist(fc);
 
-        Deck deck = new Deck();
+        Deck deck = new Deck(studentDetails);
         deck.getFlashCards().add(fc);
 
 
@@ -116,62 +155,16 @@ public class StudentDetailsTest {
 
     }
 
-    @Test
-    public void createStudentDeckCascade() {
-        StudentDetails studentDetails = new StudentDetails();
-        studentDetails.setName("StudentDetails");
-//        studentDetails.setPassword("password");
-//        studentDetails.setEmail("studentDetails@example.com");
-
-        Deck deck = new Deck();
-        Question que = new Question("q");
-        Answer ans = new Answer("a");
-        entityManager.persist(que);
-        entityManager.persist(ans);    
-        
-        deck.getFlashCards().add(new FlashCard(que,ans));
-
-        studentDetails.getDecks().add(deck);
-        studentDetails.setStudent(student);
-        entityManager.persist(studentDetails);
-        entityManager.flush();
-        Serializable student_id = studentDetails.getId();
-
-        deck = null;
-        studentDetails = null;
-
-        studentDetails = entityManager.find(StudentDetails.class, student_id);
-        assertNotNull(studentDetails);
-        assertNotNull(studentDetails.getDecks());
-        assertFalse(studentDetails.getDecks().isEmpty());
-        assertEquals(1, studentDetails.getDecks().size());
-        deck = studentDetails.getDecks().iterator().next();
-        assertNotNull(deck);
-        assertNotNull(deck.getFlashCards());
-        assertFalse(deck.getFlashCards().isEmpty());
-        assertEquals(1, deck.getFlashCards().size());
-        FlashCard fc = deck.getFlashCards().iterator().next();
-        assertNotNull(fc);
-        assertNotNull(fc.getQuestion());
-        assertNotNull(fc.getAnswer());
-
-    }
-
 
     @Test
     public void studentIdentityTest() {
-        StudentDetails studentDetails1 = new StudentDetails("student");
-        StudentDetails studentDetails2 = new StudentDetails("student");
-
-        studentDetails1.setStudent(student1);
-        studentDetails2.setStudent(student2);
-
-        entityManager.persist(studentDetails1);
-        entityManager.persist(studentDetails2);
-        entityManager.flush();
+        StudentDetails studentDetails1 = entityManager.find(StudentDetails.class,student1_id);
+        StudentDetails studentDetails2 = entityManager.find(StudentDetails.class,student2_id);
 
         Serializable s1 = studentDetails1.getId();
         Serializable s2 = studentDetails2.getId();
+
+        assertTrue(s1 != s2);
 
         assertFalse(studentDetails1 == studentDetails2);
         assertFalse(studentDetails1.equals(studentDetails2));
@@ -181,11 +174,9 @@ public class StudentDetailsTest {
         assertTrue(studentDetails1.equals(copy_studentDetails1));
         assertTrue(copy_studentDetails1.equals(studentDetails1));
 
-        assertTrue(s1 != s2);
 
-        assertTrue(studentDetails1.getName().equals(studentDetails2.getName()));
-        assertTrue(studentDetails1.getName() == copy_studentDetails1.getName()); //questionable
-        assertTrue(studentDetails1.getName() == studentDetails2.getName());
+
+        assertTrue(studentDetails1.getName() == copy_studentDetails1.getName());
 
         assertTrue(copy_studentDetails1.getName().equals(studentDetails1.getName()));
 
@@ -213,64 +204,49 @@ public class StudentDetailsTest {
         
         FlashCard fc = new FlashCard(que,ans);
         entityManager.persist(fc);
+        entityManager.flush();
         return fc;
     }
     
     @Test
     public void studentDeckIdentityTest() {
-        StudentDetails studentDetails1 = new StudentDetails("student");
-//        studentDetails1.setPassword("password");
-//        studentDetails1.setEmail("studentDetails1@example.com");
 
-        HashSet<Deck> student_decks = new LinkedHashSet<>();
+        List<Deck> student_decks = new ArrayList<>();
 
         student_decks.addAll(Arrays.asList(
-                new Deck(newFlashCard("Que1","Ans1")),
-                new Deck(newFlashCard("Que2","Ans2")),
-                new Deck(newFlashCard("Que3","Ans3"))
+                new Deck(studentDetails1, newFlashCard("Que1","Ans1")),
+                new Deck(studentDetails1, newFlashCard("Que2","Ans2")),
+                new Deck(studentDetails1, newFlashCard("Que3","Ans3"))
         ));
 
-        studentDetails1.setStudent(student1);
-        entityManager.persist(studentDetails1);
-        studentDetails1.setDecks(student_decks);
+        student_decks.forEach(entityManager::persist);
 
         entityManager.flush();
-        Serializable s1 = studentDetails1.getId();
 
+        StudentDetails copy_studentDetails1 = entityManager.find(StudentDetails.class, student1_id);
 
-        StudentDetails copy_studentDetails1 = entityManager.find(StudentDetails.class, s1);
+//        deckRepository.findByAuthor_Id(copy_studentDetails1.getId()).forEach((deck) -> LOG.info("{}",deck));
 
-        Set<?> set_orig = studentDetails1.getDecks();
-        Set<?> set_copy = copy_studentDetails1.getDecks();
+        assertEquals(3, deckRepository.findByAuthor_Id(copy_studentDetails1.getId()).size());
 
-        assertFalse(set_orig.isEmpty());
-        assertEquals(set_orig.size(), set_copy.size());
+        Set<Deck> set_copy = new HashSet<Deck>();
+        set_copy.addAll(deckRepository.findByAuthor_Id(copy_studentDetails1.getId()));
 
+        assertFalse(set_copy.isEmpty());
+        assertEquals(3,set_copy.size());
     }
 
     @Test
     public void removalDetailsCascadesToAccountTest()
     {
         assertEquals(3,studentRepository.count());
-        assertEquals(0,studentDetailsRepository.count());
-
-        StudentDetails studentDetails = new StudentDetails();
-        studentDetails.setName("name");
-        studentDetails.setStudent(student);
-        studentDetailsRepository.save(studentDetails);
-        entityManager.flush();
-
-        assertEquals(3,studentRepository.count());
-        assertEquals(1,studentDetailsRepository.count());
-
-        entityManager.clear();
+        assertEquals(3,studentDetailsRepository.count());
 
         studentDetailsRepository.delete(studentDetails);
         entityManager.flush();
 
         assertEquals(2,studentRepository.count());
-        assertEquals(0,studentDetailsRepository.count());
-
+        assertEquals(2,studentDetailsRepository.count());
     }
 
 
@@ -278,24 +254,14 @@ public class StudentDetailsTest {
     public void removalAccountCascadesToDetailsTest()
     {
         assertEquals(3,studentRepository.count());
-        assertEquals(0,studentDetailsRepository.count());
-
-        StudentDetails studentDetails = new StudentDetails();
-        studentDetails.setName("name");
-        studentDetails.setStudent(student);
-        studentDetailsRepository.save(studentDetails);
-        entityManager.flush();
-
-        assertEquals(3,studentRepository.count());
-        assertEquals(1,studentDetailsRepository.count());
-
-        entityManager.clear();
+        assertEquals(3,studentDetailsRepository.count());
 
         studentRepository.delete(student);
+
         entityManager.flush();
 
         assertEquals(2,studentRepository.count());
-        assertEquals(0,studentDetailsRepository.count());
+        assertEquals(2,studentDetailsRepository.count());
 
     }
 }

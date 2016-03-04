@@ -1,9 +1,9 @@
 package com.pliesveld.flashnote.domain;
 
-import javax.persistence.*;
-
+import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +16,15 @@ import java.util.List;
         @NamedQuery(name = "Deck.count", query = "SELECT COUNT(d) FROM Deck d")
 )
 @EntityListeners(value = { LogEntityListener.class })
-public class Deck implements Serializable
+public class Deck extends DomainBaseEntity implements Serializable
 {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "DECK_ID")
     private Integer id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private StudentDetails author;
 
     @OneToMany(cascade = {CascadeType.ALL})
 //    @OrderColumn(name = "FLASHCARD_ORDER",updatable=false)
@@ -46,18 +49,20 @@ public class Deck implements Serializable
     @ManyToOne
     private Category category;
 
-    public Deck() {
+    public Deck(StudentDetails author) {
+        this.author = author;
     }
 
-    public Deck(FlashCard... cards) {
+    public Deck(StudentDetails author, FlashCard... cards) {
+        this.author = author;
         for(FlashCard fc : cards)
         {
             flashCards.add(fc);
         }
     }
 
-    public Deck(String title,FlashCard... flashCards) {
-        this(flashCards);
+    public Deck(StudentDetails author, String title, FlashCard... flashCards) {
+        this(author, flashCards);
         this.title = title;
     }
 
@@ -93,6 +98,14 @@ public class Deck implements Serializable
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public StudentDetails getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(StudentDetails author) {
+        this.author = author;
     }
 
     @Override

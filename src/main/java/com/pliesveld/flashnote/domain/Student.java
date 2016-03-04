@@ -20,8 +20,8 @@ public class Student {
     private Integer id;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @OnDelete(action= OnDeleteAction.CASCADE)
     @PrimaryKeyJoinColumn
+    @OnDelete(action= OnDeleteAction.CASCADE)
     private StudentDetails studentDetails;
 
     @NotNull

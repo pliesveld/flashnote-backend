@@ -40,9 +40,8 @@ public class DeckStudentDetailsTest
         entityManager.persist(ans);
         
         FlashCard fc = new FlashCard(que,ans);
-        Deck deck = new Deck();
+        Deck deck = new Deck(studentDetails1);
         deck.getFlashCards().add(fc);
-        studentDetails1.getDecks().add(deck);
         
         entityManager.persist(studentDetails1);
         entityManager.flush();
@@ -73,11 +72,11 @@ public class DeckStudentDetailsTest
             entityManager.persist(ans);
             
             FlashCard fc = new FlashCard(que,ans);
-            Deck deck = new Deck();
+            Deck deck = new Deck(studentDetails1);
             deck.getFlashCards().add(fc);
-            studentDetails1.getDecks().add(deck);
-            
+
             entityManager.persist(studentDetails1);
+            entityManager.persist(deck);
             entityManager.flush();
             
             did = deck.getId();
@@ -90,7 +89,6 @@ public class DeckStudentDetailsTest
         
 
         Deck deck = entityManager.find(Deck.class,did);
-        
         
         
         FlashCard fc = deck.getFlashCards().get(0);
@@ -107,10 +105,8 @@ public class DeckStudentDetailsTest
         
 
         entityManager.remove(deck);
-        
-        studentDetails.getDecks().clear();
+
         entityManager.flush();
-        
     }
 
 }

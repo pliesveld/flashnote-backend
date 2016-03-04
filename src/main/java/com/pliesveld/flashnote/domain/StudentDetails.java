@@ -6,8 +6,6 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "STUDENT_DETAILS")
@@ -18,20 +16,10 @@ public class StudentDetails implements Serializable
     private Integer id;
 
     @MapsId
-    @OnDelete(action= OnDeleteAction.CASCADE)
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "STUDENT_ID")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Student student;
-
-    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH})
-    @JoinTable(name="STUDENT_DECK"
-        ,joinColumns =  @JoinColumn(name="STUDENT_ID",foreignKey = @ForeignKey(name = "FK_STUDENT"))
-        ,foreignKey =                                              @ForeignKey(name="FK_STUDENT")
-        ,inverseJoinColumns =   @JoinColumn(name="DECK_ID",foreignKey = @ForeignKey(name = "FK_STUDENT_DECK"))
-        ,inverseForeignKey =                                            @ForeignKey(name="FK_STUDENT_DECK")
-        ,uniqueConstraints = {@UniqueConstraint(columnNames = {"DECK_ID"},  name="UNIQUE_DECK")}
-    )
-    private Set<Deck> decks = new HashSet<>();
 
     @Size(min = 3,max = 32)
     @Column(name = "STUDENT_NAME",  length = 32, nullable = false)
@@ -62,14 +50,6 @@ public class StudentDetails implements Serializable
     public void setName(String name)
     {
         this.name = name;
-    }
-
-    public Set<Deck> getDecks() {
-        return decks;
-    }
-
-    public void setDecks(Set<Deck> decks) {
-        this.decks = decks;
     }
 
     public Student getStudent() { return student; }

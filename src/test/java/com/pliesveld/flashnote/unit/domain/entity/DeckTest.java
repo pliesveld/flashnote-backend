@@ -1,9 +1,6 @@
 package com.pliesveld.flashnote.unit.domain.entity;
 
-import com.pliesveld.flashnote.domain.Answer;
-import com.pliesveld.flashnote.domain.Deck;
-import com.pliesveld.flashnote.domain.FlashCard;
-import com.pliesveld.flashnote.domain.Question;
+import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.service.CardService;
 import com.pliesveld.flashnote.unit.spring.DefaultTestAnnotations;
 import org.junit.Before;
@@ -60,6 +57,23 @@ public class DeckTest
         // TODO: StudentDetails, Attachment, Category
     }
 
+    StudentDetails author;
+
+    @Before
+    public void initializeDeckOwner()
+    {
+        Student student = new Student();
+        student.setPassword("password");
+        student.setEmail("test@example.com");
+        entityManager.persist(student);
+
+        author = new StudentDetails();
+        author.setName("author");
+        author.setStudent(student);
+        entityManager.persist(author);
+        entityManager.flush();
+    }
+
     @Test
     public void deckOfOneQuestionTwoAnswers()
     {
@@ -79,7 +93,7 @@ public class DeckTest
 
         FlashCard fc2 = new FlashCard(question,answer2);
 
-        Deck deck = new Deck();
+        Deck deck = new Deck(author);
         deck.getFlashCards().add(fc1);
         deck.getFlashCards().add(fc2);
 
@@ -105,7 +119,7 @@ public class DeckTest
         assertEquals("FlashCard count should be zero",0,((Long)cardService.countFlashCards()).intValue());
 
 
-        Deck deck = new Deck();
+        Deck deck = new Deck(author);
         deck.setTitle("This is an example Deck.");
 
         List<FlashCard> list = new LinkedList<>();
@@ -151,7 +165,7 @@ public class DeckTest
         assertEquals("FlashCard count should be zero",0,((Long)cardService.countFlashCards()).intValue());
 
 
-        Deck deck = new Deck();
+        Deck deck = new Deck(author);
         deck.setTitle("This is an example Deck.");
 
         List<FlashCard> list = new LinkedList<>();
@@ -204,7 +218,7 @@ public class DeckTest
 
         assertEquals("FlashCard count should be zero",0,((Long)cardService.countFlashCards()).intValue());
 
-        Deck deck = new Deck();
+        Deck deck = new Deck(author);
         deck.setTitle("This is an example Deck.");
 
         List<FlashCard> list = new LinkedList<>();

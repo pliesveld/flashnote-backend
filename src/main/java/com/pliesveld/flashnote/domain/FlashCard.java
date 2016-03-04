@@ -1,8 +1,9 @@
 package com.pliesveld.flashnote.domain;
 
-import javax.persistence.*;
-
+import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
+
+import javax.persistence.*;
 
 @Entity
 @EntityListeners(value = { LogEntityListener.class })
@@ -10,7 +11,7 @@ import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
 @NamedQueries(
         @NamedQuery(name = "FlashCard.count", query = "SELECT COUNT(f) FROM FlashCard f")
 )
-public class FlashCard implements Comparable<FlashCard>
+public class FlashCard extends DomainBaseEntity implements Comparable<FlashCard>
 {
     private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger();
 

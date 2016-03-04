@@ -54,9 +54,9 @@ public class FlashCardPrimaryKey implements Serializable, Comparable<FlashCardPr
 
     @Override
     public int hashCode() {
-        if(questionId == null || answerId == null)
-            return 0;
-        return answerId.hashCode() + questionId.hashCode();
+        int result = questionId != null ? questionId.hashCode() : 0;
+        result = 31 * result + (answerId != null ? answerId.hashCode() : 0);
+        return result;
     }
 
     @Override
