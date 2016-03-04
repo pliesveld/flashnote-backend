@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.io.*;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 
 import static org.junit.Assert.*;
@@ -63,14 +66,16 @@ public class AttachmentTest
         String resource_dir = ClassLoader.getSystemResource(".").getPath();
         String expected_file = "puppy.jpg";
 
+        Resource resource = new ClassPathResource(expected_file);
         Serializable id = null;
 
         {
     //        System.out.println("dir: " + resource_dir);
 
-            assertTrue("Could not load test resource: " + expected_file, new ClassPathResource(expected_file).exists());
 
-            byte[] photoBytes = readBytesFromFile(new ClassPathResource(expected_file).getFile().getAbsolutePath());
+            assertTrue("Could not load test resource: " + resource.getFile(), resource.exists());
+
+            byte[] photoBytes = readBytesFromFile(resource.getFile().getAbsolutePath());
 
             Attachment attachment = new Attachment();
             attachment.setContentType(expected_type);
@@ -98,6 +103,7 @@ public class AttachmentTest
             String fileout = Paths.get(resource_dir,"puppy_out.jpg").toString();
             saveBytesToFile(fileout,attachment2.getFileData());
 
+            verifyFiles(resource.getFile(),new File(fileout));
             // TODO: verify files match
 
             creationTime = attachment2.getModifiedOn();
@@ -126,8 +132,58 @@ public class AttachmentTest
         }
 
     }
+    private String computeHash(InputStream inputStream) throws IOException {
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            fail("Could not load message digest sha-256");
+        }
+
+        byte[] dataBytes = new byte[1024];
+
+        int nread = 0;
+        while((nread = inputStream.read(dataBytes)) != -1)
+        {
+            md.update(dataBytes,0,nread);
+        }
+
+        byte[] mdbytes = md.digest();
+
+        StringBuffer hexString = new StringBuffer();
+    	for (int i=0;i<mdbytes.length;i++) {
+    	  hexString.append(Integer.toHexString(0xFF & mdbytes[i]));
+    	}
+
+        return hexString.toString();
+    }
+
+    private void verifyFiles(File file_in, File file_out) {
+        assertNotNull(file_in);
+        assertNotNull(file_out);
 
 
+
+        try {
+            FileInputStream fis = new FileInputStream(file_in);
+            FileInputStream fis2 = new FileInputStream(file_out);
+
+            try {
+                String hash1 = computeHash(fis);
+                String hash2 = computeHash(fis2);
+
+                assertEquals(hash1,hash2);
+            } catch(IOException ioe) {
+                fail(ioe.getMessage());
+            }
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
+
+    }
 
 
 }
