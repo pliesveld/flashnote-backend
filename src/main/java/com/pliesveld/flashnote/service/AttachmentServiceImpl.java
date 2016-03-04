@@ -65,6 +65,23 @@ public class AttachmentServiceImpl implements AttachmentService {
         return attachmentBin;
     }
 
+    private AttachmentBinary verifyAttachmentBinary(int id) throws AttachmentNotFoundException
+    {
+        AttachmentBinary attachmentBin = attachmentBinaryRepository.findOne(id);
+        if(attachmentBin == null)
+            throw new AttachmentNotFoundException(id);
+        return attachmentBin;
+    }
+
+    private AttachmentText verifyAttachmentText(int id) throws AttachmentNotFoundException
+    {
+        AttachmentText attachmentText = attachmentTextRepository.findOne(id);
+        if(attachmentText == null)
+            throw new AttachmentNotFoundException(id);
+
+        return attachmentText;
+    }
+
 
     @Override
     public List<AttachmentBinary> findBinaryAttachmentByStudentEmail(String email) throws StudentNotFoundException {
@@ -101,6 +118,18 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public AbstractAttachment findAttachmentById(int id) throws AttachmentNotFoundException {
         AbstractAttachment attachment = verifyAttachment(id);
+        return attachment;
+    }
+
+    @Override
+    public AttachmentBinary findAttachmentBinaryById(int id) throws AttachmentNotFoundException {
+        AttachmentBinary attachment = verifyAttachmentBinary(id);
+        return attachment;
+    }
+
+    @Override
+    public AttachmentText findAttachmentTextById(int id) throws AttachmentNotFoundException {
+        AttachmentText attachment = verifyAttachmentText(id);
         return attachment;
     }
 

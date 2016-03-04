@@ -2,8 +2,10 @@ package com.pliesveld.flashnote.web.controller;
 
 
 import com.pliesveld.flashnote.domain.AttachmentBinary;
+import com.pliesveld.flashnote.domain.AttachmentText;
 import com.pliesveld.flashnote.domain.AttachmentType;
 import com.pliesveld.flashnote.domain.dto.AttachmentHeader;
+import com.pliesveld.flashnote.exception.AttachmentNotFoundException;
 import com.pliesveld.flashnote.exception.AttachmentUploadException;
 import com.pliesveld.flashnote.service.AttachmentService;
 import com.pliesveld.flashnote.service.CardService;
@@ -13,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -89,12 +92,29 @@ public class AttachmentController  {
     @RequestMapping(value="/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> downloadAttachment(@PathVariable("id") int id)
     {
-        AttachmentBinary attachment = attachmentService.findAttachmentById(id);
+        MediaType content_type = null;
+        Object response_data = null;
+        long last_modified = 0;
+
+
+        try {
+            AttachmentBinary attachment;
+            attachment = attachmentService.findAttachmentBinaryById(id);
+            response_data = attachment.getFileData();
+            content_type = attachment.getAttachmentType().getMediatype();
+            last_modified = attachment.getModifiedOn().toEpochMilli();
+        } catch(AttachmentNotFoundException anfe) {
+            AttachmentText attachment;
+            attachment = attachmentService.findAttachmentTextById(id);
+            response_data = attachment.getContents();
+            content_type = attachment.getAttachmentType().getMediatype();
+            last_modified = attachment.getModifiedOn().toEpochMilli();
+        }
 
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setContentType(attachment.getAttachmentType().getMediatype());
-        responseHeaders.setDate(attachment.getModifiedOn().toEpochMilli());
-        return new ResponseEntity<>(attachment.getFileData(),responseHeaders,HttpStatus.OK);
+        responseHeaders.setContentType(content_type);
+        responseHeaders.setDate(last_modified);
+        return new ResponseEntity<>(response_data,responseHeaders,HttpStatus.OK);
     }
 
     @RequestMapping(value="/{id}", method = RequestMethod.HEAD)

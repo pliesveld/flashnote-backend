@@ -27,14 +27,22 @@ public interface AttachmentService {
     @Transactional(rollbackFor = AttachmentNotFoundException.class)
     AbstractAttachment delete(int id)                                             throws AttachmentNotFoundException;
 
+    @Transactional(readOnly = true)
+    AttachmentBinary findAttachmentBinaryById(int id)                             throws AttachmentNotFoundException;
+
+    @Transactional(readOnly = true)
+    AttachmentText findAttachmentTextById(int id)                                 throws AttachmentNotFoundException;
+
     @Transactional
     void                        removeAttachmentById(int id)                      throws AttachmentNotFoundException;
     @Transactional(readOnly = true)
     List<AbstractAttachment>    findAttachmentByStudent(int id)                   throws StudentNotFoundException;
 
-    List<AttachmentBinary> findBinaryAttachmentByStudentEmail(String email) throws StudentNotFoundException;
+    @Transactional(readOnly = true)
+    List<AttachmentBinary> findBinaryAttachmentByStudentEmail(String email)       throws StudentNotFoundException;
 
-    List<AttachmentText> findTextAttachmentByStudentEmail(String email) throws StudentNotFoundException;
+    @Transactional(readOnly = true)
+    List<AttachmentText> findTextAttachmentByStudentEmail(String email)           throws StudentNotFoundException;
 
     @Transactional(readOnly = true)
     List<AttachmentBinary>      findBinaryAttachmentByStudent(int id)             throws StudentNotFoundException;
