@@ -3,8 +3,8 @@ package com.pliesveld.flashnote.security;
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.domain.StudentRole;
 import com.pliesveld.flashnote.repository.StudentRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
@@ -24,10 +24,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.pliesveld.flashnote.logging.Markers.SECURITY_AUTH;
+
 @Component
 @Transactional(rollbackFor = UsernameNotFoundException.class)
 public class AuthService extends AbstractUserDetailsAuthenticationProvider implements UserDetailsService {
-    final static Logger LOG = LoggerFactory.getLogger(AuthService.class);
+    private static final Logger LOG = LogManager.getLogger();
 
     @Autowired
     private StudentRepository studentRepository;
@@ -35,20 +37,19 @@ public class AuthService extends AbstractUserDetailsAuthenticationProvider imple
     @Override
     @Transactional(rollbackFor = UsernameNotFoundException.class)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        LOG.info("Looking up email address: " + username);
+        LOG.info(SECURITY_AUTH, "Looking up email address: " + username);
         Student student = studentRepository.findOneByEmail(username);
-        LOG.info("Email: " + username + " -> " + student);
+
 
         if(student == null)
         {
             throw new UsernameNotFoundException(String.format("Student with an email address of %s does not exist",username));
         }
 
-        LOG.info(" pass " + student.getPassword() + " email " + student.getEmail());
-
-
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(student.getRole().toString());
-        authorities.forEach((a) -> LOG.info(a.getAuthority()));
+
+        LOG.info(SECURITY_AUTH, "Email: " + username + " -> " + student);
+        authorities.forEach((a) -> LOG.info(SECURITY_AUTH,a.getAuthority()));
 
         return new StudentPrincipal(student,authorities);
 
