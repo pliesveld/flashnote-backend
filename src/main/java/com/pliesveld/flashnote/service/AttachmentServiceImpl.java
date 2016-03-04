@@ -1,33 +1,39 @@
 package com.pliesveld.flashnote.service;
 
-import com.pliesveld.flashnote.domain.Attachment;
-import com.pliesveld.flashnote.domain.StudentDetails;
+import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.domain.dto.AttachmentHeader;
 import com.pliesveld.flashnote.exception.AttachmentNotFoundException;
+import com.pliesveld.flashnote.exception.AttachmentUploadException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
-import com.pliesveld.flashnote.repository.AttachmentRepository;
+import com.pliesveld.flashnote.repository.AttachmentBinaryRepository;
+import com.pliesveld.flashnote.repository.AttachmentTextRepository;
+import com.pliesveld.flashnote.web.validator.ValidAttachment;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.pliesveld.flashnote.logging.Markers.SERVICE_ATTACHMENT;
 
 @Service(value = "attachmentService")
 public class AttachmentServiceImpl implements AttachmentService {
     private static final Logger LOG = LogManager.getLogger();
 
     @Autowired
-    AttachmentRepository attachmentRepository;
+    AttachmentBinaryRepository attachmentBinaryRepository;
+
+    @Autowired
+    AttachmentTextRepository attachmentTextRepository;
 
     @Autowired
     StudentService studentService;
 
-
-    private StudentDetails verifyStudent(int id) throws StudentNotFoundException
+    private StudentDetails verifyStudentDetails(int id) throws StudentNotFoundException
     {
         StudentDetails studentDetails = studentService.findStudentDetailsById(id);
         if(studentDetails == null)
@@ -36,63 +42,124 @@ public class AttachmentServiceImpl implements AttachmentService {
         return studentDetails;
     }
 
-    private Attachment verifyAttachment(int id) throws AttachmentNotFoundException
+    private Student verifyStudent(int id) throws StudentNotFoundException
     {
-        Attachment attachment = attachmentRepository.findOne(id);
-        if(attachment == null)
-            throw new AttachmentNotFoundException(id);
-        return attachment;
+        Student student = studentService.findStudentById(id);
+        if(student == null)
+            throw new StudentNotFoundException(id);
+
+        return student;
+    }
+
+    private AbstractAttachment verifyAttachment(int id) throws AttachmentNotFoundException
+    {
+        AttachmentBinary attachmentBin = attachmentBinaryRepository.findOne(id);
+        if(attachmentBin == null)
+        {
+            AttachmentText attachmentText = attachmentTextRepository.findOne(id);
+            if(attachmentText == null)
+                throw new AttachmentNotFoundException(id);
+
+            return attachmentText;
+        }
+        return attachmentBin;
     }
 
 
     @Override
-    @Transactional(readOnly = true)
-    public Attachment findAttachmentById(int id) throws AttachmentNotFoundException {
-        Attachment attachment = verifyAttachment(id);
+    public List<AttachmentBinary> findBinaryAttachmentByStudentEmail(String email) throws StudentNotFoundException {
+        return attachmentBinaryRepository.findByCreatedByUser(email);
+    }
+
+    @Override
+    public List<AttachmentText> findTextAttachmentByStudentEmail(String email) throws StudentNotFoundException {
+        return attachmentTextRepository.findByCreatedByUser(email);
+    }
+
+    @Override
+    public List<AttachmentBinary> findBinaryAttachmentByStudent(int id) throws StudentNotFoundException {
+        Student student = verifyStudent(id);
+        String email;
+        if(!StringUtils.hasText((email = student.getEmail())))
+        {
+            throw new StudentNotFoundException("No email for student id " + id);
+        }
+        return findBinaryAttachmentByStudentEmail(email);
+    }
+
+    @Override
+    public List<AttachmentText> findTextAttachmentByStudent(int id) throws StudentNotFoundException {
+        Student student = verifyStudent(id);
+        String email;
+        if(!StringUtils.hasText((email = student.getEmail())))
+        {
+            throw new StudentNotFoundException("No email for student id " + id);
+        }
+        return findTextAttachmentByStudentEmail(email);
+    }
+
+    @Override
+    public AbstractAttachment findAttachmentById(int id) throws AttachmentNotFoundException {
+        AbstractAttachment attachment = verifyAttachment(id);
         return attachment;
     }
 
     @Override
     public void removeAttachmentById(int id) throws AttachmentNotFoundException {
-        if(!attachmentRepository.exists(id))
+        if(attachmentBinaryRepository.exists(id))
+        {
+            attachmentBinaryRepository.delete(id);
+        } else if(attachmentTextRepository.exists(id)) {
+            attachmentTextRepository.delete(id);
+        } else {
             throw new AttachmentNotFoundException("Could not find id " + id);
-
-        attachmentRepository.delete(id);
+        }
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<Attachment> findAttachmentByStudent(int id) throws StudentNotFoundException {
+    public List<AbstractAttachment> findAttachmentByStudent(int id) throws StudentNotFoundException {
 
-        StudentDetails studentDetails = verifyStudent(id);
-        return new ArrayList<Attachment>();
+        StudentDetails studentDetails = verifyStudentDetails(id);
+        String email = studentDetails.getStudent().getEmail();
+        List<AbstractAttachment> attachmentList = new ArrayList<>();
+
+        attachmentBinaryRepository.findByCreatedByUser(email).forEach(attachmentList::add);
+        attachmentTextRepository.findByCreatedByUser(email).forEach(attachmentList::add);
+
+        return attachmentList;
     }
 
     @Override
-    @Transactional
-    public Attachment storeAttachment(Attachment attachment) {
-
-        LOG.debug("Storing attachment {} {} {}", attachment.getAttachmentType(),
+    public AttachmentText storeAttachment(@ValidAttachment AttachmentText attachment) throws AttachmentUploadException {
+        LOG.debug(SERVICE_ATTACHMENT,"Storing attachment {} {} {}", attachment.getAttachmentType(),
                 attachment.getFileName(),attachment.getMimeType());
 
-        return attachmentRepository.save(attachment);
+        return attachmentTextRepository.save(attachment);
+    }
+
+
+    @Override
+    public AttachmentBinary storeAttachment(@ValidAttachment AttachmentBinary attachment) throws AttachmentUploadException {
+
+        LOG.debug(SERVICE_ATTACHMENT,"Storing attachment {} {} {}", attachment.getAttachmentType(),
+                attachment.getFileName(),attachment.getMimeType());
+
+        return attachmentBinaryRepository.save(attachment);
     }
 
     @Override
-    @Transactional(rollbackFor = StudentNotFoundException.class)
-    public Attachment delete(int id) throws AttachmentNotFoundException {
-        Attachment attachment = attachmentRepository.findOne(id);
+    public AttachmentBinary delete(int id) throws AttachmentNotFoundException {
+        AttachmentBinary attachment = attachmentBinaryRepository.findOne(id);
         if(attachment == null)
             throw new AttachmentNotFoundException(id);
 
-        attachmentRepository.delete(attachment);
+        attachmentBinaryRepository.delete(attachment);
         return attachment;
     }
 
     @Override
-    @Transactional(rollbackFor = AttachmentNotFoundException.class)
     public AttachmentHeader findAttachmentHeaderById(int id) throws AttachmentNotFoundException {
-        return attachmentRepository.findAttachmentHeaderById(id);
+        return attachmentBinaryRepository.findAttachmentHeaderById(id);
     }
 
     @Override
