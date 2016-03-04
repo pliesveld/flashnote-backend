@@ -1,5 +1,6 @@
 package com.pliesveld.flashnote.schema;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,13 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.function.Consumer;
 
 @Configuration
 @PropertySource(value = {"classpath:dev-datasource.properties"})
@@ -82,11 +85,48 @@ public class DropCreateDatabase {
         return newJdbcUrl;
     }
 
+    class SQLExecutor implements Consumer<String> {
+
+        private final Connection connection;
+
+        SQLExecutor(Connection statement) {
+            this.connection = statement;
+        }
+
+
+        @Override
+        public void accept(String sql) {
+            Statement statement = null;
+            try {
+                statement = connection.createStatement();
+                statement.executeUpdate(sql);
+                LOG.info("{}",sql);
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+                LOG.error("{}",sql);
+                LOG.catching(Level.ERROR,e);
+            } finally {
+                if(statement != null)
+                    try {
+                        statement.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+            }
+        }
+
+        @Override
+        public Consumer<String> andThen(Consumer<? super String> after) {
+            return null;
+        }
+    }
+
     public void main_real(String[] args) {
         initFromEnvironment(environment);
-        DB_URL = trimDB(DB_URL);
+        String DB_ROOT_URL = trimDB(DB_URL);
         LOG.info("JDBC: " + JDBC_DRIVER);
-        LOG.info("DB_URL: " + DB_URL);
+        LOG.info("DB_URL: " + DB_ROOT_URL);
         Connection conn = null;
         Statement stmt = null;
 
@@ -95,8 +135,8 @@ public class DropCreateDatabase {
             Class.forName(JDBC_DRIVER);
 
             //STEP 3: Open a connection
-            LOG.info("Connecting to a selected database: " + DB_URL);
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            LOG.info("Connecting to a selected database: " + DB_ROOT_URL);
+            conn = DriverManager.getConnection(DB_ROOT_URL, USER, PASS);
             LOG.info("Connected database successfully...");
 
             //STEP 4: Execute a query
@@ -113,17 +153,12 @@ public class DropCreateDatabase {
 
             if(StringUtils.hasText(DB_INIT))
             {
-                LOG.info(DB_INIT == null);
-                LOG.info(DB_INIT.equals(""));
-                LOG.info(DB_INIT.length());
-                LOG.info(DB_INIT);
                 Resource resource = new ClassPathResource(DB_INIT);
                 if(!resource.exists())
                 {
                     LOG.error("Could not find {}",DB_INIT);
                 } else {
-                    LOG.info("Running db init", DB_INIT);
-                    Files.lines(resource.getFile().toPath()).filter(s -> !s.startsWith("--")).forEach(System.out::println);
+                    initializeDB(resource);
                 }
 
 
@@ -139,7 +174,7 @@ public class DropCreateDatabase {
             //finally block used to close resources
             try {
                 if (stmt != null)
-                    conn.close();
+                    stmt.close();
             } catch (SQLException se) {
             }// do nothing
             try {
@@ -150,6 +185,28 @@ public class DropCreateDatabase {
             }//end finally try
         }//end try
     }//end main
+
+    private void initializeDB(Resource resource) throws IOException {
+        //STEP 3: Open a connection
+        LOG.info("Connecting to a selected database: " + DB_URL);
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            LOG.info("Connected database successfully...");
+            SQLExecutor sqlExecutor = new SQLExecutor(conn);
+            LOG.info("Running db init", DB_INIT);
+            Files.lines(resource.getFile().toPath()).filter(s -> !s.startsWith("--")).forEach(sqlExecutor);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if(conn != null)
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+        }
+    }
 
     public static void main(String[] args) {
         AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
