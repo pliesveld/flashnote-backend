@@ -2,6 +2,7 @@ package com.pliesveld.flashnote.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -11,9 +12,11 @@ import java.io.Serializable;
 @Embeddable
 public class FlashCardPrimaryKey implements Serializable, Comparable<FlashCardPrimaryKey> {
 
+    @NotNull
     @Column(name = "QUESTION_ID",nullable = false)
     private Integer questionId;
 
+    @NotNull
     @Column(name = "ANSWER_ID",nullable = false)
     private Integer answerId;
 

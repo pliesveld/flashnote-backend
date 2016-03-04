@@ -21,7 +21,7 @@ public abstract class AbstractAttachment extends AbstractAuditableEntity {
     @Column(name = "ATTACHMENT_ID")
     Integer id;
 
-    @Column(name = "CONTENT_TYPE", length = 16)         @NotNull
+    @Column(name = "CONTENT_TYPE", length = 16, nullable = false)   @NotNull
     @Convert(converter = AttachmentTypeConverter.class)
     AttachmentType contentType;
 
@@ -30,7 +30,7 @@ public abstract class AbstractAttachment extends AbstractAuditableEntity {
     AbstractStatement statement;
 
     @NotNull
-    @Column(name = "FILENAME", length = Constants.MAX_ATTACHMENT_FILENAME_LENGTH)
+    @Column(name = "FILENAME", length = Constants.MAX_ATTACHMENT_FILENAME_LENGTH, nullable = false)
     String fileName;
 
     @Column(name = "FILE_LENGTH")

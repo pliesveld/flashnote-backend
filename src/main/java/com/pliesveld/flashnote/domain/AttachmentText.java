@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @PrimaryKeyJoinColumn(name = "ATTACHMENT_ID", foreignKey = @ForeignKey(name = "FK_ATTACHMENT_TEXT"))
 public class AttachmentText extends AbstractAttachment {
     @NotNull
-    @Column(name = "FILE_TEXT", length = Constants.MAX_ATTACHMENT_TEXT_FILE_LENGTH)
+    @Column(name = "FILE_TEXT", length = Constants.MAX_ATTACHMENT_TEXT_FILE_LENGTH, nullable = false)
     @Size(max = Constants.MAX_ATTACHMENT_TEXT_FILE_LENGTH)
     String contents;
 

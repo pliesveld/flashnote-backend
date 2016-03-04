@@ -1,11 +1,15 @@
 package com.pliesveld.flashnote.domain;
 
+import com.pliesveld.flashnote.schema.Constants;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "STUDENT_DETAILS")
+@Table(name = "STUDENT_DETAILS",
+        uniqueConstraints = @UniqueConstraint(name = "UNIQUE_STUDENT_NAME", columnNames = "STUDENT_NAME"))
 public class StudentDetails implements Serializable
 {
     @Id
@@ -18,8 +22,9 @@ public class StudentDetails implements Serializable
     @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private Student student;
 
-    @Size(min = 3,max = 32)
-    @Column(name = "STUDENT_NAME",  length = 32, nullable = false)
+    @NotNull
+    @Size(min = Constants.MIN_STUDENT_NAME_LENGTH,max = Constants.MAX_STUDENT_NAME_LENGTH)
+    @Column(name = "STUDENT_NAME",  length = Constants.MAX_STUDENT_NAME_LENGTH, nullable = false)
     private String name;
 
     public StudentDetails() {

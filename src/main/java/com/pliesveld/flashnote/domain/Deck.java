@@ -2,8 +2,10 @@ package com.pliesveld.flashnote.domain;
 
 import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
+import com.pliesveld.flashnote.schema.Constants;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +48,8 @@ public class Deck extends DomainBaseEntity implements Serializable
     )
     private List<FlashCard> flashCards = new ArrayList<>();
 
-    @Column(name = "DECK_TITLE", length=177)
+    @NotNull
+    @Column(name = "DECK_TITLE", length = Constants.MAX_DECK_TITLE_LENGTH, nullable = false)
     private String title = "Untitled";
 
     @ManyToOne

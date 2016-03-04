@@ -1,6 +1,7 @@
 package com.pliesveld.flashnote.domain;
 
 import com.pliesveld.flashnote.domain.base.AbstractAuditableEntity;
+import com.pliesveld.flashnote.schema.Constants;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,10 +18,10 @@ public class Category extends AbstractAuditableEntity implements Serializable
     @Column(name = "CATEGORY_ID")
     private Integer id;
 
-    @Column(name = "CATEGORY_NAME", length = 34, nullable = false)
+    @Column(name = "CATEGORY_NAME", length = Constants.MAX_CATEGORY_NAME_LENGTH, nullable = false)
     private String name;
 
-    @Column(name = "CATEGORY_DESC", length = 512, nullable = false)
+    @Column(name = "CATEGORY_DESC", length = Constants.MAX_CATEGORY_DESCRIPTION_LENGTH, nullable = false)
     private String description;
 
     @ManyToOne(cascade = CascadeType.ALL)

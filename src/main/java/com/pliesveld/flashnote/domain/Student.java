@@ -7,6 +7,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import static com.pliesveld.flashnote.schema.Constants.*;
+
 @Entity
 @Table(name = "STUDENT_ACCOUNT",
         uniqueConstraints = @UniqueConstraint(name = "UNIQUE_EMAIL", columnNames = {"STUDENT_EMAIL"}))
@@ -23,19 +25,19 @@ public class Student {
     private StudentDetails studentDetails;
 
     @NotNull
-    @Size(min = 5,max = 48)
+    @Size(min = MIN_STUDENT_EMAIL_LENGTH,max = MAX_STUDENT_EMAIL_LENGTH)
     @Email
-    @Column(name = "STUDENT_EMAIL", length = 48, nullable = false, unique = true)
+    @Column(name = "STUDENT_EMAIL", length = MAX_STUDENT_EMAIL_LENGTH, nullable = false, unique = true)
     private String email;
 
     @NotNull
-    @Size(min = 1, max = 60)
-    @Column(name = "STUDENT_PASSWORD", length = 60, nullable = true)
+    @Size(min = MIN_STUDENT_PASSWORD_LENGTH, max = MAX_STUDENT_EMAIL_LENGTH)
+    @Column(name = "STUDENT_PASSWORD", length = MAX_STUDENT_PASSWORD_LENGTH, nullable = false)
     private String password;
 
     @NotNull
-    @Column(name="STUDENT_ROLE",length=16)
-    @Convert(converter=StudentRoleConverter.class)
+    @Column(name="STUDENT_ROLE", nullable = false)
+    @Convert(converter = StudentRoleConverter.class)
     @Basic(fetch = FetchType.EAGER)
     private StudentRole role;
 
