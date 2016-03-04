@@ -1,7 +1,10 @@
 package com.pliesveld.flashnote.repository;
 
 import com.pliesveld.flashnote.domain.Deck;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface DeckRepository extends JpaRepository<Deck,Integer> {
+import java.util.List;
+
+public interface DeckRepository extends CrudRepository<Deck,Integer> {
+    List<Deck> findByAuthor_Id(int id);
 }

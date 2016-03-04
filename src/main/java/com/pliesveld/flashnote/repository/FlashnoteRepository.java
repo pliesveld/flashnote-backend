@@ -20,8 +20,8 @@ import java.io.Serializable;
 public interface FlashnoteRepository<T, ID extends Serializable>
     extends CrudRepository<T, ID>
 {
-    enum PERMISSIONS { NONE, READ, WRITE }
-    public PERMISSIONS permissions(StudentPrincipal currentUser, T resource);
+    enum RepositoryPermissions { NONE, READ, WRITE }
+    public RepositoryPermissions permissions(StudentPrincipal currentUser, T resource);
 }
 
 

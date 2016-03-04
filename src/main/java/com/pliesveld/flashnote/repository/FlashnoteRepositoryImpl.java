@@ -31,7 +31,7 @@ public class FlashnoteRepositoryImpl<T, ID extends Serializable>
 
 
     @Override
-    public PERMISSIONS permissions(StudentPrincipal currentUser, T resource) {
-        return PERMISSIONS.NONE;
+    public RepositoryPermissions permissions(StudentPrincipal currentUser, T resource) {
+        return RepositoryPermissions.NONE;
     }
 }

@@ -1,5 +1,6 @@
 package com.pliesveld.flashnote.unit.spring;
 
+import com.pliesveld.flashnote.spring.Profiles;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -12,7 +13,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@ActiveProfiles("h2")
+@ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextConfiguration(classes = SpringUnitTestConfig.class, loader = AnnotationConfigContextLoader.class)
 @TestPropertySource( locations = "classpath:test-datasource.properties" )
 public @interface DefaultTestAnnotations { }

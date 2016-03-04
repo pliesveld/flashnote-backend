@@ -12,7 +12,7 @@ import javax.persistence.TypedQuery;
  * Created by happs on 2/21/16.
  */
 
-public class AttachmentRepositoryImpl implements AttachmentRepositoryCustomization {
+public class AttachmentTextRepositoryImpl implements AttachmentRepositoryCustomization {
     @PersistenceContext
     EntityManager em;
 

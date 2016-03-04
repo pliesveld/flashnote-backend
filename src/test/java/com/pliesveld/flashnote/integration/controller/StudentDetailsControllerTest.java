@@ -6,6 +6,7 @@ import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.domain.dto.StudentDTO;
 import com.pliesveld.flashnote.service.StudentService;
 import com.pliesveld.flashnote.spring.FlashnoteContainerApplication;
+import com.pliesveld.flashnote.spring.Profiles;
 import com.pliesveld.flashnote.unit.spring.SpringUnitTestConfig;
 import com.pliesveld.flashnote.util.generator.StudentGenerator;
 import com.pliesveld.flashnote.web.controller.StudentController;
@@ -42,7 +43,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles("h2")
+@ActiveProfiles(Profiles.INTEGRATION_TEST)
 @SpringApplicationConfiguration(classes = FlashnoteContainerApplication.class)
 @ContextConfiguration(classes = { MockServletContext.class, SpringUnitTestConfig.class }, loader = AnnotationConfigContextLoader.class)
 @WebAppConfiguration

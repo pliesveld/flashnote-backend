@@ -1,32 +1,28 @@
 package com.pliesveld.flashnote.unit.repository;
 
+import com.pliesveld.flashnote.repository.DeckRepository;
 import com.pliesveld.flashnote.repository.StudentRepository;
 import com.pliesveld.flashnote.spring.Profiles;
 import com.pliesveld.flashnote.spring.SpringRootConfig;
 import com.pliesveld.flashnote.spring.db.H2DataSource;
 import com.pliesveld.flashnote.spring.db.PersistenceContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.mapping.PropertyReferenceException;
-import org.springframework.stereotype.Controller;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.util.StringUtils;
 
-import static junit.framework.Assert.*;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.fail;
 
-@Configuration
-@ActiveProfiles(Profiles.INTEGRATION_TEST)
-@ComponentScan(basePackages = {
-        "com.pliesveld.flashnote.spring.db",
-        "com.pliesveld.flashnote.service",
-        "com.pliesveld.flashnote.repository"
-},
-        excludeFilters = @ComponentScan.Filter(Controller.class))
+
 public class ConstructRepositoryBeanTest {
+    private static final Logger LOG = LogManager.getLogger();
 
     @Test
     public void constructDeckRepositry()
@@ -35,6 +31,7 @@ public class ConstructRepositoryBeanTest {
         System.setProperty("spring.profiles.active",Profiles.INTEGRATION_TEST);
         AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
 
+        LOG.info(StringUtils.arrayToCommaDelimitedString(ctx.getEnvironment().getActiveProfiles()));
         try {
         ctx.register(SpringRootConfig.class);
         ctx.register(TestRepositoryConfig.class);
@@ -51,9 +48,10 @@ public class ConstructRepositoryBeanTest {
         }
 
         TestRepositoryConfig testRepositoryConfig = ctx.getBean(TestRepositoryConfig.class);
-        assertEquals(4,testRepositoryConfig.sample);
+
 
         assertNotNull(testRepositoryConfig.studentRepository);
+        assertNotNull(testRepositoryConfig.deckRepository);
     }
 }
 
@@ -63,6 +61,10 @@ class TestRepositoryConfig {
 
     @Autowired
     StudentRepository studentRepository;
+
+    @Autowired
+    DeckRepository deckRepository;
+
 
     public TestRepositoryConfig() {}
 

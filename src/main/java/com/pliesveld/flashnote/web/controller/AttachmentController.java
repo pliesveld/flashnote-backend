@@ -1,7 +1,7 @@
 package com.pliesveld.flashnote.web.controller;
 
 
-import com.pliesveld.flashnote.domain.Attachment;
+import com.pliesveld.flashnote.domain.AttachmentBinary;
 import com.pliesveld.flashnote.domain.AttachmentType;
 import com.pliesveld.flashnote.domain.dto.AttachmentHeader;
 import com.pliesveld.flashnote.exception.AttachmentUploadException;
@@ -60,7 +60,7 @@ public class AttachmentController  {
         LOG.info("Uploading attachment from: " + request.getRemoteAddr() + " filename: " + fileName + " size: " + file.getSize() );
 
 
-        Attachment attachment = new Attachment();
+        AttachmentBinary attachment = new AttachmentBinary();
         String fileContentType = file.getContentType();
         AttachmentType attachmentType = AttachmentType.valueOfMime(fileContentType);
         attachment.setContentType(attachmentType);
@@ -89,7 +89,7 @@ public class AttachmentController  {
     @RequestMapping(value="/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> downloadAttachment(@PathVariable("id") int id)
     {
-        Attachment attachment = attachmentService.findAttachmentById(id);
+        AttachmentBinary attachment = attachmentService.findAttachmentById(id);
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setContentType(attachment.getAttachmentType().getMediatype());
