@@ -1,18 +1,12 @@
 package com.pliesveld.flashnote.unit.web.validator;
 
 
-import com.pliesveld.flashnote.unit.spring.SpringUnitTestConfig;
-import com.pliesveld.flashnote.web.validator.ImageMetaData;
+import com.pliesveld.flashnote.web.validator.ImageMetadata;
 import com.pliesveld.flashnote.web.validator.ImageMetadataReader;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -27,9 +21,6 @@ import java.io.IOException;
 import java.net.URL;
 
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles("h2")
-@ContextConfiguration(classes = SpringUnitTestConfig.class, loader = AnnotationConfigContextLoader.class)
 public class ImageMetadataReaderTest {
     private static final Logger LOG = LogManager.getLogger();
 
@@ -58,7 +49,7 @@ public class ImageMetadataReaderTest {
 
             try {
                 byte[] contents = openToByteArray(file);
-                ImageMetaData imd = ImageMetadataReader.readImageMetaData(file.getName(), contents);
+                ImageMetadata imd = ImageMetadataReader.readImageMetaData(file.getName(), contents);
                 LOG.info(imd);
             } catch(IOException ex) {
                 LOG.error("reader could not open {}",file.getName());
@@ -77,7 +68,7 @@ public class ImageMetadataReaderTest {
 
     void logImageSupport()
     {
-        LOG.debug("Image reader supported formats {}",ImageIO.getReaderFormatNames());
+        LOG.debug("Image reader supported formats " + ImageIO.getReaderFormatNames());
         LOG.debug("Image reader supported file extensions {}",ImageIO.getReaderFileSuffixes());
         LOG.debug("Image reader supported MIME types {}",ImageIO.getReaderMIMETypes());
     }

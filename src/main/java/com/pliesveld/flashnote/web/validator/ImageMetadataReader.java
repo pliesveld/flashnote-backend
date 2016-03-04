@@ -58,7 +58,7 @@ public class ImageMetadataReader {
      * @return Image metadata
      * @throws IOException
      */
-    static public ImageMetaData readImageMetaData(String name, byte[] contents, String mime_type) throws IOException {
+    static public ImageMetadata readImageMetadata(String name, byte[] contents, String mime_type) throws IOException {
 
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(contents);
         ImageInputStream iis = ImageIO.createImageInputStream(byteArrayInputStream);
@@ -98,7 +98,7 @@ public class ImageMetadataReader {
             //attach source to reader
             reader.setInput(iis,true);
 
-            return new ImageMetaData(reader.getFormatName(),reader.getWidth(0),reader.getHeight(0),reader.getAspectRatio(0));
+            return new ImageMetadata(reader.getFormatName(),reader.getWidth(0),reader.getHeight(0),reader.getAspectRatio(0));
 
             // TODO: verify user supplied mime_type is mime type returned by image provider
             // TODO: verify user supplied file suffix is mime type returned by image provider
@@ -109,16 +109,16 @@ public class ImageMetadataReader {
     /**
      * Convience methods
      */
-    static public ImageMetaData readImageMetaData(byte[] contents) throws IOException {
-        return readImageMetaData(null,contents,null);
+    static public ImageMetadata readImageMetaData(byte[] contents) throws IOException {
+        return readImageMetadata(null, contents, null);
     }
 
-    static public ImageMetaData readImageMetaData(String name, byte[] contents) throws IOException {
-        return readImageMetaData(name,contents,null);
+    static public ImageMetadata readImageMetaData(String name, byte[] contents) throws IOException {
+        return readImageMetadata(name, contents, null);
     }
 
-    static public ImageMetaData readImageMetaData(byte[] contents, String mime_type) throws IOException {
-        return readImageMetaData(null,contents,mime_type);
+    static public ImageMetadata readImageMetaData(byte[] contents, String mime_type) throws IOException {
+        return readImageMetadata(null, contents, mime_type);
     }
 
 }

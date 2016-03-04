@@ -1,6 +1,6 @@
 package com.pliesveld.flashnote.web.validator;
 
-import com.pliesveld.flashnote.domain.Attachment;
+import com.pliesveld.flashnote.domain.AttachmentBinary;
 import com.pliesveld.flashnote.domain.AttachmentType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,7 +15,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 
 @Component
-public class AttachmentValidator implements ConstraintValidator<ValidAttachment, Attachment> {
+public class AttachmentValidator implements ConstraintValidator<ValidAttachment, AttachmentBinary> {
     private static final Logger LOG = LogManager.getLogger();
 
     @Override
@@ -28,7 +28,7 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
     }
 
     @Override
-    public boolean isValid(Attachment attachment, ConstraintValidatorContext context) {
+    public boolean isValid(AttachmentBinary attachment, ConstraintValidatorContext context) {
         AttachmentType attachmentType = attachment.getAttachmentType();
         boolean is_valid = true;
 
@@ -69,13 +69,13 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
 
 
 
-    private boolean validateImageAttachment(Attachment attachment, ConstraintValidatorContext errors) {
+    private boolean validateImageAttachment(AttachmentBinary attachment, ConstraintValidatorContext errors) {
         byte[] content = attachment.getFileData();
         String fileName = attachment.getFileName();
         String mime = attachment.getMimeType();
 
         try {
-            ImageMetadataReader.readImageMetaData(fileName,content,mime);
+            ImageMetadataReader.readImageMetadata(fileName, content, mime);
 
         } catch (IOException e) {
 
@@ -84,7 +84,7 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
         return true;
     }
 
-    private boolean validateDocumentAttachment(Attachment attachment, ConstraintValidatorContext errors) {
+    private boolean validateDocumentAttachment(AttachmentBinary attachment, ConstraintValidatorContext errors) {
         if(!isValidUTF8(attachment.getFileData()))
         {
             //errors.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.message}").addConstraintViolation();
@@ -93,7 +93,7 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
         return true;
     }
 
-    private boolean validateAudioAttachment(Attachment attachment, ConstraintValidatorContext errors) {
+    private boolean validateAudioAttachment(AttachmentBinary attachment, ConstraintValidatorContext errors) {
         //errors.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.message}").addConstraintViolation();
         return false;
     }

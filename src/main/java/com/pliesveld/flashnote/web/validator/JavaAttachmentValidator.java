@@ -1,6 +1,6 @@
 package com.pliesveld.flashnote.web.validator;
 
-import com.pliesveld.flashnote.domain.Attachment;
+import com.pliesveld.flashnote.domain.AttachmentBinary;
 import com.pliesveld.flashnote.domain.AttachmentType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +33,7 @@ public class JavaAttachmentValidator implements Validator {
             return;
         }
 
-        Attachment attachment = (Attachment) target;
+        AttachmentBinary attachment = (AttachmentBinary) target;
         AttachmentType attachmentType = attachment.getAttachmentType();
 
         if(!StringUtils.hasLength(attachment.getFileName()))
@@ -74,33 +74,33 @@ public class JavaAttachmentValidator implements Validator {
 
 
 
-    private void validateImageAttachment(Attachment attachment, Errors errors) {
+    private void validateImageAttachment(AttachmentBinary attachment, Errors errors) {
         byte[] content = attachment.getFileData();
         String fileName = attachment.getFileName();
         String mime = attachment.getMimeType();
 
         try {
-            ImageMetadataReader.readImageMetaData(fileName, content, mime);
+            ImageMetadataReader.readImageMetadata(fileName, content, mime);
 
         } catch (IOException e) {
             errors.rejectValue("fileData","invalid","invalid");
         }
     }
 
-    private void validateDocumentAttachment(Attachment attachment, Errors errors) {
+    private void validateDocumentAttachment(AttachmentBinary attachment, Errors errors) {
         if(!isValidUTF8(attachment.getFileData()))
         {
             errors.rejectValue("fileData","invalid","invalid");
         }
     }
 
-    private void validateAudioAttachment(Attachment attachment, Errors errors) {
+    private void validateAudioAttachment(AttachmentBinary attachment, Errors errors) {
 
     }
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return Attachment.class.isAssignableFrom(clazz);
+        return AttachmentBinary.class.isAssignableFrom(clazz);
     }
 
     /**

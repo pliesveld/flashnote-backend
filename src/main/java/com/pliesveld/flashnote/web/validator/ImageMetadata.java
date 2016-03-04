@@ -1,13 +1,13 @@
 package com.pliesveld.flashnote.web.validator;
 
-public class ImageMetaData
+public class ImageMetadata
 {
     final private String formatName;
     final private int width;
     final private int height;
     final private float aspectRatio;
 
-    ImageMetaData(String formatName, int width, int height, float aspectRatio) {
+    ImageMetadata(String formatName, int width, int height, float aspectRatio) {
         this.formatName = formatName;
         this.width = width;
         this.height = height;
@@ -32,7 +32,7 @@ public class ImageMetaData
 
     @Override
     public String toString() {
-        return "ImageMetaData{" +
+        return "ImageMetadata{" +
                 "formatName='" + formatName + '\'' +
                 ", width=" + width +
                 ", height=" + height +

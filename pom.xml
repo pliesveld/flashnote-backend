@@ -205,6 +205,18 @@
             <version>${hibernate.version}</version>
         </dependency>
 
+
+
+        <!-- Support for java8 date/time -->
+        <!--
+        <dependency>
+            <groupId>org.jadira.usertype</groupId>
+            <artifactId>usertype.extended</artifactId>
+            <version>3.2.0.GA</version>
+        </dependency>
+        -->
+
+
         <!-- Hibernate support for java8 date/time -->
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -312,6 +324,72 @@
             <version>1.7.6</version>
         </dependency>
         -->
+
+    <!-- audio decoder mp3 -->
+    <!--
+    <dependency>
+        <groupId>javazoom</groupId>
+        <artifactId>jlayer</artifactId>
+        <version>1.0.1</version>
+    </dependency>-->
+
+    <dependency>
+        <groupId>com.googlecode.soundlibs</groupId>
+        <artifactId>mp3spi</artifactId>
+        <version>1.9.5-1</version>
+    </dependency>
+
+
+    <!-- audio decoder vorbis -->
+    <dependency>
+        <groupId>com.github.trilarion</groupId>
+        <artifactId>vorbis-support</artifactId>
+        <version>1.1.0</version>
+    </dependency>
+
+
+    <dependency>
+        <groupId>com.googlecode.soundlibs</groupId>
+        <artifactId>tritonus-share</artifactId>
+        <version>0.3.7-2</version>
+
+        <exclusions><exclusion>
+            <groupId>net.sourceforge.jaad</groupId>
+            <artifactId>jaad</artifactId>
+        </exclusion></exclusions>
+    </dependency>
+
+
+    <!-- m4a external jar -->
+    <!--  bug does not play well with other providers 
+    <dependency>
+        <groupId>net.sourceforge.jaad</groupId>
+        <artifactId>jaad</artifactId>
+        <version>0.8.4</version>
+    </dependency> -->
+
+<!--
+    <dependency>
+	    <groupId>org.mobicents.media</groupId>
+	    <artifactId>spi</artifactId>
+	    <version>3.0.2.FINAL</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.mobicents.media</groupId>
+        <artifactId>concurrent</artifactId>
+        <version>3.0.2.FINAL</version>
+        <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>org.mobicents.media</groupId>
+        <artifactId>scheduler</artifactId>
+        <version>3.0.2.FINAL</version>
+        <scope>compile</scope>
+    </dependency>
+-->
+
 
 
     </dependencies>
