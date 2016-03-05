@@ -24,12 +24,12 @@ public class Category extends AbstractAuditableEntity implements Serializable
     @Column(name = "CATEGORY_DESC", length = Constants.MAX_CATEGORY_DESCRIPTION_LENGTH, nullable = false)
     private String description;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "CATEGORY_PARENT_ID", foreignKey = @ForeignKey(name="FK_CATEGORY_PARENT"))
+    @ManyToOne(cascade = {CascadeType.PERSIST})
+    @JoinColumn(name = "CATEGORY_PARENT_ID", foreignKey = @ForeignKey(name="FK_CATEGORY_PARENT"), updatable = false)
     private Category parentCategory;
 
     @OneToMany(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "CATEGORY_ID", foreignKey = @ForeignKey(name="FK_CATEGORY"))
+    @JoinColumn(name = "CATEGORY_ID", foreignKey = @ForeignKey(name="FK_CATEGORY"), updatable = false)
     private Set<Category> childCategories = new HashSet<>();
 
     public Category() {

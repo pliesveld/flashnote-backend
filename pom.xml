@@ -23,6 +23,7 @@
         <security.version>4.0.3.RELEASE</security.version>
         <commons.lang.version>3.4</commons.lang.version>
         <commons.collections.version>4.1</commons.collections.version>
+        <commons.csv.version>1.2</commons.csv.version>
         <commons.io.version>2.4</commons.io.version>
         <log4j.version>2.5</log4j.version>
         <junit.version>4.12</junit.version>
@@ -256,6 +257,12 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
             <version>${commons.collections.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>${commons.csv.version}</version>
         </dependency>
 
 
