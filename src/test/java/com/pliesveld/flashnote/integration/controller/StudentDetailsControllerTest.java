@@ -1,11 +1,11 @@
 package com.pliesveld.flashnote.integration.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pliesveld.flashnote.FlashnoteContainerApplication;
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.domain.dto.StudentDTO;
 import com.pliesveld.flashnote.service.StudentService;
-import com.pliesveld.flashnote.spring.FlashnoteContainerApplication;
 import com.pliesveld.flashnote.spring.Profiles;
 import com.pliesveld.flashnote.unit.spring.SpringUnitTestConfig;
 import com.pliesveld.flashnote.util.generator.StudentGenerator;

@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.spring;
+package com.pliesveld.flashnote.spring.web;
 
 import org.hibernate.validator.HibernateValidator;
 import org.springframework.boot.context.embedded.MultipartConfigFactory;

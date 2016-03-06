@@ -1,13 +1,11 @@
-package com.pliesveld.flashnote.spring;
+package com.pliesveld.flashnote.spring.security;
 
 import com.pliesveld.flashnote.domain.StudentRole;
+import com.pliesveld.flashnote.spring.Profiles;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.autoconfigure.ManagementWebSecurityAutoConfiguration;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -36,9 +34,8 @@ import java.util.Collection;
  * http://stackoverflow.com/questions/24827963/enabling-websecurityconfigurer-via-profile-does-not-work
  */
 @Configuration
-@EnableAutoConfiguration(exclude = SecurityAutoConfiguration.class)
-@ComponentScan(basePackages = {
-        "com.pliesveld.flashnote.security"
+@ComponentScan(basePackageClasses = {
+        com.pliesveld.flashnote.security.StudentPrincipal.class
 })
 public class SpringSecurityConfig {
     private static final Logger LOG = LogManager.getLogger();
@@ -69,9 +66,8 @@ public class SpringSecurityConfig {
 
     @Configuration
     @Profile(Profiles.AUTH)
-    @EnableGlobalAuthentication
-    @EnableAutoConfiguration(exclude = {SecurityAutoConfiguration.class,ManagementWebSecurityAutoConfiguration.class})
     @ConditionalOnExpression("!${my.security.enabled:false}")
+    @EnableGlobalAuthentication
     @EnableWebSecurity
     @EnableGlobalMethodSecurity(prePostEnabled = true)
     protected static class ProductionWebSecurity extends WebSecurityConfigurerAdapter {
