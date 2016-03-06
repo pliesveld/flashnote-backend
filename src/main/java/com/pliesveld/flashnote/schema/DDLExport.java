@@ -6,7 +6,6 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.PropertyValueException;
-import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl;
@@ -23,8 +22,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.util.StringUtils;
 
@@ -64,6 +61,19 @@ public class DDLExport
     @Autowired
     Environment environment;
 
+    public static void main(String[] args) throws IllegalAccessException {
+        System.setProperty("spring.profiles.active", System.getProperty("spring.profiles.active",Profiles.LOCAL));
+        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
+
+        ctx.register(PersistenceContext.class,DDLExport.class);
+        ctx.refresh();
+
+        DDLExport ddlExport = ctx.getBean(DDLExport.class);
+        ddlExport.displayProfile(ctx);
+        ddlExport.real_main(args,ctx);
+    }
+
+
     /* so that Spring knows how to interpret ${} */
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertyConfigIn() {
@@ -86,9 +96,21 @@ public class DDLExport
         properties.put("hibernate.hbm2ddl.auto", environment.getRequiredProperty("hibernate.hbm2ddl.auto"));
         return properties;
     }
-
-
     @Bean
+    @Autowired
+    public LocalSessionFactoryBean sessionFactory(DataSource dataSource)
+    {
+        if(!StringUtils.hasText(PROPERTY_NAME_ENTITY_PACKAGES))
+            throw new PropertyValueException("Could not find entities to scan","entitymanager.packages.to.scan",PROPERTY_NAME_ENTITY_PACKAGES);
+        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
+        sessionFactory.setDataSource(dataSource);
+        sessionFactory.setPackagesToScan(new String[]{PROPERTY_NAME_ENTITY_PACKAGES});
+        sessionFactory.setHibernateProperties(hibernateProperties());
+        return sessionFactory;
+    }
+
+   
+/*    @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
@@ -98,17 +120,6 @@ public class DDLExport
         return dataSource;
     }
 
-    @Bean
-    public LocalSessionFactoryBean sessionFactory()
-    {
-        if(!StringUtils.hasText(PROPERTY_NAME_ENTITY_PACKAGES))
-            throw new PropertyValueException("Could not find entities to scan","entitymanager.packages.to.scan",PROPERTY_NAME_ENTITY_PACKAGES);
-        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-        sessionFactory.setDataSource(dataSource());
-        sessionFactory.setPackagesToScan(new String[] { PROPERTY_NAME_ENTITY_PACKAGES });
-        sessionFactory.setHibernateProperties(hibernateProperties());
-        return sessionFactory;
-    }
 
     @Bean
     @Autowired
@@ -119,18 +130,7 @@ public class DDLExport
         return txManager;
     }
 
-
-    public static void main(String[] args) throws IllegalAccessException {
-        System.setProperty("spring.profiles.active", Profiles.LOCAL);
-        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
-
-        ctx.register(PersistenceContext.class,DDLExport.class);
-        ctx.refresh();
-
-        DDLExport ddlExport = ctx.getBean(DDLExport.class);
-        ddlExport.displayProfile(ctx);
-        ddlExport.real_main(args,ctx);
-    }
+*/
 
 
     public void real_main(String[] args,AnnotationConfigApplicationContext ctx) throws IllegalAccessException

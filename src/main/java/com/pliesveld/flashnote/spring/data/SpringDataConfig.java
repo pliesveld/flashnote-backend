@@ -15,7 +15,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @EnableJpaAuditing(dateTimeProviderRef = "dateTimeProvider")
 @EnableJpaRepositories(basePackageClasses = FlashCardRepository.class)
-@ComponentScan(basePackageClasses = FlashCardRepository.class)
+@ComponentScan(basePackageClasses = {FlashCardRepository.class,AuditingDateTimeProvider.class})
 public class SpringDataConfig {
     @Bean
     DateTimeProvider dateTimeProvider(DateTimeService dateTimeService) {

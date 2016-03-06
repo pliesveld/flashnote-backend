@@ -2,7 +2,10 @@ package com.pliesveld.flashnote.spring.db;
 
 import com.pliesveld.flashnote.spring.Profiles;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -16,10 +19,6 @@ import java.util.Properties;
 
 @Profile(Profiles.LOCAL)
 @Configuration
-@ComponentScan(basePackages = {
-        "com.pliesveld.flashnote.service",
-        "com.pliesveld.flashnote.repository"
-})
 @PropertySource(value = { "classpath:dev-datasource.properties" })
 public class DefaultDataSource {
     private static final String PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN = "entitymanager.packages.to.scan";
