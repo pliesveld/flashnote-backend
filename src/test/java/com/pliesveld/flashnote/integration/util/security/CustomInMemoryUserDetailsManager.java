@@ -1,5 +1,6 @@
 package com.pliesveld.flashnote.integration.util.security;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,6 +11,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+@ConditionalOnMissingBean
 @Component(value = "inMemoryUserDetails")
 public class CustomInMemoryUserDetailsManager implements UserDetailsService {
     private Map<String,User> users = new HashMap<String, User>();
