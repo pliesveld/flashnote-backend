@@ -31,7 +31,7 @@
         <h2.version>1.4.190</h2.version>
         <servletapi.version>3.1.0</servletapi.version>
         <wtp.version>none</wtp.version>
-        <start-class>com.pliesveld.flashnote.spring.FlashnoteContainerApplication</start-class>
+        <start-class>com.pliesveld.flashnote.FlashnoteContainerApplication</start-class>
     </properties>
 
     <dependencyManagement>
@@ -87,10 +87,12 @@
         </dependency>
 
         <!-- http://localhost:port/beans -->
+        <!--
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+        -->
 
         <!-- Spring Security OAuth 2 -->
         <dependency>
