@@ -2,6 +2,7 @@ package com.pliesveld.flashnote.security;
 
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.domain.StudentRole;
+import com.pliesveld.flashnote.logging.Markers;
 import com.pliesveld.flashnote.repository.StudentRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -110,13 +111,13 @@ public class AuthService extends AbstractUserDetailsAuthenticationProvider imple
 
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
-        LOG.info("additionalChecks {}",userDetails.getUsername());
+        LOG.info(Markers.SECURITY_AUTH,"additionalChecks {}",userDetails.getUsername());
         authentication.setAuthenticated(true);
     }
 
     @Override
     protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
-        LOG.info("retrieveUser {}",username);
+        LOG.info(Markers.SECURITY_AUTH,"retrieveUser {}",username);
         //authentication.setAuthenticated(true);
         Student student = studentRepository.findOneByEmail(username);
 

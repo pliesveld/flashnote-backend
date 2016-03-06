@@ -86,6 +86,12 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+        <!-- http://localhost:port/beans -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
         <!-- Spring Security OAuth 2 -->
         <dependency>
             <groupId>org.springframework.security.oauth</groupId>
