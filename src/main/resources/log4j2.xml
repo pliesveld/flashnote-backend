@@ -3,7 +3,8 @@
   <Properties>
     <Property name="filename">log/hibernate.log</Property>
     <Property name="servicefilename">log/service.log</Property>
-    <Property name="springfilename">log/spring.log</Property>
+    <Property name="springwarn">log/spring.log</Property>
+    <Property name="springdebug">log/spring-debug.log</Property>
     <Property name="springselect">log/spring-web.log</Property>
 
   </Properties>
@@ -25,7 +26,11 @@
         <PatternLayout pattern="[%t] %-5level %logger{2.1.} - %msg%n"/>
     </File>
 
-    <File name="FileSpring" fileName="${springfilename}" append="false">
+    <File name="FileSpring" fileName="${springwarn}" append="false">
+        <PatternLayout pattern="%-5level %c %msg%n"/>
+    </File>
+
+    <File name="FileSpringDebug" fileName="${springdebug}" append="false">
         <PatternLayout pattern="%-5level %c %msg%n"/>
     </File>
 
@@ -45,8 +50,6 @@
   		<AppenderRef ref="FileHibernate"/>
   	</logger>
 
-
-
     <logger name="org.springframework.boot.autoconfigure.logging.AutoConfigurationReportLoggingInitializer" level="INFO" additivity="true">
         <AppenderRef ref="FileSpringSelect"/>
     </logger>
@@ -61,6 +64,10 @@
 
     <logger name="org.springframework" level="WARN" additivity="false">
         <AppenderRef ref="FileSpring"/>
+    </logger>
+
+    <logger name="org.springframework" level="DEBUG" additivity="false">
+        <AppenderRef ref="FileSpringDebug"/>
     </logger>
 
     <Root level="WARN">
