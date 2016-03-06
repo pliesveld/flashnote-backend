@@ -46,7 +46,7 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
                     case AUDIO:
                         is_valid = is_valid && validateAudioAttachment(attachment,context);
                         break;
-                    case DOC:
+                    case TEXT:
                         is_valid = is_valid && validateDocumentAttachment(attachment,context);
                         break;
                     case IMAGE:

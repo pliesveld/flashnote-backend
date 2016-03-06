@@ -22,7 +22,7 @@ public class AttachmentTest {
     {
         AttachmentText attachment = new AttachmentText();
         attachment.setFileName("test.txt");
-        attachment.setContentType(AttachmentType.DOC);
+        attachment.setContentType(AttachmentType.TEXT);
         attachment.setContents("THIS IS THE CONTENTS OF THE DOCUMENT ATTACHMENT");
         return attachment;
     }

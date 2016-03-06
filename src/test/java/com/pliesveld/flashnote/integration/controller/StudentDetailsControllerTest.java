@@ -1,7 +1,6 @@
 package com.pliesveld.flashnote.integration.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pliesveld.flashnote.FlashnoteContainerApplication;
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.domain.dto.StudentDTO;
@@ -18,7 +17,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -44,7 +42,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
-@SpringApplicationConfiguration(classes = FlashnoteContainerApplication.class)
+//@SpringApplicationConfiguration(classes = FlashnoteContainerApplication.class)
 @ContextConfiguration(classes = { MockServletContext.class, SpringUnitTestConfig.class }, loader = AnnotationConfigContextLoader.class)
 @WebAppConfiguration
 public class StudentDetailsControllerTest {

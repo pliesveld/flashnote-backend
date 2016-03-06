@@ -62,7 +62,7 @@ public class JavaAttachmentValidator implements Validator {
             case AUDIO:
                 validateAudioAttachment(attachment,errors);
                 break;
-            case DOC:
+            case TEXT:
                 validateDocumentAttachment(attachment,errors);
                 break;
             case IMAGE:
