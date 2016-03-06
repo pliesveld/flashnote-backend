@@ -6,6 +6,7 @@ import com.pliesveld.flashnote.exception.AttachmentNotFoundException;
 import com.pliesveld.flashnote.exception.AttachmentUploadException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.repository.AttachmentBinaryRepository;
+import com.pliesveld.flashnote.repository.AttachmentRepository;
 import com.pliesveld.flashnote.repository.AttachmentTextRepository;
 import com.pliesveld.flashnote.web.validator.ValidAttachment;
 import org.apache.logging.log4j.LogManager;
@@ -23,6 +24,9 @@ import static com.pliesveld.flashnote.logging.Markers.SERVICE_ATTACHMENT;
 @Service(value = "attachmentService")
 public class AttachmentServiceImpl implements AttachmentService {
     private static final Logger LOG = LogManager.getLogger();
+
+    @Autowired
+    AttachmentRepository attachmentRepository;
 
     @Autowired
     AttachmentBinaryRepository attachmentBinaryRepository;
@@ -159,21 +163,20 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
-    public AttachmentText storeAttachment(@ValidAttachment AttachmentText attachment) throws AttachmentUploadException {
-        LOG.debug(SERVICE_ATTACHMENT,"Storing attachment {} {} {}", attachment.getAttachmentType(),
-                attachment.getFileName(),attachment.getMimeType());
-
-        return attachmentTextRepository.save(attachment);
-    }
-
-
-    @Override
     public AttachmentBinary storeAttachment(@ValidAttachment AttachmentBinary attachment) throws AttachmentUploadException {
 
         LOG.debug(SERVICE_ATTACHMENT,"Storing attachment {} {} {}", attachment.getAttachmentType(),
                 attachment.getFileName(),attachment.getMimeType());
 
         return attachmentBinaryRepository.save(attachment);
+    }
+
+    @Override
+    public AttachmentText storeAttachment(@ValidAttachment AttachmentText attachment) throws AttachmentUploadException {
+        LOG.debug(SERVICE_ATTACHMENT,"Storing attachment {} {} {}", attachment.getAttachmentType(),
+                attachment.getFileName(),attachment.getMimeType());
+
+        return attachmentTextRepository.save(attachment);
     }
 
     @Override

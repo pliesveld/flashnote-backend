@@ -37,7 +37,7 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
             is_valid = false;
         } else {
 
-            if(attachment.getFileData() == null)
+            if(attachment.getContents() == null)
             {
                 is_valid = true;
             } else {
@@ -70,7 +70,7 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
 
 
     private boolean validateImageAttachment(AttachmentBinary attachment, ConstraintValidatorContext errors) {
-        byte[] content = attachment.getFileData();
+        byte[] content = attachment.getContents();
         String fileName = attachment.getFileName();
         String mime = attachment.getMimeType();
 
@@ -85,7 +85,7 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
     }
 
     private boolean validateDocumentAttachment(AttachmentBinary attachment, ConstraintValidatorContext errors) {
-        if(!isValidUTF8(attachment.getFileData()))
+        if(!isValidUTF8(attachment.getContents()))
         {
             //errors.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.message}").addConstraintViolation();
             return false;

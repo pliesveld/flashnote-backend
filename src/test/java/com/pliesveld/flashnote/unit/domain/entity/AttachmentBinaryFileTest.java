@@ -80,7 +80,7 @@ public class AttachmentBinaryFileTest
             AttachmentBinary attachment = new AttachmentBinary();
             attachment.setContentType(expected_type);
             attachment.setFileName("puppy.jpg");
-            attachment.setFileData(photoBytes);
+            attachment.setContents(photoBytes);
             entityManager.persist(attachment);
             entityManager.flush();      // flush transaction to database
             entityManager.clear();      // detach previous entity so retrieval SQL statement is executed
@@ -98,10 +98,10 @@ public class AttachmentBinaryFileTest
             assertNotNull(attachment2.getFileName());
             assertEquals(expected_type,attachment2.getAttachmentType());
             assertEquals(expected_file,attachment2.getFileName());
-            assertNotNull(attachment2.getFileData());
+            assertNotNull(attachment2.getContents());
 
             String fileout = Paths.get(resource_dir,"puppy_out.jpg").toString();
-            saveBytesToFile(fileout,attachment2.getFileData());
+            saveBytesToFile(fileout,attachment2.getContents());
 
             verifyFiles(resource.getFile(),new File(fileout));
             // TODO: verify files match

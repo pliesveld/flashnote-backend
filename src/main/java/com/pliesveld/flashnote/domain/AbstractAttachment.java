@@ -6,6 +6,7 @@ import com.pliesveld.flashnote.schema.Constants;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.UnsupportedEncodingException;
 
 @Entity
 @Table(name = "ATTACHMENT")
@@ -36,6 +37,7 @@ public abstract class AbstractAttachment extends AbstractAuditableEntity {
     @Column(name = "FILE_LENGTH")
     int fileLength;
 
+    public abstract void setContents(byte[] contents) throws UnsupportedEncodingException;
     public Integer getId() {
         return id;
     }

@@ -14,15 +14,15 @@ public class AttachmentBinary extends AbstractAttachment implements Serializable
 
     @NotNull
     @Column(name = "FILE_DATA", length = Constants.MAX_ATTACHMENT_BINARY_FILE_LENGTH)
-    byte[] fileData;
+    byte[] contents;
 
-    public byte[] getFileData() {
-        return fileData;
+    public byte[] getContents() {
+        return contents;
     }
 
-    public void setFileData(byte[] fileData) {
-        this.fileData = fileData;
-        setFileLength(fileData.length);
+    public void setContents(byte[] contents) {
+        this.contents = contents;
+        setFileLength(contents.length);
     }
 
 }

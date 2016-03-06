@@ -16,7 +16,9 @@ import java.util.List;
 
 @Validated
 public interface AttachmentService {
+    @Transactional
     AbstractAttachment findAttachmentById(int id)                        throws AttachmentNotFoundException;
+
 
     @Transactional
     AttachmentBinary storeAttachment(@ValidAttachment AttachmentBinary attachment) throws AttachmentUploadException;
@@ -46,6 +48,7 @@ public interface AttachmentService {
 
     @Transactional(readOnly = true)
     List<AttachmentBinary>      findBinaryAttachmentByStudent(int id)             throws StudentNotFoundException;
+
     @Transactional(readOnly = true)
     List<AttachmentText>        findTextAttachmentByStudent(int id)               throws StudentNotFoundException;
 
@@ -54,4 +57,6 @@ public interface AttachmentService {
 
     @Transactional(readOnly = true)
     Integer testValidation(@NotNull Integer arg);
+
+
 }
