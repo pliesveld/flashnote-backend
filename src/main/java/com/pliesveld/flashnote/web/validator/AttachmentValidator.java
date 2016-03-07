@@ -72,7 +72,7 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
     private boolean validateImageAttachment(AttachmentBinary attachment, ConstraintValidatorContext errors) {
         byte[] content = attachment.getContents();
         String fileName = attachment.getFileName();
-        String mime = attachment.getMimeType();
+        String mime = attachment.getMimeContentType();
 
         try {
             ImageMetadataReader.readImageMetadata(fileName, content, mime);

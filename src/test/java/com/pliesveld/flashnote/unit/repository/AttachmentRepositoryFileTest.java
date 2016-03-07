@@ -1,14 +1,20 @@
-package com.pliesveld.flashnote.unit.domain.entity;
+package com.pliesveld.flashnote.unit.repository;
 
 import com.pliesveld.flashnote.domain.AttachmentBinary;
 import com.pliesveld.flashnote.domain.AttachmentType;
 import com.pliesveld.flashnote.model.json.response.AttachmentHeader;
+import com.pliesveld.flashnote.repository.AttachmentBinaryRepository;
+import com.pliesveld.flashnote.repository.AttachmentRepository;
+import com.pliesveld.flashnote.spring.data.SpringDataConfig;
 import com.pliesveld.flashnote.unit.spring.DefaultTestAnnotations;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -16,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import java.io.*;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
@@ -28,12 +33,20 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @DefaultTestAnnotations
 @Transactional
-public class AttachmentBinaryFileTest
+@Configuration
+@Import(value = {SpringDataConfig.class, com.pliesveld.flashnote.spring.db.PersistenceContext.class})
+public class AttachmentRepositoryFileTest
 {
     private static final Logger LOG = LogManager.getLogger();
 
     @PersistenceContext
     protected EntityManager entityManager;
+
+    @Autowired
+    AttachmentBinaryRepository attachmentBinaryRepository;
+
+    @Autowired
+    AttachmentRepository attachmentRepository;
 
     @Before
     public void setupSession()
@@ -67,39 +80,39 @@ public class AttachmentBinaryFileTest
         String expected_file = "puppy.jpg";
 
         Resource resource = new ClassPathResource(expected_file);
-        Serializable id = null;
-        int len = 0;
+        int id;
 
         LOG.info("Storing binary file attachment");
         {
             assertTrue("Could not load test resource: " + resource.getFile(), resource.exists());
 
             byte[] photoBytes = readBytesFromFile(resource.getFile().getAbsolutePath());
-            len = photoBytes.length;
 
             AttachmentBinary attachment = new AttachmentBinary();
             attachment.setAttachmentType(expected_type);
             attachment.setFileName("puppy.jpg");
             attachment.setContents(photoBytes);
-            entityManager.persist(attachment);
-            entityManager.flush();      // flush transaction to database
-            entityManager.clear();      // detach previous entity so retrieval SQL statement is executed
+
+            attachment = attachmentBinaryRepository.save(attachment);
+            assertEquals(photoBytes.length,attachment.getFileLength());
             id = attachment.getId();
+            entityManager.flush();
+            entityManager.clear();
         }
 
         Instant creationTime = null;
         AttachmentType attachmentType = null;
         int length;
+        assertNotNull(id);
 
         LOG.info("Fetching binary file attachment");
         {
-            assertNotNull(id);
-            AttachmentBinary attachment2 = entityManager.find(AttachmentBinary.class,id);
+
+            AttachmentBinary attachment2 = attachmentBinaryRepository.findOne(id);
             assertNotNull(attachment2.getAttachmentType());
             assertNotNull(attachment2.getFileName());
             assertEquals(expected_type,attachment2.getAttachmentType());
             assertEquals(expected_file,attachment2.getFileName());
-            assertEquals(len,attachment2.getFileLength());
             assertNotNull(attachment2.getContents());
 
             String fileout = Paths.get(resource_dir,"puppy_out.jpg").toString();
@@ -119,24 +132,17 @@ public class AttachmentBinaryFileTest
 
         LOG.info("Fetching binary file, content only");
         {
-            AttachmentBinary attachment3 = entityManager.find(AttachmentBinary.class,id);
+            AttachmentBinary attachment3 = attachmentBinaryRepository.findOne(id);
             assertNotNull(attachment3.getContents());
             entityManager.flush();
             entityManager.clear();
         }
 
 
-        assertNotNull(id);
         LOG.info("Executing find header query.");
         /* Unit testing named query to fetch header information only */
         {
-            //TypedQuery<AttachmentHeader> query = entityManager.createNamedQuery("AbstractAttachment.findHeaderByAttachmentId",AttachmentHeader.class);
-            TypedQuery<AttachmentHeader> query = entityManager.createQuery("select new com.pliesveld.flashnote.model.json.response.AttachmentHeader(a.attachmentType, a.fileLength, a.modifiedOn) from AbstractAttachment a where a.id = :id",AttachmentHeader.class);
-
-            query.setParameter("id",id);
-
-            AttachmentHeader header = query.getSingleResult();
-
+            AttachmentHeader header = attachmentRepository.findAttachmentHeaderById(id);
             assertNotNull(header);
             assertNotNull(header.getContentType());
             assertNotNull(header.getLength());

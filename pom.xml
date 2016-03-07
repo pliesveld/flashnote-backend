@@ -86,6 +86,12 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+        <!-- Spring Security OAuth 2 -->
+        <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+        </dependency>
+
         <!-- http://localhost:port/beans -->
         <!--
         <dependency>
@@ -94,11 +100,14 @@
         </dependency>
         -->
 
-        <!-- Spring Security OAuth 2 -->
+        <!-- for LiveReloading. refreshes web pages on changes -->
+        <!--
         <dependency>
-            <groupId>org.springframework.security.oauth</groupId>
-            <artifactId>spring-security-oauth2</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
         </dependency>
+        -->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

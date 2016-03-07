@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-@ConditionalOnMissingBean
+@ConditionalOnMissingBean(name = "authService")
 @Component(value = "inMemoryUserDetails")
 public class CustomInMemoryUserDetailsManager implements UserDetailsService {
     private Map<String,User> users = new HashMap<String, User>();
