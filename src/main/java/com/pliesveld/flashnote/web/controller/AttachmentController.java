@@ -17,7 +17,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -55,25 +54,20 @@ public class AttachmentController  {
     {
         Principal principal = request.getUserPrincipal();
 
-        final String DEFAULT_FILENAME = "unamed.file";
-        String fileName = StringUtils.hasText(file.getName()) ? file.getName() :
-                        StringUtils.hasText(file.getOriginalFilename()) ? file.getOriginalFilename() :
-                                DEFAULT_FILENAME;
-
-        LOG.info("Uploading attachment from: " + request.getRemoteAddr() + " filename: " + fileName + " size: " + file.getSize() );
+        LOG.info("Uploading attachment ip: {} size: {} user: {} file: {} orig: {}", request.getRemoteAddr(),file.getSize() ,principal,file.getName(),file.getOriginalFilename());
 
         String fileContentType = file.getContentType();
         AttachmentType attachmentType = AttachmentType.valueOfMime(fileContentType);
 
-        if(attachmentType == null)
-        {
-            throw new AttachmentUploadException("Unknown content-type");
-        }
+        String fileName = attachmentType.supportsFilenameBySuffix(file.getName()) ? file.getName() :
+                attachmentType.supportsFilenameBySuffix(file.getOriginalFilename()) ?
+                        file.getOriginalFilename() : null;
 
-        if(!attachmentType.supportsFilenameBySuffix(fileName))
-        {
+        if(fileName == null)
             throw new AttachmentUploadException("Invalid file extension");
-        }
+        if(attachmentType == null)
+            throw new AttachmentUploadException("Unknown content-type");
+
 
         byte[] contents = null;
 
@@ -88,7 +82,7 @@ public class AttachmentController  {
         if(attachmentType.isBinary()) {
             AttachmentBinary attachment = new AttachmentBinary();
             attachment.setContents(contents);
-            attachment.setContentType(attachmentType);
+            attachment.setAttachmentType(attachmentType);
             attachment.setFileName(fileName);
             id = attachmentService.storeAttachment(attachment).getId();
         } else {
@@ -98,7 +92,7 @@ public class AttachmentController  {
             } catch (UnsupportedEncodingException e) {
                 throw new AttachmentUploadException("Could not convert uploaded contents to String",e);
             }
-            attachment.setContentType(attachmentType);
+            attachment.setAttachmentType(attachmentType);
             attachment.setFileName(fileName);
             id = attachmentService.storeAttachment(attachment).getId();
         }

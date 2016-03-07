@@ -57,6 +57,12 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     private AbstractAttachment verifyAttachment(int id) throws AttachmentNotFoundException
     {
+        if(!attachmentRepository.exists(id))
+        {
+            throw new AttachmentNotFoundException(id);
+        } else {
+            AttachmentHeader header = attachmentRepository.findAttachmentHeaderById(id);
+        }
         AttachmentBinary attachmentBin = attachmentBinaryRepository.findOne(id);
         if(attachmentBin == null)
         {
@@ -166,7 +172,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     public AttachmentBinary storeAttachment(@ValidAttachment AttachmentBinary attachment) throws AttachmentUploadException {
 
         LOG.debug(SERVICE_ATTACHMENT,"Storing attachment {} {} {}", attachment.getAttachmentType(),
-                attachment.getFileName(),attachment.getMimeType());
+                attachment.getFileName(),attachment.getMimeContentType());
 
         return attachmentBinaryRepository.save(attachment);
     }
@@ -174,7 +180,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public AttachmentText storeAttachment(@ValidAttachment AttachmentText attachment) throws AttachmentUploadException {
         LOG.debug(SERVICE_ATTACHMENT,"Storing attachment {} {} {}", attachment.getAttachmentType(),
-                attachment.getFileName(),attachment.getMimeType());
+                attachment.getFileName(),attachment.getMimeContentType());
 
         return attachmentTextRepository.save(attachment);
     }
@@ -191,7 +197,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Override
     public AttachmentHeader findAttachmentHeaderById(int id) throws AttachmentNotFoundException {
-        return null; //attachmentBinaryRepository.findAttachmentHeaderById(id);
+        return attachmentRepository.findAttachmentHeaderById(id);
     }
 
     @Override

@@ -77,7 +77,7 @@ public class JavaAttachmentValidator implements Validator {
     private void validateImageAttachment(AttachmentBinary attachment, Errors errors) {
         byte[] content = attachment.getContents();
         String fileName = attachment.getFileName();
-        String mime = attachment.getMimeType();
+        String mime = attachment.getMimeContentType();
 
         try {
             ImageMetadataReader.readImageMetadata(fileName, content, mime);

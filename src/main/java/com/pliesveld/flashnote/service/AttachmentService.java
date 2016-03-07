@@ -19,11 +19,10 @@ public interface AttachmentService {
     @Transactional
     AbstractAttachment findAttachmentById(int id)                        throws AttachmentNotFoundException;
 
-
-    @Transactional
+    @Transactional @NotNull
     AttachmentBinary storeAttachment(@ValidAttachment AttachmentBinary attachment) throws AttachmentUploadException;
 
-    @Transactional
+    @Transactional @NotNull
     AttachmentText storeAttachment(@ValidAttachment AttachmentText attachment)    throws AttachmentUploadException;
 
     @Transactional(rollbackFor = AttachmentNotFoundException.class)
@@ -52,7 +51,7 @@ public interface AttachmentService {
     @Transactional(readOnly = true)
     List<AttachmentText>        findTextAttachmentByStudent(int id)               throws StudentNotFoundException;
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true) @NotNull
     AttachmentHeader findAttachmentHeaderById(int id)                             throws AttachmentNotFoundException;
 
     @Transactional(readOnly = true)
