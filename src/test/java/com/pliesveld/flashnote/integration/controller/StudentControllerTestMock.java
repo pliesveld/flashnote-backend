@@ -3,7 +3,7 @@ package com.pliesveld.flashnote.integration.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.domain.StudentDetails;
-import com.pliesveld.flashnote.domain.dto.StudentDTO;
+import com.pliesveld.flashnote.model.json.request.NewStudentDetails;
 import com.pliesveld.flashnote.service.StudentService;
 import com.pliesveld.flashnote.util.generator.StudentGenerator;
 import com.pliesveld.flashnote.web.controller.StudentController;
@@ -101,13 +101,16 @@ public class StudentControllerTestMock {
 
         ObjectMapper mapper = new ObjectMapper();
         Student student = StudentGenerator.randomizedStudent();
-        StudentDTO studentDTO = StudentDTO.convert(student);
+        NewStudentDetails newStudent = new NewStudentDetails();
+        newStudent.setName(student.getStudentDetails().getName());
+        newStudent.setEmail(student.getEmail());
+        newStudent.setPassword(student.getPassword());
 
-        final String JSON_DATA = mapper.writeValueAsString(studentDTO);
+        final String JSON_DATA = mapper.writeValueAsString(newStudent);
         LOG.info(JSON_DATA);
         when(studentService.create(any(String.class),any(String.class),any(String.class))).thenReturn(student);
 
-        ResponseEntity<?> creationResponse = studentController.createStudent(studentDTO);
+        ResponseEntity<?> creationResponse = studentController.createStudent(newStudent);
         assertEquals(HttpStatus.CREATED,creationResponse.getStatusCode());
     }
 

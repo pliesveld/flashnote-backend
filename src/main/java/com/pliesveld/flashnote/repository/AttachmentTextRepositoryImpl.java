@@ -1,18 +1,11 @@
 package com.pliesveld.flashnote.repository;
 
-import com.pliesveld.flashnote.domain.dto.AttachmentHeader;
-import com.pliesveld.flashnote.exception.AttachmentNotFoundException;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-
 /**
  * Created by happs on 2/21/16.
  */
 
 public class AttachmentTextRepositoryImpl implements AttachmentRepositoryCustomization {
+    /*
     @PersistenceContext
     EntityManager em;
 
@@ -23,5 +16,5 @@ public class AttachmentTextRepositoryImpl implements AttachmentRepositoryCustomi
         query.setParameter("id",id);
         AttachmentHeader header = query.getSingleResult();
         return header;
-    }
+    }*/
 }

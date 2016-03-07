@@ -115,15 +115,16 @@ public class SpringSecurityConfig {
         protected void configure(HttpSecurity http) throws Exception {
             http
                 .csrf().disable()
+                    .httpBasic().and()
                 .authorizeRequests()
                     .expressionHandler(webExpressionHandler())
                     .antMatchers("/", "/students").permitAll()
                     .antMatchers("/test/**").permitAll()
                     .antMatchers("/user/**").hasRole("USER")
                     .antMatchers("/admin/**").hasRole("ADMIN")
-                    .anyRequest().authenticated()
-                    .and()
-                    .httpBasic();
+                    .anyRequest().authenticated();
+
+
         }
 
         private SecurityExpressionHandler<FilterInvocation> webExpressionHandler() {

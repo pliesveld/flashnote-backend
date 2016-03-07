@@ -11,10 +11,12 @@ import java.io.UnsupportedEncodingException;
 @Entity
 @Table(name = "ATTACHMENT")
 @Inheritance(strategy = InheritanceType.JOINED)
+/*
 @NamedQueries(value = {
         @NamedQuery(name = "AbstractAttachment.findHeaderByAttachmentId",
                 query = "SELECT NEW com.pliesveld.flashnote.domain.dto.AttachmentHeader(a.contentType, a.fileLength, a.modifiedOn) FROM AbstractAttachment a WHERE a.id = :id")
 })
+*/
 public abstract class AbstractAttachment extends AbstractAuditableEntity {
 
     @Id

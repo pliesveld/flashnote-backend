@@ -1,10 +1,10 @@
 package com.pliesveld.flashnote.service;
 
 import com.pliesveld.flashnote.domain.*;
-import com.pliesveld.flashnote.domain.dto.AttachmentHeader;
 import com.pliesveld.flashnote.exception.AttachmentNotFoundException;
 import com.pliesveld.flashnote.exception.AttachmentUploadException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
+import com.pliesveld.flashnote.model.json.response.AttachmentHeader;
 import com.pliesveld.flashnote.repository.AttachmentBinaryRepository;
 import com.pliesveld.flashnote.repository.AttachmentRepository;
 import com.pliesveld.flashnote.repository.AttachmentTextRepository;
@@ -191,7 +191,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Override
     public AttachmentHeader findAttachmentHeaderById(int id) throws AttachmentNotFoundException {
-        return attachmentBinaryRepository.findAttachmentHeaderById(id);
+        return null; //attachmentBinaryRepository.findAttachmentHeaderById(id);
     }
 
     @Override
