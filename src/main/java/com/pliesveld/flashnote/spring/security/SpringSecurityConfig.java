@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.authentication.encoding.PlaintextPasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -24,6 +23,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 
@@ -76,14 +77,27 @@ public class SpringSecurityConfig {
 
         @Autowired RoleHierarchyImpl roleHierarchy;
 
+        boolean debug_enable_bcrypt = true;
+
+        @Bean
         DaoAuthenticationProvider daoAuthenticationProvider() throws Exception {
             DaoAuthenticationProvider daoAuthenticationProvider = new  DaoAuthenticationProvider();
             daoAuthenticationProvider.setUserDetailsService(userDetailsService);
-            daoAuthenticationProvider.setPasswordEncoder(new PlaintextPasswordEncoder());
+            daoAuthenticationProvider.setPasswordEncoder(this.passwordEncoder());
+            daoAuthenticationProvider.setPostAuthenticationChecks((user) -> {LOG.debug("post auth check on: user.getUsername()");});
 
-            //daoAuthenticationProvider.afterPropertiesSet();
-            //daoAuthenticationProvider.authenticate()
+            daoAuthenticationProvider.afterPropertiesSet();
             return daoAuthenticationProvider;
+        }
+
+        @Bean
+        PasswordEncoder passwordEncoder()
+        {
+            if(debug_enable_bcrypt) {
+                return new BCryptPasswordEncoder();
+            } else {
+                return new NoOpPasswordEncoder();
+            }
         }
 
         @Override
@@ -132,12 +146,30 @@ public class SpringSecurityConfig {
             defaultWebSecurityExpressionHandler.setRoleHierarchy(roleHierarchy);
             return defaultWebSecurityExpressionHandler;
         }
+
     }
-
-
-
 }
 
+/* From Spring Security -- for testing */
+class NoOpPasswordEncoder implements PasswordEncoder {
+
+    public String encode(CharSequence rawPassword) {
+        return rawPassword.toString();
+    }
+
+    public boolean matches(CharSequence rawPassword, String encodedPassword) {
+        return rawPassword.toString().equals(encodedPassword);
+    }
+
+    /**
+     * Get the singleton {@link NoOpPasswordEncoder}.
+     */
+    public static PasswordEncoder getInstance() {
+        return INSTANCE;
+    }
+
+    private static final PasswordEncoder INSTANCE = new NoOpPasswordEncoder();
+}
 
 
 
