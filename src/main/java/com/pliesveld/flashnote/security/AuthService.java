@@ -43,7 +43,7 @@ public class AuthService /*extends AbstractUserDetailsAuthenticationProvider*/ i
     @Override
     @Transactional(rollbackFor = UsernameNotFoundException.class)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        LOG.info(SECURITY_AUTH, "Looking up email address: " + username);
+        LOG.info("Looking up email address: " + username);
         Student student = studentRepository.findOneByEmail(username);
 
 
