@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Profile;
 })
 public class SpringRootConfig {
 
-    @Profile({Profiles.PRODUCTION, Profiles.LOCAL})
+    @Profile({Profiles.LOCAL})
     @Bean
     DateTimeService currentTimeDateTimeService()
     {
