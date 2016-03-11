@@ -1,9 +1,10 @@
 import os
 import os.path;
 
-SCHEME="http"
+SCHEME=os.getenv('INTEGRATION_TEST_SCHEME',"http")
 HOST=os.getenv('INTEGRATION_TEST_HOST',"localhost")
 PORT=os.getenv('INTEGRATION_TEST_PORT',8080)
+PROFILES=os.getenv('INTEGRATION_TEST_PROFILES','')
 
 URL=SCHEME + "://" + HOST + ":" + str(PORT) + "/"
 DATA_DIR="/home/happs/projects/flashnote/src/test/resources/scripts/tests/test-data"

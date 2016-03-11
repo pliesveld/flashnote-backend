@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.util.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -101,6 +102,9 @@ public class PythonUnitTests {
 
         System.out.println("port=" + port);
         env.put("INTEGRATION_TEST_PORT",port);
+
+        String profiles = StringUtils.arrayToCommaDelimitedString(environment.getActiveProfiles());
+        env.put("INTEGRATION_TEST_PROFILES",profiles);
 
 		pb.directory(rootDir);
 		Process p = pb.start();

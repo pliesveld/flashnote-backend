@@ -10,7 +10,28 @@ try:
 except SystemError:
         from settings import URL
 
-class AnonTest(unittest.TestCase):
+
+class AuthBaseTest(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        print("setup-class",file=sys.stderr)
+
+    @classmethod
+    def tearDownClass(cls):
+        print("tear-down-class",file=sys.stderr)
+
+    def setUp(self):
+        print("setup-test ",file=sys.stderr)
+
+    def tearDown(self):
+        print("tear-down-test",file=sys.stderr)
+
+
+
+
+
+class AnonTest(AuthBaseTest):
     auth_token=('student@example.com','password')
     ANON_RESOURCE = '/test/byAuth1'
     USER_RESOURCE = '/user/byAuth1'
@@ -35,7 +56,7 @@ class AnonTest(unittest.TestCase):
             self.assertNotEqual(r.status_code,200)
 
 
-class AuthTest(unittest.TestCase):
+class AuthTest(AuthBaseTest):
     auth_token=('student@example.com','password')
     ANON_RESOURCE = '/test/byAuth1'
     USER_RESOURCE = '/user/byAuth1'
@@ -60,7 +81,7 @@ class AuthTest(unittest.TestCase):
             self.assertNotEqual(r.status_code,200)
 
 
-class AdminTest(unittest.TestCase):
+class AdminTest(AuthBaseTest):
     auth_token=('admin@example.com','password')
     ANON_RESOURCE = '/test/byAuth1'
     USER_RESOURCE = '/user/byAuth1'
