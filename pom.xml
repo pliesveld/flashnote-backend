@@ -479,6 +479,39 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+        <id>refresh-db</id>
+        <build>
+            <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <configuration>
+                            <target>
+                                <property file="src/main/resources/dev-datasource.properties"/>
+                                <sql driver="${jdbc.driverClassName}" url="${jdbc.url}"
+                                     userid="${jdbc.username}"        password="${jdbc.password}"
+                                     onerror="continue" autocommit="true">
+                                    <classpath refid="maven.runtime.classpath"/>
+                                    <transaction src="src/main/resources/sql/db-init.sql"/>
+                                </sql>
+                                <sql driver="${jdbc.driverClassName}" url="${jdbc.url}"
+                                     userid="${jdbc.username}"        password="${jdbc.password}"
+                                     onerror="abort">
+                                    <classpath refid="maven.runtime.classpath"/>
+                                    <transaction src="src/main/resources/sql/db-import.sql"/>
+                                </sql>
+                            </target>
+
+                        </configuration>
+            </plugin>
+            </plugins>
+        </build>
+        </profile>
+    </profiles>
+
+
     <repositories>
         <repository>
             <id>com.springsource.repository.maven.release</id>

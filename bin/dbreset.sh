@@ -15,3 +15,5 @@ PGPASSWORD=Pico psql ${SERVER_ARG} ${USER_ARG} <<EOF
 DROP DATABASE learners;
 CREATE DATABASE learners;
 EOF
+
+mvn antrun:run -Prefresh-db
