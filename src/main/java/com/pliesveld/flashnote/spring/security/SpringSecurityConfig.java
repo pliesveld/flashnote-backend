@@ -20,23 +20,46 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
+import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.ClientRegistrationException;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationManager;
+import org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService;
+import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 
+import javax.inject.Inject;
 import java.util.Collection;
 
 /*
  * Profile based security configuration
  * http://stackoverflow.com/questions/24827963/enabling-websecurityconfigurer-via-profile-does-not-work
  */
+
 @Configuration
+@Profile(Profiles.AUTH)
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @ComponentScan(basePackageClasses = {
-        com.pliesveld.flashnote.security.StudentPrincipal.class
+        com.pliesveld.flashnote.security.StudentPrincipal.class,
+        com.pliesveld.flashnote.spring.security.SpringSecurityConfig.class
 })
 public class SpringSecurityConfig {
     private static final Logger LOG = LogManager.getLogger();
@@ -67,28 +90,20 @@ public class SpringSecurityConfig {
 
     @Configuration
     @Profile(Profiles.AUTH)
-    @ConditionalOnExpression("!${my.security.enabled:false}")
-    @EnableGlobalAuthentication
     @EnableWebSecurity
     @EnableGlobalMethodSecurity(prePostEnabled = true)
+    @ComponentScan(basePackageClasses = {
+            com.pliesveld.flashnote.security.StudentPrincipal.class,
+            com.pliesveld.flashnote.spring.security.SpringSecurityConfig.class
+
+    })
     protected static class ProductionWebSecurity extends WebSecurityConfigurerAdapter {
 
-        @Autowired UserDetailsService userDetailsService;
+        @Inject
+        UserDetailsService userDetailsService;
 
         @Autowired RoleHierarchyImpl roleHierarchy;
-
         boolean debug_enable_bcrypt = true;
-
-        @Bean
-        DaoAuthenticationProvider daoAuthenticationProvider() throws Exception {
-            DaoAuthenticationProvider daoAuthenticationProvider = new  DaoAuthenticationProvider();
-            daoAuthenticationProvider.setUserDetailsService(userDetailsService);
-            daoAuthenticationProvider.setPasswordEncoder(this.passwordEncoder());
-            daoAuthenticationProvider.setPostAuthenticationChecks((user) -> {LOG.debug("post auth check on: user.getUsername()");});
-
-            daoAuthenticationProvider.afterPropertiesSet();
-            return daoAuthenticationProvider;
-        }
 
         @Bean
         PasswordEncoder passwordEncoder()
@@ -102,32 +117,38 @@ public class SpringSecurityConfig {
 
         @Override
         protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+            LOG.debug("Configuring userDetailsService: {}", userDetailsService.getClass().getName());
             auth.
-            authenticationProvider(this.daoAuthenticationProvider());
+                    userDetailsService(userDetailsService)
+                    .passwordEncoder(new NoOpPasswordEncoder())
+            .and()
+            .authenticationEventPublisher(new AuthenticationEventPublisher() {
+
+                @Override
+                public void publishAuthenticationSuccess(Authentication authentication) {
+                    LOG.debug("Authenticating from builder.");
+
+                }
+
+                @Override
+                public void publishAuthenticationFailure(AuthenticationException exception, Authentication authentication) {
+                    LOG.debug("AuthenticatingFailure from builder.");
+
+                }
+            });
         }
-
-            /* TODO: Encode password, salt with BCrypt hash
-            // http://stackoverflow.com/questions/30805877/spring-authenticationmanagerbuilder-password-hashing
-                    .passwordEncoder(new BCryptPasswordEncoder());
-            */
-    
-            /*
-            // fetch with SQL
-            auth.jdbcAuthentication().dataSource(dataSource)
-                    .passwordEncoder(new BCryptPasswordEncoder())
-                    .usersByUsernameQuery("select student_email,student_password from student_account where student_email=?")
-                    .authoritiesByUsernameQuery("select student_email,role from student_account where student_email=?");
-            */
-
 
         @Override
         public void configure(WebSecurity web) throws Exception {
-            //web.debug(true);
+            web.debug(true);
         }
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
+
             http
+
+
                 .csrf().disable()
                     .httpBasic().and()
                 .authorizeRequests()
