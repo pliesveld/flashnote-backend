@@ -11,28 +11,38 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Transactional
+
 @Validated
+@Transactional(readOnly = true)
 public interface StudentService {
 
+    @NotNull
+    @Transactional
     Student create(@NotNull String name,@NotNull String email,@NotNull String password) throws StudentCreateException;
 
-    @Transactional(readOnly = true)
+    @NotNull
     Student findByEmail(@NotNull String email)                    throws StudentNotFoundException;
 
-    //StudentDetails             create(StudentDetails studentDetails) throws StudentCreateException;
+    @NotNull
+    @Transactional
     StudentDetails delete(int id)                        throws StudentNotFoundException;
+
+    @NotNull
+    @Transactional
     StudentDetails update(StudentDetails studentDetails) throws StudentNotFoundException;
 
-    @Transactional(readOnly = true)
+    @NotNull
     StudentDetails findStudentDetailsById(int id)        throws StudentNotFoundException;
-    @Transactional(readOnly = true)
+
+    @NotNull
     Student findStudentById(int id)                      throws StudentNotFoundException;
 
-    @Transactional(readOnly = true)
+    @NotNull
     Long                count();
-    @Transactional(readOnly = true)
+
+    @NotNull
     Iterable<StudentDetails>   findAll();
-    @Transactional(readOnly = true)
+
+    @NotNull
     List<Deck>          findDecksByOwner(int id);
 }

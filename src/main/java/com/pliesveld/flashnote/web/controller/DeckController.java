@@ -6,9 +6,9 @@ import com.pliesveld.flashnote.domain.FlashCard;
 import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.exception.DeckNotFoundException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
+import com.pliesveld.flashnote.model.json.response.CardStatistics;
 import com.pliesveld.flashnote.service.CardService;
 import com.pliesveld.flashnote.service.StudentService;
-import com.pliesveld.flashnote.web.dto.CardStatistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -63,8 +63,7 @@ public class DeckController {
     public Deck retrieve_deck(@PathVariable("id") int id)
     {
         LOG.info("Retreiving deck " + id);
-        Deck deck = verifyDeck(id);
-        return deck;
+        return verifyDeck(id);
     }
     
     @RequestMapping(value="/{id}", method = RequestMethod.POST)

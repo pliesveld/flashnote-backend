@@ -3,9 +3,8 @@ package com.pliesveld.flashnote.integration.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.domain.StudentDetails;
-import com.pliesveld.flashnote.domain.dto.StudentDTO;
+import com.pliesveld.flashnote.model.json.request.NewStudentDetails;
 import com.pliesveld.flashnote.service.StudentService;
-import com.pliesveld.flashnote.spring.FlashnoteContainerApplication;
 import com.pliesveld.flashnote.spring.Profiles;
 import com.pliesveld.flashnote.unit.spring.SpringUnitTestConfig;
 import com.pliesveld.flashnote.util.generator.StudentGenerator;
@@ -18,7 +17,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -44,7 +42,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
-@SpringApplicationConfiguration(classes = FlashnoteContainerApplication.class)
+//@SpringApplicationConfiguration(classes = FlashnoteContainerApplication.class)
 @ContextConfiguration(classes = { MockServletContext.class, SpringUnitTestConfig.class }, loader = AnnotationConfigContextLoader.class)
 @WebAppConfiguration
 public class StudentDetailsControllerTest {
@@ -78,9 +76,13 @@ public class StudentDetailsControllerTest {
     public void createStudent() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         Student student = StudentGenerator.randomizedStudent();
-        StudentDTO studentDTO = StudentDTO.convert(student);
+        NewStudentDetails newStudent = new NewStudentDetails();
+        newStudent.setName(student.getStudentDetails().getName());
+        newStudent.setEmail(student.getEmail());
+        newStudent.setPassword(student.getPassword());
 
-        final String JSON_DATA = mapper.writeValueAsString(studentDTO);
+
+        final String JSON_DATA = mapper.writeValueAsString(newStudent);
         LOG.info(JSON_DATA);
         when(studentService.create(any(String.class),any(String.class),any(String.class))).thenReturn(student);
         MvcResult result = mockMvc.perform(post("/students")

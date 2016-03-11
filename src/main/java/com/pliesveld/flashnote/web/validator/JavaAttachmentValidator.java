@@ -48,7 +48,7 @@ public class JavaAttachmentValidator implements Validator {
             check_content = false;
         }
 
-        if(attachment.getFileData() == null)
+        if(attachment.getContents() == null)
         {
             errors.rejectValue("fileData","required","required");
             check_content = false;
@@ -62,7 +62,7 @@ public class JavaAttachmentValidator implements Validator {
             case AUDIO:
                 validateAudioAttachment(attachment,errors);
                 break;
-            case DOC:
+            case TEXT:
                 validateDocumentAttachment(attachment,errors);
                 break;
             case IMAGE:
@@ -75,9 +75,9 @@ public class JavaAttachmentValidator implements Validator {
 
 
     private void validateImageAttachment(AttachmentBinary attachment, Errors errors) {
-        byte[] content = attachment.getFileData();
+        byte[] content = attachment.getContents();
         String fileName = attachment.getFileName();
-        String mime = attachment.getMimeType();
+        String mime = attachment.getMimeContentType();
 
         try {
             ImageMetadataReader.readImageMetadata(fileName, content, mime);
@@ -88,7 +88,7 @@ public class JavaAttachmentValidator implements Validator {
     }
 
     private void validateDocumentAttachment(AttachmentBinary attachment, Errors errors) {
-        if(!isValidUTF8(attachment.getFileData()))
+        if(!isValidUTF8(attachment.getContents()))
         {
             errors.rejectValue("fileData","invalid","invalid");
         }

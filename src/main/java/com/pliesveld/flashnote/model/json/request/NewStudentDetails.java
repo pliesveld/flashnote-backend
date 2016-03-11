@@ -1,18 +1,19 @@
-package com.pliesveld.flashnote.domain.dto;
+package com.pliesveld.flashnote.model.json.request;
 
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.domain.StudentRole;
+import com.pliesveld.flashnote.model.json.base.JsonWebRequestSerializable;
+import com.pliesveld.flashnote.model.json.base.ModelBase;
 import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 
 /**
  * Subset of studentDetails model for account creation
  */
 
-public class StudentDTO implements Serializable
+public class NewStudentDetails extends ModelBase implements JsonWebRequestSerializable
 {
     @Size(min = 3,max = 32) @NotNull
     private String name;
@@ -26,23 +27,23 @@ public class StudentDTO implements Serializable
     @NotNull
     private StudentRole role = StudentRole.ROLE_ACCOUNT;
 
-    public StudentDTO() {
+    public NewStudentDetails() {
     }
 
-    public static StudentDTO convert(Student student) {
+    public static NewStudentDetails convert(Student student) {
         if (student == null)
             throw new NullPointerException("studentDetails argument was null");
 
-        StudentDTO studentDTO = new StudentDTO();
-//        studentDTO.setName(studentDetails.getTitle());
-        studentDTO.setEmail(student.getEmail());
-        studentDTO.setPassword(student.getPassword());
-        studentDTO.setRole(student.getRole());
+        NewStudentDetails newStudent = new NewStudentDetails();
+//        newStudent.setName(studentDetails.getTitle());
+        newStudent.setEmail(student.getEmail());
+        newStudent.setPassword(student.getPassword());
+        newStudent.setRole(student.getRole());
 
         if (student.getStudentDetails() != null)
-            studentDTO.setName(student.getStudentDetails().getName());
+            newStudent.setName(student.getStudentDetails().getName());
 
-        return studentDTO;
+        return newStudent;
     }
 
     public String getName()

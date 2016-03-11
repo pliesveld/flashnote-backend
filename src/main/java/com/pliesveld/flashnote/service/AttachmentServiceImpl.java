@@ -1,11 +1,12 @@
 package com.pliesveld.flashnote.service;
 
 import com.pliesveld.flashnote.domain.*;
-import com.pliesveld.flashnote.domain.dto.AttachmentHeader;
 import com.pliesveld.flashnote.exception.AttachmentNotFoundException;
 import com.pliesveld.flashnote.exception.AttachmentUploadException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
+import com.pliesveld.flashnote.model.json.response.AttachmentHeader;
 import com.pliesveld.flashnote.repository.AttachmentBinaryRepository;
+import com.pliesveld.flashnote.repository.AttachmentRepository;
 import com.pliesveld.flashnote.repository.AttachmentTextRepository;
 import com.pliesveld.flashnote.web.validator.ValidAttachment;
 import org.apache.logging.log4j.LogManager;
@@ -23,6 +24,9 @@ import static com.pliesveld.flashnote.logging.Markers.SERVICE_ATTACHMENT;
 @Service(value = "attachmentService")
 public class AttachmentServiceImpl implements AttachmentService {
     private static final Logger LOG = LogManager.getLogger();
+
+    @Autowired
+    AttachmentRepository attachmentRepository;
 
     @Autowired
     AttachmentBinaryRepository attachmentBinaryRepository;
@@ -53,6 +57,12 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     private AbstractAttachment verifyAttachment(int id) throws AttachmentNotFoundException
     {
+        if(!attachmentRepository.exists(id))
+        {
+            throw new AttachmentNotFoundException(id);
+        } else {
+            AttachmentHeader header = attachmentRepository.findAttachmentHeaderById(id);
+        }
         AttachmentBinary attachmentBin = attachmentBinaryRepository.findOne(id);
         if(attachmentBin == null)
         {
@@ -159,21 +169,20 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
-    public AttachmentText storeAttachment(@ValidAttachment AttachmentText attachment) throws AttachmentUploadException {
-        LOG.debug(SERVICE_ATTACHMENT,"Storing attachment {} {} {}", attachment.getAttachmentType(),
-                attachment.getFileName(),attachment.getMimeType());
-
-        return attachmentTextRepository.save(attachment);
-    }
-
-
-    @Override
     public AttachmentBinary storeAttachment(@ValidAttachment AttachmentBinary attachment) throws AttachmentUploadException {
 
         LOG.debug(SERVICE_ATTACHMENT,"Storing attachment {} {} {}", attachment.getAttachmentType(),
-                attachment.getFileName(),attachment.getMimeType());
+                attachment.getFileName(),attachment.getMimeContentType());
 
         return attachmentBinaryRepository.save(attachment);
+    }
+
+    @Override
+    public AttachmentText storeAttachment(@ValidAttachment AttachmentText attachment) throws AttachmentUploadException {
+        LOG.debug(SERVICE_ATTACHMENT,"Storing attachment {} {} {}", attachment.getAttachmentType(),
+                attachment.getFileName(),attachment.getMimeContentType());
+
+        return attachmentTextRepository.save(attachment);
     }
 
     @Override
@@ -188,7 +197,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Override
     public AttachmentHeader findAttachmentHeaderById(int id) throws AttachmentNotFoundException {
-        return attachmentBinaryRepository.findAttachmentHeaderById(id);
+        return attachmentRepository.findAttachmentHeaderById(id);
     }
 
     @Override

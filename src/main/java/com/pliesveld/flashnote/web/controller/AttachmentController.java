@@ -1,12 +1,12 @@
 package com.pliesveld.flashnote.web.controller;
 
 
+import com.pliesveld.flashnote.domain.AbstractAttachment;
 import com.pliesveld.flashnote.domain.AttachmentBinary;
 import com.pliesveld.flashnote.domain.AttachmentText;
 import com.pliesveld.flashnote.domain.AttachmentType;
-import com.pliesveld.flashnote.domain.dto.AttachmentHeader;
-import com.pliesveld.flashnote.exception.AttachmentNotFoundException;
 import com.pliesveld.flashnote.exception.AttachmentUploadException;
+import com.pliesveld.flashnote.model.json.response.AttachmentHeader;
 import com.pliesveld.flashnote.service.AttachmentService;
 import com.pliesveld.flashnote.service.CardService;
 import com.pliesveld.flashnote.service.StudentService;
@@ -17,7 +17,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -25,6 +24,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.security.Principal;
 
@@ -47,7 +47,6 @@ public class AttachmentController  {
     @Autowired
     private AttachmentService attachmentService;
 
-
     @RequestMapping(value="", method = RequestMethod.POST)
     public ResponseEntity<?> handleFileupload(
             @RequestParam("file") MultipartFile file,
@@ -55,38 +54,59 @@ public class AttachmentController  {
     {
         Principal principal = request.getUserPrincipal();
 
-        final String DEFAULT_FILENAME = "unamed.file";
-        String fileName = StringUtils.hasText(file.getName()) ? file.getName() :
-                        StringUtils.hasText(file.getOriginalFilename()) ? file.getOriginalFilename() :
-                                DEFAULT_FILENAME;
+        LOG.info("Uploading attachment ip: {} size: {} user: {} file: {} orig: {}", request.getRemoteAddr(),file.getSize() ,principal,file.getName(),file.getOriginalFilename());
 
-        LOG.info("Uploading attachment from: " + request.getRemoteAddr() + " filename: " + fileName + " size: " + file.getSize() );
-
-
-        AttachmentBinary attachment = new AttachmentBinary();
         String fileContentType = file.getContentType();
         AttachmentType attachmentType = AttachmentType.valueOfMime(fileContentType);
-        attachment.setContentType(attachmentType);
-        attachment.setFileName(fileName);
+
+        String fileName = attachmentType.supportsFilenameBySuffix(file.getName()) ? file.getName() :
+                attachmentType.supportsFilenameBySuffix(file.getOriginalFilename()) ?
+                        file.getOriginalFilename() : null;
+
+        if(fileName == null)
+            throw new AttachmentUploadException("Invalid file extension");
+        if(attachmentType == null)
+            throw new AttachmentUploadException("Unknown content-type");
+
+
+        byte[] contents = null;
 
         try {
-            attachment.setFileData(file.getBytes());
+            contents = file.getBytes();
         } catch (IOException e) {
-            throw new AttachmentUploadException("Error uploading file",e);
+            throw new AttachmentUploadException("Could not get upload contents.",e);
         }
 
-        attachment = attachmentService.storeAttachment(attachment);
+        int id = 0;
+
+        if(attachmentType.isBinary()) {
+            AttachmentBinary attachment = new AttachmentBinary();
+            attachment.setContents(contents);
+            attachment.setAttachmentType(attachmentType);
+            attachment.setFileName(fileName);
+            id = attachmentService.storeAttachment(attachment).getId();
+        } else {
+            AttachmentText attachment = new AttachmentText();
+            try {
+                attachment.setContents(new String(contents,"UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                throw new AttachmentUploadException("Could not convert uploaded contents to String",e);
+            }
+            attachment.setAttachmentType(attachmentType);
+            attachment.setFileName(fileName);
+            id = attachmentService.storeAttachment(attachment).getId();
+        }
 
         HttpHeaders responseHeaders = new HttpHeaders();
 
         URI newStudentUri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(attachment.getId())
+                .buildAndExpand(id)
                 .toUri();
 
         responseHeaders.setLocation(newStudentUri);
-        return new ResponseEntity<>(null,responseHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<>(null,responseHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value="/{id}", method = RequestMethod.GET)
@@ -96,25 +116,20 @@ public class AttachmentController  {
         Object response_data = null;
         long last_modified = 0;
 
-
-        try {
-            AttachmentBinary attachment;
-            attachment = attachmentService.findAttachmentBinaryById(id);
-            response_data = attachment.getFileData();
-            content_type = attachment.getAttachmentType().getMediatype();
-            last_modified = attachment.getModifiedOn().toEpochMilli();
-        } catch(AttachmentNotFoundException anfe) {
-            AttachmentText attachment;
-            attachment = attachmentService.findAttachmentTextById(id);
-            response_data = attachment.getContents();
-            content_type = attachment.getAttachmentType().getMediatype();
-            last_modified = attachment.getModifiedOn().toEpochMilli();
-        }
+        AbstractAttachment attachment = attachmentService.findAttachmentById(id);
 
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setContentType(content_type);
-        responseHeaders.setDate(last_modified);
-        return new ResponseEntity<>(response_data,responseHeaders,HttpStatus.OK);
+        responseHeaders.setContentType(attachment.getAttachmentType().getMediatype());
+        responseHeaders.setDate(attachment.getModifiedOn().toEpochMilli());
+
+        if(attachment.getAttachmentType().isBinary())
+        {
+            AttachmentBinary binary = (AttachmentBinary) attachment;
+            return new ResponseEntity<>(binary.getContents(),responseHeaders,HttpStatus.OK);
+        } else {
+            AttachmentText text = (AttachmentText) attachment;
+            return new ResponseEntity<>(text.getContents(),responseHeaders,HttpStatus.OK);
+        }
     }
 
     @RequestMapping(value="/{id}", method = RequestMethod.HEAD)
@@ -144,10 +159,4 @@ public class AttachmentController  {
         LOG.debug("returned " + ret);
     }
 
-    public AttachmentService getAttachmentService() {
-        return attachmentService;
-    }
-    public void setAttachmentService(AttachmentService attachmentService) {
-        this.attachmentService = attachmentService;
-    }
 }

@@ -1,20 +1,13 @@
-package com.pliesveld.flashnote.servlet3.filters;
+package com.pliesveld.flashnote.spring.servlet.filter;
 
-import java.io.IOException;
-import java.util.UUID;
+import org.apache.logging.log4j.ThreadContext;
 
-import javax.servlet.DispatcherType;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import org.apache.logging.log4j.ThreadContext;
+import java.io.IOException;
+import java.util.UUID;
 
 @WebFilter(urlPatterns = "/*", dispatcherTypes = {
         DispatcherType.ASYNC, DispatcherType.ERROR, DispatcherType.FORWARD,

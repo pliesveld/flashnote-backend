@@ -3,8 +3,9 @@ package com.pliesveld.flashnote.web.controller;
 
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.domain.StudentDetails;
-import com.pliesveld.flashnote.domain.dto.StudentDTO;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
+import com.pliesveld.flashnote.model.json.request.NewStudentDetails;
+import com.pliesveld.flashnote.model.json.response.ExistingStudentDetails;
 import com.pliesveld.flashnote.service.StudentService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,7 +48,7 @@ public class StudentController {
     }
 
     @RequestMapping(value="",method = RequestMethod.POST)
-    public ResponseEntity<Void> createStudent(@Valid @RequestBody StudentDTO studentdto)
+    public ResponseEntity<Void> createStudent(@Valid @RequestBody NewStudentDetails studentdto)
     {
         Student studentDetails = studentService.create(studentdto.getName(),studentdto.getEmail(),studentdto.getPassword());
         
@@ -78,8 +79,8 @@ public class StudentController {
     {
         LOG.info("Getting studentDetails by id " + id);
         Student student = verifyStudent(id);
-        StudentDTO studentDTO = StudentDTO.convert(student);
-        return new ResponseEntity<>(studentDTO,HttpStatus.OK);
+        ExistingStudentDetails existingStudent = ExistingStudentDetails.convert(student);
+        return new ResponseEntity<>(existingStudent,HttpStatus.OK);
     }
 
 

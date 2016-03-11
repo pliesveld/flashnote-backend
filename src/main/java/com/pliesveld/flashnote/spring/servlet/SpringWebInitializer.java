@@ -1,9 +1,12 @@
-package com.pliesveld.flashnote.spring;
+package com.pliesveld.flashnote.spring.servlet;
 
 /**
  * Created by happs on 1/18/16.
  */
 
+import com.pliesveld.flashnote.spring.SpringRootConfig;
+import com.pliesveld.flashnote.spring.security.SpringSecurityConfig;
+import com.pliesveld.flashnote.spring.web.SpringWebConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

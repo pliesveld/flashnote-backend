@@ -6,7 +6,7 @@ import com.pliesveld.flashnote.repository.QuestionRepository;
 import com.pliesveld.flashnote.repository.StudentDetailsRepository;
 import com.pliesveld.flashnote.repository.StudentRepository;
 import com.pliesveld.flashnote.spring.Profiles;
-import com.pliesveld.flashnote.unit.dao.config.SpringTestDataConfig;
+import com.pliesveld.flashnote.unit.dao.spring.SpringDataTestConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
@@ -14,10 +14,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.*;
 
@@ -27,10 +25,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
-@ContextConfiguration(classes = SpringTestDataConfig.class, loader = AnnotationConfigContextLoader.class)
-@TestPropertySource( locations = "classpath:test-datasource.properties" )
-
-@Transactional
+@ContextConfiguration(classes = SpringDataTestConfig.class, loader = AnnotationConfigContextLoader.class)
 public class StudentTest {
     private static final Logger LOG = LogManager.getLogger();
 

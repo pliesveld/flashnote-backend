@@ -4,7 +4,7 @@ import com.pliesveld.flashnote.repository.DeckRepository;
 import com.pliesveld.flashnote.repository.StudentRepository;
 import com.pliesveld.flashnote.spring.Profiles;
 import com.pliesveld.flashnote.spring.SpringRootConfig;
-import com.pliesveld.flashnote.spring.db.H2DataSource;
+import com.pliesveld.flashnote.spring.data.SpringDataConfig;
 import com.pliesveld.flashnote.spring.db.PersistenceContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,9 +17,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.util.StringUtils;
 
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.fail;
-
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 public class ConstructRepositoryBeanTest {
     private static final Logger LOG = LogManager.getLogger();
@@ -56,7 +55,7 @@ public class ConstructRepositoryBeanTest {
 }
 
 @Configuration
-@Import(value = {H2DataSource.class,PersistenceContext.class})
+@Import(value = {SpringDataConfig.class,PersistenceContext.class})
 class TestRepositoryConfig {
 
     @Autowired
@@ -64,6 +63,7 @@ class TestRepositoryConfig {
 
     @Autowired
     DeckRepository deckRepository;
+
 
 
     public TestRepositoryConfig() {}
