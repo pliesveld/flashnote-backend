@@ -2,6 +2,7 @@ package com.pliesveld.flashnote.web.validator;
 
 import com.pliesveld.flashnote.domain.AttachmentBinary;
 import com.pliesveld.flashnote.domain.AttachmentType;
+import com.pliesveld.flashnote.exception.AudioFormatNotSupportedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -94,8 +95,25 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
     }
 
     private boolean validateAudioAttachment(AttachmentBinary attachment, ConstraintValidatorContext errors) {
+        byte[] content = attachment.getContents();
+        String fileName = attachment.getFileName();
+        String mime = attachment.getMimeContentType();
+
+        AudioMetadata metadata = null;
         //errors.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.message}").addConstraintViolation();
-        return false;
+        try {
+            metadata = AudioMetadataReader.readAudioMetadata(fileName,content,mime);
+        } catch (AudioFormatNotSupportedException e) {
+            errors.buildConstraintViolationWithTemplate("{validator.ValidAttachment.audio.message}").addConstraintViolation();
+            return false;
+        }
+
+        // TODO: verify mime content against audioformat
+        metadata.getMimeContentType();
+
+        metadata.getAudioFileFormat(); // one of these is null
+        metadata.getAudioFormat();
+        return true;
     }
 
     /**
