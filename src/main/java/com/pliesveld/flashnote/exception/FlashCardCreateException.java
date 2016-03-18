@@ -4,23 +4,23 @@ import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
 
-/**
- * Created by happs on 1/20/16.
- */
-public class FlashCardCreateException extends ResourceRepositoryException {
-    final static private HttpStatus EXCEPTION_STATUS_IM_USED = HttpStatus.IM_USED;
+public class FlashCardCreateException extends ResourceCreateException {
 
     @Override
     public String getRepositoryMessage() {
-        return "FlashCard exists: " + getRepositoryId();
+        return super.getMessage();
     }
 
-    @Override
-    public HttpStatus getRepositoryStatus() {
-        return EXCEPTION_STATUS_IM_USED;
-    }
-    
     public FlashCardCreateException(Serializable id) {
-        super(id);
+        super("FlashCard " + id + " already exists");
+    }
+
+
+    public FlashCardCreateException(String message) {
+        super(message);
+    }
+
+    public FlashCardCreateException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

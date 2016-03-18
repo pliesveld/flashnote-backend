@@ -8,17 +8,6 @@ import java.io.Serializable;
  * Created by happs on 1/20/16.
  */
 public abstract class ResourceRepositoryException extends RuntimeException {
-    protected Serializable id;
-
-    public ResourceRepositoryException(Serializable id) {
-        super();
-        this.id = id;
-    }
-
-    public Serializable getRepositoryId()
-    {
-        return id;
-    }
 
     abstract public String getRepositoryMessage();
     abstract public HttpStatus getRepositoryStatus();
