@@ -1,5 +1,6 @@
 package com.pliesveld.flashnote.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pliesveld.flashnote.domain.base.AbstractAuditableEntity;
 import com.pliesveld.flashnote.schema.Constants;
 
@@ -30,6 +31,7 @@ public class Category extends AbstractAuditableEntity implements Serializable
 
     @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "CATEGORY_ID", foreignKey = @ForeignKey(name="FK_CATEGORY"), updatable = false)
+    @JsonIgnore
     private Set<Category> childCategories = new HashSet<>();
 
     public Category() {
