@@ -18,6 +18,7 @@ import org.springframework.util.StringUtils;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.pliesveld.flashnote.logging.Markers.SERVICE_ATTACHMENT;
 
@@ -57,27 +58,17 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     private AbstractAttachment verifyAttachment(int id) throws AttachmentNotFoundException
     {
-        if(!attachmentRepository.exists(id))
-        {
+        AbstractAttachment attachment = attachmentRepository.findOneById(id);
+        if( attachment == null )
             throw new AttachmentNotFoundException(id);
-        } else {
-            AttachmentHeader header = attachmentRepository.findAttachmentHeaderById(id);
-        }
-        AttachmentBinary attachmentBin = attachmentBinaryRepository.findOne(id);
-        if(attachmentBin == null)
-        {
-            AttachmentText attachmentText = attachmentTextRepository.findOne(id);
-            if(attachmentText == null)
-                throw new AttachmentNotFoundException(id);
 
-            return attachmentText;
-        }
-        return attachmentBin;
+        return attachment;
     }
 
     private AttachmentBinary verifyAttachmentBinary(int id) throws AttachmentNotFoundException
     {
         AttachmentBinary attachmentBin = attachmentBinaryRepository.findOne(id);
+
         if(attachmentBin == null)
             throw new AttachmentNotFoundException(id);
         return attachmentBin;
@@ -86,21 +77,21 @@ public class AttachmentServiceImpl implements AttachmentService {
     private AttachmentText verifyAttachmentText(int id) throws AttachmentNotFoundException
     {
         AttachmentText attachmentText = attachmentTextRepository.findOne(id);
+
         if(attachmentText == null)
             throw new AttachmentNotFoundException(id);
-
         return attachmentText;
     }
 
 
     @Override
     public List<AttachmentBinary> findBinaryAttachmentByStudentEmail(String email) throws StudentNotFoundException {
-        return attachmentBinaryRepository.findByCreatedByUser(email);
+        return attachmentBinaryRepository.findAllByAuthor(email).collect(Collectors.toList());
     }
 
     @Override
     public List<AttachmentText> findTextAttachmentByStudentEmail(String email) throws StudentNotFoundException {
-        return attachmentTextRepository.findByCreatedByUser(email);
+        return attachmentTextRepository.findAllByAuthor(email).collect(Collectors.toList());
     }
 
     @Override
@@ -160,12 +151,8 @@ public class AttachmentServiceImpl implements AttachmentService {
 
         StudentDetails studentDetails = verifyStudentDetails(id);
         String email = studentDetails.getStudent().getEmail();
-        List<AbstractAttachment> attachmentList = new ArrayList<>();
 
-        attachmentBinaryRepository.findByCreatedByUser(email).forEach(attachmentList::add);
-        attachmentTextRepository.findByCreatedByUser(email).forEach(attachmentList::add);
-
-        return attachmentList;
+        return attachmentRepository.findAllByAuthor(email).collect(Collectors.toList());
     }
 
     @Override
@@ -187,6 +174,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Override
     public AttachmentBinary delete(int id) throws AttachmentNotFoundException {
+
         AttachmentBinary attachment = attachmentBinaryRepository.findOne(id);
         if(attachment == null)
             throw new AttachmentNotFoundException(id);

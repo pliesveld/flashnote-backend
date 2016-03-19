@@ -13,6 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Iterator;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @DefaultTestAnnotations
 @Transactional
@@ -57,7 +62,21 @@ public class CardServiceTest {
         cardService.createFlashCardReferecingQuestion(que.getId(), ans);
         cardService.createFlashCardReferecingQuestion(que.getId(), ans);
     }
-    
+
+    @Test
+    public void findByEmail()
+    {
+        Question que = new Question("que?");
+        Answer ans = new Answer("Ans.");
+
+        questionRepository.save(que);
+        answerRepository.save(ans);
+
+        Iterator<Question> statements = questionRepository.findAllByAuthor("SYSTEM").iterator();
+        assertNotNull(statements);
+        assertTrue(statements.hasNext());
+    }
+
 
 
 }

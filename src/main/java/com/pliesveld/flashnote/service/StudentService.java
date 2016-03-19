@@ -1,5 +1,6 @@
 package com.pliesveld.flashnote.service;
 
+import com.pliesveld.flashnote.domain.AbstractStatement;
 import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.domain.StudentDetails;
@@ -45,4 +46,7 @@ public interface StudentService {
 
     @NotNull
     List<Deck>          findDecksByOwner(int id);
+
+    @NotNull
+    List<AbstractStatement> findPublishedStatementsBy(StudentDetails studentDetails);
 }
