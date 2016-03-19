@@ -1,5 +1,6 @@
 package com.pliesveld.flashnote.spring.web;
 
+import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import org.hibernate.validator.HibernateValidator;
 import org.springframework.boot.context.embedded.MultipartConfigFactory;
 import org.springframework.context.annotation.*;
@@ -81,9 +82,12 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter{
         return multipartResolver;
     }
 */
+
+
     @Bean
     public Jackson2ObjectMapperBuilder jacksonBuilder() {
 	    Jackson2ObjectMapperBuilder b = new Jackson2ObjectMapperBuilder();
+        b.modulesToInstall(new Hibernate5Module().enable(Hibernate5Module.Feature.SERIALIZE_IDENTIFIER_FOR_LAZY_NOT_LOADED_OBJECTS));
 	    b.indentOutput(true).dateFormat(new SimpleDateFormat("yyyy-MM-dd"));
 	    return b;
     }

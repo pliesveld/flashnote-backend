@@ -28,6 +28,7 @@
         <log4j.version>2.5</log4j.version>
         <junit.version>4.12</junit.version>
         <jackson.version>2.6.4</jackson.version>
+        <jackson.hibernate5.version>2.7.3</jackson.hibernate5.version>
         <h2.version>1.4.190</h2.version>
         <servletapi.version>3.1.0</servletapi.version>
         <wtp.version>none</wtp.version>
@@ -208,6 +209,13 @@
             <artifactId>jackson-annotations</artifactId>
             <version>${jackson.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-hibernate5</artifactId>
+            <version>${jackson.hibernate5.version}</version>
+        </dependency>
+
 
         <!-- HIBERNATE FRAMEWORK -->
         <dependency>
