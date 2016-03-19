@@ -2,7 +2,7 @@ package com.pliesveld.flashnote.exception;
 
 import java.io.Serializable;
 
-public class AnswerNotFoundException extends ResourceNotFoundException {
+public class AnswerNotFoundException extends StatementNotFoundException {
 
     public AnswerNotFoundException(Serializable id) {
         super(id);
