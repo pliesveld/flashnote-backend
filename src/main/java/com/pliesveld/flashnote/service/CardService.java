@@ -1,9 +1,6 @@
 package com.pliesveld.flashnote.service;
 
-import com.pliesveld.flashnote.domain.Answer;
-import com.pliesveld.flashnote.domain.Deck;
-import com.pliesveld.flashnote.domain.FlashCard;
-import com.pliesveld.flashnote.domain.Question;
+import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.exception.DeckNotFoundException;
 import com.pliesveld.flashnote.exception.FlashCardCreateException;
 import com.pliesveld.flashnote.exception.QuestionNotFoundException;
@@ -24,4 +21,11 @@ public interface CardService {
 
     Deck findDeckById(int id) throws DeckNotFoundException;
 
+    Question createQuestion(Question question);
+    Answer createAnswer(Answer answer);
+
+    Question findQuestionById(int id);
+    Answer findAnswerById(int id);
+
+    AbstractStatement findStatementById(int id);
 }

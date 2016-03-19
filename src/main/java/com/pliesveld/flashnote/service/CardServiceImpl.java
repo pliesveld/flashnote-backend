@@ -4,10 +4,7 @@ import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.exception.DeckNotFoundException;
 import com.pliesveld.flashnote.exception.FlashCardCreateException;
 import com.pliesveld.flashnote.exception.QuestionNotFoundException;
-import com.pliesveld.flashnote.repository.AnswerRepository;
-import com.pliesveld.flashnote.repository.DeckRepository;
-import com.pliesveld.flashnote.repository.FlashCardRepository;
-import com.pliesveld.flashnote.repository.QuestionRepository;
+import com.pliesveld.flashnote.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +18,9 @@ import java.util.List;
 public class CardServiceImpl implements CardService {
     
     private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger();
+
+    @Autowired
+    StatementRepository statementRepository;
 
     @Autowired
     QuestionRepository questionRepository;
@@ -83,7 +83,7 @@ public class CardServiceImpl implements CardService {
                 throw new FlashCardCreateException(fc.getId());
         }
 
-        Question question = questionRepository.getOne(questionId);
+        Question question = questionRepository.findOne(questionId);
         return createFlashCard(question,answer);
     }
 
@@ -105,6 +105,35 @@ public class CardServiceImpl implements CardService {
         
         return deck;
     }
-    
-    
+
+    @Override
+    @Transactional(readOnly = true)
+    public Question findQuestionById(int id) {
+        return questionRepository.findOne(id);
+    }
+
+    @Override
+    @Transactional
+    public Question createQuestion(Question question) {
+        return questionRepository.save(question);
+    }
+
+    @Override
+    @Transactional
+    public Answer createAnswer(Answer answer) {
+        return answerRepository.save(answer);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Answer findAnswerById(int id) {
+        return answerRepository.findOne(id);
+    }
+
+    @Override
+    public AbstractStatement findStatementById(int id) {
+        return statementRepository.findOneById(id);
+    }
+
+
 }

@@ -32,7 +32,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+
 
 
 @SpringBootApplication(scanBasePackageClasses = FlashnoteContainerApplication.class)

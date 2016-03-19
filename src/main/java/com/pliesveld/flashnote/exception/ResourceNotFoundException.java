@@ -7,15 +7,11 @@ import java.io.Serializable;
 /**
  * Created by happs on 1/20/16.
  */
-public abstract class ResourceNotFoundException extends ResourceRepositoryException {
-    private static final HttpStatus EXCEPTION_STATUS_NOT_FOUND = HttpStatus.NOT_FOUND;
+public abstract class ResourceNotFoundException extends ResourceRetrieveException {
 
     public ResourceNotFoundException(Serializable id) {
         super(id);
     }
 
-    public HttpStatus getRepositoryStatus()
-    {
-        return EXCEPTION_STATUS_NOT_FOUND;
-    }
+    public HttpStatus getRepositoryStatus() { return HttpStatus.NOT_FOUND; }
 }

@@ -1,14 +1,9 @@
 package com.pliesveld.flashnote.service;
 
-import com.pliesveld.flashnote.domain.Deck;
-import com.pliesveld.flashnote.domain.Student;
-import com.pliesveld.flashnote.domain.StudentDetails;
-import com.pliesveld.flashnote.domain.StudentRole;
+import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.exception.StudentCreateException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
-import com.pliesveld.flashnote.repository.DeckRepository;
-import com.pliesveld.flashnote.repository.StudentDetailsRepository;
-import com.pliesveld.flashnote.repository.StudentRepository;
+import com.pliesveld.flashnote.repository.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.dao.DataAccessException;
@@ -16,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service(value = "studentService")
 public class StudentServiceImpl implements StudentService {
@@ -30,6 +26,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Resource
     DeckRepository deckRepository;
+
+    @Resource
+    StatementRepository statementRepository;
 
     @Override
     public Student create(String name, String email, String password) throws StudentCreateException {
@@ -109,5 +108,19 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Long count() {
         return studentDetailsRepository.count();
+    }
+
+    @Override
+    public List<AbstractStatement> findPublishedStatementsBy(StudentDetails studentDetails) throws StudentNotFoundException {
+        Student student = studentDetails.getStudent();
+
+        if(student == null)
+        {
+            throw new StudentNotFoundException(studentDetails.getId());
+        }
+
+        String email = studentDetails.getStudent().getEmail();
+        List<AbstractStatement> list = statementRepository.findAllByAuthor(email).collect(Collectors.toList());
+        return list;
     }
 }
