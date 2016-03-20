@@ -47,9 +47,13 @@ public class DDLExport
     String PROPERTY_NAME_ENTITY_PACKAGES;
 
     @Value("${schema.export.file:db-init.sql}")
-    String DIR_EXPORT_FILE;
+    String CREATE_EXPORT_FILE;
 
-    @Value("${schema.export.dir:/src/main/resources/sql/}")
+    @Value("${schema.export.file:db-drop.sql}")
+    String DROP_EXPORT_FILE;
+
+
+    @Value("${schema.export.dir:/resource/src/main/resources/sql/}")
     String DIR_EXPORT_PATH;
 
     @Value("${schema.export.root:#{systemProperties['user.dir']}}")
@@ -62,6 +66,7 @@ public class DDLExport
     Environment environment;
 
     public static void main(String[] args) throws IllegalAccessException {
+
         System.setProperty("spring.profiles.active", System.getProperty("spring.profiles.active",Profiles.LOCAL));
         AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
 
@@ -187,17 +192,18 @@ public class DDLExport
 
                 .build();
 
-        LOG.debug("export root {}", DIR_EXPORT_ROOT);
-        LOG.debug("export path {}", DIR_EXPORT_PATH);
-        LOG.debug("export file {}", DIR_EXPORT_FILE);
+        String filename_drop = DIR_EXPORT_ROOT + DIR_EXPORT_PATH + DROP_EXPORT_FILE;
 
-        //String filename_export = System.getProperty("user.dir") + "/src/main/resources/sql/" + "db-init.sql";
-        String filename_export = DIR_EXPORT_ROOT + DIR_EXPORT_PATH + DIR_EXPORT_FILE;
+        new SchemaExport((MetadataImplementor) metadata).setOutputFile(filename_drop).setDelimiter(";")
+                .setFormat(FORMAT_EXPORT_OUTPUT).setHaltOnError(true).drop(false,false);
+        LOG.info("Exported:" + filename_drop);
+
+        String filename_export = DIR_EXPORT_ROOT + DIR_EXPORT_PATH + CREATE_EXPORT_FILE;
 
         new SchemaExport((MetadataImplementor) metadata).setOutputFile(filename_export).setDelimiter(";")
-                .setFormat(FORMAT_EXPORT_OUTPUT).setHaltOnError(true).create(NONE);
-
+                .setFormat(FORMAT_EXPORT_OUTPUT).setHaltOnError(true).execute(NONE, SchemaExport.Type.CREATE);
         LOG.info("Exported:" + filename_export);
+
     }
 
     private void displayProfile(ApplicationContext ctx)

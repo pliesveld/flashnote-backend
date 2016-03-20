@@ -3,6 +3,7 @@ package com.pliesveld.flashnote.schema;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -21,7 +22,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Configuration
 @PropertySource(value = {"classpath:dev-datasource.properties"})
@@ -100,12 +104,12 @@ public class DropCreateDatabase {
             try {
                 statement = connection.createStatement();
                 statement.executeUpdate(sql);
-                LOG.info("{}",sql);
+//                LOG.info("{}",sql);
 
             } catch (SQLException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
                 LOG.error("{}",sql);
-                LOG.catching(Level.ERROR,e);
+        //        LOG.catching(Level.ERROR,e);
             } finally {
                 if(statement != null)
                     try {
@@ -139,7 +143,16 @@ public class DropCreateDatabase {
             conn = DriverManager.getConnection(DB_ROOT_URL, USER, PASS);
             LOG.info("Connected database successfully...");
 
-            //STEP 4: Execute a query
+            //STEP 4: DROP ACTIVE DATABASE CONNECTIONS TO TARGET DATABASE
+            stmt = conn.createStatement();
+            String sql_connections = "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = 'TARGET_DB' AND pid <> pg_backend_pid();"
+                    .replaceFirst("TARGET_DB",DB_NAME);
+            LOG.info("Dropping active connections to target database");
+            stmt.executeQuery(sql_connections);
+//            if (1/0 == 0)
+//                return;
+
+            //STEP 5: Execute a query
             LOG.info("Deleting database...");
             stmt = conn.createStatement();
 
@@ -195,7 +208,13 @@ public class DropCreateDatabase {
             LOG.info("Connected database successfully...");
             SQLExecutor sqlExecutor = new SQLExecutor(conn);
             LOG.info("Running db init", DB_INIT);
-            Files.lines(resource.getFile().toPath()).filter(s -> !s.startsWith("--")).forEach(sqlExecutor);
+
+            List<String> db_init =
+            Files.lines(resource.getFile().toPath()).filter(s -> !s.startsWith("--")).collect(Collectors.toList());
+
+            db_init.forEach(LOG::info);
+
+            db_init.forEach(sqlExecutor);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -208,7 +227,8 @@ public class DropCreateDatabase {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IllegalAccessException {
+        DDLExport.main(args);
         AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
         ctx.register(DropCreateDatabase.class);
         ctx.refresh();
