@@ -7,9 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -17,6 +15,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.ValidationMode;
 import javax.sql.DataSource;
+import java.sql.Driver;
 import java.util.Properties;
 
 @Profile(Profiles.INTEGRATION_TEST)
@@ -31,14 +30,35 @@ public class H2DataSource {
 
     @Bean
     public DataSource dataSource() {
-
+/*
         EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
         EmbeddedDatabase db = builder.setType(EmbeddedDatabaseType.H2)
-//                .addScript("sql/create-db.sql")
+                  .addScript("sql/embedded/h2-postgresql.sql")
 //                .addScript("sql/insert-data.sql")
                 .build();
-        return db;  
 
+        return db;
+          */
+
+        String url = environment.getRequiredProperty("jdbc.url");
+        String driver = environment.getRequiredProperty("jdbc.driverClassName");
+        String username = environment.getRequiredProperty("jdbc.username");
+        String password = environment.getRequiredProperty("jdbc.username");
+
+        SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
+
+        try {
+            @SuppressWarnings("unchecked")
+                    Class<? extends Driver> classz = (Class<? extends Driver>) Class.forName(driver);
+            dataSource.setDriverClass(classz);
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException("failed to load class: " + driver, e);
+        }
+
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+        return dataSource;
     }
 
     // TODO: http://www.jpab.org/Hibernate.html
@@ -58,7 +78,7 @@ public class H2DataSource {
     public EntityManagerFactory entityManagerFactory(DataSource dataSource) {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setGenerateDdl(true);
-        vendorAdapter.setShowSql(true);
+        vendorAdapter.setShowSql(false);
         vendorAdapter.setDatabasePlatform(environment.getRequiredProperty("hibernate.dialect"));
         vendorAdapter.setDatabase(Database.H2);
 
@@ -69,7 +89,7 @@ public class H2DataSource {
         entityManagerFactoryBean.setPackagesToScan(environment.getRequiredProperty(PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN));
         entityManagerFactoryBean.setDataSource(dataSource);
         entityManagerFactoryBean.setJpaProperties(hibernateProperties());
-        entityManagerFactoryBean.setValidationMode(ValidationMode.NONE);
+        entityManagerFactoryBean.setValidationMode(ValidationMode.AUTO); // NONE, CALLBACK, AUTO
         entityManagerFactoryBean.afterPropertiesSet();
         return entityManagerFactoryBean.getObject();
     }
