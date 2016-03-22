@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.service;
+package com.pliesveld.flashnote.audit;
 
 import java.time.ZonedDateTime;
 

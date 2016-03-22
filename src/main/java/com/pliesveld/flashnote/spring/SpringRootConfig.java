@@ -1,7 +1,7 @@
 package com.pliesveld.flashnote.spring;
 
-import com.pliesveld.flashnote.service.DateTimeService;
-import com.pliesveld.flashnote.service.DateTimeServiceImpl;
+import com.pliesveld.flashnote.audit.DateTimeService;
+import com.pliesveld.flashnote.audit.DateTimeServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

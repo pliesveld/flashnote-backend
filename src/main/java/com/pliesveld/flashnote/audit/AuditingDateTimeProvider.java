@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.service;
+package com.pliesveld.flashnote.audit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.auditing.DateTimeProvider;
