@@ -71,20 +71,49 @@ public class StudentGenerator
 
     static public Student randomizedStudent()
     {
+        return randomizedStudent(true);
+    }
+
+    static public Student randomizedStudent(boolean andDetails)
+    {
         StudentRole random_role = randomValue(StudentRole.values());
         int rand_num = ThreadLocalRandom.current().nextInt(0,1000);
         String random_name = String.format("%s%d",randomValue(GIRL_NAMES),rand_num);
         String random_email = random_name.concat("@" + randomValue(DOMAIN_NAMES));
 
-        StudentDetails studentDetails = new StudentDetails();
-        studentDetails.setName(random_name);
-
         Student student = new Student();
-        student.setStudentDetails(studentDetails);
+
+        if(andDetails) {
+            StudentDetails studentDetails = new StudentDetails();
+            studentDetails.setName(random_name);
+            student.setStudentDetails(studentDetails);
+        }
+
         student.setEmail(random_email);
         student.setPassword("password");
         student.setRole(StudentRole.ROLE_USER);
         return student;
+    }
+
+    static public StudentDetails randomizedStudentDetails()
+    {
+        return randomizedStudentDetails(true);
+    }
+
+    static public StudentDetails randomizedStudentDetails(boolean andStudent)
+    {
+        if(andStudent)
+        {
+            return randomizedStudent().getStudentDetails();
+        }
+
+        StudentRole random_role = randomValue(StudentRole.values());
+        int rand_num = ThreadLocalRandom.current().nextInt(0,1000);
+        String random_name = String.format("%s%d",randomValue(GIRL_NAMES),rand_num);
+
+        StudentDetails studentDetails = new StudentDetails();
+        studentDetails.setName(random_name);
+        return studentDetails;
     }
 
 }

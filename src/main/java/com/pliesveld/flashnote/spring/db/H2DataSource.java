@@ -34,8 +34,8 @@ public class H2DataSource {
 
         EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
         EmbeddedDatabase db = builder.setType(EmbeddedDatabaseType.H2)
-                .addScript("sql/create-db.sql")
-                .addScript("sql/insert-data.sql")
+//                .addScript("sql/create-db.sql")
+//                .addScript("sql/insert-data.sql")
                 .build();
         return db;  
 

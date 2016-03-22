@@ -2,6 +2,8 @@ package com.pliesveld.flashnote.unit.domain.entity;
 
 import com.pliesveld.flashnote.domain.Category;
 import com.pliesveld.flashnote.unit.spring.DefaultTestAnnotations;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -17,58 +19,92 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @DefaultTestAnnotations
 @Transactional
-public class CategoryTest
+public class CategoryTest extends AbstractDomainEntityUnitTest
 {
     @PersistenceContext
     EntityManager entityManager;
 
-    @Test
-    public void generateCategorySingle()
-    {
-        Category category = new Category();
-        category.setName("ROOT");
-        category.setDescription("ROOT category description");
-        entityManager.persist(category);
-        entityManager.flush();
-        Serializable new_id = category.getId();
+    Serializable category_id;
 
-        Category category_retrieved = entityManager.find(Category.class, new_id);
-        assertNotNull(category_retrieved);
-        assertEquals("Retrieved same as persisted", category.getName(), category_retrieved.getName());
+    @Before
+    public void setupEntities()
+    {
+        Category category = categoryBean();
+        category = categoryRepository.save(category);
+        category_id = category.getId();
+        entityManager.flush();
+        entityManager.clear();
+    }
+
+    protected Category categoryFromTest()
+    {
+        assertNotNull(category_id);
+        Category category = entityManager.find(Category.class,category_id);
+        assertNotNull(category);
+        return category;
+    }
+
+    @Test
+    public void testEntitySanity()
+    {
+        assertNotNull(category_id);
+        Category category = entityManager.find(Category.class,category_id);
+        assertNotNull(category);
+        assertCategoryRepositoryCount(1);
+    }
+
+    @After
+    public void flushAfter()
+    {
+        entityManager.flush();
     }
 
     @Test
     public void generateCategoryHierarchy()
     {
-        Category category = new Category();
-        category.setName("ROOT");
-        category.setDescription("ROOT category description");
-        entityManager.persist(category);
-        entityManager.flush();
+        Category root = entityManager.find(Category.class, category_id);
 
+        Category child1 = categoryBean();
+        Category child2 = categoryBean();
+        Category child3 = categoryBean();
 
-        Category chld = new Category();
-        chld.setName("CHILD");
-        chld.setDescription("Child category description.");
-        
-        category.addChildCategory(chld);
-        entityManager.persist(chld);
-        
-        /*
-        Serializable new_id = category.getId();
+        root.addChildCategory(child1);
+        root.addChildCategory(child2);
+        root.addChildCategory(child3);
 
-        Category category_retrieved = entityManager.find(Category.class, new_id);
-        assertNotNull(category_retrieved);
-        Set<?> set_child = category_retrieved.getChildCategories();
-        assertNotNull(set_child);
-        assertEquals(set_child.size(), 1);
+        entityManager.persist(child1);
+        entityManager.persist(child2);
+        entityManager.persist(child3);
 
-        Category chld_retrieved = (Category) set_child.iterator().next();
-        assertEquals("Retrieved same as persisted", category.getTitle(), category_retrieved.getTitle());
-        assertEquals("Child Retrieved same as persisted", chld.getTitle(), chld_retrieved.getTitle());
-        */
+        assertNotNull(child1.getId());
+        assertNotNull(child2.getId());
+        assertNotNull(child3.getId());
 
-         
+        assertCategoryRepositoryCount(4);
+
+    }
+
+    @Test
+    public void generateCategoryHierarchyCascade()
+    {
+        Category root = entityManager.find(Category.class, category_id);
+
+        Category child1 = categoryBean();
+        Category child2 = categoryBean();
+        Category child3 = categoryBean();
+
+        root.addChildCategory(child1);
+        root.addChildCategory(child2);
+        root.addChildCategory(child3);
+
+        entityManager.persist(root);
+
+        assertNotNull(child1.getId());
+        assertNotNull(child2.getId());
+        assertNotNull(child3.getId());
+
+        assertCategoryRepositoryCount(4);
+
     }
 
 }

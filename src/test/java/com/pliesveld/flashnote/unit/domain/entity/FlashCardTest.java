@@ -1,78 +1,114 @@
 package com.pliesveld.flashnote.unit.domain.entity;
 
 import com.pliesveld.flashnote.domain.Answer;
-import com.pliesveld.flashnote.domain.Category;
+
 import com.pliesveld.flashnote.domain.FlashCard;
 import com.pliesveld.flashnote.domain.Question;
 import com.pliesveld.flashnote.unit.spring.DefaultTestAnnotations;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.hibernate.SessionEventListener;
+
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
+
 import java.io.Serializable;
 
 import static org.junit.Assert.*;
 
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @DefaultTestAnnotations
 @Transactional
-public class FlashCardTest
+public class FlashCardTest extends AbstractDomainEntityUnitTest
 {
     @PersistenceContext
-    EntityManager entityManager;
+    protected EntityManager entityManager;
+
+    protected Serializable flashcard_id;
 
     @Before
-    public void setup()
+    public void setupEntities()
     {
-        /*
-         * ApplicationContext ctx = new
-         * AnnotationConfigApplicationContext(SpringConfig.class);
-         * LocalEntityManagerFactoryBean sfb = (LocalEntityManagerFactoryBean)
-         * ctx.getBean("&entityManager"); entityManager =
-         * sfb.getConfiguration().buildEntityManagerFactory();
-         */
+        Question question = questionBean();
+        Answer answer = answerBean();
+
+        entityManager.persist(question);
+        entityManager.persist(answer);
+
+        entityManager.flush();
+
+        FlashCard flashCard = new FlashCard(question,answer);
+        entityManager.persist(flashCard);
+
+        flashcard_id = flashCard.getId();
+        entityManager.flush();
+        entityManager.clear();
     }
 
     @Test
-    public void entityManagerWired()
+    public void testTestLoad()
     {
-        assertNotNull(entityManager);
-    }
 
+    }
 
     @Test
-    public void generateCategoryEmpty()
+    public void testEntitySanity()
     {
-        Category category = entityManager.find(Category.class, 1);
-        assertNull(category);
-         
+        assertNotNull(flashcard_id);
+
+        FlashCard fc = flashCardRepository.findAll().iterator().next();
+        assertNotNull(fc);
+        assertNotNull(fc.getAnswer());
+        assertNotNull(fc.getQuestion());
+        assertTrue(questionRepository.exists(fc.getQuestion().getId()));
+        assertTrue(answerRepository.exists(fc.getAnswer().getId()));
+
+        assertQuestionRepositoryCount(1);
+        assertAnswerRepositoryCount(1);
+        assertFlashCardRepositoryCount(1);
     }
 
-    @Test 
-    public void testQuestion()
+    @After
+    public void flushAfter()
     {
-        Question q = new Question();
-        q.setContent("This is a question?");
-        entityManager.persist(q);
+        LOG.debug("flushAfter");
         entityManager.flush();
-        Integer q_id = q.getId();
-
-        Answer a = new Answer();
-        a.setContent("This is an answer.");
-
-        entityManager.persist(a);
-        entityManager.flush();
-        Integer a_id = a.getId();
-
-        FlashCard fc = new FlashCard(q,a);
-        entityManager.persist(fc);
-         
     }
 
+    @Test
+    public void testFlashCardRemoval()
+    {
+        flashCardRepository.deleteAll();
+    }
+
+    @Test
+    public void testAnswerRemoval()
+    {
+        flashCardRepository.deleteAll();
+        answerRepository.deleteAll();
+    }
+
+    @Test
+    public void testQuestionRemoval()
+    {
+        flashCardRepository.deleteAll();
+        questionRepository.deleteAll();
+    }
+
+
+
+    /*
     @Test
     public void testAnswerModifications()
     {
@@ -122,50 +158,10 @@ public class FlashCardTest
         assertEquals("After answer updated, loaded flashcard does not match modified",ANSWER_MODIFIED,fc3.getAnswer().getContent());
 
          
-    }
+    }*/
 
 
 
-    @Test
-    public void testFlashCardCascade()
-    {
-        Question q = new Question();
-        q.setContent("This is a question?");
-//        Integer q_id = (Integer) entityManager.persist(q);
-        Answer a = new Answer();
-        a.setContent("This is an answer.");
-//        Integer a_id = (Integer) entityManager.persist(a);
 
-        FlashCard fc = new FlashCard(q,a);
-        entityManager.persist(fc);
-        entityManager.flush();
-    }
-    
-    
-    @Test
-    public void testFlashCardCascadeWithPersist()
-    {
-        Question q = new Question();
-        q.setContent("This is a question?");
-//        Integer q_id = (Integer) entityManager.persist(q);
-        Answer a = new Answer();
-        a.setContent("This is an answer.");
-//        Integer a_id = (Integer) entityManager.persist(a);
-        entityManager.persist(q);
-        entityManager.persist(a);
-        entityManager.flush();
 
-        FlashCard fc = new FlashCard(q,a);
-        entityManager.persist(fc);
-        entityManager.flush();
-    }
-/*
-    @Test
-    public void createCardCascadeAll()
-    {
-        FlashCard fc = new FlashCard(new Question("q"),new Answer("a"));
-        entityManager.persist(fc);
-        entityManager.flush();
-    }
-    */
 }

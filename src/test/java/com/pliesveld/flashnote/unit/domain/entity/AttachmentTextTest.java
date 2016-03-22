@@ -2,43 +2,53 @@ package com.pliesveld.flashnote.unit.domain.entity;
 
 import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.unit.spring.DefaultTestAnnotations;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.io.Serializable;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @DefaultTestAnnotations
 @Transactional
-public class AttachmentTest {
+public class AttachmentTextTest extends AbstractDomainEntityUnitTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @PersistenceContext
-    EntityManager em;
+    EntityManager entityManager;
 
-    AbstractAttachment createAttachment()
+    Serializable attachment_id;
+
+    @Before
+    public void setupEntities()
     {
-        AttachmentText attachment = new AttachmentText();
-        attachment.setFileName("test.txt");
-        attachment.setAttachmentType(AttachmentType.TEXT);
-        attachment.setContents("THIS IS THE CONTENTS OF THE DOCUMENT ATTACHMENT");
-        return attachment;
+        AttachmentText attachmentText = attachmentTextBean();
+        attachmentText = attachmentTextRepository.save(attachmentText);
+        attachment_id = attachmentText.getId();
     }
 
-    AbstractStatement createQuestion()
+    @Test
+    public void testEntitySanity()
     {
-        Question que = new Question();
-        que.setTitle("Title");
-        que.setContent("Question.");
-        return que;
+        assertNotNull(entityManager.find(AttachmentText.class,attachment_id));
+
     }
 
-    AbstractStatement createAnswer()
+    @After
+    public void flushAfter()
     {
-        Answer ans = new Answer();
-        ans.setContent("Answer.");
-        return ans;
+        entityManager.flush();
     }
 
     /*
