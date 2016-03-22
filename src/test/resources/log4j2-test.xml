@@ -10,12 +10,15 @@
     <Console name="CONSOLE" target="SYSTEM_OUT">
       <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
     </Console>
+
     <File name="FileHibernate" fileName="${filename}" append="false">
       <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
     </File>
+
     <File name="FileService" fileName="${servicefilename}" append="false">
         <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
     </File>
+
     <File name="FileSpring" fileName="${springfilename}" append="false">
         <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
     </File>
@@ -30,8 +33,8 @@
   		<!-- <AppenderRef ref="FileHibernate"/>  -->
 		<AppenderRef ref="CONSOLE"/>
   	</logger>
-  	<logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
-		<AppenderRef ref="CONSOLE"/>
+  	<logger name="org.hibernate.SQL" level="${sys:LOG_SQL_LEVEL}" additivity="false">
+        <AppenderRef ref="CONSOLE"/>
   	</logger>
   	<logger name="org.springframework" level="DEBUG" additivity="false">
   		<AppenderRef ref="FileSpring"/>
