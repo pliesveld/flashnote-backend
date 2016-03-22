@@ -62,7 +62,12 @@ public class Student {
 
     public StudentDetails getStudentDetails() { return studentDetails; }
 
-    public void setStudentDetails(StudentDetails studentDetails) { this.studentDetails = studentDetails; }
+    public void setStudentDetails(StudentDetails studentDetails)
+    {
+        this.studentDetails = studentDetails;
+        if(studentDetails.getStudent() == null || !studentDetails.getStudent().equals(this))
+            studentDetails.setStudent(this);
+    }
 
     public String getEmail() {
         return email;
@@ -88,5 +93,20 @@ public class Student {
         this.role = role;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        Student student = (Student) o;
+
+        if (id != null ? !id.equals(student.id) : student.id != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }
