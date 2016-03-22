@@ -4,21 +4,18 @@ package com.pliesveld.flashnote.web.controller;
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
-import com.pliesveld.flashnote.model.json.request.NewStudentDetails;
 import com.pliesveld.flashnote.model.json.response.ExistingStudentDetails;
 import com.pliesveld.flashnote.service.StudentService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import javax.validation.Valid;
-import java.net.URI;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/students")
@@ -45,24 +42,6 @@ public class StudentController {
         LOG.info("Retrieving list of all students");
         Iterable<StudentDetails> allStudents = studentService.findAll();
         return new ResponseEntity<>(allStudents, HttpStatus.OK);
-    }
-
-    @RequestMapping(value="",method = RequestMethod.POST)
-    public ResponseEntity<Void> createStudent(@Valid @RequestBody NewStudentDetails studentdto)
-    {
-        Student studentDetails = studentService.create(studentdto.getName(),studentdto.getEmail(),studentdto.getPassword());
-        
-        LOG.info("Created studentDetails: " + studentDetails);
-
-        HttpHeaders responseHeaders = new HttpHeaders();
-        URI newStudentUri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(studentDetails.getId())
-                .toUri();
-
-        responseHeaders.setLocation(newStudentUri);
-        return new ResponseEntity<>(null,responseHeaders,HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasAuthority('USER')")
@@ -95,6 +74,26 @@ public class StudentController {
     }
     */
 
+
+    /*
+    @RequestMapping(value="",method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Void> createStudent(@Valid @RequestBody NewStudentDetails studentdto)
+    {
+        Student studentDetails = studentService.createStudent(studentdto.getName(),studentdto.getEmail(),studentdto.getPassword());
+
+        LOG.info("Created studentDetails: " + studentDetails);
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        URI newStudentUri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(studentDetails.getId())
+                .toUri();
+
+        responseHeaders.setLocation(newStudentUri);
+        return new ResponseEntity<>(null,responseHeaders,HttpStatus.CREATED);
+    }*/
 
 
 

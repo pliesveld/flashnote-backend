@@ -29,8 +29,10 @@
         <junit.version>4.12</junit.version>
         <jackson.version>2.6.4</jackson.version>
         <h2.version>1.4.190</h2.version>
+        <guava.version>19.0</guava.version>
         <servletapi.version>3.1.0</servletapi.version>
         <wtp.version>none</wtp.version>
+        <subethamail.version>3.1.7</subethamail.version>
         <start-class>com.pliesveld.flashnote.FlashnoteContainerApplication</start-class>
     </properties>
 
@@ -66,11 +68,6 @@
         </dependency>
 
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency> 
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
@@ -78,7 +75,23 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
         <dependency>
@@ -108,12 +121,6 @@
             <optional>true</optional>
         </dependency>
         -->
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
 
 
         <!-- SPRING FRAMEWORK
@@ -259,7 +266,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>test</scope>
+            <!--<scope>test</scope>-->
         </dependency>
 
         <!--  DEPENDENCY FOR SCHEMA EXPORT -->
@@ -280,6 +287,12 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
             <version>${commons.csv.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
         </dependency>
 
 
@@ -414,7 +427,16 @@
     </dependency>
 -->
 
-    <dependency>
+        <!-- for unit testing email with Wiser -->
+        <dependency>
+            <groupId>org.subethamail</groupId>
+            <artifactId>subethasmtp</artifactId>
+            <version>${subethamail.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+
+        <dependency>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
         <version>1.8</version>

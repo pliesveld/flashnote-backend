@@ -4,7 +4,6 @@ import com.pliesveld.flashnote.domain.AbstractStatement;
 import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.domain.StudentDetails;
-import com.pliesveld.flashnote.exception.StudentCreateException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -17,10 +16,8 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface StudentService {
 
-    @Transactional
-    Student create(@NotNull String name,@NotNull String email,@NotNull String password) throws StudentCreateException;
-
-    Student findByEmail(@NotNull String email)           throws StudentNotFoundException;
+    Student findByEmail(@NotNull String email);
+    StudentDetails findByName(@NotNull String name);
 
     @Transactional
     StudentDetails delete(int id)                        throws StudentNotFoundException;
@@ -43,4 +40,6 @@ public interface StudentService {
 
     @NotNull
     List<AbstractStatement> findPublishedStatementsBy(StudentDetails studentDetails);
+
+
 }

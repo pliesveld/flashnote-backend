@@ -41,6 +41,10 @@ public class Student {
     @Basic(fetch = FetchType.EAGER)
     private StudentRole role;
 
+    @NotNull
+    @Column(name = "TEMP_PASSWORD", nullable = false)
+    private boolean temporaryPassword;
+
     public Student() {}
 
     public Student(Student o) {
@@ -53,7 +57,8 @@ public class Student {
     @PrePersist
     public void prePersist() {
         if(role == null)
-            role = StudentRole.ROLE_USER;
+            role = StudentRole.ROLE_ACCOUNT;
+        temporaryPassword = false;
     }
 
     public Integer getId() { return id; }
@@ -108,5 +113,13 @@ public class Student {
     @Override
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
+    }
+
+    public void setTemporaryPassword(boolean temporaryPassword) {
+        this.temporaryPassword = temporaryPassword;
+    }
+
+    public boolean isTemporaryPassword() {
+        return temporaryPassword;
     }
 }

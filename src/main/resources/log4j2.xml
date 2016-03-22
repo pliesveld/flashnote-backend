@@ -50,10 +50,6 @@
   		<AppenderRef ref="FileHibernate"/>
   	</logger>
 
-    <logger name="org.springframework.boot.autoconfigure.logging.AutoConfigurationReportLoggingInitializer" level="INFO" additivity="true">
-        <AppenderRef ref="FileSpringSelect"/>
-    </logger>
-
     <logger name="org.springframework.web.servlet.handler" level="INFO" additivity="true">
         <AppenderRef ref="FileSpringSelect"/>
     </logger>
@@ -62,15 +58,15 @@
         <AppenderRef ref="FileSpringSelect"/>
     </logger>
 
-    <logger name="org.springframework" level="WARN" additivity="false">
-        <AppenderRef ref="FileSpring"/>
-    </logger>
-
     <logger name="org.springframework" level="DEBUG" additivity="false">
         <AppenderRef ref="FileSpringDebug"/>
     </logger>
 
-    <Root level="WARN">
+    <logger name="org.springframework" level="WARN" additivity="false">
+        <AppenderRef ref="FileSpring"/>
+    </logger>
+
+    <Root level="INFO">
       <AppenderRef ref="CONSOLE"/>
     </Root>
   </Loggers>

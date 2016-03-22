@@ -2,25 +2,20 @@ package com.pliesveld.flashnote.unit.domain.entity;
 
 import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.repository.*;
-import com.pliesveld.flashnote.spring.data.SpringDataConfig;
 import com.pliesveld.flashnote.util.generator.QuestionGenerator;
 import com.pliesveld.flashnote.util.generator.StudentGenerator;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.SessionEventListener;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -69,6 +64,14 @@ public class AbstractDomainEntityUnitTest
     @Autowired(required = false)
     protected StudentRepository studentRepository;
 
+    @Autowired(required = false)
+    protected PasswordResetRepository passwordResetRepository;
+
+    @Autowired(required = false)
+    protected RegistrationRepository registrationRepository;
+
+
+
     @Transactional
     public void testRepositoryLoads()
     {
@@ -84,6 +87,8 @@ public class AbstractDomainEntityUnitTest
         assertNotNull(statementRepository);
         assertNotNull(studentDetailsRepository);
         assertNotNull(studentRepository);
+        assertNotNull(registrationRepository);
+        assertNotNull(passwordResetRepository);
     }
 
     protected void assertAnswerRepositoryCount(long value)
@@ -122,12 +127,10 @@ public class AbstractDomainEntityUnitTest
     {
         assertEquals("The entity count of QuestionRepository should be " + value, value, questionBankRepository.count());
     }
-
     protected void assertStatementRepositoryCount(long value)
     {
             assertEquals("The entity count of StatementRepository should be " + value, value, questionRepository.count() + answerRepository.count());
     }
-
     protected void assertStudentDetailsRepositoryCount(long value)
     {
             assertEquals("The entity count of StudentDetailsRepository should be " + value, value, studentDetailsRepository.count());
@@ -135,6 +138,14 @@ public class AbstractDomainEntityUnitTest
     protected void assertStudentRepositoryCount(long value)
     {
             assertEquals("The entity count of StudentRepository should be " + value, value, studentRepository.count());
+    }
+    protected void assertRegistrationRepositoryCount(long value)
+    {
+        assertEquals("The entity count of StudentRepository should be " + value, value, registrationRepository.count());
+    }
+    protected void assertPasswordResetRepositoryCount(long value)
+    {
+        assertEquals("The entity count of StudentRepository should be " + value, value, passwordResetRepository.count());
     }
 
     @Bean
@@ -261,6 +272,14 @@ public class AbstractDomainEntityUnitTest
         return StudentGenerator.randomizedStudentDetails(true);
     }
 
+    @Bean
+    @Scope("prototype")
+    public AccountPasswordResetToken accountPasswordResetTokenBean(Student student)
+    {
+        String token = UUID.randomUUID().toString().toUpperCase();
+        AccountPasswordResetToken pw_token = new AccountPasswordResetToken(student, token);
+        return pw_token;
+    }
     /*
     @Before
     public void setup()

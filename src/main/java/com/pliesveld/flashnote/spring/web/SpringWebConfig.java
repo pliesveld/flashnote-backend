@@ -1,5 +1,6 @@
 package com.pliesveld.flashnote.spring.web;
 
+import com.pliesveld.flashnote.web.controller.RateLimitingInterceptor;
 import org.hibernate.validator.HibernateValidator;
 import org.springframework.boot.context.embedded.MultipartConfigFactory;
 import org.springframework.context.annotation.*;
@@ -7,6 +8,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -27,7 +29,7 @@ import java.text.SimpleDateFormat;
 
 })
 @PropertySource(value = { "classpath:application-local.properties" })
-public class SpringWebConfig extends WebMvcConfigurerAdapter{
+public class SpringWebConfig extends WebMvcConfigurerAdapter {
 
 
     @Bean
@@ -70,17 +72,30 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter{
         return multipartConfigFactory.createMultipartConfig();
     }
 
-/*
-    @Bean
-    MultipartResolver multipartResolver() throws IOException {
-        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxInMemorySize(1024*1024*5);
-        multipartResolver.setMaxUploadSizePerFile(1024*1024*5*5);
-        multipartResolver.setMaxUploadSize(1024*1024*5*5*5);
-        multipartResolver.setUploadTempDir(new FileSystemResource("/tmp/upload/"));
-        return multipartResolver;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        //registry.addInterceptor(this.rateLimitingInterceptor());
+        super.addInterceptors(registry);
     }
-*/
+
+    @Bean
+    public RateLimitingInterceptor rateLimitingInterceptor()
+    {
+        return new RateLimitingInterceptor();
+    }
+
+    /*
+        @Bean
+        MultipartResolver multipartResolver() throws IOException {
+            CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+            multipartResolver.setMaxInMemorySize(1024*1024*5);
+            multipartResolver.setMaxUploadSizePerFile(1024*1024*5*5);
+            multipartResolver.setMaxUploadSize(1024*1024*5*5*5);
+            multipartResolver.setUploadTempDir(new FileSystemResource("/tmp/upload/"));
+            return multipartResolver;
+        }
+    */
     @Bean
     public Jackson2ObjectMapperBuilder jacksonBuilder() {
 	    Jackson2ObjectMapperBuilder b = new Jackson2ObjectMapperBuilder();
