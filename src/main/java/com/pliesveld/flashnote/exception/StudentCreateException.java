@@ -4,23 +4,29 @@ import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
 
-/**
- * Created by happs on 1/20/16.
- */
-public class StudentCreateException extends ResourceRepositoryException {
-    final static private HttpStatus EXCEPTION_STATUS_IM_USED = HttpStatus.IM_USED;
+public class StudentCreateException extends ResourceCreateException {
+
+    public StudentCreateException(Serializable id) {
+        super("Student resource " + id + " already exists.");
+    }
+
+    public StudentCreateException(String message) {
+        super(message);
+    }
+
+    public StudentCreateException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
     @Override
     public String getRepositoryMessage() {
-        return "StudentDetails already exists: " + getRepositoryId();
+        return this.getMessage();
     }
 
     @Override
     public HttpStatus getRepositoryStatus() {
-        return EXCEPTION_STATUS_IM_USED;
+        return HttpStatus.CONFLICT;
     }
-    
-    public StudentCreateException(Serializable id) {
-        super(id);
-    }
+
+
 }

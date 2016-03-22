@@ -1,10 +1,6 @@
 package com.pliesveld.flashnote.unit.domain.entity;
 
 import com.pliesveld.flashnote.domain.*;
-import com.pliesveld.flashnote.repository.DeckRepository;
-import com.pliesveld.flashnote.repository.StudentDetailsRepository;
-import com.pliesveld.flashnote.repository.StudentRepository;
-import com.pliesveld.flashnote.service.CardService;
 import com.pliesveld.flashnote.unit.spring.DefaultTestAnnotations;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,7 +8,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,110 +21,78 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @DefaultTestAnnotations
 @Transactional
-public class StudentDetailsTest {
+public class StudentDetailsTest extends StudentTest {
     private static final Logger LOG = LogManager.getLogger();
 
     @PersistenceContext
-    EntityManager entityManager;
-
-    @Autowired
-    CardService cardService;
-
-    @Autowired
-    StudentDetailsRepository studentDetailsRepository;
-
-    @Autowired
-    StudentRepository studentRepository;
-
-    @Autowired
-    DeckRepository deckRepository;
-
-    @Test
-    public void entityManagerWired() {
-        assertNotNull(entityManager);
-    }
-
-    @Test
-    public void verifyEmpty() {
-        assertEquals("Deck count should be zero", 0, ((Long) cardService.countDecks()).intValue());
-        assertEquals("Question count should be zero", 0, ((Long) cardService.countQuestions()).intValue());
-        assertEquals("Answer count should be zero", 0, ((Long) cardService.countAnswers()).intValue());
-        assertEquals("FlashCard count should be zero", 0, ((Long) cardService.countFlashCards()).intValue());
-        // TODO: StudentDetails, AttachmentBinary, Category
-    }
-
-    Student student;
-    Student student1;
-    Student student2;
-
-    StudentDetails studentDetails;
-    StudentDetails studentDetails1;
-    StudentDetails studentDetails2;
-
-    Serializable student_id = null;
-    Serializable student1_id = null;
-    Serializable student2_id = null;
+    protected EntityManager entityManager;
 
     @Before
-    public void createStudent()
+    @Override
+    public void setupEntities()
     {
-        student = new Student();
-        student.setEmail("email@example.com");
-        student.setPassword("password");
-        entityManager.persist(student);
+        super.setupEntities();
 
-        student1 = new Student();
-        student1.setEmail("student1@example.com");
-        student1.setPassword("password");
-        entityManager.persist(student1);
+        assertNotNull(student_id);
 
-        student2 = new Student();
-        student2.setEmail("student2@example.com");
-        student2.setPassword("password");
-        entityManager.persist(student2);
+        Student student = entityManager.getReference(Student.class, student_id);
+        assertTrue(entityManager.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(student));
 
-        studentDetails = new StudentDetails();
-        student.setStudentDetails(studentDetails);
+        StudentDetails studentDetails = studentDetailsBean();
         studentDetails.setStudent(student);
-        studentDetails.setName("studentDetails");
         entityManager.persist(studentDetails);
 
-        studentDetails1 = new StudentDetails();
-        student1.setStudentDetails(studentDetails1);
-        studentDetails1.setStudent(student1);
-        studentDetails1.setName("studentDetails1");
-        entityManager.persist(studentDetails1);
+    }
 
-        studentDetails2 = new StudentDetails();
-        student2.setStudentDetails(studentDetails2);
-        studentDetails2.setStudent(student2);
-        studentDetails2.setName("studentDetails2");
-        entityManager.persist(studentDetails2);
-        entityManager.flush();
-
-        student_id = student.getId();
-        student1_id = student1.getId();
-        student2_id = student2.getId();
+    @Test
+    public void testEntitySanity()
+    {
+        assertStudentRepositoryCount(1);
+        assertStudentDetailsRepositoryCount(1);
     }
 
     @After
-    public void removeStudent()
+    @Override
+    public void flushAfter()
     {
-        student = null;
-        student1 = null;
-        student2 = null;
-        studentDetails = null;
-        studentDetails1 = null;
-        studentDetails2 = null;
-        student_id = null;
-        student1_id = null;
-        student2_id = null;
+        entityManager.flush();
     }
 
     @Test
+    public void removalDetailsCascadesToAccountTest()
+    {
+        assertStudentRepositoryCount(1);
+        assertStudentDetailsRepositoryCount(1);
+
+        StudentDetails studentDetails = studentDetailsRepository.findAll().iterator().next();
+//        studentDetailsRepository.delete(studentDetails);
+        assertTrue(entityManager.contains(studentDetails));
+        entityManager.remove(studentDetails);
+        entityManager.flush();
+
+        assertStudentDetailsRepositoryCount(0);
+        assertStudentRepositoryCount(0);
+    }
+
+    @Test
+    public void removalAccountCascadesToDetailsTest()
+    {
+        assertStudentRepositoryCount(1);
+        assertStudentDetailsRepositoryCount(1);
+
+        Student student = studentRepository.findAll().iterator().next();
+        studentRepository.delete(student);
+        entityManager.flush();
+
+        assertStudentRepositoryCount(0);
+        assertStudentDetailsRepositoryCount(0);
+    }
+
+    /*
+    @Test
     public void createStudentDeck() {
 
-        StudentDetails studentDetails = entityManager.find(StudentDetails.class,student_id);
+        StudentDetails studentDetails = entityManager.find(StudentDetails.class, student_id);
         assertNotNull(studentDetails);
 
         Question q = new Question("q");
@@ -142,24 +105,21 @@ public class StudentDetailsTest {
         Deck deck = new Deck(studentDetails);
         deck.getFlashCards().add(fc);
 
-
         entityManager.persist(deck);
         entityManager.flush();
 
-
-        assertEquals("Deck count should be zero", 1, ((Long) cardService.countDecks()).intValue());
-        assertEquals("Question count should be zero", 1, ((Long) cardService.countQuestions()).intValue());
-        assertEquals("Answer count should be zero", 1, ((Long) cardService.countAnswers()).intValue());
-        assertEquals("FlashCard count should be zero", 1, ((Long) cardService.countFlashCards()).intValue());
-        //studentDetails.addDeck(deck);
-
+        assertDeckRepositoryCount(1);
+        assertQuestionRepositoryCount(1);
+        assertAnswerRepositoryCount(1);
+        assertFlashCardRepositoryCount(1);
     }
+    */
 
-
+    /*
     @Test
     public void studentIdentityTest() {
-        StudentDetails studentDetails1 = entityManager.find(StudentDetails.class,student1_id);
-        StudentDetails studentDetails2 = entityManager.find(StudentDetails.class,student2_id);
+        StudentDetails studentDetails1 = entityManager.find(StudentDetails.class, student1_id);
+        StudentDetails studentDetails2 = entityManager.find(StudentDetails.class, student2_id);
 
         Serializable s1 = studentDetails1.getId();
         Serializable s2 = studentDetails2.getId();
@@ -191,7 +151,11 @@ public class StudentDetailsTest {
 
         assertTrue(copy_studentDetails1.getName().equals(studentDetails1.getName()));
 
-    }
+    }*/
+
+
+
+    /*
 
     @Transactional
     private FlashCard newFlashCard(String question, String answer)
@@ -201,13 +165,12 @@ public class StudentDetailsTest {
         entityManager.persist(que);
         entityManager.persist(ans);
         entityManager.flush();
-        
         FlashCard fc = new FlashCard(que,ans);
         entityManager.persist(fc);
         entityManager.flush();
         return fc;
     }
-    
+
     @Test
     public void studentDeckIdentityTest() {
 
@@ -236,33 +199,7 @@ public class StudentDetailsTest {
         assertEquals(3,set_copy.size());
     }
 
-    @Test
-    public void removalDetailsCascadesToAccountTest()
-    {
-        assertEquals(3,studentRepository.count());
-        assertEquals(3,studentDetailsRepository.count());
+*/
 
-        studentDetailsRepository.delete(studentDetails);
-        entityManager.flush();
-
-        assertEquals(2,studentRepository.count());
-        assertEquals(2,studentDetailsRepository.count());
-    }
-
-
-    @Test
-    public void removalAccountCascadesToDetailsTest()
-    {
-        assertEquals(3,studentRepository.count());
-        assertEquals(3,studentDetailsRepository.count());
-
-        studentRepository.delete(student);
-
-        entityManager.flush();
-
-        assertEquals(2,studentRepository.count());
-        assertEquals(2,studentDetailsRepository.count());
-
-    }
 }
 

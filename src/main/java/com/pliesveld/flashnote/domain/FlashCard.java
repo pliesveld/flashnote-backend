@@ -19,7 +19,7 @@ public class FlashCard extends DomainBaseEntity implements Comparable<FlashCard>
     @EmbeddedId
     private FlashCardPrimaryKey id;
 
-    @ManyToOne(cascade = {CascadeType.ALL},
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH},
             targetEntity = com.pliesveld.flashnote.domain.Question.class)
     @JoinColumn(name = "QUESTION_ID",
             nullable = false, insertable = false, updatable = false,

@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Created by happs on 2/22/16.
  */
-public class CategorySearchException extends ResourceRepositoryException {
+public class CategorySearchException extends ResourceRetrieveException {
 
     public CategorySearchException(Serializable id) {
         super(id);

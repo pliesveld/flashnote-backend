@@ -2,6 +2,8 @@ package com.pliesveld.flashnote.unit.domain.entity;
 
 import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.unit.spring.DefaultTestAnnotations;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -16,38 +18,32 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @DefaultTestAnnotations
 @Transactional
-public class DeckStudentDetailsTest
+public class DeckFlashcardRemovalTest extends StudentDetailsTest
 {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Test
-    public void studentDeckConstruct()
+    @Before
+    @Override
+    public void setupEntities()
     {
-        Student student = new Student();
-        StudentDetails studentDetails1 = new StudentDetails();
-        studentDetails1.setName("Student1");
-        student.setEmail("studentDetails1@email.com");
-        student.setPassword("password");
-        studentDetails1.setStudent(student);
+        super.setupEntities();
+    }
 
-
-                
-        Question que = new Question("Question?");
-        Answer ans = new Answer("Answer.");
-        
-        entityManager.persist(que);
-        entityManager.persist(ans);
-        
-        FlashCard fc = new FlashCard(que,ans);
-        Deck deck = new Deck(studentDetails1);
-        deck.getFlashCards().add(fc);
-        
-        entityManager.persist(studentDetails1);
-        entityManager.flush();
+    @Test
+    public void testEntitySanity()
+    {
 
     }
-    
+
+    @After
+    @Override
+    public void flushAfter()
+    {
+        entityManager.flush();
+    }
+
+
     @Test
     public void studentDeckRemove()
     {
@@ -100,9 +96,6 @@ public class DeckStudentDetailsTest
         
         entityManager.remove(que);
         entityManager.remove(ans);
-        
-
-        
 
         entityManager.remove(deck);
 

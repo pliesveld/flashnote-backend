@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service("categoryService")
@@ -19,6 +20,17 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     CategoryRepository categoryRepository;
+
+    @Override
+    @Transactional(readOnly = true)
+    public Category getCategoryById(Integer id) throws CategoryNotFoundException {
+        Category category = categoryRepository.findOne(id);
+        if(category == null)
+        {
+            throw new CategoryNotFoundException(id);
+        }
+        return category;
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -53,5 +65,13 @@ public class CategoryServiceImpl implements CategoryService {
     public List<Category> categoriesHavingDescription(String categoryTerm) {
         verifyCategoryTerm(categoryTerm);
         return categoryRepository.findByDescriptionContains(categoryTerm);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Category> allCategories() {
+        List<Category> list = new ArrayList<Category>();
+        categoryRepository.findAll().forEach(list::add);
+        return list;
     }
 }

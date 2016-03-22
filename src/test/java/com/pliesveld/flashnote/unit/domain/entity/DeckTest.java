@@ -3,6 +3,7 @@ package com.pliesveld.flashnote.unit.domain.entity;
 import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.service.CardService;
 import com.pliesveld.flashnote.unit.spring.DefaultTestAnnotations;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,77 +22,62 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @DefaultTestAnnotations
 @Transactional
-public class DeckTest
+public class DeckTest extends StudentDetailsTest
 {
     @PersistenceContext
     EntityManager entityManager;
 
-    @Autowired
-    CardService cardService;
+    private StudentDetails author;
+    private Category category;
 
     @Before
-    public void setup()
+    @Override
+    public void setupEntities()
     {
-        /*
-         * ApplicationContext ctx = new
-         * AnnotationConfigApplicationContext(SpringConfig.class);
-         * LocalEntityManagerFactoryBean sfb = (LocalEntityManagerFactoryBean)
-         * ctx.getBean("&entityManager"); entityManager =
-         * sfb.getConfiguration().buildEntityManagerFactory();
-         */
+        super.setupEntities();
+        assertNotNull(student_id);
+
+        StudentDetails studentDetails = entityManager.getReference(StudentDetails.class, student_id);
+        assertTrue(entityManager.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(studentDetails));
+
+        author = entityManager.find(StudentDetails.class,student_id);
+        category = categoryBean();
+        entityManager.persist(category);
     }
 
     @Test
-    public void entityManagerWired()
+    public void testEntitySanity()
     {
-        assertNotNull(entityManager);
+        assertStudentDetailsRepositoryCount(1);
+        assertStudentRepositoryCount(1);
+        assertNotNull(student_id);
+        assertNotNull(entityManager.find(Student.class,student_id));
+        assertNotNull(entityManager.find(StudentDetails.class,student_id));
     }
 
-    @Test
-    public void verifyEmpty()
+    @After
+    @Override
+    public void flushAfter()
     {
-        assertEquals("Deck count should be zero",0,((Long)cardService.countDecks()).intValue());
-        assertEquals("Question count should be zero",0,((Long)cardService.countQuestions()).intValue());
-        assertEquals("Answer count should be zero",0,((Long)cardService.countAnswers()).intValue());
-        assertEquals("FlashCard count should be zero",0,((Long)cardService.countFlashCards()).intValue());
-        // TODO: StudentDetails, AttachmentBinary, Category
-    }
-
-    StudentDetails author;
-
-    @Before
-    public void initializeDeckOwner()
-    {
-        Student student = new Student();
-        student.setPassword("password");
-        student.setEmail("test@example.com");
-        entityManager.persist(student);
-
-        author = new StudentDetails();
-        author.setName("author");
-        author.setStudent(student);
-        entityManager.persist(author);
         entityManager.flush();
     }
 
     @Test
-    public void deckOfOneQuestionTwoAnswers()
+    public void constructDeckSharedQuestion()
     {
-        Question question = new Question();
-        question.setContent("Question?");
+        Question question = questionBean();
+        Answer answer1 = answerBean();
+        Answer answer2 = answerBean();
 
-        Answer answer1 = new Answer();
-        answer1.setContent("This is the first answer");
-        Answer answer2 = new Answer();
-        answer1.setContent("This is the second answer");
-
-        entityManager.persist(question);
-        entityManager.persist(answer1);
-        entityManager.persist(answer2);
+//        entityManager.persist(question);
+//        entityManager.persist(answer1);
+//        entityManager.persist(answer2);
 
         FlashCard fc1 = new FlashCard(question,answer1);
-
         FlashCard fc2 = new FlashCard(question,answer2);
+
+        entityManager.persist(fc1);
+        entityManager.persist(fc2);
 
         Deck deck = new Deck(author);
         deck.getFlashCards().add(fc1);
@@ -102,21 +88,20 @@ public class DeckTest
 
         entityManager.persist(deck);
 
-
-        assertEquals("FlashCard count should be 2",2,((Long)cardService.countFlashCards()).intValue());
-        assertEquals("Question count should be 1",1,((Long)cardService.countQuestions()).intValue());
-        assertEquals("Answer count should be 2",2,((Long)cardService.countAnswers()).intValue());
-
+        assertQuestionRepositoryCount(1);
+        assertAnswerRepositoryCount(2);
+        assertFlashCardRepositoryCount(2);
     }
-    
+
+
     @Test
-    public void createDeck()
+    public void constructDeckMultipleFlashcards()
     {
         int i = 1;
         int a_no = 0;
         int q_no = 0;
 
-        assertEquals("FlashCard count should be zero",0,((Long)cardService.countFlashCards()).intValue());
+        assertFlashCardRepositoryCount(0);
 
 
         Deck deck = new Deck(author);
@@ -145,14 +130,13 @@ public class DeckTest
         deck.setFlashCards(list);
         entityManager.persist(deck);
 
-        assertEquals("Question count should be 5",5,((Long)cardService.countQuestions()).intValue());
-        assertEquals("Answer count should be 5",5,((Long)cardService.countAnswers()).intValue());
-        assertEquals("FlashCard count should be 5",5,((Long)cardService.countFlashCards()).intValue());
-        assertEquals("Deck count should be 1",1,((Long)cardService.countDecks()).intValue());
-        
+        assertQuestionRepositoryCount(5);
+        assertAnswerRepositoryCount(5);
+        assertFlashCardRepositoryCount(5);
+        assertDeckRepositoryCount(1);
+
         assertEquals("Deck size should be 5",5,deck.getFlashCards().size());
     }
-
 
 
     @Test
@@ -162,8 +146,7 @@ public class DeckTest
         int a_no = 0;
         int q_no = 0;
 
-        assertEquals("FlashCard count should be zero",0,((Long)cardService.countFlashCards()).intValue());
-
+        assertFlashCardRepositoryCount(0);
 
         Deck deck = new Deck(author);
         deck.setTitle("This is an example Deck.");
@@ -192,19 +175,19 @@ public class DeckTest
         entityManager.persist(deck);
         entityManager.flush();
 
-        assertEquals("Question count should be 5",5,((Long)cardService.countQuestions()).intValue());
-        assertEquals("Answer count should be 5",5,((Long)cardService.countAnswers()).intValue());
-        assertEquals("FlashCard count should be 5",5,((Long)cardService.countFlashCards()).intValue());
-        assertEquals("Deck count should be 1",1,((Long)cardService.countDecks()).intValue());
+        assertQuestionRepositoryCount(5);
+        assertAnswerRepositoryCount(5);
+        assertFlashCardRepositoryCount(5);
+        assertDeckRepositoryCount(1);
 
         assertEquals("Deck size should be 5",5,deck.getFlashCards().size());
 
         FlashCard fc_removed = deck.getFlashCards().remove(2);
         entityManager.remove(fc_removed);
 
-
         assertEquals("Deck size should be 4",4,deck.getFlashCards().size());
-        assertEquals("FlashCard count should be 4",4,((Long)cardService.countFlashCards()).intValue());
+        assertFlashCardRepositoryCount(4);
+
     }
 
 
@@ -216,7 +199,8 @@ public class DeckTest
         int a_no = 0;
         int q_no = 0;
 
-        assertEquals("FlashCard count should be zero",0,((Long)cardService.countFlashCards()).intValue());
+        assertFlashCardRepositoryCount(0);
+//        assertEquals("FlashCard count should be zero",0,((Long)cardService.countFlashCards()).intValue());
 
         Deck deck = new Deck(author);
         deck.setTitle("This is an example Deck.");
@@ -244,9 +228,8 @@ public class DeckTest
         entityManager.persist(deck);
         entityManager.flush();
 
-        assertEquals("FlashCard count should be five", 5, ((Long) cardService.countFlashCards()).intValue());
-
-        assertEquals("Deck count should be one",1,((Long)cardService.countDecks()).intValue());
+        assertFlashCardRepositoryCount(5);
+        assertDeckRepositoryCount(1);
 
         Serializable deck_id = deck.getId();
 
@@ -299,7 +282,6 @@ public class DeckTest
         }
 
     }
-
 
 
 }

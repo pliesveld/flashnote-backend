@@ -19,7 +19,7 @@ public class StudentDetails implements Serializable
     @MapsId
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "STUDENT_ID", foreignKey = @ForeignKey(name = "FK_STUDENT"))
-    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
+//    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private Student student;
 
     @NotNull
@@ -56,30 +56,28 @@ public class StudentDetails implements Serializable
 
     public Student getStudent() { return student; }
 
-    public void setStudent(Student student) { this.student = student; }
+    public void setStudent(Student student) {
 
-    @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        return result;
+        this.student = student;
+        if(student.getStudentDetails() == null || !student.getStudentDetails().equals(this))
+            student.setStudentDetails(this);
+
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
-        StudentDetails other = (StudentDetails) obj;
-        if (id == null) {
-            if (other.id != null) return false;
-        } else if (!id.equals(other.id)) return false;
-        if (name == null) {
-            if (other.name != null) return false;
-        } else if (!name.equals(other.name)) return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        StudentDetails that = (StudentDetails) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 }
