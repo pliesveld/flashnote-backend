@@ -4,9 +4,9 @@ import com.pliesveld.flashnote.domain.base.AbstractAuditableEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
 
 @Entity
 @Table(name = "QUESTION_BANK")
@@ -27,7 +27,11 @@ public class QuestionBank extends AbstractAuditableEntity {
     private String description;
 
     @NotNull
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany
+    @JoinTable(name = "QUESTION_BANK_COLLECTION",
+            joinColumns = @JoinColumn(name = "QUESTION_BANK_ID"),
+            inverseJoinColumns = @JoinColumn(name = "QUESTION_ID",referencedColumnName = "QUESTION_ID")
+    )
     private Set<Question> questionCollection = new HashSet<Question>();
 
     public QuestionBank() {

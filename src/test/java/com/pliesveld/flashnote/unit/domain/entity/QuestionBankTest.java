@@ -1,8 +1,6 @@
 package com.pliesveld.flashnote.unit.domain.entity;
 
-import com.pliesveld.flashnote.domain.Category;
-import com.pliesveld.flashnote.domain.Question;
-import com.pliesveld.flashnote.domain.QuestionBank;
+import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.unit.spring.DefaultTestAnnotations;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +18,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @DefaultTestAnnotations
 @Transactional
-public class QuestionBankTest
+public class QuestionBankTest extends AbstractDomainEntityUnitTest
 {
     @PersistenceContext
     EntityManager entityManager;
