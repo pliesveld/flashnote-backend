@@ -6,7 +6,7 @@ import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.model.json.request.NewStudentDetails;
 import com.pliesveld.flashnote.service.StudentService;
 import com.pliesveld.flashnote.spring.Profiles;
-import com.pliesveld.flashnote.unit.spring.SpringUnitTestConfig;
+import com.pliesveld.flashnote.unit.spring.SpringEntityTestConfig;
 import com.pliesveld.flashnote.util.generator.StudentGenerator;
 import com.pliesveld.flashnote.web.controller.StudentController;
 import org.apache.logging.log4j.LogManager;
@@ -43,7 +43,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 //@SpringApplicationConfiguration(classes = FlashnoteContainerApplication.class)
-@ContextConfiguration(classes = { MockServletContext.class, SpringUnitTestConfig.class }, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = { MockServletContext.class, SpringEntityTestConfig.class }, loader = AnnotationConfigContextLoader.class)
 @WebAppConfiguration
 public class StudentDetailsControllerTest {
     private static final Logger LOG = LogManager.getLogger();

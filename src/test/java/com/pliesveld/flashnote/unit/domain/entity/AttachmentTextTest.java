@@ -1,7 +1,7 @@
 package com.pliesveld.flashnote.unit.domain.entity;
 
-import com.pliesveld.flashnote.domain.*;
-import com.pliesveld.flashnote.unit.spring.DefaultTestAnnotations;
+import com.pliesveld.flashnote.domain.AttachmentText;
+import com.pliesveld.flashnote.unit.spring.DefaultEntityTestAnnotations;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -15,10 +15,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@DefaultTestAnnotations
+@DefaultEntityTestAnnotations
 @Transactional
 public class AttachmentTextTest extends AbstractDomainEntityUnitTest {
 

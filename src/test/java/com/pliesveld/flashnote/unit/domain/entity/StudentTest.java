@@ -1,8 +1,7 @@
 package com.pliesveld.flashnote.unit.domain.entity;
 
 import com.pliesveld.flashnote.domain.Student;
-import com.pliesveld.flashnote.domain.StudentDetails;
-import com.pliesveld.flashnote.unit.spring.DefaultTestAnnotations;
+import com.pliesveld.flashnote.unit.spring.DefaultEntityTestAnnotations;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.After;
@@ -16,10 +15,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@DefaultTestAnnotations
+@DefaultEntityTestAnnotations
 @Transactional
 public class StudentTest extends AbstractDomainEntityUnitTest {
     private static final Logger LOG = LogManager.getLogger();

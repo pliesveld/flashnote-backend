@@ -1,7 +1,7 @@
 package com.pliesveld.flashnote.unit.security;
 
 
-import com.pliesveld.flashnote.unit.spring.DefaultTestAnnotations;
+import com.pliesveld.flashnote.unit.spring.DefaultEntityTestAnnotations;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +15,7 @@ import java.security.SecureRandom;
  * Created by happs on 1/20/16.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@DefaultTestAnnotations
+@DefaultEntityTestAnnotations
 public class HashingTest {
 
     SecureRandom secureRandom;

@@ -14,6 +14,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
-@ContextConfiguration(classes = SpringUnitTestConfig.class, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = SpringEntityTestConfig.class, loader = AnnotationConfigContextLoader.class)
 @TestPropertySource( locations = "classpath:test-datasource.properties" )
-public @interface DefaultTestAnnotations { }
+public @interface DefaultEntityTestAnnotations { }

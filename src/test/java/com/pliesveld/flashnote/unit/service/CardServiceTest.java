@@ -6,7 +6,7 @@ import com.pliesveld.flashnote.exception.FlashCardCreateException;
 import com.pliesveld.flashnote.repository.AnswerRepository;
 import com.pliesveld.flashnote.repository.QuestionRepository;
 import com.pliesveld.flashnote.service.CardService;
-import com.pliesveld.flashnote.unit.spring.DefaultTestAnnotations;
+import com.pliesveld.flashnote.unit.spring.DefaultServiceTestAnnotations;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@DefaultTestAnnotations
+@DefaultServiceTestAnnotations
 @Transactional
 public class CardServiceTest {
 

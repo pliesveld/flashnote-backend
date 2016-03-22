@@ -3,7 +3,7 @@ package com.pliesveld.flashnote.util.schema;
 
 import com.pliesveld.flashnote.domain.Category;
 import com.pliesveld.flashnote.repository.CategoryRepository;
-import com.pliesveld.flashnote.unit.spring.DefaultTestAnnotations;
+import com.pliesveld.flashnote.unit.spring.DefaultEntityTestAnnotations;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -32,7 +32,7 @@ import static org.junit.Assert.assertEquals;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@DefaultTestAnnotations
+@DefaultEntityTestAnnotations
 @Transactional
 public class CategoryDefaults {
     private static final Logger LOG = LogManager.getLogger();

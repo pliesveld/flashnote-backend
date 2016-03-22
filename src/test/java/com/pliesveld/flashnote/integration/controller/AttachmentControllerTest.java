@@ -5,7 +5,7 @@ import com.pliesveld.flashnote.service.AttachmentService;
 import com.pliesveld.flashnote.spring.Profiles;
 import com.pliesveld.flashnote.spring.data.SpringDataConfig;
 import com.pliesveld.flashnote.spring.db.PersistenceContext;
-import com.pliesveld.flashnote.unit.spring.SpringUnitTestConfig;
+import com.pliesveld.flashnote.unit.spring.SpringEntityTestConfig;
 import com.pliesveld.flashnote.web.controller.AttachmentController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 //@SpringApplicationConfiguration(classes = FlashnoteContainerApplication.class)
-@ContextConfiguration(classes = {PersistenceContext.class,SpringDataConfig.class, SpringUnitTestConfig.class}, loader = AnnotationConfigWebContextLoader.class)
+@ContextConfiguration(classes = {PersistenceContext.class,SpringDataConfig.class, SpringEntityTestConfig.class}, loader = AnnotationConfigWebContextLoader.class)
 @WebAppConfiguration
 public class AttachmentControllerTest {
     private static final Logger LOG = LogManager.getLogger();

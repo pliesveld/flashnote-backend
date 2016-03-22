@@ -1,11 +1,7 @@
 package com.pliesveld.flashnote.unit.domain.entity;
 
-import com.pliesveld.flashnote.domain.Answer;
 import com.pliesveld.flashnote.domain.FlashCard;
-import com.pliesveld.flashnote.domain.Question;
-import com.pliesveld.flashnote.unit.spring.DefaultTestAnnotations;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.pliesveld.flashnote.unit.spring.DefaultEntityTestAnnotations;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -18,14 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
-import java.io.Serializable;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@DefaultTestAnnotations
+@DefaultEntityTestAnnotations
 @Transactional
 public class FlashCardFKTest extends FlashCardTest
 {

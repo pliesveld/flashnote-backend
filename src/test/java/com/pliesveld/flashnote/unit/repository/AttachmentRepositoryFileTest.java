@@ -6,7 +6,7 @@ import com.pliesveld.flashnote.model.json.response.AttachmentHeader;
 import com.pliesveld.flashnote.repository.AttachmentBinaryRepository;
 import com.pliesveld.flashnote.repository.AttachmentRepository;
 import com.pliesveld.flashnote.spring.data.SpringDataConfig;
-import com.pliesveld.flashnote.unit.spring.DefaultTestAnnotations;
+import com.pliesveld.flashnote.unit.spring.DefaultEntityTestAnnotations;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
@@ -31,7 +31,7 @@ import java.time.Instant;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@DefaultTestAnnotations
+@DefaultEntityTestAnnotations
 @Transactional
 @Configuration
 @Import(value = {SpringDataConfig.class, com.pliesveld.flashnote.spring.db.PersistenceContext.class})

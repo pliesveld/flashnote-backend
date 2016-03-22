@@ -4,7 +4,7 @@ import com.pliesveld.flashnote.domain.Category;
 import com.pliesveld.flashnote.exception.CategorySearchException;
 import com.pliesveld.flashnote.repository.CategoryRepository;
 import com.pliesveld.flashnote.service.CategoryService;
-import com.pliesveld.flashnote.unit.spring.DefaultTestAnnotations;
+import com.pliesveld.flashnote.unit.spring.DefaultServiceTestAnnotations;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
@@ -24,7 +24,7 @@ import static org.junit.Assert.assertNotNull;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@DefaultTestAnnotations
+@DefaultServiceTestAnnotations
 @Transactional
 public class CategoryServiceTest {
     private static final Logger LOG = LogManager.getLogger();
