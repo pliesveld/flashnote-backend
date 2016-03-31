@@ -59,14 +59,15 @@ public class AttachmentController  {
         String fileContentType = file.getContentType();
         AttachmentType attachmentType = AttachmentType.valueOfMime(fileContentType);
 
+        if(attachmentType == null)
+            throw new AttachmentUploadException("Unknown content-type: " + fileContentType);
+
         String fileName = attachmentType.supportsFilenameBySuffix(file.getName()) ? file.getName() :
                 attachmentType.supportsFilenameBySuffix(file.getOriginalFilename()) ?
                         file.getOriginalFilename() : null;
 
         if(fileName == null)
             throw new AttachmentUploadException("Invalid file extension");
-        if(attachmentType == null)
-            throw new AttachmentUploadException("Unknown content-type");
 
 
         byte[] contents = null;
