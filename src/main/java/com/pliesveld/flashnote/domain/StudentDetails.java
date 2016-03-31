@@ -18,7 +18,7 @@ public class StudentDetails implements Serializable
 
     @MapsId
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "STUDENT_ID", foreignKey = @ForeignKey(name = "FK_STUDENT"))
+    @JoinColumn(name = "STUDENT_ID", foreignKey = @ForeignKey(name = "FK_STUDENT_DETAILS"))
 //    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private Student student;
 
