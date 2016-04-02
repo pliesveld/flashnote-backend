@@ -1,6 +1,7 @@
 package com.pliesveld.flashnote.spring.security;
 
 import com.pliesveld.flashnote.domain.StudentRole;
+import com.pliesveld.flashnote.service.RememberService;
 import com.pliesveld.flashnote.spring.Profiles;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,17 +10,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
-import org.springframework.security.authentication.AuthenticationEventPublisher;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,6 +29,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 import javax.inject.Inject;
 import java.util.Collection;
@@ -85,63 +88,72 @@ public class SpringSecurityConfig {
         @Inject
         UserDetailsService userDetailsService;
 
-        @Autowired RoleHierarchyImpl roleHierarchy;
-        boolean debug_enable_bcrypt = true;
+        @Autowired
+        RememberService rememberService;
+
+        @Autowired
+        RoleHierarchyImpl roleHierarchy;
 
         @Bean
-        PasswordEncoder passwordEncoder()
+        public PasswordEncoder passwordEncoder()
         {
-            if(debug_enable_bcrypt) {
-                return new BCryptPasswordEncoder();
-            } else {
-                return new NoOpPasswordEncoder();
-            }
+            return new BCryptPasswordEncoder(11);
+        }
+
+        @Bean
+        public AuthenticationProvider authenticationProvider() {
+            DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+            authProvider.setUserDetailsService(userDetailsService);
+            authProvider.setPasswordEncoder(this.passwordEncoder());
+            return authProvider;
         }
 
         @Override
         protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-            LOG.debug("Configuring userDetailsService: {}", userDetailsService.getClass().getName());
-            auth.
-                    userDetailsService(userDetailsService)
-                    .passwordEncoder(new NoOpPasswordEncoder())
-            .and()
-            .authenticationEventPublisher(new AuthenticationEventPublisher() {
-
-                @Override
-                public void publishAuthenticationSuccess(Authentication authentication) {
-                    LOG.debug("Authenticating from builder.");
-
-                }
-
-                @Override
-                public void publishAuthenticationFailure(AuthenticationException exception, Authentication authentication) {
-                    LOG.debug("AuthenticatingFailure from builder.");
-
-                }
-            });
+            auth
+                    .authenticationProvider(this.authenticationProvider());
         }
 
         @Override
         public void configure(WebSecurity web) throws Exception {
-            web.debug(true);
+            web
+                .debug(false)
+                .ignoring().antMatchers("/js/**","/css/**","/img/**");
         }
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
+/*
+            http.authorizeRequests().antMatchers("/**").hasRole("USER");
+            http.formLogin().permitAll();
+            http.rememberMe().tokenRepository(this.rememberService).userDetailsService(this.userDetailsService);
+*/
 
-            http
-
-
-                .csrf().disable()
-                    .httpBasic().and()
-                .authorizeRequests()
+            http.authorizeRequests()
+                    .antMatchers(HttpMethod.OPTIONS).permitAll()
+                    .antMatchers("/account/sign-up", "/account/confirm", "/account/reset", "/account/reset/confirm").permitAll()
+                    .antMatchers(HttpMethod.POST, "/account/password").fullyAuthenticated()
+                    .antMatchers(HttpMethod.HEAD, "/categories/**", "/attachments/**").permitAll()
+                    .antMatchers(HttpMethod.GET, "/", "/students/**", "/categories/**", "/attachments/**",
+                            "/decks/**", "/statements/**", "/questions/**", "/answers/**").permitAll()
                     .expressionHandler(webExpressionHandler())
-                    .antMatchers("/", "/students").permitAll()
-                    .antMatchers("/test/**").permitAll()
-                    .antMatchers("/user/**").hasRole("USER")
-                    .antMatchers("/admin/**").hasRole("ADMIN")
-                    .anyRequest().authenticated();
 
+                    .antMatchers("/anon/**").permitAll()
+                    .antMatchers("/auth/**").hasRole("USER")
+                    .antMatchers("/admin/**").hasRole("ADMIN");
+
+            http.formLogin()
+                    .successHandler(this.savedRequestAwareAuthenticationSuccessHandler())
+                    .permitAll();
+
+            http.rememberMe().tokenRepository(this.rememberService).userDetailsService(this.userDetailsService);
+
+            http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
+            //http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);
+
+            http.csrf().disable();
+
+            http.headers().disable();
 
         }
 
@@ -150,6 +162,77 @@ public class SpringSecurityConfig {
             defaultWebSecurityExpressionHandler.setRoleHierarchy(roleHierarchy);
             return defaultWebSecurityExpressionHandler;
         }
+
+        @Bean
+        public SavedRequestAwareAuthenticationSuccessHandler
+        savedRequestAwareAuthenticationSuccessHandler() {
+
+            SavedRequestAwareAuthenticationSuccessHandler auth
+                    = new SavedRequestAwareAuthenticationSuccessHandler();
+            auth.setTargetUrlParameter("targetUrl");
+            return auth;
+        }
+
+/*
+        @Autowired
+        @Qualifier("myAuthenticationManager")
+        AuthenticationManager authenticationManager;
+*/
+
+/*
+        @Bean(name = "myAuthenticationManager")
+        @Override
+        public AuthenticationManager authenticationManagerBean() throws Exception {
+            return super.authenticationManagerBean();
+        }
+*/
+
+/*
+        @Bean
+        public MyAuthenticationFilter authenticationFilter() {
+            MyAuthenticationFilter authFilter = new MyAuthenticationFilter();
+            authFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login","POST"));
+            authFilter.setAuthenticationManager(authenticationManager);
+            authFilter.setAuthenticationSuccessHandler(new MySuccessHandler("/app"));
+            authFilter.setAuthenticationFailureHandler(new MyFailureHandler("/login?error=1"));
+            authFilter.setUsernameParameter("username");
+            authFilter.setPasswordParameter("password");
+            authFilter.setPasswordParameter("password");
+            return authFilter;
+        }
+*/
+
+/*
+static class MyAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+    private static final Logger LOG = LogManager.getLogger();
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        LOG.debug("MyAuthFilter.attemptAuthentication {}",request.getUserPrincipal());
+        return super.attemptAuthentication(request, response);
+    }
+}
+
+static class MySuccessHandler implements AuthenticationSuccessHandler {
+    private static final Logger LOG = LogManager.getLogger();
+    public MySuccessHandler(String s) {
+    }
+
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        LOG.debug("My success handler for {}", authentication.getPrincipal());
+
+    }
+}
+
+static class MyFailureHandler implements AuthenticationFailureHandler {
+    public MyFailureHandler(String s) {
+    }
+
+    @Override
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+
+    }
+}*/
 
     }
 }
@@ -178,66 +261,6 @@ class NoOpPasswordEncoder implements PasswordEncoder {
 
 
 
-
-
-
-            /*
-           http
-            .formLogin()
-                    .loginPage("/")
-                    .loginProcessingUrl("/loginprocess")
-                    .failureUrl("/mobile/app/sign-in?loginFailure=true").and()
-                   .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                   .httpBasic().realmName("FlashNotes")
-                   .and()
-                   .authorizeRequests()
-                   .antMatchers("/").permitAll()
-                   .antMatchers("/sign-up").permitAll()
-                   .antMatchers("/sign-in").permitAll()
-                   .antMatchers("/login").permitAll()
-                   .antMatchers("/test/**").authenticated()
-                   .anyRequest().authenticated();
-
-        }
-    }*/
-
-    
-    /*
-            http
-                    .csrf()
-                    .disable()
-                    .authorizeRequests()
-                    .antMatchers("/resources/**").permitAll()
-                    .antMatchers("/sign-up").permitAll()
-                    .antMatchers("/sign-in").permitAll()
-                    .anyRequest().authenticated()
-                    .and()
-                    .formLogin()
-                    .loginPage("/")
-                    .loginProcessingUrl("/loginprocess")
-                    .failureUrl("/mobile/app/sign-in?loginFailure=true")
-                    .permitAll();
-            //.and()
-            //        .rememberMe().rememberMeServices(tokenBasedRememberMeService);
-    */
-    
-    
-    //        super.configure(http);
-            /*
-            http
-                    .httpBasic().realmName("FlashNotes")
-                    .and()
-                    .csrf().disable()
-                    .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                    .and()
-                    .authorizeRequests()
-                    .antMatchers("/resources/**").permitAll()
-                    .antMatchers("/deck/**","/students/**").authenticated();
-                    */
-        
-
-        
 
 
   /*

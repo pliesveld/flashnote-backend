@@ -1,10 +1,13 @@
 package com.pliesveld.flashnote.web.controller;
 
 
-import com.pliesveld.flashnote.domain.*;
+import com.pliesveld.flashnote.domain.AbstractStatement;
+import com.pliesveld.flashnote.domain.Answer;
+import com.pliesveld.flashnote.domain.Question;
+import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.exception.AnswerNotFoundException;
-
 import com.pliesveld.flashnote.exception.QuestionNotFoundException;
+import com.pliesveld.flashnote.exception.StatementNotFoundException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.model.json.response.CardStatistics;
 import com.pliesveld.flashnote.service.CardService;
@@ -12,19 +15,11 @@ import com.pliesveld.flashnote.service.StudentService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.util.List;
 
 @RestController
-@RequestMapping("/statement")
 public class StatementController {
     private static final Logger LOG = LogManager.getLogger();
 
@@ -59,11 +54,15 @@ public class StatementController {
         return ans;
     }
 
-    private AbstractStatement verifyStatement(int id) {
-        return null;
+    private AbstractStatement verifyStatement(int id) throws StatementNotFoundException
+    {
+        AbstractStatement statement = cardService.findStatementById(id);
+        if(statement == null)
+            throw new StatementNotFoundException(id);
+        return statement;
     }
 
-    @RequestMapping(value="/count", method = RequestMethod.GET)
+    @RequestMapping(value="/statements/count", method = RequestMethod.GET)
     public ResponseEntity<?> entity_counts()
     {
         LOG.info("Retrieving counts of all statements");
@@ -73,7 +72,7 @@ public class StatementController {
         return new ResponseEntity<>(cardStatistics,HttpStatus.OK);
     }
 
-    @RequestMapping(value="/{id}", method = RequestMethod.GET)
+    @RequestMapping(value="/statements/{id}", method = RequestMethod.GET)
     @ResponseBody @ResponseStatus(code = HttpStatus.OK)
     public AbstractStatement retrieveStatement(@PathVariable("id") int id)
     {
@@ -88,22 +87,6 @@ public class StatementController {
         LOG.info("Retreiving question " + id);
         return verifyQuestion(id);
     }
-    
-    @RequestMapping(value="/questions", method = RequestMethod.POST)
-    public ResponseEntity<?> createQuestion(@Valid @RequestBody Question question)
-    {
-        Question que = cardService.createQuestion(question);
-        
-        HttpHeaders responseHeaders = new HttpHeaders();
-        URI newQuestionUri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(que.getId())
-                .toUri();
-
-        responseHeaders.setLocation(newQuestionUri);
-        return new ResponseEntity<>(null,responseHeaders,HttpStatus.CREATED);
-    }
 
     @RequestMapping(value="/answers/{id}", method = RequestMethod.GET)
     @ResponseBody @ResponseStatus(code = HttpStatus.OK)
@@ -113,32 +96,6 @@ public class StatementController {
         return verifyAnswer(id);
     }
 
-    @RequestMapping(value="/answers", method = RequestMethod.POST)
-    public ResponseEntity<?> createAnswer(@Valid @RequestBody Answer answer)
-    {
-        Answer ans = cardService.createAnswer(answer);
-
-        HttpHeaders responseHeaders = new HttpHeaders();
-        URI newAnswerUri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(ans.getId())
-                .toUri();
-
-        responseHeaders.setLocation(newAnswerUri);
-        return new ResponseEntity<>(null,responseHeaders,HttpStatus.CREATED);
-    }
-
-    @RequestMapping(value="/author/{id}")
-    @ResponseBody @ResponseStatus(code = HttpStatus.OK)
-    public List<AbstractStatement> retrieveStudentStatements(@PathVariable("id") int id)
-    {
-        StudentDetails studentDetails = verifyStudent(id);
-
-        LOG.info("Retreiving statements by " + id);
-
-        return studentService.findPublishedStatementsBy(studentDetails);
-    }
 
 
 

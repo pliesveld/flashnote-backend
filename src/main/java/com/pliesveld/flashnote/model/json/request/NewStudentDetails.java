@@ -25,7 +25,7 @@ public class NewStudentDetails extends ModelBase implements JsonWebRequestSerial
     private String password;
 
     @NotNull
-    private StudentRole role = StudentRole.ROLE_ACCOUNT;
+    private StudentRole role;
 
     public NewStudentDetails() {
     }

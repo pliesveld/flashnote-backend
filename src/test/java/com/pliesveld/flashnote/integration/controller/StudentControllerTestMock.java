@@ -1,7 +1,13 @@
 package com.pliesveld.flashnote.integration.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.domain.StudentDetails;
+import com.pliesveld.flashnote.model.json.request.NewStudentDetails;
+import com.pliesveld.flashnote.service.AccountRegistrationService;
 import com.pliesveld.flashnote.service.StudentService;
+import com.pliesveld.flashnote.util.generator.StudentGenerator;
+import com.pliesveld.flashnote.web.controller.AdministrationController;
 import com.pliesveld.flashnote.web.controller.StudentController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,6 +51,10 @@ public class StudentControllerTestMock {
     @Mock
     private StudentService studentService;
 
+    @Mock
+    private AccountRegistrationService accountRegistrationService;
+
+
     @Before
     public void setUp() throws Exception {
         /* mock servlet request to handle usage of UriComponentsBuilder .. .fromCurrentRequest()
@@ -61,7 +71,10 @@ public class StudentControllerTestMock {
             Instantiates a StudentController object, and injects the mocked dependency
          */
         StudentController studentController = new StudentController();
-        ReflectionTestUtils.setField(studentController,"studentService",studentService);
+        ReflectionTestUtils.setField(studentController, "studentService", studentService);
+
+        AdministrationController administrationController = new AdministrationController();
+        ReflectionTestUtils.setField(administrationController, "studentService", studentService);
 
         /*
             When the mocked method findAll() is invoked, the an empty ArrayList<StudentDetails> is returned.
@@ -71,7 +84,7 @@ public class StudentControllerTestMock {
         /*
             Invoke the Controller methods that depend on the mocked objects.
          */
-        ResponseEntity<Iterable<StudentDetails>> allStudentsEntry = studentController.getAllStudents();
+        ResponseEntity<Iterable<StudentDetails>> allStudentsEntry = administrationController.getAllStudents();
 
         /*
             Checks that the underlying mocked dependency invoked the method findAll once.
@@ -88,12 +101,12 @@ public class StudentControllerTestMock {
         assertEquals(0,target.size());
     }
 
-    /*
     @Test
     public void testCreateStudent() throws Exception {
 
-        StudentController studentController = new StudentController();
-        ReflectionTestUtils.setField(studentController,"studentService",studentService);
+        AdministrationController administrationController = new AdministrationController();
+        ReflectionTestUtils.setField(administrationController, "studentService", studentService);
+        ReflectionTestUtils.setField(administrationController, "registrationService", accountRegistrationService);
 
         ObjectMapper mapper = new ObjectMapper();
         Student student = StudentGenerator.randomizedStudent();
@@ -104,10 +117,10 @@ public class StudentControllerTestMock {
 
         final String JSON_DATA = mapper.writeValueAsString(newStudent);
         LOG.info(JSON_DATA);
-        when(studentService.createStudent(any(String.class),any(String.class),any(String.class))).thenReturn(student);
+        when(accountRegistrationService.createStudent(any(String.class),any(String.class),any(String.class))).thenReturn(student);
 
-        ResponseEntity<?> creationResponse = studentController.createStudent(newStudent);
+        ResponseEntity<?> creationResponse = administrationController.createStudent(newStudent);
         assertEquals(HttpStatus.CREATED,creationResponse.getStatusCode());
-    }*/
+    }
 
 }

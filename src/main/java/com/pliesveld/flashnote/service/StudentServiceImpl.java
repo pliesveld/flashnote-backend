@@ -68,6 +68,10 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentDetails delete(int id) throws StudentNotFoundException {
+
+        // delete RegistrationToken
+        // delete PasswordResetToken
+
         StudentDetails deletedStudentDetails = studentDetailsRepository.findOne(id);
         if(deletedStudentDetails == null)
             throw new StudentNotFoundException(id);
@@ -93,7 +97,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<AbstractStatement> findPublishedStatementsBy(StudentDetails studentDetails) throws StudentNotFoundException {
+    public List<AbstractStatement> findStatementsBy(StudentDetails studentDetails) throws StudentNotFoundException {
         Student student = studentDetails.getStudent();
 
         if(student == null)

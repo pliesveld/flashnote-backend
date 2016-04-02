@@ -22,7 +22,7 @@ import java.util.List;
 import static com.pliesveld.flashnote.logging.Markers.SECURITY_AUTH;
 
 @Component
-@Transactional(rollbackFor = UsernameNotFoundException.class)
+@Transactional
 public class AuthService /*extends AbstractUserDetailsAuthenticationProvider*/ implements UserDetailsService {
 
     static {
@@ -41,7 +41,7 @@ public class AuthService /*extends AbstractUserDetailsAuthenticationProvider*/ i
     private StudentRepository studentRepository;
 
     @Override
-    @Transactional(rollbackFor = UsernameNotFoundException.class)
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         LOG.info("Looking up email address: " + username);
         Student student = studentRepository.findOneByEmail(username);
@@ -65,7 +65,6 @@ public class AuthService /*extends AbstractUserDetailsAuthenticationProvider*/ i
 //        return userDetails;
     }
 
-    @Transactional
     public void saveUser(Student principal, String newPassword)
     {
         if(StringUtils.hasLength(newPassword))

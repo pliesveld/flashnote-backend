@@ -33,9 +33,9 @@ class AuthBaseTest(unittest.TestCase):
 
 class AnonTest(AuthBaseTest):
     auth_token=('student@example.com','password')
-    ANON_RESOURCE = '/test/byAuth1'
-    USER_RESOURCE = '/user/byAuth1'
-    ADMIN_RESOURCE = '/admin/byAuth1'
+    ANON_RESOURCE = '/anon/Principal'
+    USER_RESOURCE = '/auth/Principal'
+    ADMIN_RESOURCE = '/admin/Principal'
 
     def testAnonAccess(self):
         with requests.Session() as s:
@@ -58,9 +58,9 @@ class AnonTest(AuthBaseTest):
 
 class AuthTest(AuthBaseTest):
     auth_token=('student@example.com','password')
-    ANON_RESOURCE = '/test/byAuth1'
-    USER_RESOURCE = '/user/byAuth1'
-    ADMIN_RESOURCE = '/admin/byAuth1'
+    ANON_RESOURCE = '/anon/Principal'
+    USER_RESOURCE = '/auth/Principal'
+    ADMIN_RESOURCE = '/admin/Principal'
 
     def testAnonAccess(self):
         with requests.Session() as s:
@@ -83,9 +83,9 @@ class AuthTest(AuthBaseTest):
 
 class AdminTest(AuthBaseTest):
     auth_token=('admin@example.com','password')
-    ANON_RESOURCE = '/test/byAuth1'
-    USER_RESOURCE = '/user/byAuth1'
-    ADMIN_RESOURCE = '/admin/byAuth1'
+    ANON_RESOURCE = '/anon/Principal'
+    USER_RESOURCE = '/auth/Principal'
+    ADMIN_RESOURCE = '/admin/Principal'
 
     def testAnonAccess(self):
         with requests.Session() as s:

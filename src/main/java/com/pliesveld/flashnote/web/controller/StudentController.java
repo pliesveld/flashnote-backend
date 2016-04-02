@@ -1,6 +1,8 @@
 package com.pliesveld.flashnote.web.controller;
 
 
+import com.pliesveld.flashnote.domain.AbstractStatement;
+import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
@@ -12,15 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/students")
 public class StudentController {
-    
     private static final Logger LOG = LogManager.getLogger();
 
     @Autowired
@@ -33,15 +33,6 @@ public class StudentController {
             throw new StudentNotFoundException(id);
 
         return student;
-    }
-
-    @RequestMapping(value="/list", method = RequestMethod.GET)
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Iterable<StudentDetails>> getAllStudents()
-    {
-        LOG.info("Retrieving list of all students");
-        Iterable<StudentDetails> allStudents = studentService.findAll();
-        return new ResponseEntity<>(allStudents, HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('USER')")
@@ -62,56 +53,21 @@ public class StudentController {
         return new ResponseEntity<>(existingStudent,HttpStatus.OK);
     }
 
-
-
-    /*
-    @RequestMapping(value="/{id}/decks/{deckid}", method = RequestMethod.GET)
-    public ResponseEntity<?> listDecks(@PathVariable Integer id, @PathVariable Integer deckid)
+    @RequestMapping(value="/{id}/statements", method = RequestMethod.GET)
+    @ResponseBody
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<AbstractStatement> retrieveStudentStatements(@PathVariable("id") int student_id)
     {
-        LOG.info("Getting student by id " + id);
-        StudentDetails student = verifyStudent(id);
-        return new ResponseEntity<>(student,HttpStatus.OK);
+        StudentDetails studentDetails = verifyStudent(student_id).getStudentDetails();
+        return studentService.findStatementsBy(studentDetails);
     }
-    */
 
-
-    /*
-    @RequestMapping(value="",method = RequestMethod.POST)
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Void> createStudent(@Valid @RequestBody NewStudentDetails studentdto)
+    @RequestMapping(value="/{id}/decks", method = RequestMethod.GET)
+    @ResponseBody
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<Deck> retrieveStudentDecks(@PathVariable("id") int student_id)
     {
-        Student studentDetails = studentService.createStudent(studentdto.getName(),studentdto.getEmail(),studentdto.getPassword());
-
-        LOG.info("Created studentDetails: " + studentDetails);
-
-        HttpHeaders responseHeaders = new HttpHeaders();
-        URI newStudentUri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(studentDetails.getId())
-                .toUri();
-
-        responseHeaders.setLocation(newStudentUri);
-        return new ResponseEntity<>(null,responseHeaders,HttpStatus.CREATED);
-    }*/
-
-
-
-/*
-Alternatives to apache.commons.collections
-
-Iterator<T> source = ...;
-List<T> target = new ArrayList<>();
-source.forEachRemaining(target::add);
-
-Iterable<T> source = ...;
-source.forEach(target::add);
-
-
-public static <T> List<T> toList(final Iterable<T> iterable) {
-    return StreamSupport.stream(iterable.spliterator(), false)
-                        .collect(Collectors.toList());
-}
- */
+        return studentService.findDecksByOwner(student_id);
+    }
 
 }

@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 @RestController
-@RequestMapping( { "/test", "/admin", "/user" })
+@RequestMapping( { "/anon",  "/auth", "/admin" })
 public class AuthTestController {
     private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger();
 
@@ -26,32 +28,36 @@ public class AuthTestController {
     @Autowired
     private CardService cardService;
 
-    @RequestMapping(value="/byAuth1", method = RequestMethod.GET)
+    @RequestMapping(value="/StudentPrincipal", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public void customAnnotation(@CurrentUser StudentPrincipal student)
+    public StudentPrincipal getAuthByCustomSpringPrincipal(@CurrentUser StudentPrincipal studentPrincipal)
     {
-        LOG.info("@CurrentUser StudentPrincipal " + student);
+        LOG.info("@CurrentUser StudentPrincipal " + studentPrincipal);
+        return studentPrincipal;
     }
 
-    @RequestMapping(value="/byAuth2", method = RequestMethod.GET)
+    @RequestMapping(value="/User", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public void authenticationPrincipal(@AuthenticationPrincipal StudentPrincipal studentPrincipal)
-    {
-        LOG.info("@AuthenticationPrincipal StudentPrincipal " + studentPrincipal);
-    }
-
-    @RequestMapping(value="/byAuth3", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    public void springsecurityUserObj(@AuthenticationPrincipal User user)
+    public User getAuthBySpringUser(@AuthenticationPrincipal User user)
     {
         LOG.info("@AuthenticationPrincipal org.springframework.security.core.userdetails.User " + user);
+        return user;
     }
 
-    @RequestMapping(value="/byAuth4", method = RequestMethod.GET)
+    @RequestMapping(value="/UserDetails", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public void springsecurityUserObj(@AuthenticationPrincipal UserDetails userDetails)
+    public UserDetails getAuthByUserDetails(@AuthenticationPrincipal UserDetails userDetails)
     {
         LOG.info("org.springframework.security.core.userdetails.UserDetails " + userDetails);
+        return userDetails;
+    }
+
+    @RequestMapping(value="/Principal", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public Principal getAuthByPrincipal(Principal principal)
+    {
+        LOG.info("java.security.Principal " + principal);
+        return principal;
     }
 
 }

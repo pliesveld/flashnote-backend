@@ -3,7 +3,7 @@ import os.path;
 
 SCHEME=os.getenv('INTEGRATION_TEST_SCHEME',"http")
 HOST=os.getenv('INTEGRATION_TEST_HOST',"localhost")
-PORT=os.getenv('INTEGRATION_TEST_PORT',8080)
+PORT=os.getenv('INTEGRATION_TEST_PORT',9000)
 PROFILES=os.getenv('INTEGRATION_TEST_PROFILES','')
 
 URL=SCHEME + "://" + HOST + ":" + str(PORT) + "/"

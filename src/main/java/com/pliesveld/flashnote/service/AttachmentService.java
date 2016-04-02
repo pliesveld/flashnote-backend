@@ -25,9 +25,6 @@ public interface AttachmentService {
     @Transactional @NotNull
     AttachmentText storeAttachment(@ValidAttachment AttachmentText attachment)    throws AttachmentUploadException;
 
-    @Transactional(rollbackFor = AttachmentNotFoundException.class)
-    AbstractAttachment delete(int id)                                             throws AttachmentNotFoundException;
-
     @Transactional(readOnly = true)
     AttachmentBinary findAttachmentBinaryById(int id)                             throws AttachmentNotFoundException;
 
@@ -53,9 +50,5 @@ public interface AttachmentService {
 
     @Transactional(readOnly = true) @NotNull
     AttachmentHeader findAttachmentHeaderById(int id)                             throws AttachmentNotFoundException;
-
-    @Transactional(readOnly = true)
-    Integer testValidation(@NotNull Integer arg);
-
 
 }

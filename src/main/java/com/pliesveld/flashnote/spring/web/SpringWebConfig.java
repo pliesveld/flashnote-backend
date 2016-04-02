@@ -67,7 +67,7 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory multipartConfigFactory = new MultipartConfigFactory();
-        multipartConfigFactory.setMaxFileSize("25MB");
+        multipartConfigFactory.setMaxFileSize("5MB");
         multipartConfigFactory.setMaxRequestSize("50MB");
         return multipartConfigFactory.createMultipartConfig();
     }

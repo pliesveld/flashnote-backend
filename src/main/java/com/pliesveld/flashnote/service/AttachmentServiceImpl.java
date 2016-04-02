@@ -15,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -173,24 +171,8 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
-    public AttachmentBinary delete(int id) throws AttachmentNotFoundException {
-
-        AttachmentBinary attachment = attachmentBinaryRepository.findOne(id);
-        if(attachment == null)
-            throw new AttachmentNotFoundException(id);
-
-        attachmentBinaryRepository.delete(attachment);
-        return attachment;
-    }
-
-    @Override
     public AttachmentHeader findAttachmentHeaderById(int id) throws AttachmentNotFoundException {
         return attachmentRepository.findAttachmentHeaderById(id);
     }
 
-    @Override
-    public Integer testValidation(@NotNull Integer arg) {
-        LOG.debug("arg = " + arg);
-        return arg;
-    }
 }
