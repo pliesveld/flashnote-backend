@@ -10,9 +10,19 @@ try:
 except SystemError:
         from settings import *
 
-ANON_RESOURCE =  URL + 'anon/Principal'
-USER_RESOURCE =  URL + 'auth/Principal'
-ADMIN_RESOURCE = URL + 'admin/Principal'
+#ANON_RESOURCE =  URL + 'anon/Principal'
+#USER_RESOURCE =  URL + 'auth/Principal'
+#ADMIN_RESOURCE = URL + 'admin/Principal'
+
+#ANON_RESOURCE =  URL + 'anon/User'
+#USER_RESOURCE =  URL + 'auth/User'
+#ADMIN_RESOURCE = URL + 'admin/User'
+
+ANON_RESOURCE =  URL + 'anon/StudentPrincipal'
+USER_RESOURCE =  URL + 'auth/StudentPrincipal'
+ADMIN_RESOURCE = URL + 'admin/StudentPrincipal'
+
+
 
 class AuthBaseTest(unittest.TestCase):
 

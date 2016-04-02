@@ -1,6 +1,7 @@
 package com.pliesveld.flashnote.spring.data;
 
 import com.pliesveld.flashnote.domain.Student;
+import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.domain.StudentRole;
 import com.pliesveld.flashnote.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,15 +30,15 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         if(alreadySetup)
             return;
 
-
-        createStudentIfNotFound("new@example.com", ROLE_ACCOUNT);
-        createStudentIfNotFound("student@example.com", ROLE_USER);
-        createStudentIfNotFound("admin@example.com", ROLE_ADMIN);
-
+        createStudentIfNotFound("new@example.com",     ROLE_ACCOUNT,    "new");
+        createStudentIfNotFound("student@example.com", ROLE_USER,       "basic");
+        createStudentIfNotFound("premium@example.com", ROLE_PREMIUM,    "premium");
+        createStudentIfNotFound("mod@example.com",     ROLE_MODERATOR,  "moderator");
+        createStudentIfNotFound("admin@example.com",   ROLE_ADMIN,      "admin");
     }
 
     @Transactional
-    private Student createStudentIfNotFound(String email, StudentRole role) {
+    private Student createStudentIfNotFound(String email, StudentRole role, String name) {
         Student student = studentRepository.findOneByEmail(email);
         if( student == null )
         {
@@ -45,6 +46,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             student.setEmail(email);
             student.setRole(role);
             student.setPassword(passwordEncoder.encode("password"));
+
+            StudentDetails studentDetails = new StudentDetails(name);
+            studentDetails.setStudent(student);
             studentRepository.save(student);
         }
 
