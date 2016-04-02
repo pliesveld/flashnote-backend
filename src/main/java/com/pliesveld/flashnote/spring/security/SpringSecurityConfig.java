@@ -30,6 +30,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.util.Collection;
@@ -42,7 +43,7 @@ import java.util.Collection;
 @Configuration
 @Profile(Profiles.AUTH)
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @ComponentScan(basePackageClasses = {
         com.pliesveld.flashnote.security.StudentPrincipal.class,
         com.pliesveld.flashnote.spring.security.SpringSecurityConfig.class
@@ -77,7 +78,7 @@ public class SpringSecurityConfig {
     @Configuration
     @Profile(Profiles.AUTH)
     @EnableWebSecurity
-    @EnableGlobalMethodSecurity(prePostEnabled = true)
+    @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
     @ComponentScan(basePackageClasses = {
             com.pliesveld.flashnote.security.StudentPrincipal.class,
             com.pliesveld.flashnote.spring.security.SpringSecurityConfig.class
@@ -129,6 +130,7 @@ public class SpringSecurityConfig {
             http.rememberMe().tokenRepository(this.rememberService).userDetailsService(this.userDetailsService);
 */
 
+            http.httpBasic().realmName("FlashNote");
             http.authorizeRequests()
                     .antMatchers(HttpMethod.OPTIONS).permitAll()
                     .antMatchers("/account/sign-up", "/account/confirm", "/account/reset", "/account/reset/confirm").permitAll()
@@ -142,9 +144,12 @@ public class SpringSecurityConfig {
                     .antMatchers("/auth/**").hasRole("USER")
                     .antMatchers("/admin/**").hasRole("ADMIN");
 
-            http.formLogin()
-                    .successHandler(this.savedRequestAwareAuthenticationSuccessHandler())
-                    .permitAll();
+            http.userDetailsService(this.userDetailsService);
+
+/*            http.formLogin()
+ *                   .successHandler(this.savedRequestAwareAuthenticationSuccessHandler())
+ *                   .permitAll();
+ */
 
             http.rememberMe().tokenRepository(this.rememberService).userDetailsService(this.userDetailsService);
 
@@ -238,6 +243,8 @@ static class MyFailureHandler implements AuthenticationFailureHandler {
 }
 
 /* From Spring Security -- for testing */
+@Component
+@Profile("!" + Profiles.AUTH)
 class NoOpPasswordEncoder implements PasswordEncoder {
 
     public String encode(CharSequence rawPassword) {
