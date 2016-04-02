@@ -50,6 +50,10 @@
   		<AppenderRef ref="FileHibernate"/>
   	</logger>
 
+    <logger name="org.springframework.security.web.access.expression.ExpressionBasedFilterInvocationSecurityMetadataSource" level="DEBUG">
+        <AppenderRef ref="FileSpringSelect"/>
+    </logger>
+
     <logger name="org.springframework.web.servlet.handler" level="INFO" additivity="true">
         <AppenderRef ref="FileSpringSelect"/>
     </logger>
