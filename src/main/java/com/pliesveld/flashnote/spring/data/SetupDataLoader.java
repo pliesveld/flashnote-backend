@@ -19,6 +19,8 @@ import static com.pliesveld.flashnote.domain.StudentRole.*;
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
     private boolean alreadySetup = false;
 
+    final private static String DEFAULT_PASSWORD = "password";
+
     @Autowired
     StudentRepository studentRepository;
 
@@ -45,7 +47,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             student = new Student();
             student.setEmail(email);
             student.setRole(role);
-            student.setPassword(passwordEncoder.encode("password"));
+            student.setPassword(passwordEncoder.encode(DEFAULT_PASSWORD));
 
             StudentDetails studentDetails = new StudentDetails(name);
             studentDetails.setStudent(student);
