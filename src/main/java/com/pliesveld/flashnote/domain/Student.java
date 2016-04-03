@@ -31,7 +31,7 @@ public class Student {
     private String email;
 
     @NotNull
-    @Size(min = MIN_STUDENT_PASSWORD_LENGTH, max = MAX_STUDENT_EMAIL_LENGTH)
+    @Size(min = MIN_STUDENT_PASSWORD_LENGTH, max = MAX_STUDENT_PASSWORD_LENGTH)
     @Column(name = "STUDENT_PASSWORD", length = MAX_STUDENT_PASSWORD_LENGTH, nullable = false)
     private String password;
 
