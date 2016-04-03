@@ -41,9 +41,8 @@ public class AuthService /*extends AbstractUserDetailsAuthenticationProvider*/ i
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        LOG.info("Looking up email address: " + username);
-        Student student = studentRepository.findOneByEmail(username);
 
+        Student student = studentRepository.findOneByEmail(username);
 
         if(student == null)
         {
@@ -52,8 +51,11 @@ public class AuthService /*extends AbstractUserDetailsAuthenticationProvider*/ i
 
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(student.getRole().toString());
 
-        LOG.info(SECURITY_AUTH, "Email: " + username);
-        authorities.forEach((a) -> LOG.info(SECURITY_AUTH,a.getAuthority()));
+        if(LOG.isDebugEnabled())
+        {
+            LOG.debug(SECURITY_AUTH, "Email: " + username);
+            authorities.forEach((a) -> LOG.debug(SECURITY_AUTH,a.getAuthority()));
+        }
 
         return new StudentPrincipal(student,authorities);
     }
