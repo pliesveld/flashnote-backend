@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration configDebug="false" monitorInterval="30">
   <Properties>
-    <Property name="filename">log/hibernate.log</Property>
+    <Property name="hibernatefilename">log/hibernate.log</Property>
     <Property name="servicefilename">log/service.log</Property>
-    <Property name="springwarn">log/spring.log</Property>
+    <Property name="springbootdebug">log/spring-boot.log</Property>
     <Property name="springdebug">log/spring-debug.log</Property>
     <Property name="springselect">log/spring-web.log</Property>
 
@@ -18,7 +18,7 @@
 	    </PatternLayout>
     </Console>
 
-    <File name="FileHibernate" fileName="${filename}" append="false">
+    <File name="FileHibernate" fileName="${hibernatefilename}" append="false">
       <PatternLayout pattern="[%t] %-5level %logger{2.1.} - %msg%n"/>
     </File>
 
@@ -26,52 +26,60 @@
         <PatternLayout pattern="[%t] %-5level %logger{2.1.} - %msg%n"/>
     </File>
 
-    <File name="FileSpring" fileName="${springwarn}" append="false">
-        <PatternLayout pattern="%-5level %c %msg%n"/>
-    </File>
-
     <File name="FileSpringDebug" fileName="${springdebug}" append="false">
         <PatternLayout pattern="%-5level %c %msg%n"/>
     </File>
 
-   <File name="FileSpringSelect" fileName="${springselect}" append="false">
+    <File name="FileSpringBootDebug" fileName="${springbootdebug}" append="false">
+        <PatternLayout pattern="%-5level %c %msg%n"/>
+    </File>
+
+    <File name="FileSpringSelect" fileName="${springselect}" append="false">
         <PatternLayout pattern="%-5level %msg%n"/>
-   </File>
+    </File>
 
   </Appenders>
 
   <Loggers>
+
+
     <logger name="com.pliesveld.flashnote" level="DEBUG" additivity="false">
         <AppenderRef ref="FileService"/>
         <AppenderRef ref="CONSOLE"/>
     </logger>
 
-  	<logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
+<!--
+    <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
   		<AppenderRef ref="FileHibernate"/>
   	</logger>
 
-    <logger name="org.springframework.security.web.access.expression.ExpressionBasedFilterInvocationSecurityMetadataSource" level="DEBUG">
+    <logger name="org.springframework.boot.autoconfigure.logging.AutoConfigurationReportLoggingInitializer" level="DEBUG" additivity="false">
+        <AppenderRef ref="FileSpringBootDebug"/>
+    </logger>
+
+    <logger name="org.springframework.security.web.access.expression.ExpressionBasedFilterInvocationSecurityMetadataSource" level="DEBUG" additivity="false">
         <AppenderRef ref="FileSpringSelect"/>
     </logger>
 
-    <logger name="org.springframework.web.servlet.handler" level="INFO" additivity="true">
+    <logger name="org.springframework.web.servlet.handler" level="INFO" additivity="false">
         <AppenderRef ref="FileSpringSelect"/>
     </logger>
 
-    <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="INFO" additivity="true">
+    <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="INFO" additivity="false">
         <AppenderRef ref="FileSpringSelect"/>
-    </logger>
-
-    <logger name="org.springframework" level="DEBUG" additivity="false">
-        <AppenderRef ref="FileSpringDebug"/>
     </logger>
 
     <logger name="org.springframework" level="WARN" additivity="false">
-        <AppenderRef ref="FileSpring"/>
+        <AppenderRef ref="CONSOLE"/>
     </logger>
 
-    <Root level="INFO">
-      <AppenderRef ref="CONSOLE"/>
+    <logger name="org.springframework" level="DEBUG" additivity="false">
+       <AppenderRef ref="FileSpringDebug"/>
+    </logger>
+-->
+
+    <Root level="WARN">
+       <AppenderRef ref="CONSOLE"/>
     </Root>
   </Loggers>
 </Configuration>
