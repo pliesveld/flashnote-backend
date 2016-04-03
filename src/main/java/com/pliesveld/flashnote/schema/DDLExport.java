@@ -11,9 +11,9 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl;
 import org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.boot.spi.MetadataImplementor;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
+import org.hibernate.tool.schema.TargetType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -26,9 +26,8 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
+import java.util.EnumSet;
 import java.util.Properties;
-
-import static org.hibernate.tool.hbm2ddl.Target.NONE;
 
 /**
  * Generates database schemas for annotated classes. Requires dialects and
@@ -67,7 +66,7 @@ public class DDLExport
 
     public static void main(String[] args) throws IllegalAccessException {
 
-        System.setProperty("spring.profiles.active", System.getProperty("spring.profiles.active",Profiles.LOCAL));
+        System.setProperty("spring.profiles.active", System.getProperty("spring.profiles.active", Profiles.LOCAL));
         AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
 
         ctx.register(PersistenceContext.class,DDLExport.class);
@@ -194,14 +193,24 @@ public class DDLExport
 
         String filename_drop = DIR_EXPORT_ROOT + DIR_EXPORT_PATH + DROP_EXPORT_FILE;
 
-        new SchemaExport((MetadataImplementor) metadata).setOutputFile(filename_drop).setDelimiter(";")
-                .setFormat(FORMAT_EXPORT_OUTPUT).setHaltOnError(true).drop(false,false);
+        EnumSet<TargetType> targets = EnumSet.of(TargetType.STDOUT, TargetType.SCRIPT);
+
+        new SchemaExport()
+                .setDelimiter(";")
+                .setOutputFile(filename_drop)
+                .setHaltOnError(true)
+                .execute(targets, SchemaExport.Action.DROP, metadata);
+
         LOG.info("Exported:" + filename_drop);
 
         String filename_export = DIR_EXPORT_ROOT + DIR_EXPORT_PATH + CREATE_EXPORT_FILE;
 
-        new SchemaExport((MetadataImplementor) metadata).setOutputFile(filename_export).setDelimiter(";")
-                .setFormat(FORMAT_EXPORT_OUTPUT).setHaltOnError(true).execute(NONE, SchemaExport.Type.CREATE);
+        new SchemaExport()
+                .setDelimiter(";")
+                .setOutputFile(filename_export)
+                .setHaltOnError(true)
+                .execute(targets, SchemaExport.Action.CREATE, metadata);
+
         LOG.info("Exported:" + filename_export);
 
     }
