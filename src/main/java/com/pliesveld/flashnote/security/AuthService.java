@@ -13,8 +13,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.List;
 
 import static com.pliesveld.flashnote.logging.Markers.SECURITY_AUTH;
@@ -23,17 +21,7 @@ import static com.pliesveld.flashnote.logging.Markers.SECURITY_AUTH;
 @Transactional
 public class AuthService implements UserDetailsService {
 
-    static {
-        try {
-            RANDOM = SecureRandom.getInstance("SHA1PRNG");
-        } catch (NoSuchAlgorithmException e) {
-            throw new ExceptionInInitializerError("Could not initialize secure random source in AuthService");
-        }
-    }
-
     private static final Logger LOG = LogManager.getLogger();
-    private static final int HASING_ROUNDS = 10;
-    private static final SecureRandom RANDOM;
 
     @Autowired
     private StudentRepository studentRepository;
@@ -53,8 +41,10 @@ public class AuthService implements UserDetailsService {
 
         if(LOG.isDebugEnabled())
         {
-            LOG.debug(SECURITY_AUTH, "Email: " + username);
-            authorities.forEach((a) -> LOG.debug(SECURITY_AUTH,a.getAuthority()));
+            StringBuilder sb = new StringBuilder(128);
+            sb.append("Loading UserDetails for ").append(username).append(".  Granted Authorities: ");
+            authorities.forEach((a) -> sb.append(a).append(" "));
+            LOG.debug(SECURITY_AUTH, sb.toString());
         }
 
         return new StudentPrincipal(student,authorities);

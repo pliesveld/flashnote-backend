@@ -61,19 +61,22 @@ public class SpringSecurityConfig {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
         roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_MODERATOR and ROLE_MODERATOR > ROLE_PREMIUM and ROLE_PREMIUM > ROLE_USER and ROLE_USER > ROLE_ACCOUNT");
 
-        for(StudentRole role : StudentRole.values())
+        if(LOG.isDebugEnabled())
         {
-            StringBuilder sb = new StringBuilder();
-            sb.append("for Role ");
-            sb.append(role.name());
+            for(StudentRole role : StudentRole.values())
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.append("for Role ");
+                sb.append(role.name());
 
-            sb.append(" has authorities ");
-            Collection<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(role.name());
-            authorities.forEach((auth) -> sb.append(auth));
-            sb.append(" has reachable roles ");
+                sb.append(" has authorities ");
+                Collection<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(role.name());
+                authorities.forEach((auth) -> sb.append(auth));
+                sb.append(" has reachable roles ");
 
-            roleHierarchy.getReachableGrantedAuthorities(authorities).forEach((grantedAuthority) -> sb.append(grantedAuthority + " "));
-            LOG.debug(sb.toString());
+                roleHierarchy.getReachableGrantedAuthorities(authorities).forEach((grantedAuthority) -> sb.append(grantedAuthority + " "));
+                LOG.debug(sb.toString());
+            }
         }
 
 
