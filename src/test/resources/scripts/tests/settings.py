@@ -10,10 +10,15 @@ PROFILES=os.getenv('INTEGRATION_TEST_PROFILES','')
 
 URL=SCHEME + "://" + HOST + ":" + str(PORT) + "/"
 DATA_DIR="/home/happs/projects/flashnote/src/test/resources/scripts/tests/test-data"
-DEBUG=False
 
-log.basicConfig( stream=sys.stdout, level=log.DEBUG)
-log.getLogger().setLevel(log.DEBUG)
+
+if os.getenv('DEBUG'):
+    DEBUG=True
+else:
+    DEBUG=False
+
+log.basicConfig( stream=sys.stdout, level=log.WARN if DEBUG == False else log.DEBUG)
+log.getLogger().setLevel(log.WARN if DEBUG == False else log.DEBUG)
 
 log.debug("__file__" +  __file__)
 log.debug("Spring Profiles: " + PROFILES)

@@ -3,12 +3,13 @@ package com.pliesveld.flashnote;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.ErrorMvcAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
-@EnableAutoConfiguration(exclude = SecurityAutoConfiguration.class)
+@EnableAutoConfiguration(exclude = {SecurityAutoConfiguration.class, ErrorMvcAutoConfiguration.class})
 @ComponentScan
 @EnableScheduling
 public class FlashnoteContainerApplication {

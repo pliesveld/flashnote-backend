@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Email;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
 import static com.pliesveld.flashnote.schema.Constants.*;
 
@@ -44,6 +45,7 @@ public class Student {
     @NotNull
     @Column(name = "TEMP_PASSWORD", nullable = false)
     private boolean temporaryPassword;
+    private Date lastPasswordResetDate;
 
     public Student() {}
 
@@ -121,5 +123,13 @@ public class Student {
 
     public boolean isTemporaryPassword() {
         return temporaryPassword;
+    }
+
+    public Date getLastPasswordResetDate() {
+        return lastPasswordResetDate;
+    }
+
+    public void setLastPasswordResetDate(Date lastPasswordResetDate) {
+        this.lastPasswordResetDate = lastPasswordResetDate;
     }
 }

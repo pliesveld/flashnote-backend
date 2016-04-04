@@ -21,7 +21,7 @@ import static com.pliesveld.flashnote.logging.Markers.SECURITY_AUTH;
 
 @Component
 @Transactional
-public class AuthService /*extends AbstractUserDetailsAuthenticationProvider*/ implements UserDetailsService {
+public class AuthService implements UserDetailsService {
 
     static {
         try {
@@ -59,7 +59,6 @@ public class AuthService /*extends AbstractUserDetailsAuthenticationProvider*/ i
 
         return new StudentPrincipal(student,authorities);
     }
-
 }
 
 

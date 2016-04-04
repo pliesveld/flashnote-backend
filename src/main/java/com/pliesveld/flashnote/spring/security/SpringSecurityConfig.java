@@ -1,11 +1,14 @@
 package com.pliesveld.flashnote.spring.security;
 
 import com.pliesveld.flashnote.domain.StudentRole;
+import com.pliesveld.flashnote.security.JwtAuthenticationEntryPoint;
+import com.pliesveld.flashnote.security.JwtAuthenticationTokenFilter;
 import com.pliesveld.flashnote.service.RememberService;
 import com.pliesveld.flashnote.spring.Profiles;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +16,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -27,9 +31,10 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -130,10 +135,12 @@ public class SpringSecurityConfig {
             http.rememberMe().tokenRepository(this.rememberService).userDetailsService(this.userDetailsService);
 */
 
-            http.httpBasic().realmName("FlashNote");
+            //http.httpBasic().realmName("FlashNote");
+            //http.addFilter(this.authenticationFilter());
             http.authorizeRequests()
                     .antMatchers(HttpMethod.OPTIONS).permitAll()
                     .antMatchers("/account/sign-up", "/account/confirm", "/account/reset", "/account/reset/confirm").permitAll()
+                    .antMatchers("/auth", "/refresh","/user").permitAll()
                     .antMatchers(HttpMethod.POST, "/account/password").fullyAuthenticated()
                     .antMatchers(HttpMethod.HEAD, "/categories/**", "/attachments/**").permitAll()
                     .antMatchers(HttpMethod.GET, "/", "/students/**", "/categories/**", "/attachments/**",
@@ -146,20 +153,42 @@ public class SpringSecurityConfig {
 
             http.userDetailsService(this.userDetailsService);
 
-/*            http.formLogin()
- *                   .successHandler(this.savedRequestAwareAuthenticationSuccessHandler())
- *                   .permitAll();
- */
+            http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-            http.rememberMe().tokenRepository(this.rememberService).userDetailsService(this.userDetailsService);
+            http.exceptionHandling().authenticationEntryPoint(this.authenticationEntryPoint());
 
-            http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
-            //http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);
+            http.addFilterBefore(this.authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
 
             http.csrf().disable();
 
             http.headers().disable();
 
+/*            http.formLogin()
+ *                   .successHandler(this.savedRequestAwareAuthenticationSuccessHandler())
+ *                   .permitAll();
+ *
+ *            http.rememberMe().tokenRepository(this.rememberService).userDetailsService(this.userDetailsService);
+ *            //http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
+ */
+/*
+            @Bean
+            public SavedRequestAwareAuthenticationSuccessHandler
+            savedRequestAwareAuthenticationSuccessHandler() {
+
+                SavedRequestAwareAuthenticationSuccessHandler auth
+                        = new SavedRequestAwareAuthenticationSuccessHandler();
+                auth.setTargetUrlParameter("targetUrl");
+                return auth;
+            }
+*/
+
+
+
+        }
+
+        @Bean
+        private AuthenticationEntryPoint authenticationEntryPoint() {
+            return new JwtAuthenticationEntryPoint();
         }
 
         private SecurityExpressionHandler<FilterInvocation> webExpressionHandler() {
@@ -168,29 +197,24 @@ public class SpringSecurityConfig {
             return defaultWebSecurityExpressionHandler;
         }
 
-        @Bean
-        public SavedRequestAwareAuthenticationSuccessHandler
-        savedRequestAwareAuthenticationSuccessHandler() {
 
-            SavedRequestAwareAuthenticationSuccessHandler auth
-                    = new SavedRequestAwareAuthenticationSuccessHandler();
-            auth.setTargetUrlParameter("targetUrl");
-            return auth;
-        }
-
-/*
-        @Autowired
         @Qualifier("myAuthenticationManager")
+        @Autowired
         AuthenticationManager authenticationManager;
-*/
 
-/*
         @Bean(name = "myAuthenticationManager")
         @Override
         public AuthenticationManager authenticationManagerBean() throws Exception {
             return super.authenticationManagerBean();
         }
-*/
+
+        @Bean
+        public JwtAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
+            JwtAuthenticationTokenFilter authenticationTokenFilter = new JwtAuthenticationTokenFilter();
+
+            authenticationTokenFilter.setAuthenticationManager(authenticationManagerBean());
+            return authenticationTokenFilter;
+        }
 
 /*
         @Bean
@@ -202,43 +226,46 @@ public class SpringSecurityConfig {
             authFilter.setAuthenticationFailureHandler(new MyFailureHandler("/login?error=1"));
             authFilter.setUsernameParameter("username");
             authFilter.setPasswordParameter("password");
-            authFilter.setPasswordParameter("password");
             return authFilter;
         }
+
+
+    static class MyAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+        private static final Logger LOG = LogManager.getLogger();
+        @Override
+        public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+
+            Authentication auth =  super.attemptAuthentication(request, response);
+            LOG.debug(Markers.SECURITY_AUTH, "MyAuthFilter principal returned {}", auth.getPrincipal());
+            LOG.debug(Markers.SECURITY_AUTH, "MyAuthFilter.details {}", auth.getDetails());
+            return auth;
+        }
+    }
+
+    static class MySuccessHandler implements AuthenticationSuccessHandler {
+        private static final Logger LOG = LogManager.getLogger();
+        public MySuccessHandler(String s) {
+        }
+
+        @Override
+        public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+            LOG.debug("My success handler for {}", authentication.getPrincipal());
+
+        }
+    }
+
+    static class MyFailureHandler implements AuthenticationFailureHandler {
+        private static final Logger LOG = LogManager.getLogger();
+        public MyFailureHandler(String s) {
+        }
+
+        @Override
+        public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+            LOG.debug("My failure handler for {}", exception.getMessage());
+
+        }
+    }
 */
-
-/*
-static class MyAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    private static final Logger LOG = LogManager.getLogger();
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        LOG.debug("MyAuthFilter.attemptAuthentication {}",request.getUserPrincipal());
-        return super.attemptAuthentication(request, response);
-    }
-}
-
-static class MySuccessHandler implements AuthenticationSuccessHandler {
-    private static final Logger LOG = LogManager.getLogger();
-    public MySuccessHandler(String s) {
-    }
-
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        LOG.debug("My success handler for {}", authentication.getPrincipal());
-
-    }
-}
-
-static class MyFailureHandler implements AuthenticationFailureHandler {
-    public MyFailureHandler(String s) {
-    }
-
-    @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-
-    }
-}*/
-
     }
 }
 
