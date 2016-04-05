@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,7 @@ public class JwtTokenUtil implements Serializable {
     private static final long serialVersionUID = -3301605591108950415L;
 
     private static final String CLAIM_KEY_USERNAME = "sub";
+    private static final String CLAIM_KEY_AUDIENCE = "aud";
     private static final String CLAIM_KEY_CREATED = "created";
 
     @Value("${jwt.secret}")
@@ -37,7 +39,7 @@ public class JwtTokenUtil implements Serializable {
         return username;
     }
 
-    public Date getCreatedDateFromToken(String token) {
+    public Instant getCreatedDateFromToken(String token) {
         Date created;
         try {
             final Claims claims = getClaimsFromToken(token);
@@ -45,10 +47,10 @@ public class JwtTokenUtil implements Serializable {
         } catch (Exception e) {
             created = null;
         }
-        return created;
+        return created.toInstant();
     }
 
-    public Date getExpirationDateFromToken(String token) {
+    public Instant getExpirationDateFromToken(String token) {
         Date expiration;
         try {
             final Claims claims = getClaimsFromToken(token);
@@ -56,7 +58,7 @@ public class JwtTokenUtil implements Serializable {
         } catch (Exception e) {
             expiration = null;
         }
-        return expiration;
+        return expiration.toInstant();
     }
 
     private Claims getClaimsFromToken(String token) {
@@ -77,12 +79,12 @@ public class JwtTokenUtil implements Serializable {
     }
 
     private Boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
+        final Instant expiration = getExpirationDateFromToken(token);
+        return expiration.isBefore(Instant.now());
     }
 
-    private Boolean isCreatedBeforeLastPasswordReset(Date created, Date lastPasswordReset) {
-        return (lastPasswordReset != null && created.before(lastPasswordReset));
+    private Boolean isCreatedBeforeLastPasswordReset(Instant created, Instant lastPasswordReset) {
+        return (lastPasswordReset != null && created.isBefore(lastPasswordReset));
     }
 
     public String generateToken(UserDetails userDetails) {
@@ -100,8 +102,8 @@ public class JwtTokenUtil implements Serializable {
                 .compact();
     }
 
-    public Boolean canTokenBeRefreshed(String token, Date lastPasswordReset) {
-        final Date created = getCreatedDateFromToken(token);
+    public Boolean canTokenBeRefreshed(String token, Instant lastPasswordReset) {
+        final Instant created = getCreatedDateFromToken(token);
         return !isCreatedBeforeLastPasswordReset(created, lastPasswordReset)
                 && !isTokenExpired(token);
     }
@@ -121,8 +123,8 @@ public class JwtTokenUtil implements Serializable {
     public Boolean validateToken(String token, UserDetails userDetails) {
         StudentPrincipal user = (StudentPrincipal) userDetails;
         final String username = getUsernameFromToken(token);
-        final Date created = getCreatedDateFromToken(token);
-        //final Date expiration = getExpirationDateFromToken(token);
+        final Instant created = getCreatedDateFromToken(token);
+        //final Instant expiration = getExpirationDateFromToken(token);
         return (
                 username.equals(user.getUsername())
                         && !isTokenExpired(token)

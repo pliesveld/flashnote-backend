@@ -8,7 +8,7 @@ import java.time.Instant;
 import java.util.Date;
 
 @Entity
-@Table(name = "PERSISTENT_LOGINS")
+@Table(name = "ACCOUNT_REMEMBERME_TOKEN")
 public class AccountRememberMeToken {
 
     @Id

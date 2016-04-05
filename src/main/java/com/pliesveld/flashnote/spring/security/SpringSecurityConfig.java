@@ -190,7 +190,7 @@ public class SpringSecurityConfig {
         }
 
         @Bean
-        private AuthenticationEntryPoint authenticationEntryPoint() {
+        public AuthenticationEntryPoint authenticationEntryPoint() {
             return new JwtAuthenticationEntryPoint();
         }
 

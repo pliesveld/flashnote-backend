@@ -173,6 +173,7 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
 
         student.setPassword(temp_password);
         student.setTemporaryPassword(true);
+        student.setLastPasswordResetDate(Instant.now());
         studentRepository.save(student);
 
         passwordResetRepository.delete(resetToken);

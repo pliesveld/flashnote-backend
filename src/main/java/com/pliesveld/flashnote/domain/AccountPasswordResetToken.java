@@ -9,7 +9,9 @@ import java.time.Duration;
 import java.time.Instant;
 
 @Entity
-@Table(name = "ACCOUNT_RESET_TOKEN")
+@Table(name = "ACCOUNT_RESET_TOKEN",
+    indexes = { @Index(name = "IDX_RESET_TOKEN", columnList = "TOKEN") }
+)
 public class AccountPasswordResetToken {
 
 	@Id

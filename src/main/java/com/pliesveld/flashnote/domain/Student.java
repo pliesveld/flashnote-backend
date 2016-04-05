@@ -1,12 +1,13 @@
 package com.pliesveld.flashnote.domain;
 
+import com.pliesveld.flashnote.domain.converter.InstantConverter;
 import com.pliesveld.flashnote.domain.converter.StudentRoleConverter;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Date;
+import java.time.Instant;
 
 import static com.pliesveld.flashnote.schema.Constants.*;
 
@@ -37,15 +38,19 @@ public class Student {
     private String password;
 
     @NotNull
-    @Column(name="STUDENT_ROLE", nullable = false)
+    @Column(name = "STUDENT_ROLE", nullable = false)
     @Convert(converter = StudentRoleConverter.class)
     @Basic(fetch = FetchType.EAGER)
     private StudentRole role;
 
     @NotNull
-    @Column(name = "TEMP_PASSWORD", nullable = false)
+    @Column(name = "MUST_CHANGE_PASSWORD", nullable = false)
     private boolean temporaryPassword;
-    private Date lastPasswordResetDate;
+
+    @NotNull
+    @Column(name = "LAST_PASSWORD_RESET", nullable = false)
+    @Convert(converter = InstantConverter.class)
+    private Instant lastPasswordResetDate;
 
     public Student() {}
 
@@ -61,6 +66,7 @@ public class Student {
         if(role == null)
             role = StudentRole.ROLE_ACCOUNT;
         temporaryPassword = false;
+        lastPasswordResetDate = Instant.now();
     }
 
     public Integer getId() { return id; }
@@ -125,11 +131,11 @@ public class Student {
         return temporaryPassword;
     }
 
-    public Date getLastPasswordResetDate() {
+    public Instant getLastPasswordResetDate() {
         return lastPasswordResetDate;
     }
 
-    public void setLastPasswordResetDate(Date lastPasswordResetDate) {
+    public void setLastPasswordResetDate(Instant lastPasswordResetDate) {
         this.lastPasswordResetDate = lastPasswordResetDate;
     }
 }

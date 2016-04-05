@@ -9,7 +9,9 @@ import java.time.Duration;
 import java.time.Instant;
 
 @Entity
-@Table(name = "ACCOUNT_REGISTRATION")
+@Table(name = "ACCOUNT_REGISTRATION_TOKEN",
+    indexes = { @Index(name = "IDX_REGISTER_TOKEN", columnList = "TOKEN") }
+)
 public class AccountRegistrationToken {
 	
 	@Id

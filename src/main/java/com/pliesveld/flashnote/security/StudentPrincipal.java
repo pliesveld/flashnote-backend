@@ -1,24 +1,20 @@
 package com.pliesveld.flashnote.security;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.pliesveld.flashnote.domain.Student;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Instant;
 import java.util.Collection;
-import java.util.Date;
 
-@JsonInclude(JsonInclude.Include.ALWAYS)
+@JsonIgnoreProperties( value = {"password", "accountNonExpired", "accountNonLocked", "enabled" })
 final public class StudentPrincipal extends User implements UserDetails {
     private static final long serialVersionUID = 5639683223516504866L;
 
     final String handle;
-    private Date lastPasswordResetDate;
-
-    public String getHandle() {
-        return handle;
-    }
+    private Instant lastPasswordResetDate;
 
     public StudentPrincipal(Student student, Collection<GrantedAuthority> authorities) {
         super(student.getEmail(),student.getPassword(),authorities);
@@ -26,7 +22,11 @@ final public class StudentPrincipal extends User implements UserDetails {
         lastPasswordResetDate = student.getLastPasswordResetDate();
     }
 
-    public Date getLastPasswordResetDate() {
+    public String getHandle() {
+        return handle;
+    }
+
+    public Instant getLastPasswordResetDate() {
         return lastPasswordResetDate;
     }
 }
