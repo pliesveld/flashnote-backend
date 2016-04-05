@@ -29,8 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 public class EntitySerializerTest {
     private static final Logger LOG = LogManager.getLogger();
@@ -70,6 +70,8 @@ public class EntitySerializerTest {
         entityClasses.forEach((entity_class) -> serialize_json_print(entity_class));
 
     }
+
+
 
     private <C> void serialize_json_print(Class<C> entity_class) {
         C entity = null;

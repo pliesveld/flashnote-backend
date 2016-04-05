@@ -24,7 +24,7 @@ public class AudioMetadataReaderTest {
 
     public AudioMetadataReaderTest() {}
 
-    ClassPathResource resource = new ClassPathResource("/scripts/tests/audio/");
+    ClassPathResource resource = new ClassPathResource("/scripts/tests/test-data/audio/");
     private static String[] AUDIO = { "sample.wav", "sample.mp3", "sample.ogg", "sample.m4a","iphone.m4a","sample.aiff","mobile.wav" };
 
 
