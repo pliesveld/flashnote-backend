@@ -1,9 +1,7 @@
 package com.pliesveld.flashnote.schema;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -22,7 +20,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -108,7 +105,7 @@ public class DropCreateDatabase {
 
             } catch (SQLException e) {
                 //e.printStackTrace();
-                LOG.error("{}",sql);
+                LOG.info("{}",sql);
         //        LOG.catching(Level.ERROR,e);
             } finally {
                 if(statement != null)
