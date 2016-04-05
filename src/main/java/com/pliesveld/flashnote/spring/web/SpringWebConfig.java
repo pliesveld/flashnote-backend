@@ -1,10 +1,21 @@
 package com.pliesveld.flashnote.spring.web;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.Module;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.pliesveld.flashnote.web.controller.RateLimitingInterceptor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.HibernateValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.MultipartConfigFactory;
 import org.springframework.context.annotation.*;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -13,11 +24,10 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.servlet.MultipartConfigElement;
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+import java.util.List;
+import java.util.TimeZone;
 
-/**
- * Created by happs on 1/18/16.
- */
 @Configuration
 @EnableWebMvc
 @ComponentScan({
@@ -30,6 +40,7 @@ import java.text.SimpleDateFormat;
 })
 @PropertySource(value = { "classpath:application-local.properties" })
 public class SpringWebConfig extends WebMvcConfigurerAdapter {
+    private static final Logger LOG = LogManager.getLogger();
 
 
     @Bean
@@ -85,34 +96,46 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
         return new RateLimitingInterceptor();
     }
 
-    /*
-        @Bean
-        MultipartResolver multipartResolver() throws IOException {
-            CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-            multipartResolver.setMaxInMemorySize(1024*1024*5);
-            multipartResolver.setMaxUploadSizePerFile(1024*1024*5*5);
-            multipartResolver.setMaxUploadSize(1024*1024*5*5*5);
-            multipartResolver.setUploadTempDir(new FileSystemResource("/tmp/upload/"));
-            return multipartResolver;
-        }
-    */
     @Bean
-    public Jackson2ObjectMapperBuilder jacksonBuilder() {
-	    Jackson2ObjectMapperBuilder b = new Jackson2ObjectMapperBuilder();
-	    b.indentOutput(true).dateFormat(new SimpleDateFormat("yyyy-MM-dd"));
-	    return b;
+    public Jackson2ObjectMapperBuilder objectMapperBuilder() {
+
+        Jackson2ObjectMapperBuilder b = new Jackson2ObjectMapperBuilder();
+        b.modulesToInstall(this.jacksonHibernateModule(),this.jacksonJavaTimeModule());
+        return b;
     }
 
-    /**
-     * Default view for JSON rendering
+    @Bean
+    public Module jacksonHibernateModule()
+    {
+        return new Hibernate5Module().enable(Hibernate5Module.Feature.SERIALIZE_IDENTIFIER_FOR_LAZY_NOT_LOADED_OBJECTS);
+    }
 
+    @Bean
+    public Module jacksonJavaTimeModule() {
+        return new JavaTimeModule();
+    }
+
+    @Autowired(required = true)
+    public void configureJackson(ObjectMapper jackson2ObjectMapper)
+    {
+        jackson2ObjectMapper.registerModule(this.jacksonHibernateModule());
+        jackson2ObjectMapper.registerModule(this.jacksonJavaTimeModule());
+        jackson2ObjectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        DateFormat dateTime = new com.fasterxml.jackson.databind.util.ISO8601DateFormat();
+        dateTime.setTimeZone(TimeZone.getTimeZone("UTC"));
+        jackson2ObjectMapper.setDateFormat(dateTime);
+    }
+
+/**  UGLY HACK **/
     @Override
-    public void configureViewResolvers(ViewResolverRegistry registry) {
-        registry.enableContentNegotiation(new MappingJackson2JsonView());
-        registry.jsp();
+    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+        for (HttpMessageConverter<?> converter : converters) {
+            if (converter instanceof MappingJackson2HttpMessageConverter) {
+                MappingJackson2HttpMessageConverter jsonMessageConverter = (MappingJackson2HttpMessageConverter) converter;
+                ObjectMapper objectMapper = jsonMessageConverter.getObjectMapper();
+                objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+                break;
+            }
+        }
     }
-    */
-
-
-
 }
