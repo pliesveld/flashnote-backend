@@ -35,8 +35,8 @@ public class FlashCardTest extends AbstractDomainEntityUnitTest
         Question question = questionBean();
         Answer answer = answerBean();
 
-        entityManager.persist(question);
-        entityManager.persist(answer);
+        //entityManager.persist(question);
+        //entityManager.persist(answer);
 
         entityManager.flush();
 

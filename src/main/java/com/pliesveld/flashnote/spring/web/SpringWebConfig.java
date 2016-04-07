@@ -1,6 +1,7 @@
 package com.pliesveld.flashnote.spring.web;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -99,15 +100,24 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public Jackson2ObjectMapperBuilder objectMapperBuilder() {
 
-        Jackson2ObjectMapperBuilder b = new Jackson2ObjectMapperBuilder();
-        b.modulesToInstall(this.jacksonHibernateModule(),this.jacksonJavaTimeModule());
+        DateFormat dateTime = new com.fasterxml.jackson.databind.util.ISO8601DateFormat();
+        dateTime.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        Jackson2ObjectMapperBuilder b = new Jackson2ObjectMapperBuilder()
+                .createXmlMapper(false).dateFormat(dateTime)
+                .modulesToInstall(this.jacksonHibernateModule(),this.jacksonJavaTimeModule())
+                .serializationInclusion(JsonInclude.Include.NON_ABSENT)
+                .featuresToDisable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+
         return b;
     }
 
     @Bean
     public Module jacksonHibernateModule()
     {
-        return new Hibernate5Module().enable(Hibernate5Module.Feature.SERIALIZE_IDENTIFIER_FOR_LAZY_NOT_LOADED_OBJECTS);
+        return new Hibernate5Module()
+                .enable(Hibernate5Module.Feature.SERIALIZE_IDENTIFIER_FOR_LAZY_NOT_LOADED_OBJECTS)
+                .enable(Hibernate5Module.Feature.FORCE_LAZY_LOADING);
     }
 
     @Bean
@@ -115,15 +125,20 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
         return new JavaTimeModule();
     }
 
+
     @Autowired(required = true)
     public void configureJackson(ObjectMapper jackson2ObjectMapper)
     {
         jackson2ObjectMapper.registerModule(this.jacksonHibernateModule());
         jackson2ObjectMapper.registerModule(this.jacksonJavaTimeModule());
         jackson2ObjectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        DateFormat dateTime = new com.fasterxml.jackson.databind.util.ISO8601DateFormat();
-        dateTime.setTimeZone(TimeZone.getTimeZone("UTC"));
-        jackson2ObjectMapper.setDateFormat(dateTime);
+        jackson2ObjectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        jackson2ObjectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        jackson2ObjectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        jackson2ObjectMapper.enable(SerializationFeature.USE_EQUALITY_FOR_OBJECT_ID);
+        jackson2ObjectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+
+
     }
 
 /**  UGLY HACK **/
@@ -133,7 +148,7 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
             if (converter instanceof MappingJackson2HttpMessageConverter) {
                 MappingJackson2HttpMessageConverter jsonMessageConverter = (MappingJackson2HttpMessageConverter) converter;
                 ObjectMapper objectMapper = jsonMessageConverter.getObjectMapper();
-                objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+                configureJackson(objectMapper);
                 break;
             }
         }

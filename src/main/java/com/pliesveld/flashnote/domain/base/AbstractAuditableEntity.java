@@ -1,5 +1,6 @@
 package com.pliesveld.flashnote.domain.base;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pliesveld.flashnote.domain.converter.InstantConverter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -28,19 +29,23 @@ public abstract class AbstractAuditableEntity extends DomainBaseEntity {
     @Column(name = "CREATED")
     @Convert(converter = InstantConverter.class)
     @CreatedDate
+    @JsonProperty("created")
     protected Instant createdOn;
 
     @Column(name = "MODIFIED")
     @Convert(converter = InstantConverter.class)
     @LastModifiedDate
+    @JsonProperty("modified")
     protected Instant modifiedOn;
 
     @Column(name = "CREATED_BY")
     @CreatedBy
+    @JsonProperty("created_by")
     protected String createdByUser;
 
     @Column(name = "MODIFIED_BY")
     @LastModifiedBy
+    @JsonProperty("modified_by")
     protected String modifiedByUser;
 
     @PrePersist

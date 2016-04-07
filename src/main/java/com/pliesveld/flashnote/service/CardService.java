@@ -38,4 +38,7 @@ public interface CardService {
     Answer createAnswer(Answer answer);
 
     void addToDeckFlashCard(Deck deck, FlashCard fc);
+
+    @Transactional(readOnly = true)
+    List<Deck> findAllDecks();
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service(value = "cardService")
@@ -134,5 +135,12 @@ public class CardServiceImpl implements CardService {
         deck = entityManager.merge(deck);
         flashCard = entityManager.merge(flashCard);
         deck.getFlashCards().add(flashCard);
+    }
+
+    @Override
+    public List<Deck> findAllDecks() {
+        List<Deck> list = new ArrayList<>();
+        deckRepository.findAll().forEach(list::add);
+        return list;
     }
 }

@@ -4,8 +4,10 @@ import com.pliesveld.flashnote.model.json.request.JwtAuthenticationRequestJson;
 import com.pliesveld.flashnote.model.json.response.JwtAuthenticationResponseJson;
 import com.pliesveld.flashnote.security.JwtTokenUtil;
 import com.pliesveld.flashnote.security.StudentPrincipal;
+import com.pliesveld.flashnote.spring.Profiles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
+@Profile(value = Profiles.AUTH)
 public class AuthenticationRestController {
 
     @Value("${jwt.header}")

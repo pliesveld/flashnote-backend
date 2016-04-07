@@ -4,6 +4,7 @@ import com.pliesveld.flashnote.domain.base.AbstractAuditableEntity;
 import com.pliesveld.flashnote.schema.Constants;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -16,9 +17,10 @@ public abstract class AbstractStatement extends AbstractAuditableEntity
     @Column(name = "STATEMENT_ID")
     protected Integer id;
 
+    @NotNull
     @Column(name = "CONTENT", length = Constants.MAX_STATEMENT_CONTENT_LENGTH)
     @Size(max = Constants.MAX_STATEMENT_CONTENT_LENGTH)
-    protected String content;
+    protected String content = "";
 
     public AbstractStatement() {}
 
@@ -42,26 +44,22 @@ public abstract class AbstractStatement extends AbstractAuditableEntity
         this.id = id;
     }
 
-    @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        return result;
-    }
 
     @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
-        AbstractStatement other = (AbstractStatement) obj;
-        if (id == null) {
-            if (other.id != null) return false;
-        } else if (!id.equals(other.id)) return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AbstractStatement)) return false;
+
+        AbstractStatement that = (AbstractStatement) o;
+
+        if (!content.equals(that.content)) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+
         return true;
     }
 
+    @Override
+    public int hashCode() {
+        return content.hashCode();
+    }
 }

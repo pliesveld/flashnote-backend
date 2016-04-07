@@ -10,6 +10,7 @@ import java.util.List;
 public interface CategoryRepository extends CrudRepository<Category,Integer> {
     List<Category> findByParentCategoryIsNull();
     List<Category> findByParentCategory_id(int parentCategory);
+    Category        findOneByNameEquals(String categoryName);
     List<Category> findByNameContains(String categoryTerm);
     List<Category> findByDescriptionContains(String categoryTerm);
 }

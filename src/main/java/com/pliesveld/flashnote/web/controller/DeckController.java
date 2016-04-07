@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/decks")
 public class DeckController {
@@ -43,6 +45,20 @@ public class DeckController {
         return deck;
     }
 
+    @RequestMapping(value="", method = RequestMethod.GET)
+    @ResponseBody @ResponseStatus(code = HttpStatus.OK)
+    public List<Deck> retrieveAllDecks()
+    {
+        return cardService.findAllDecks();
+    }
+
+    @RequestMapping(value="/{id}", method = RequestMethod.GET)
+    @ResponseBody @ResponseStatus(code = HttpStatus.OK)
+    public Deck retrieveDeck(@PathVariable("id") int id)
+    {
+        return verifyDeck(id);
+    }
+
     @RequestMapping(value="/count", method = RequestMethod.GET)
     public ResponseEntity<?> getCardStatistics()
     {
@@ -55,13 +71,6 @@ public class DeckController {
         return new ResponseEntity<>(cardStatistics,HttpStatus.OK);
     }
 
-    @RequestMapping(value="/{id}", method = RequestMethod.GET)
-    @ResponseBody @ResponseStatus(code = HttpStatus.OK)
-    public Deck getDeck(@PathVariable("id") int id)
-    {
-        LOG.info("Retreiving deck " + id);
-        return verifyDeck(id);
-    }
 
 
 }

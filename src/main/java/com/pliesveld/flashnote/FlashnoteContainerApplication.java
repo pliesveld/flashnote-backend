@@ -9,12 +9,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
-@EnableAutoConfiguration(exclude = {SecurityAutoConfiguration.class, ErrorMvcAutoConfiguration.class})
+@EnableAutoConfiguration(exclude = {SecurityAutoConfiguration.class, ErrorMvcAutoConfiguration.class })
 @ComponentScan
 @EnableScheduling
 public class FlashnoteContainerApplication {
 
-	public static void main(String[] args) {
+
+
+    public static void main(String[] args) {
 //        System.setProperty("spring.profiles.default", System.getProperty("spring.profiles.default", "local"));
 //        System.setProperty("spring.profiles.active", Profiles.LOCAL);
 

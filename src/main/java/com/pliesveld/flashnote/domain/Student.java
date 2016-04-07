@@ -1,5 +1,8 @@
 package com.pliesveld.flashnote.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.pliesveld.flashnote.domain.converter.InstantConverter;
 import com.pliesveld.flashnote.domain.converter.StudentRoleConverter;
 import org.hibernate.validator.constraints.Email;
@@ -14,6 +17,7 @@ import static com.pliesveld.flashnote.schema.Constants.*;
 @Entity
 @Table(name = "STUDENT_ACCOUNT",
         uniqueConstraints = @UniqueConstraint(name = "UNIQUE_EMAIL", columnNames = {"STUDENT_EMAIL"}))
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Student {
 
     @Id
@@ -35,6 +39,7 @@ public class Student {
     @NotNull
     @Size(min = MIN_STUDENT_PASSWORD_LENGTH, max = MAX_STUDENT_PASSWORD_LENGTH)
     @Column(name = "STUDENT_PASSWORD", length = MAX_STUDENT_PASSWORD_LENGTH, nullable = false)
+    @JsonIgnore
     private String password;
 
     @NotNull

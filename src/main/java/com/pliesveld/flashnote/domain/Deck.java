@@ -1,5 +1,6 @@
 package com.pliesveld.flashnote.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
 import com.pliesveld.flashnote.schema.Constants;
@@ -46,6 +47,7 @@ public class Deck extends DomainBaseEntity implements Serializable
             /*,uniqueConstraints = {@UniqueConstraint(name="UNIQUE_FLASHCARD",columnNames = {"QUESTION_ID","ANSWER_ID"})}*/
 
     )
+    @JsonProperty("flashcards")
     private List<FlashCard> flashCards = new ArrayList<>();
 
     @NotNull

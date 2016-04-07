@@ -31,7 +31,10 @@ public class SpringRootConfig implements AsyncConfigurer, SchedulingConfigurer {
     private static final Logger schedulingLoggerError =
             LogManager.getLogger(LOG.getName() + ".[scheduling-error]");
 
-//    @Profile({Profiles.LOCAL})
+
+
+
+    //    @Profile({Profiles.LOCAL})
     @Bean
     DateTimeService currentTimeDateTimeService()
     {

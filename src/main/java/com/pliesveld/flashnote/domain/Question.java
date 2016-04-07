@@ -31,4 +31,6 @@ public class Question extends AbstractStatement implements Serializable
     public void setTitle(String title) {
         this.title = title;
     }
+
+
 }

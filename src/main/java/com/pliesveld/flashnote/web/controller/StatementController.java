@@ -1,25 +1,28 @@
 package com.pliesveld.flashnote.web.controller;
 
 
-import com.pliesveld.flashnote.domain.AbstractStatement;
-import com.pliesveld.flashnote.domain.Answer;
-import com.pliesveld.flashnote.domain.Question;
-import com.pliesveld.flashnote.domain.StudentDetails;
+import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.exception.AnswerNotFoundException;
 import com.pliesveld.flashnote.exception.QuestionNotFoundException;
 import com.pliesveld.flashnote.exception.StatementNotFoundException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
-import com.pliesveld.flashnote.model.json.response.CardStatistics;
+import com.pliesveld.flashnote.model.json.request.UpdateQuestionBankRequestJson;
 import com.pliesveld.flashnote.service.CardService;
 import com.pliesveld.flashnote.service.StudentService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
+
+import javax.validation.Valid;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
+@RequestMapping(path = "/construct")
 public class StatementController {
     private static final Logger LOG = LogManager.getLogger();
 
@@ -62,40 +65,78 @@ public class StatementController {
         return statement;
     }
 
-    @RequestMapping(value="/statements/count", method = RequestMethod.GET)
-    public ResponseEntity<?> entity_counts()
+    @RequestMapping(value="/questionbank", method = RequestMethod.OPTIONS)
+    public ResponseEntity methodsAllowed()
     {
-        LOG.info("Retrieving counts of all statements");
-        CardStatistics cardStatistics = new CardStatistics();
-        cardStatistics.setQuestionsCount(cardService.countQuestions());
-        cardStatistics.setAnswersCount(cardService.countAnswers());
-        return new ResponseEntity<>(cardStatistics,HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
-    @RequestMapping(value="/statements/{id}", method = RequestMethod.GET)
-    @ResponseBody @ResponseStatus(code = HttpStatus.OK)
-    public AbstractStatement retrieveStatement(@PathVariable("id") int id)
+
+    @RequestMapping(value = "/questionbank", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<?> retrieveAllQuestionBanks()
     {
-        LOG.info("Retreiving statement " + id);
-        return verifyStatement(id);
+        List<QuestionBank> questionBanks = new ArrayList<>();
+        QuestionBank questionBank = new QuestionBank();
+        questionBank.setDescription("Commonly asked web developer questions.");
+        questionBank.setId(5);
+        questionBank.add(new Question("What is a RESTful web service?"));
+        questionBank.add(new Question("What methods are supported by the HTTP specification?"));
+        questionBank.add(new Question("What is a Cross-Origin-Request?"));
+        questionBank.add(new Question("Give an example of a stateless request."));
+        questionBanks.add(questionBank);
+
+        questionBank = new QuestionBank();
+        questionBank.setDescription("Object Oriented Programming");
+        questionBank.add(new Question("What is encapsulation?"));
+        questionBank.add(new Question("What is composition?"));
+        questionBank.add(new Question("What is inheritence?"));
+        questionBank.add(new Question("What is abstraction?"));
+        questionBanks.add(questionBank);
+
+        return ResponseEntity.ok(questionBanks);
     }
 
-    @RequestMapping(value="/questions/{id}", method = RequestMethod.GET)
-    @ResponseBody @ResponseStatus(code = HttpStatus.OK)
-    public Question retrieveQuestion(@PathVariable("id") int id)
+    @RequestMapping(value="/questionbank", method = RequestMethod.POST)
+    public ResponseEntity<?> createQuestionBank()
     {
-        LOG.info("Retreiving question " + id);
-        return verifyQuestion(id);
+        int id = 5;
+
+        URI newUri = MvcUriComponentsBuilder
+                .fromController(StatementController.class)
+                .path("/questionbank/{id}")
+                .buildAndExpand(id)
+                .toUri();
+
+
+        return ResponseEntity.ok()
+                .location(newUri)
+                .build();
     }
 
-    @RequestMapping(value="/answers/{id}", method = RequestMethod.GET)
-    @ResponseBody @ResponseStatus(code = HttpStatus.OK)
-    public Answer retrieveAnswer(@PathVariable("id") int id)
+    @RequestMapping(value = "/questionbank/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<?> retrieveQuestionBank(@PathVariable("id") int id)
     {
-        LOG.info("Retreiving answer " + id);
-        return verifyAnswer(id);
+        QuestionBank questionBank = new QuestionBank();
+        questionBank.setId(id);
+
+        return ResponseEntity.ok(questionBank);
     }
 
+    @RequestMapping(value = "/questionbank/{id}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResponseEntity<?> deleteQuestionBank(@PathVariable("id") int id)
+    {
+        return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(value = "/questionbank/{id}", method = RequestMethod.PUT)
+    @ResponseBody
+    public ResponseEntity<?> updateQuestionBank(@PathVariable("id") int id, @Valid @RequestBody UpdateQuestionBankRequestJson requestJson)
+    {
+        return ResponseEntity.ok().build();
+    }
 
 
 
