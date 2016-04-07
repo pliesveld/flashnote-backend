@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -52,11 +54,31 @@ public class DeckController {
         return cardService.findAllDecks();
     }
 
+    @RequestMapping(value="", method = RequestMethod.POST)
+    @ResponseStatus(code = HttpStatus.OK)
+    public ResponseEntity createDeck(@Valid @RequestBody Deck deck)
+    {
+        deck = cardService.createDeck(deck);
+
+        return ResponseEntity.created(
+                MvcUriComponentsBuilder.fromController(DeckController.class)
+                        .path("/{id}").buildAndExpand(deck.getId()).toUri()).build();
+    }
+
+
     @RequestMapping(value="/{id}", method = RequestMethod.GET)
     @ResponseBody @ResponseStatus(code = HttpStatus.OK)
     public Deck retrieveDeck(@PathVariable("id") int id)
     {
         return verifyDeck(id);
+    }
+
+    @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(code = HttpStatus.OK)
+    public void deleteDeck(@PathVariable("id") int id)
+    {
+        Deck deck = verifyDeck(id);
+        cardService.deleteDeck(deck);
     }
 
     @RequestMapping(value="/count", method = RequestMethod.GET)

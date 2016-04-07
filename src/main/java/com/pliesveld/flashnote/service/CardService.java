@@ -31,8 +31,8 @@ public interface CardService {
     @Transactional(readOnly = true)
     List<FlashCard> findFlashCardsByContainingQuestionId(int questionId) throws QuestionNotFoundException;
 
-    FlashCard createFlashCard(Question question,Answer answer) throws FlashCardCreateException;
-    FlashCard createFlashCardReferecingQuestion(int questionId,Answer answer) throws QuestionNotFoundException, FlashCardCreateException;
+    FlashCard createFlashCard(Question question, Answer answer) throws FlashCardCreateException;
+    FlashCard createFlashCardReferecingQuestion(int questionId, Answer answer) throws QuestionNotFoundException, FlashCardCreateException;
 
     Question createQuestion(Question question);
     Answer createAnswer(Answer answer);
@@ -41,4 +41,18 @@ public interface CardService {
 
     @Transactional(readOnly = true)
     List<Deck> findAllDecks();
+
+    Deck createDeck(Deck deck);
+
+    void deleteDeck(Deck deck);
+
+    @Transactional(readOnly = true)
+    List<QuestionBank> findAllQuestionBanks();
+
+    QuestionBank createQuestionBank(QuestionBank questionBank);
+
+    @Transactional(readOnly = true)
+    QuestionBank findQuestionBankById(int id);
+
+    void deleteQuestionBank(int id);
 }

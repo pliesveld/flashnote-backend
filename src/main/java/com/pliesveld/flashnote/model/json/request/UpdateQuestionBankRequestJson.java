@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @Validated
 public class UpdateQuestionBankRequestJson extends ModelBase implements JsonWebRequestSerializable {
-    enum UpdateOperation {
+    public enum UpdateOperation {
         ADD_QUESTION,
         REMOVE_QUESTION
     };

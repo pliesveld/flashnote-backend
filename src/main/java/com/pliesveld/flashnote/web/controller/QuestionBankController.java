@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
-import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 @RestController
-@RequestMapping(path = "/construct")
-public class StatementController {
+@RequestMapping(path = "/questionbanks")
+public class QuestionBankController {
     private static final Logger LOG = LogManager.getLogger();
 
     @Autowired
@@ -65,76 +65,61 @@ public class StatementController {
         return statement;
     }
 
-    @RequestMapping(value="/questionbank", method = RequestMethod.OPTIONS)
+    @RequestMapping(value = "", method = RequestMethod.OPTIONS)
     public ResponseEntity methodsAllowed()
     {
         return ResponseEntity.ok().build();
     }
 
 
-    @RequestMapping(value = "/questionbank", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<?> retrieveAllQuestionBanks()
     {
-        List<QuestionBank> questionBanks = new ArrayList<>();
-        QuestionBank questionBank = new QuestionBank();
-        questionBank.setDescription("Commonly asked web developer questions.");
-        questionBank.setId(5);
-        questionBank.add(new Question("What is a RESTful web service?"));
-        questionBank.add(new Question("What methods are supported by the HTTP specification?"));
-        questionBank.add(new Question("What is a Cross-Origin-Request?"));
-        questionBank.add(new Question("Give an example of a stateless request."));
-        questionBanks.add(questionBank);
-
-        questionBank = new QuestionBank();
-        questionBank.setDescription("Object Oriented Programming");
-        questionBank.add(new Question("What is encapsulation?"));
-        questionBank.add(new Question("What is composition?"));
-        questionBank.add(new Question("What is inheritence?"));
-        questionBank.add(new Question("What is abstraction?"));
-        questionBanks.add(questionBank);
-
+        List<QuestionBank> questionBanks = cardService.findAllQuestionBanks();
         return ResponseEntity.ok(questionBanks);
     }
 
-    @RequestMapping(value="/questionbank", method = RequestMethod.POST)
-    public ResponseEntity<?> createQuestionBank()
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    public ResponseEntity<?> createQuestionBank(@Valid @RequestBody QuestionBank questionBank)
     {
-        int id = 5;
+        questionBank = cardService.createQuestionBank(questionBank);
 
-        URI newUri = MvcUriComponentsBuilder
-                .fromController(StatementController.class)
-                .path("/questionbank/{id}")
-                .buildAndExpand(id)
-                .toUri();
+        return ResponseEntity.created(
+                MvcUriComponentsBuilder
+                        .fromController(QuestionBankController.class)
+                        .path("/{id}")
+                        .buildAndExpand(questionBank.getId())
+                        .toUri()).build();
 
-
-        return ResponseEntity.ok()
-                .location(newUri)
-                .build();
     }
 
-    @RequestMapping(value = "/questionbank/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<?> retrieveQuestionBank(@PathVariable("id") int id)
     {
-        QuestionBank questionBank = new QuestionBank();
-        questionBank.setId(id);
+        QuestionBank questionBank = cardService.findQuestionBankById(id);
+
+        if(questionBank == null )
+            return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(questionBank);
     }
 
-    @RequestMapping(value = "/questionbank/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseBody
     public ResponseEntity<?> deleteQuestionBank(@PathVariable("id") int id)
     {
+        cardService.deleteQuestionBank(id);
         return ResponseEntity.ok().build();
     }
 
-    @RequestMapping(value = "/questionbank/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseBody
     public ResponseEntity<?> updateQuestionBank(@PathVariable("id") int id, @Valid @RequestBody UpdateQuestionBankRequestJson requestJson)
     {
+        EnumMap<UpdateQuestionBankRequestJson.UpdateOperation, Consumer<UpdateQuestionBankRequestJson>> action = null;
+        action.get(requestJson.getOperation()).accept(requestJson);
         return ResponseEntity.ok().build();
     }
 

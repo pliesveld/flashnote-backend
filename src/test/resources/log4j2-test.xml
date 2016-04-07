@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration configDebug="true">
+<Configuration configDebug="false">
   <Properties>
       <Property name="filename">log/hibernate.log</Property>
       <Property name="servicefilename">log/service.log</Property>

@@ -67,7 +67,7 @@ public class ConstructController {
 
         HttpHeaders responseHeaders = new HttpHeaders();
         URI newQuestionUri = MvcUriComponentsBuilder
-                .fromController(StatementController.class)
+                .fromController(QuestionBankController.class)
                 .path("/questions/{id}")
                 .buildAndExpand(que.getId())
                 .toUri();
@@ -84,7 +84,7 @@ public class ConstructController {
 
         HttpHeaders responseHeaders = new HttpHeaders();
         URI newAnswerUri = MvcUriComponentsBuilder
-                .fromController(StatementController.class)
+                .fromController(QuestionBankController.class)
                 .path("/answers/{id}")
                 .buildAndExpand(ans.getId())
                 .toUri();
