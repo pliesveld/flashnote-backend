@@ -1,8 +1,10 @@
 package com.pliesveld.flashnote.spring.data;
 
+import com.pliesveld.flashnote.domain.Category;
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.domain.StudentRole;
+import com.pliesveld.flashnote.repository.CategoryRepository;
 import com.pliesveld.flashnote.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -25,6 +27,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     StudentRepository studentRepository;
 
     @Autowired
+    CategoryRepository categoryRepository;
+
+    @Autowired
     PasswordEncoder passwordEncoder;
 
     @Override
@@ -37,6 +42,8 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createStudentIfNotFound("premium@example.com", ROLE_PREMIUM,    "premium");
         createStudentIfNotFound("mod@example.com",     ROLE_MODERATOR,  "moderator");
         createStudentIfNotFound("admin@example.com",   ROLE_ADMIN,      "admin");
+
+        createCategoryIfNotFound("TEST CATEGORY", "A sample container for testing.");
     }
 
     @Transactional
@@ -55,6 +62,22 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         }
 
         return student;
+    }
+
+    @Transactional
+    private Category createCategoryIfNotFound(String name, String description)
+    {
+        Category category = categoryRepository.findOneByNameEquals(name);
+
+        if( category == null )
+        {
+            category = new Category();
+            category.setName(name);
+            category.setDescription(description);
+            categoryRepository.save(category);
+        }
+
+        return category;
     }
 
 /*
