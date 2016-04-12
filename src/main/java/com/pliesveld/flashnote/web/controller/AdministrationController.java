@@ -4,6 +4,7 @@ import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.model.json.request.NewStudentDetails;
 import com.pliesveld.flashnote.service.AccountRegistrationService;
+import com.pliesveld.flashnote.service.AdminService;
 import com.pliesveld.flashnote.service.AttachmentService;
 import com.pliesveld.flashnote.service.StudentService;
 import org.apache.logging.log4j.LogManager;
@@ -31,10 +32,13 @@ public class AdministrationController {
     private StudentService studentService;
 
     @Autowired
+    private AdminService adminService;
+
+    @Autowired
     private AttachmentService attachmentService;
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @RequestMapping(value = "/student", method = RequestMethod.POST)
+    @RequestMapping(value = "/student/create", method = RequestMethod.POST)
     public ResponseEntity<Void> createStudent(@Valid @RequestBody NewStudentDetails studentdto)
     {
         Student studentDetails = registrationService.createStudent(studentdto.getName(),studentdto.getEmail(),studentdto.getPassword());
@@ -57,7 +61,7 @@ public class AdministrationController {
     public ResponseEntity<Iterable<StudentDetails>> getAllStudents()
     {
         LOG.info("Retrieving list of all students");
-        Iterable<StudentDetails> allStudents = studentService.findAll();
+        Iterable<StudentDetails> allStudents = adminService.findAllStudentDetails();
         return new ResponseEntity<>(allStudents, HttpStatus.OK);
     }
 
@@ -74,7 +78,7 @@ public class AdministrationController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteStudent(@PathVariable("id") int id)
     {
-        studentService.delete(id);
+        adminService.deleteStudent(id);
     }
 
 }

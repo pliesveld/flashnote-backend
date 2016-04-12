@@ -5,10 +5,11 @@ import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.model.json.request.NewStudentDetails;
 import com.pliesveld.flashnote.service.AccountRegistrationService;
+import com.pliesveld.flashnote.service.AdminService;
 import com.pliesveld.flashnote.service.StudentService;
 import com.pliesveld.flashnote.util.generator.StudentGenerator;
 import com.pliesveld.flashnote.web.controller.AdministrationController;
-import com.pliesveld.flashnote.web.controller.StudentController;
+import com.pliesveld.flashnote.web.controller.AdministrationController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
@@ -39,17 +40,20 @@ import static org.mockito.Mockito.*;
 
      Finally the response object is inspected for correctness.
 
-     Note -- StudentController is treated as a POJO.  Not tested is the controllers request-mapping,
+     Note -- AdministrationController is treated as a POJO.  Not tested is the controllers request-mapping,
      validations, data bindings, and any associated exception handlers.
  */
 public class StudentControllerTestMock {
     private static final Logger LOG = LogManager.getLogger();
 
     /*
-        Dependency of StudentController whose behavior will be overridden
+        Dependency of AdministrationController whose behavior will be overridden
      */
     @Mock
     private StudentService studentService;
+
+    @Mock
+    private AdminService adminService;
 
     @Mock
     private AccountRegistrationService accountRegistrationService;
@@ -58,7 +62,7 @@ public class StudentControllerTestMock {
     @Before
     public void setUp() throws Exception {
         /* mock servlet request to handle usage of UriComponentsBuilder .. .fromCurrentRequest()
-         from inside StudentController.createStudent(student_name,...);
+         from inside AdministrationController.createStudent(student_name,...);
          */
         MockHttpServletRequest request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
@@ -68,18 +72,19 @@ public class StudentControllerTestMock {
     @Test
     public void testGetAllStudents() {
         /*
-            Instantiates a StudentController object, and injects the mocked dependency
+            Instantiates a AdministrationController object, and injects the mocked dependency
          */
-        StudentController studentController = new StudentController();
-        ReflectionTestUtils.setField(studentController, "studentService", studentService);
 
         AdministrationController administrationController = new AdministrationController();
+        ReflectionTestUtils.setField(administrationController, "adminService", adminService);
+
+
         ReflectionTestUtils.setField(administrationController, "studentService", studentService);
 
         /*
-            When the mocked method findAll() is invoked, the an empty ArrayList<StudentDetails> is returned.
+            When the mocked method findAllStudentDetails() is invoked, the an empty ArrayList<StudentDetails> is returned.
          */
-        when(studentService.findAll()).thenReturn(new ArrayList<StudentDetails>());
+        when(adminService.findAllStudentDetails()).thenReturn(new ArrayList<StudentDetails>());
 
         /*
             Invoke the Controller methods that depend on the mocked objects.
@@ -87,9 +92,9 @@ public class StudentControllerTestMock {
         ResponseEntity<Iterable<StudentDetails>> allStudentsEntry = administrationController.getAllStudents();
 
         /*
-            Checks that the underlying mocked dependency invoked the method findAll once.
+            Checks that the underlying mocked dependency invoked the method findAllStudentDetails once.
          */
-        verify(studentService,times(1)).findAll();
+        verify(adminService,times(1)).findAllStudentDetails();
 
         /*
             Asserts that the HTTP status coded returned by the Controller was OK.

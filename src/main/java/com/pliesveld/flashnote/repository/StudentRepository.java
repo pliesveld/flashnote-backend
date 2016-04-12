@@ -13,7 +13,4 @@ public interface StudentRepository extends CrudRepository<Student,Integer> {
 
     @Query("select s from Student s")
     Stream<Student> findAllAsStream();
-
-
-
 }
