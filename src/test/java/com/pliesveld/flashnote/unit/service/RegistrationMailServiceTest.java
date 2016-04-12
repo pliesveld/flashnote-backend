@@ -34,9 +34,9 @@ public class RegistrationMailServiceTest {
     
 	@Autowired
 	private MailSender mailSender;
-	
-	@Autowired
-	private SimpleMailMessage templateMessage;
+
+    @Autowired
+	private SimpleMailMessage templateVerificationMessage;
     
 	@Autowired
 	AccountRegistrationService accountService;
@@ -60,7 +60,7 @@ public class RegistrationMailServiceTest {
 	{		
 		String recipient = UUID.randomUUID().toString() + "@example.com";
 		String confirmURL = "REGISTRATION TOKEN";
-		SimpleMailMessage msg = new SimpleMailMessage(this.templateMessage);
+		SimpleMailMessage msg = new SimpleMailMessage(this.templateVerificationMessage);
 		msg.setTo(recipient);
 		msg.setText(msg.getText() + confirmURL);
 		
@@ -69,7 +69,7 @@ public class RegistrationMailServiceTest {
 		wiser.getMessages().forEach(LOG::info);
 		
 		assertReceivedMessage(wiser)
-			.from("flashnote@example.com")
+			.from("flashnote.web@gmail.com")
 			.to(recipient)
 			.withContentContaining(confirmURL);		
 	}
