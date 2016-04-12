@@ -103,7 +103,7 @@ public class StudentDetailsTest extends StudentTest {
         entityManager.persist(fc);
 
         Deck deck = new Deck(studentDetails);
-        deck.getFlashCards().add(fc);
+        deck.getFlashcards().add(fc);
 
         entityManager.persist(deck);
         entityManager.flush();

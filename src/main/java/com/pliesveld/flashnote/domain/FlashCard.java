@@ -4,6 +4,7 @@ import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @EntityListeners(value = { LogEntityListener.class })
@@ -69,20 +70,20 @@ public class FlashCard extends DomainBaseEntity implements Comparable<FlashCard>
     public Answer getAnswer()                 { return answer; }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        FlashCard flashCard = (FlashCard) o;
-
-        if (!id.equals(flashCard.id)) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(question, answer);
     }
 
     @Override
-    public int hashCode() {
-        return id == null ? 0 : id.hashCode();
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || !(obj instanceof FlashCard)) {
+            return false;
+        }
+        final FlashCard other = (FlashCard) obj;
+        return Objects.equals(getQuestion(), other.getQuestion()) && Objects.equals(getAnswer(), other.getAnswer());
     }
 
     @Override

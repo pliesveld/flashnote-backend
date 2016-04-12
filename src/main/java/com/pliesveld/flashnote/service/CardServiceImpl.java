@@ -5,6 +5,7 @@ import com.pliesveld.flashnote.exception.DeckNotFoundException;
 import com.pliesveld.flashnote.exception.FlashCardCreateException;
 import com.pliesveld.flashnote.exception.QuestionNotFoundException;
 import com.pliesveld.flashnote.repository.*;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,9 @@ public class CardServiceImpl implements CardService {
 
     @Autowired
     AnswerRepository answerRepository;
+
+    @Autowired
+    CategoryRepository categoryRepositry;
 
     @Autowired
     FlashCardRepository flashCardRepository;
@@ -61,7 +65,7 @@ public class CardServiceImpl implements CardService {
         if(deck == null)
             throw new DeckNotFoundException(id);
 
-        deck.getFlashCards();
+        deck.getFlashcards();
         deck.getCategory();
         deck.getAuthor();
         deck.getDescription();
@@ -137,7 +141,7 @@ public class CardServiceImpl implements CardService {
     public void addToDeckFlashCard(Deck deck, FlashCard flashCard) {
         deck = entityManager.merge(deck);
         flashCard = entityManager.merge(flashCard);
-        deck.getFlashCards().add(flashCard);
+        deck.getFlashcards().add(flashCard);
     }
 
     @Override
@@ -161,7 +165,13 @@ public class CardServiceImpl implements CardService {
     @Override
     public List<QuestionBank> findAllQuestionBanks() {
         ArrayList<QuestionBank> list = new ArrayList<>();
-        questionBankRepository.findAll().forEach(list::add);
+        questionBankRepository.findAll().forEach(bank ->
+        {
+            //Hibernate.initialize(bank.getQuestions());
+            bank.getQuestions().forEach(Question::getId);
+            list.add(bank);
+
+        });
         return list;
     }
 
@@ -172,7 +182,11 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public QuestionBank findQuestionBankById(int id) {
-        return questionBankRepository.findOne(id);
+        QuestionBank questionBank = questionBankRepository.findOne(id);
+        questionBank.getId();
+        questionBank.getDescription();
+        Hibernate.initialize(questionBank.getQuestions());
+        return questionBank;
     }
 
     @Override
@@ -182,4 +196,8 @@ public class CardServiceImpl implements CardService {
         questionBankRepository.delete(id);
     }
 
+    @Override
+    public boolean doesCategoryIdExist(int id) {
+        return categoryRepositry.exists(id);
+    }
 }

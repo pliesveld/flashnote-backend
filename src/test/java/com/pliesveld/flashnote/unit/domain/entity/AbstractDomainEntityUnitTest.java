@@ -229,7 +229,7 @@ public class AbstractDomainEntityUnitTest
         {
             list.add(this.flashcardBean());
         }
-        deck.setFlashCards(list);
+        deck.setFlashcards(list);
 
         return deck;
     }

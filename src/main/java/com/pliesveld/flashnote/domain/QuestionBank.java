@@ -19,7 +19,7 @@ public class QuestionBank extends AbstractAuditableEntity {
     private Integer id;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CATEGORY_ID", nullable = false)
     private Category category;
 
@@ -33,7 +33,7 @@ public class QuestionBank extends AbstractAuditableEntity {
             joinColumns = @JoinColumn(name = "QUESTION_BANK_ID"),
             inverseJoinColumns = @JoinColumn(name = "QUESTION_ID",referencedColumnName = "QUESTION_ID")
     )
-    private Set<Question> questionCollection = new HashSet<Question>();
+    private Set<Question> questions = new HashSet<Question>();
 
     public QuestionBank() {
     }
@@ -62,16 +62,15 @@ public class QuestionBank extends AbstractAuditableEntity {
         this.description = description;
     }
 
-    public Set<Question> getQuestionCollection() {
-        return questionCollection;
+    public Set<Question> getQuestions() {
+        return questions;
     }
 
-    public void setQuestionCollection(Set<Question> questionCollection) {
-        this.questionCollection = questionCollection;
+    public void setQuestions(Set<Question> questions) {
+        this.questions = questions;
     }
-
 
     public void add(@NotNull Question question) {
-        this.questionCollection.add(question);
+        this.questions.add(question);
     }
 }

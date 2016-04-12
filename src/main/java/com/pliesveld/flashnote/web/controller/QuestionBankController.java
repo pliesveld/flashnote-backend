@@ -2,10 +2,7 @@ package com.pliesveld.flashnote.web.controller;
 
 
 import com.pliesveld.flashnote.domain.*;
-import com.pliesveld.flashnote.exception.AnswerNotFoundException;
-import com.pliesveld.flashnote.exception.QuestionNotFoundException;
-import com.pliesveld.flashnote.exception.StatementNotFoundException;
-import com.pliesveld.flashnote.exception.StudentNotFoundException;
+import com.pliesveld.flashnote.exception.*;
 import com.pliesveld.flashnote.model.json.request.UpdateQuestionBankRequestJson;
 import com.pliesveld.flashnote.service.CardService;
 import com.pliesveld.flashnote.service.StudentService;
@@ -83,6 +80,19 @@ public class QuestionBankController {
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<?> createQuestionBank(@Valid @RequestBody QuestionBank questionBank)
     {
+        Category category = questionBank.getCategory();
+        if(category == null || category.getId() == null)
+        {
+            throw new CategoryNotFoundException(0);
+        }
+
+        int id = category.getId();
+        if(!cardService.doesCategoryIdExist(id))
+        {
+
+            throw new CategoryNotFoundException(id);
+        }
+
         questionBank = cardService.createQuestionBank(questionBank);
 
         return ResponseEntity.created(

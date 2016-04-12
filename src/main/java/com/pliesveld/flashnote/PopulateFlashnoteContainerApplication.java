@@ -1,11 +1,7 @@
 package com.pliesveld.flashnote;
 
-import com.pliesveld.flashnote.FlashnoteContainerApplication;
 import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.repository.*;
-import com.pliesveld.flashnote.spring.Profiles;
-import com.pliesveld.flashnote.spring.data.SpringDataConfig;
-import com.pliesveld.flashnote.spring.db.PersistenceContext;
 import com.pliesveld.flashnote.util.generator.StudentGenerator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -15,24 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.DispatcherServletAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.EmbeddedServletContainerAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.ErrorMvcAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
-import sun.print.resources.serviceui_zh_CN;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -134,7 +119,7 @@ public class PopulateFlashnoteContainerApplication {
             }
 
             Deck deck = new Deck();
-            deck.setFlashCards(flashCards);
+            deck.setFlashcards(flashCards);
             deck.setCategory(category);
             deck.setAuthor(studentDetails);
 

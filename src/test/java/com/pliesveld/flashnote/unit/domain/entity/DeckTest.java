@@ -78,8 +78,8 @@ public class DeckTest extends StudentDetailsTest
         entityManager.persist(fc2);
 
         Deck deck = new Deck(author);
-        deck.getFlashCards().add(fc1);
-        deck.getFlashCards().add(fc2);
+        deck.getFlashcards().add(fc1);
+        deck.getFlashcards().add(fc2);
         deck.setCategory(category);
 
         entityManager.persist(fc1);
@@ -127,7 +127,7 @@ public class DeckTest extends StudentDetailsTest
 
         } while(i++ < 5);
 
-        deck.setFlashCards(list);
+        deck.setFlashcards(list);
         entityManager.persist(deck);
 
         assertQuestionRepositoryCount(5);
@@ -135,7 +135,7 @@ public class DeckTest extends StudentDetailsTest
         assertFlashCardRepositoryCount(5);
         assertDeckRepositoryCount(1);
 
-        assertEquals("Deck size should be 5",5,deck.getFlashCards().size());
+        assertEquals("Deck size should be 5",5,deck.getFlashcards().size());
     }
 
 
@@ -172,7 +172,7 @@ public class DeckTest extends StudentDetailsTest
 
         } while(i++ < 5);
 
-        deck.setFlashCards(list);
+        deck.setFlashcards(list);
         entityManager.persist(deck);
         entityManager.flush();
 
@@ -181,12 +181,12 @@ public class DeckTest extends StudentDetailsTest
         assertFlashCardRepositoryCount(5);
         assertDeckRepositoryCount(1);
 
-        assertEquals("Deck size should be 5",5,deck.getFlashCards().size());
+        assertEquals("Deck size should be 5",5,deck.getFlashcards().size());
 
-        FlashCard fc_removed = deck.getFlashCards().remove(2);
+        FlashCard fc_removed = deck.getFlashcards().remove(2);
         entityManager.remove(fc_removed);
 
-        assertEquals("Deck size should be 4",4,deck.getFlashCards().size());
+        assertEquals("Deck size should be 4",4,deck.getFlashcards().size());
         assertFlashCardRepositoryCount(4);
 
     }
@@ -226,7 +226,7 @@ public class DeckTest extends StudentDetailsTest
 
         } while(i++ < 5);
 
-        deck.setFlashCards(list);
+        deck.setFlashcards(list);
         entityManager.persist(deck);
         entityManager.flush();
 
@@ -239,12 +239,12 @@ public class DeckTest extends StudentDetailsTest
             Deck deck2 = entityManager.find(Deck.class, deck_id);
             assertEquals("Decks should be equal",deck,deck2);
 
-            assertNotNull("Loading a deck had a null list",deck2.getFlashCards());
-            assertFalse("Loaded deck should have elements",deck2.getFlashCards().isEmpty());
-            assertEquals("Loaded deck should have 5 elements", 5, deck2.getFlashCards().size());
+            assertNotNull("Loading a deck had a null list",deck2.getFlashcards());
+            assertFalse("Loaded deck should have elements",deck2.getFlashcards().isEmpty());
+            assertEquals("Loaded deck should have 5 elements", 5, deck2.getFlashcards().size());
 
 
-            List<FlashCard> deck_list = deck2.getFlashCards();
+            List<FlashCard> deck_list = deck2.getFlashcards();
 
             String expected_string[] = {"0","1","2","3","4"};
 
@@ -265,12 +265,12 @@ public class DeckTest extends StudentDetailsTest
         {
             Deck deck3 = entityManager.find(Deck.class, deck_id);
 
-            assertNotNull("Loading a deck had a null list",deck3.getFlashCards());
-            assertFalse("Loaded deck should have elements",deck3.getFlashCards().isEmpty());
-            assertEquals("Loaded deck should have 5 elements",5,deck3.getFlashCards().size());
+            assertNotNull("Loading a deck had a null list",deck3.getFlashcards());
+            assertFalse("Loaded deck should have elements",deck3.getFlashcards().isEmpty());
+            assertEquals("Loaded deck should have 5 elements",5,deck3.getFlashcards().size());
 
 
-            List<FlashCard> deck_list = deck3.getFlashCards();
+            List<FlashCard> deck_list = deck3.getFlashcards();
 
             String expected_string[] = {"0","2","3","4","1"};
 

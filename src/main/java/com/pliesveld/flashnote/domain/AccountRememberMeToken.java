@@ -4,8 +4,10 @@ import com.pliesveld.flashnote.domain.converter.InstantConverter;
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "ACCOUNT_REMEMBERME_TOKEN")
@@ -15,10 +17,12 @@ public class AccountRememberMeToken {
     @Column(name = "SERIES", length = 64)
     String id;
 
+    @NotNull
     @JoinColumn(name = "USERNAME", nullable = false, insertable = false,
             foreignKey = @ForeignKey(name = "FK_USERNAME_PERSISTENT"), table = "STUDENT_DETAILS")
     String username;
 
+    @NotNull
     @Column(name = "TOKEN", nullable = false)
     String token;
 
@@ -85,25 +89,20 @@ public class AccountRememberMeToken {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        AccountRememberMeToken that = (AccountRememberMeToken) o;
-
-        if (lastUsed != null ? !lastUsed.equals(that.lastUsed) : that.lastUsed != null) return false;
-        if (token != null ? !token.equals(that.token) : that.token != null) return false;
-        if (username != null ? !username.equals(that.username) : that.username != null) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(username, token);
     }
 
     @Override
-    public int hashCode() {
-        int result = username != null ? username.hashCode() : 0;
-        result = 31 * result + (token != null ? token.hashCode() : 0);
-        result = 31 * result + (lastUsed != null ? lastUsed.hashCode() : 0);
-        return result;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || !(obj instanceof  AccountRememberMeToken)) {
+            return false;
+        }
+        final AccountRememberMeToken other = (AccountRememberMeToken) obj;
+        return Objects.equals(getUsername(), getUsername()) && Objects.equals(getToken(), other.getToken());
     }
 
     @Override

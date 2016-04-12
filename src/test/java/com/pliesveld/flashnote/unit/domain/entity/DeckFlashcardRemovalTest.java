@@ -71,7 +71,7 @@ public class DeckFlashcardRemovalTest extends StudentDetailsTest
             
             FlashCard fc = new FlashCard(que,ans);
             Deck deck = new Deck(studentDetails1);
-            deck.getFlashCards().add(fc);
+            deck.getFlashcards().add(fc);
             deck.setCategory(category);
 
             entityManager.persist(studentDetails1);
@@ -90,7 +90,7 @@ public class DeckFlashcardRemovalTest extends StudentDetailsTest
         Deck deck = entityManager.find(Deck.class,did);
         
         
-        FlashCard fc = deck.getFlashCards().get(0);
+        FlashCard fc = deck.getFlashcards().get(0);
         
         Question que = fc.getQuestion();
         Answer ans = fc.getAnswer();

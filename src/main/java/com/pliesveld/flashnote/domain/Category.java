@@ -1,13 +1,19 @@
 package com.pliesveld.flashnote.domain;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pliesveld.flashnote.domain.base.AbstractAuditableEntity;
 import com.pliesveld.flashnote.schema.Constants;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "CATEGORY",
@@ -19,14 +25,17 @@ public class Category extends AbstractAuditableEntity implements Serializable
     @Column(name = "CATEGORY_ID")
     private Integer id;
 
+    @NotNull
     @Column(name = "CATEGORY_NAME", length = Constants.MAX_CATEGORY_NAME_LENGTH, nullable = false)
     private String name;
 
+    @NotNull
     @Column(name = "CATEGORY_DESC", length = Constants.MAX_CATEGORY_DESCRIPTION_LENGTH, nullable = false)
     private String description;
 
     @ManyToOne(cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "CATEGORY_PARENT_ID", foreignKey = @ForeignKey(name="FK_CATEGORY_PARENT"), updatable = false)
+    @JsonIgnore
     private Category parentCategory;
 
     @OneToMany(cascade = CascadeType.PERSIST)
@@ -111,5 +120,39 @@ public class Category extends AbstractAuditableEntity implements Serializable
     public void setChildCategories(Set<Category> childCategories)
     {
         this.childCategories = childCategories;
+    }
+
+
+    @JsonProperty("contents_count")
+    @Transient
+    public int getCount() {return ThreadLocalRandom.current().nextInt(0,15);}
+
+    @Transient
+    @JsonProperty("parent")
+    public Integer getParentId() {
+        return this.getParentCategory() == null ? null : this.getParentCategory().getParentId();
+    }
+
+    @Transient
+    @JsonProperty("children")
+    public Set<Integer> getChildrenIds() {
+        return this.getChildCategories().stream().map(Category::getId).collect(Collectors.toSet());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || !(obj instanceof Category)) {
+            return false;
+        }
+        final Category other = (Category) obj;
+        return Objects.equals(getName(), other.getName());
     }
 }

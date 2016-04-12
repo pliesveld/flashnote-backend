@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "STUDENT_DETAILS",
@@ -68,19 +69,19 @@ public class StudentDetails implements Serializable
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        StudentDetails that = (StudentDetails) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(name);
     }
 
     @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || !(obj instanceof StudentDetails)) {
+            return false;
+        }
+        final StudentDetails other = (StudentDetails) obj;
+        return Objects.equals(getName(), other.getName());
     }
 }

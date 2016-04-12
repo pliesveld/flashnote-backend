@@ -56,4 +56,7 @@ public interface CardService {
     QuestionBank findQuestionBankById(int id);
 
     void deleteQuestionBank(int id)             throws QuestionBankNotFoundException;
+
+    @Transactional(readOnly = true)
+    boolean doesCategoryIdExist(int id);
 }

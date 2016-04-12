@@ -7,6 +7,7 @@ import com.pliesveld.flashnote.schema.Constants;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.UnsupportedEncodingException;
+import java.util.Objects;
 
 @Entity
 @Table(name = "ATTACHMENT")
@@ -26,7 +27,8 @@ public abstract class AbstractAttachment extends AbstractAuditableEntity {
      */
     Integer id;
 
-    @Column(name = "CONTENT_TYPE", length = 16, nullable = false)   @NotNull
+    @NotNull
+    @Column(name = "CONTENT_TYPE", length = 16, nullable = false)
     @Convert(converter = AttachmentTypeConverter.class)
     AttachmentType attachmentType;
 
@@ -61,21 +63,19 @@ public abstract class AbstractAttachment extends AbstractAuditableEntity {
     protected void setFileLength(int fileLength) { this.fileLength = fileLength; }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        AbstractAttachment that = (AbstractAttachment) o;
-
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(fileName);
     }
 
     @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || !(obj instanceof AbstractAttachment)) {
+            return false;
+        }
+        final AbstractAttachment other = (AbstractAttachment) obj;
+        return Objects.equals(getFileName(), other.getFileName());
     }
-
-
 }

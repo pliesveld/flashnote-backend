@@ -17,7 +17,8 @@ public class AccountRegistrationToken {
 	@Id
 	@Column(name = "ACCOUNT_ID")
 	private Integer id;
-	
+
+    @NotNull
     @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE })
     @JoinColumn(name = "STUDENT_ID", foreignKey = @ForeignKey(name = "FK_STUDENT_ACCOUNT_REGISTRATION"), nullable = false)
     private Student student;

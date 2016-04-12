@@ -129,7 +129,8 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
     {
         return new Hibernate5Module()
                 .enable(Hibernate5Module.Feature.SERIALIZE_IDENTIFIER_FOR_LAZY_NOT_LOADED_OBJECTS)
-                .enable(Hibernate5Module.Feature.FORCE_LAZY_LOADING);
+                .disable(Hibernate5Module.Feature.USE_TRANSIENT_ANNOTATION)
+                .disable(Hibernate5Module.Feature.FORCE_LAZY_LOADING);
     }
 
     @Bean

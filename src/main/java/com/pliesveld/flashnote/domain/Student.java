@@ -11,6 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.Instant;
+import java.util.Objects;
 
 import static com.pliesveld.flashnote.schema.Constants.*;
 
@@ -111,23 +112,6 @@ public class Student {
         this.role = role;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Student student = (Student) o;
-
-        if (id != null ? !id.equals(student.id) : student.id != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
-    }
-
     public void setTemporaryPassword(boolean temporaryPassword) {
         this.temporaryPassword = temporaryPassword;
     }
@@ -142,5 +126,22 @@ public class Student {
 
     public void setLastPasswordResetDate(Instant lastPasswordResetDate) {
         this.lastPasswordResetDate = lastPasswordResetDate;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || !(obj instanceof Student)) {
+            return false;
+        }
+        final Student other = (Student) obj;
+        return Objects.equals(getEmail(), other.getEmail());
     }
 }

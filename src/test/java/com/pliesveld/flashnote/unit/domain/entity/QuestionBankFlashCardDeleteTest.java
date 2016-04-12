@@ -70,7 +70,7 @@ public class QuestionBankFlashCardDeleteTest extends AbstractDomainEntityUnitTes
 
         Question que = questionRepository.findOne(que_id);
         assertNotNull(que);
-        assertTrue(questionBankRepository.findOne(qb_id).getQuestionCollection().contains(que));
+        assertTrue(questionBankRepository.findOne(qb_id).getQuestions().contains(que));
         FlashCard fc = flashCardRepository.findOne(fc_id);
         assertNotNull(fc);
         assertTrue(fc.getQuestion().equals(que));

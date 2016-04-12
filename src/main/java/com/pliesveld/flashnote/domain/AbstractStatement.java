@@ -6,6 +6,7 @@ import com.pliesveld.flashnote.schema.Constants;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Entity
 @Table(name = "STATEMENT")
@@ -18,7 +19,7 @@ public abstract class AbstractStatement extends AbstractAuditableEntity
     protected Integer id;
 
     @NotNull
-    @Column(name = "CONTENT", length = Constants.MAX_STATEMENT_CONTENT_LENGTH)
+    @Column(name = "CONTENT", length = Constants.MAX_STATEMENT_CONTENT_LENGTH, nullable = false)
     @Size(max = Constants.MAX_STATEMENT_CONTENT_LENGTH)
     protected String content = "";
 
@@ -46,20 +47,19 @@ public abstract class AbstractStatement extends AbstractAuditableEntity
 
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AbstractStatement)) return false;
-
-        AbstractStatement that = (AbstractStatement) o;
-
-        if (!content.equals(that.content)) return false;
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-
-        return true;
+    public int hashCode() {
+        return Objects.hash(content);
     }
 
     @Override
-    public int hashCode() {
-        return content.hashCode();
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || !(obj instanceof AbstractStatement)) {
+            return false;
+        }
+        final AbstractStatement other = (AbstractStatement) obj;
+        return Objects.equals(getContent(), other.getContent());
     }
 }

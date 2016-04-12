@@ -18,6 +18,7 @@ public class AccountPasswordResetToken {
 	@Column(name = "ACCOUNT_ID")
 	private Integer id;
 
+    @NotNull
     @OneToOne(cascade = { CascadeType.REFRESH, CascadeType.MERGE }, fetch = FetchType.EAGER)
     @JoinColumn(name = "STUDENT_ID", foreignKey = @ForeignKey(name = "FK_STUDENT_ACCOUNT_RESET"), nullable = false)
     private Student student;

@@ -4,15 +4,19 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pliesveld.flashnote.domain.Category;
 import com.pliesveld.flashnote.model.json.base.JsonWebResponseSerializable;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Component
 public class FlashnoteCategory implements JsonWebResponseSerializable {
+    private static final Logger LOG = LogManager.getLogger();
+
     @JsonProperty
     Integer id;
 
@@ -21,6 +25,9 @@ public class FlashnoteCategory implements JsonWebResponseSerializable {
 
     @JsonProperty
     String description;
+
+    @JsonProperty
+    int contents_count;
 
     @JsonProperty
     List<Integer> childCategories;
@@ -33,32 +40,20 @@ public class FlashnoteCategory implements JsonWebResponseSerializable {
         this.id = category.getId();
         this.name = category.getName();
         this.description = category.getDescription();
+        this.contents_count = category.getCount();
 
-        List<Integer> list = new ArrayList<>();
-        category.getChildCategories().forEach((subcategory) -> {
-            Integer subcategory_id = subcategory.getId();
+        LOG.debug("Inflashnote converter");
+        LOG.debug("Parent id = {}",category.getId());
+        category.getChildCategories().stream().forEach((c) -> LOG.debug("has child id = {}",c.getId()));
 
-            if(subcategory_id != this.id)
-            {
-                list.add(subcategory_id);
-            }
-        });
-        this.childCategories = list;
-
-
+        int parent_id = category.getId();
+        this.childCategories = category.getChildCategories().stream().map(Category::getId).filter((id) -> id != parent_id).collect(Collectors.toList());
     }
 
     public static FlashnoteCategory convert(Category category)
     {
         FlashnoteCategory flashnoteCategory = new FlashnoteCategory(category);
         return flashnoteCategory;
-    }
-
-    public FlashnoteCategory(Integer id, String name, String description, List<Integer> childCategories) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.childCategories = childCategories;
     }
 
 
