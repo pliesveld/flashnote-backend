@@ -13,12 +13,22 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.HibernateValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.embedded.MultipartConfigFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
+//import org.springframework.data.domain.PageRequest;
+//import org.springframework.data.domain.Pageable;
+//import org.springframework.data.domain.Sort;
+//import org.springframework.data.repository.support.DomainClassConverter;
+//import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+//import org.springframework.data.web.SortHandlerMethodArgumentResolver;
+//import org.springframework.format.FormatterRegistry;
+//import org.springframework.format.support.FormattingConversionService;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
+//import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -43,6 +53,8 @@ import java.util.TimeZone;
 public class SpringWebConfig extends WebMvcConfigurerAdapter {
     private static final Logger LOG = LogManager.getLogger();
 
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Bean
     @Primary
@@ -153,4 +165,38 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
             }
         }
     }
+//
+//    @Override
+//    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+//        super.addArgumentResolvers(resolvers);
+//
+//        Sort defaultSort = new Sort(new Sort.Order(Sort.Direction.ASC, "id"));
+//        Pageable defaultPageable = new PageRequest(0, 20, defaultSort);
+//
+//        SortHandlerMethodArgumentResolver sortResolver = new SortHandlerMethodArgumentResolver();
+//        sortResolver.setSortParameter("$paging.sort");
+//        sortResolver.setFallbackSort(defaultSort);
+//
+//        PageableHandlerMethodArgumentResolver pageableResolver = new PageableHandlerMethodArgumentResolver(sortResolver);
+//        pageableResolver.setMaxPageSize(200);
+//        pageableResolver.setOneIndexedParameters(true);
+//        pageableResolver.setPrefix("$paging.");
+//        pageableResolver.setFallbackPageable(defaultPageable);
+//
+//        resolvers.add(sortResolver);
+//        resolvers.add(pageableResolver);
+//    }
+//
+//    @Override
+//    public void addFormatters(FormatterRegistry registry) {
+//        super.addFormatters(registry);
+//        if(!(registry instanceof FormattingConversionService))
+//        {
+//            LOG.warn("Unable to register Spring Data JPA converter.");
+//            return;
+//        }
+//
+//        DomainClassConverter<FormattingConversionService> converter = new DomainClassConverter<>((FormattingConversionService) registry);
+//        converter.setApplicationContext(this.applicationContext);
+//    }
 }

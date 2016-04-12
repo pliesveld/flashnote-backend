@@ -11,6 +11,8 @@ import com.pliesveld.flashnote.repository.StudentDetailsRepository;
 import com.pliesveld.flashnote.repository.StudentRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -52,8 +54,8 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Iterable<StudentDetails> findAll() {
-        return studentDetailsRepository.findAll();
+    public Page<StudentDetails> findAll(Pageable page) {
+        return studentDetailsRepository.findAll(page);
     }
 
     @Override

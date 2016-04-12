@@ -11,6 +11,7 @@ import com.pliesveld.flashnote.service.StudentService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,13 +36,19 @@ public class StudentController {
         return student;
     }
 
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> removeStudent(@PathVariable Integer id)
     {
         LOG.info("Deleting student with id " + id);
         studentService.delete(id);
         return new ResponseEntity<>(null,HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllStudent(Pageable page)
+    {
+        return ResponseEntity.ok(studentService.findAll(page));
     }
 
     @RequestMapping(value="/{id}", method = RequestMethod.GET)
