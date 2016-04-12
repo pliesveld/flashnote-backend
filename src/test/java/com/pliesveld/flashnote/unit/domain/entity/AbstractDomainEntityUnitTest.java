@@ -220,7 +220,7 @@ public class AbstractDomainEntityUnitTest
         Deck deck = new Deck();
         StudentDetails studentDetails = this.studentDetailsAndStudentBean();
         deck.setAuthor(studentDetails);
-        deck.setTitle("Deck title #" + incrementCounter());
+        deck.setDescription("Deck title #" + incrementCounter());
         deck.setCategory(this.categoryBean());
 
         List<FlashCard> list = new ArrayList<FlashCard>();

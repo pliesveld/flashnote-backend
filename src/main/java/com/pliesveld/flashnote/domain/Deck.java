@@ -29,7 +29,7 @@ public class Deck extends DomainBaseEntity implements Serializable
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "STUDENT_ID", foreignKey = @ForeignKey(name = "FK_DECK_AUTHOR"))
+    @JoinColumn(name = "STUDENT_ID", foreignKey = @ForeignKey(name = "FK_DECK_AUTHOR"), nullable = false)
     private StudentDetails author;
 
     @OneToMany(cascade = {CascadeType.ALL})
@@ -51,11 +51,12 @@ public class Deck extends DomainBaseEntity implements Serializable
     private List<FlashCard> flashCards = new ArrayList<>();
 
     @NotNull
-    @Column(name = "DECK_TITLE", length = Constants.MAX_DECK_TITLE_LENGTH, nullable = false)
-    private String title = "Untitled";
+    @Column(name = "DECK_DESCRIPTION", length = Constants.MAX_DECK_DESCRIPTION_LENGTH, nullable = false)
+    private String description = "Untitled";
 
+    @NotNull
     @ManyToOne
-    @JoinColumn(name = "CATEGORY_ID", foreignKey = @ForeignKey(name = "FK_DECK_CATEGORY"))
+    @JoinColumn(name = "CATEGORY_ID", foreignKey = @ForeignKey(name = "FK_DECK_CATEGORY"), nullable = false)
     private Category category;
 
     public Deck() {}
@@ -72,17 +73,17 @@ public class Deck extends DomainBaseEntity implements Serializable
         }
     }
 
-    public Deck(StudentDetails author, String title, FlashCard... flashCards) {
+    public Deck(StudentDetails author, String description, FlashCard... flashCards) {
         this(author, flashCards);
-        this.title = title;
+        this.description = description;
     }
 
-    public String getTitle() {
-        return title;
+    public String getDescription() {
+        return description;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Integer getId()
@@ -120,20 +121,26 @@ public class Deck extends DomainBaseEntity implements Serializable
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
-        Deck other = (Deck) obj;
-        if (id == null) {
-            if (other.id != null) return false;
-        } else if (!id.equals(other.id)) return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Deck deck = (Deck) o;
+
+        if (author != null ? !author.equals(deck.author) : deck.author != null) return false;
+        if (category != null ? !category.equals(deck.category) : deck.category != null) return false;
+        if (description != null ? !description.equals(deck.description) : deck.description != null) return false;
+        if (flashCards != null ? !flashCards.equals(deck.flashCards) : deck.flashCards != null) return false;
+
         return true;
     }
 
     @Override
     public int hashCode() {
-        return (id == null) ? 0 : id.hashCode();
+        int result = author != null ? author.hashCode() : 0;
+        result = 31 * result + (flashCards != null ? flashCards.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (category != null ? category.hashCode() : 0);
+        return result;
     }
 }

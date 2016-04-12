@@ -80,6 +80,7 @@ public class DeckTest extends StudentDetailsTest
         Deck deck = new Deck(author);
         deck.getFlashCards().add(fc1);
         deck.getFlashCards().add(fc2);
+        deck.setCategory(category);
 
         entityManager.persist(fc1);
         entityManager.persist(fc2);
@@ -103,7 +104,8 @@ public class DeckTest extends StudentDetailsTest
 
 
         Deck deck = new Deck(author);
-        deck.setTitle("This is an example Deck.");
+        deck.setDescription("This is an example Deck.");
+        deck.setCategory(category);
 
         List<FlashCard> list = new LinkedList<>();
         do {
@@ -147,7 +149,8 @@ public class DeckTest extends StudentDetailsTest
         assertFlashCardRepositoryCount(0);
 
         Deck deck = new Deck(author);
-        deck.setTitle("This is an example Deck.");
+        deck.setDescription("This is an example Deck.");
+        deck.setCategory(category);
 
         List<FlashCard> list = new LinkedList<>();
         do {
@@ -201,7 +204,8 @@ public class DeckTest extends StudentDetailsTest
 //        assertEquals("FlashCard count should be zero",0,((Long)cardService.countFlashCards()).intValue());
 
         Deck deck = new Deck(author);
-        deck.setTitle("This is an example Deck.");
+        deck.setDescription("This is an example Deck.");
+        deck.setCategory(category);
 
         List<FlashCard> list = new LinkedList<>();
 

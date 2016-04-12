@@ -1,6 +1,7 @@
 package com.pliesveld.flashnote.domain;
 
 import com.pliesveld.flashnote.domain.base.AbstractAuditableEntity;
+import com.pliesveld.flashnote.schema.Constants;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -23,7 +24,7 @@ public class QuestionBank extends AbstractAuditableEntity {
     private Category category;
 
     @NotNull
-    @Column(name = "DESCRIPTION", nullable = false)
+    @Column(name = "DESCRIPTION", length = Constants.MAX_DECK_DESCRIPTION_LENGTH, nullable = false)
     private String description;
 
     @NotNull

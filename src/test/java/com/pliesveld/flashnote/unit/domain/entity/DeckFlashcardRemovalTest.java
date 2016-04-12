@@ -53,6 +53,8 @@ public class DeckFlashcardRemovalTest extends StudentDetailsTest
         
     
         {
+            Category category = this.categoryBean();
+            entityManager.persist(category);
             StudentDetails studentDetails1 = new StudentDetails();
             studentDetails1.setName("Student1");
             Student student1 = new Student();
@@ -70,6 +72,7 @@ public class DeckFlashcardRemovalTest extends StudentDetailsTest
             FlashCard fc = new FlashCard(que,ans);
             Deck deck = new Deck(studentDetails1);
             deck.getFlashCards().add(fc);
+            deck.setCategory(category);
 
             entityManager.persist(studentDetails1);
             entityManager.persist(deck);

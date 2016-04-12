@@ -35,7 +35,7 @@ public class NewStudentDetails extends ModelBase implements JsonWebRequestSerial
             throw new NullPointerException("studentDetails argument was null");
 
         NewStudentDetails newStudent = new NewStudentDetails();
-//        newStudent.setName(studentDetails.getTitle());
+//        newStudent.setName(studentDetails.getDescription());
         newStudent.setEmail(student.getEmail());
         newStudent.setPassword(student.getPassword());
         newStudent.setRole(student.getRole());

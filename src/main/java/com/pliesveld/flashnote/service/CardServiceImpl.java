@@ -64,7 +64,7 @@ public class CardServiceImpl implements CardService {
         deck.getFlashCards();
         deck.getCategory();
         deck.getAuthor();
-        deck.getTitle();
+        deck.getDescription();
         return deck;
     }
 
