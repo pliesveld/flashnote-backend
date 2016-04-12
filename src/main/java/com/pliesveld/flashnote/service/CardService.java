@@ -3,6 +3,7 @@ package com.pliesveld.flashnote.service;
 import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.exception.DeckNotFoundException;
 import com.pliesveld.flashnote.exception.FlashCardCreateException;
+import com.pliesveld.flashnote.exception.QuestionBankNotFoundException;
 import com.pliesveld.flashnote.exception.QuestionNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,7 +45,7 @@ public interface CardService {
 
     Deck createDeck(Deck deck);
 
-    void deleteDeck(Deck deck);
+    void deleteDeck(int id)                  throws DeckNotFoundException;
 
     @Transactional(readOnly = true)
     List<QuestionBank> findAllQuestionBanks();
@@ -54,5 +55,5 @@ public interface CardService {
     @Transactional(readOnly = true)
     QuestionBank findQuestionBankById(int id);
 
-    void deleteQuestionBank(int id);
+    void deleteQuestionBank(int id)             throws QuestionBankNotFoundException;
 }

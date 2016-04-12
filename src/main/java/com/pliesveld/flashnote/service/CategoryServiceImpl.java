@@ -74,4 +74,10 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.findAll().forEach(list::add);
         return list;
     }
+
+    @Override
+    @Transactional
+    public Category createCategory(Category category) {
+        return categoryRepository.save(category);
+    }
 }

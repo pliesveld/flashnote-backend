@@ -16,4 +16,5 @@ public interface CategoryService {
     List<Category> allCategories();
 
 
+    Category createCategory(Category category);
 }

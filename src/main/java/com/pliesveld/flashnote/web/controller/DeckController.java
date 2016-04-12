@@ -77,8 +77,7 @@ public class DeckController {
     @ResponseStatus(code = HttpStatus.OK)
     public void deleteDeck(@PathVariable("id") int id)
     {
-        Deck deck = verifyDeck(id);
-        cardService.deleteDeck(deck);
+        cardService.deleteDeck(id);
     }
 
     @RequestMapping(value="/count", method = RequestMethod.GET)

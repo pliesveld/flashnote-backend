@@ -6,16 +6,16 @@ import com.pliesveld.flashnote.service.CategoryService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/categories")
 public class CategoryController {
 
     private static final Logger LOG = LogManager.getLogger();
@@ -44,6 +44,18 @@ public class CategoryController {
     {
         Category category = categoryService.getCategoryById(id);
         return category;
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    public ResponseEntity createCategory(@Valid @RequestBody Category category)
+    {
+
+        Category new_category = categoryService.createCategory(category);
+        return ResponseEntity.created(
+                MvcUriComponentsBuilder
+                        .fromController(CategoryController.class)
+                        .path("/{id}").buildAndExpand(new_category.getId()).toUri())
+                    .build();
     }
 
 

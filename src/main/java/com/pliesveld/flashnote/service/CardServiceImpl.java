@@ -33,6 +33,9 @@ public class CardServiceImpl implements CardService {
     @Autowired
     DeckRepository deckRepository;
 
+    @Autowired
+    QuestionBankRepository questionBankRepository;
+
     @PersistenceContext
     EntityManager entityManager;
 
@@ -143,4 +146,40 @@ public class CardServiceImpl implements CardService {
         deckRepository.findAll().forEach(list::add);
         return list;
     }
+
+    public Deck createDeck(Deck deck) {
+        return deckRepository.save(deck);
+    }
+
+    @Override
+    public void deleteDeck(int id) {
+        if(!deckRepository.exists(id))
+            throw new DeckNotFoundException(id);
+        deckRepository.delete(id);
+    }
+
+    @Override
+    public List<QuestionBank> findAllQuestionBanks() {
+        ArrayList<QuestionBank> list = new ArrayList<>();
+        questionBankRepository.findAll().forEach(list::add);
+        return list;
+    }
+
+    @Override
+    public QuestionBank createQuestionBank(QuestionBank questionBank) {
+        return questionBankRepository.save(questionBank);
+    }
+
+    @Override
+    public QuestionBank findQuestionBankById(int id) {
+        return questionBankRepository.findOne(id);
+    }
+
+    @Override
+    public void deleteQuestionBank(int id) {
+        if(!questionBankRepository.exists(id))
+            throw new QuestionNotFoundException(id);
+        questionBankRepository.delete(id);
+    }
+
 }

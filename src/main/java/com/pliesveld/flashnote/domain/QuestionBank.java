@@ -27,7 +27,7 @@ public class QuestionBank extends AbstractAuditableEntity {
     private String description;
 
     @NotNull
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "QUESTION_BANK_COLLECTION",
             joinColumns = @JoinColumn(name = "QUESTION_BANK_ID"),
             inverseJoinColumns = @JoinColumn(name = "QUESTION_ID",referencedColumnName = "QUESTION_ID")
