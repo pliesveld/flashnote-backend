@@ -1,6 +1,5 @@
-package com.pliesveld.flashnote.unit.domain.entity;
+package com.pliesveld.flashnote.domain;
 
-import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.unit.spring.DefaultEntityTestAnnotations;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -1,6 +1,5 @@
-package com.pliesveld.flashnote.unit.domain.entity;
+package com.pliesveld.flashnote.domain;
 
-import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.repository.*;
 import com.pliesveld.flashnote.util.generator.QuestionGenerator;
 import com.pliesveld.flashnote.util.generator.StudentGenerator;

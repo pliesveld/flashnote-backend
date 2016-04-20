@@ -1,8 +1,5 @@
-package com.pliesveld.flashnote.unit.domain.entity;
+package com.pliesveld.flashnote.domain;
 
-import com.pliesveld.flashnote.domain.Category;
-import com.pliesveld.flashnote.domain.Question;
-import com.pliesveld.flashnote.domain.QuestionBank;
 import com.pliesveld.flashnote.unit.spring.DefaultEntityTestAnnotations;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,6 +50,7 @@ public class QuestionBankTest extends AbstractDomainEntityUnitTest
     public void questionBankWithQuestions()
     {
         QuestionBank questionBank = new QuestionBank();
+        //questionBank.set
         Category category = entityManager.find(Category.class,cat_id);
         questionBank.setCategory(category);
         questionBank.setDescription("A sample question bank with a question.");

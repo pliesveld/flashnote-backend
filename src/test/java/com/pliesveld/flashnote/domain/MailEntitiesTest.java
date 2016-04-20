@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.unit.domain.entity;
+package com.pliesveld.flashnote.domain;
 
 import com.pliesveld.flashnote.domain.AccountRegistrationToken;
 import com.pliesveld.flashnote.domain.Student;

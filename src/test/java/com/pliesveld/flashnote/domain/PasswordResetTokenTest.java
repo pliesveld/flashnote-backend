@@ -1,8 +1,6 @@
-package com.pliesveld.flashnote.unit.domain.entity;
+package com.pliesveld.flashnote.domain;
 
 
-import com.pliesveld.flashnote.domain.AccountPasswordResetToken;
-import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.unit.spring.DefaultEntityTestAnnotations;
 import org.junit.After;
 import org.junit.Before;

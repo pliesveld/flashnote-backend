@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.unit.domain.entity;
+package com.pliesveld.flashnote.domain;
 
 import com.pliesveld.flashnote.domain.AttachmentBinary;
 import com.pliesveld.flashnote.domain.AttachmentType;
