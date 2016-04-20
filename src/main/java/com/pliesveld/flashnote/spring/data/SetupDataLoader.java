@@ -86,29 +86,11 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         //entityManager.merge(parent);
         //entityManager.merge(child);
 
-
         parent.addChildCategory(child);
        // child.setParentCategory(parent);
 
-        parent = categoryRepository.save(parent);
-        child = categoryRepository.save(child);
-
-
-
-        LOG.debug("parent id = {}", parent.getId());
-        LOG.debug("child id = {}",child.getId());
-        if(child.getParentCategory() != null)
-        {
-            LOG.debug("Child's parent category id {}",child.getParentCategory().getId());
-        } else {
-            LOG.error("child should have a parent");
-        }
-
-        LOG.debug("Parent's children");
-        parent.getChildCategories().forEach(c -> LOG.debug("child id {}",c.getId()));
-
-
-
+        categoryRepository.save(parent);
+        categoryRepository.save(child);
     }
 
     //@Transactional

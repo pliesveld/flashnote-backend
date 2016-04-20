@@ -1,6 +1,5 @@
 package com.pliesveld.flashnote.domain;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pliesveld.flashnote.domain.base.AbstractAuditableEntity;
@@ -33,14 +32,12 @@ public class Category extends AbstractAuditableEntity implements Serializable
     @Column(name = "CATEGORY_DESC", length = Constants.MAX_CATEGORY_DESCRIPTION_LENGTH, nullable = false)
     private String description;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST})
-    @JoinColumn(name = "CATEGORY_PARENT_ID", foreignKey = @ForeignKey(name="FK_CATEGORY_PARENT"), updatable = false)
     @JsonIgnore
+    @ManyToOne(cascade = {CascadeType.PERSIST})
     private Category parentCategory;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "CATEGORY_ID", foreignKey = @ForeignKey(name="FK_CATEGORY"), updatable = false)
     @JsonIgnore
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "parentCategory")
     private Set<Category> childCategories = new HashSet<>();
 
     public Category() {
@@ -130,7 +127,7 @@ public class Category extends AbstractAuditableEntity implements Serializable
     @Transient
     @JsonProperty("parent")
     public Integer getParentId() {
-        return this.getParentCategory() == null ? null : this.getParentCategory().getParentId();
+        return this.getParentCategory() == null ? null : this.getParentCategory().getId();
     }
 
     @Transient

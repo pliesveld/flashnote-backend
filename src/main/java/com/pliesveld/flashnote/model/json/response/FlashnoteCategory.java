@@ -30,24 +30,27 @@ public class FlashnoteCategory implements JsonWebResponseSerializable {
     int contents_count;
 
     @JsonProperty
-    List<Integer> childCategories;
+    Integer parent;
+
+    @JsonProperty
+    List<Integer> child_categories;
 
     public FlashnoteCategory() {
     }
 
     public FlashnoteCategory(Category category)
     {
-        this.id = category.getId();
-        this.name = category.getName();
-        this.description = category.getDescription();
-        this.contents_count = category.getCount();
+        id = category.getId();
+        name = category.getName();
+        description = category.getDescription();
+        contents_count = category.getCount();
 
-        LOG.debug("Inflashnote converter");
-        LOG.debug("Parent id = {}",category.getId());
         category.getChildCategories().stream().forEach((c) -> LOG.debug("has child id = {}",c.getId()));
 
         int parent_id = category.getId();
-        this.childCategories = category.getChildCategories().stream().map(Category::getId).filter((id) -> id != parent_id).collect(Collectors.toList());
+        child_categories = category.getChildCategories().stream().map(Category::getId).filter((id) -> id != parent_id).collect(Collectors.toList());
+
+        parent = category.getParentId();
     }
 
     public static FlashnoteCategory convert(Category category)
