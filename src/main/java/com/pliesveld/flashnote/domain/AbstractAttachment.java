@@ -36,7 +36,8 @@ public abstract class AbstractAttachment extends AbstractAuditableEntity {
     @Column(name = "FILENAME", length = Constants.MAX_ATTACHMENT_FILENAME_LENGTH, nullable = false)
     String fileName;
 
-    @Column(name = "FILE_LENGTH")
+    @NotNull
+    @Column(name = "FILE_LENGTH", nullable = false)
     int fileLength;
 
     public abstract void setContents(byte[] contents) throws UnsupportedEncodingException;

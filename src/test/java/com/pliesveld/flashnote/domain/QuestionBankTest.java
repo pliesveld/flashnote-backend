@@ -50,7 +50,6 @@ public class QuestionBankTest extends AbstractDomainEntityUnitTest
     public void questionBankWithQuestions()
     {
         QuestionBank questionBank = new QuestionBank();
-        //questionBank.set
         Category category = entityManager.find(Category.class,cat_id);
         questionBank.setCategory(category);
         questionBank.setDescription("A sample question bank with a question.");

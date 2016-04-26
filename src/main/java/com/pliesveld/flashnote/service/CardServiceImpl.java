@@ -65,8 +65,8 @@ public class CardServiceImpl implements CardService {
         if(deck == null)
             throw new DeckNotFoundException(id);
 
-        deck.getFlashcards();
-        deck.getCategory();
+        Hibernate.initialize(deck.getFlashcards());
+        deck.getCategory().getId();
         deck.getAuthor();
         deck.getDescription();
         return deck;
@@ -98,6 +98,11 @@ public class CardServiceImpl implements CardService {
     @Override
     public Long countDecks() {
         return deckRepository.count();
+    }
+
+    @Override
+    public Long countQuestionBanks() {
+        return questionBankRepository.count();
     }
 
     @Override
@@ -147,7 +152,14 @@ public class CardServiceImpl implements CardService {
     @Override
     public List<Deck> findAllDecks() {
         List<Deck> list = new ArrayList<>();
-        deckRepository.findAll().forEach(list::add);
+        deckRepository.findAll().forEach(deck -> {
+            deck.getFlashcards().forEach(flashcard -> {
+                flashcard.getId();
+                flashcard.getQuestion().getId();
+                flashcard.getAnswer().getId();
+            });
+            //Hibernate.initialize(flashcard.getFlashcards());
+        });
         return list;
     }
 

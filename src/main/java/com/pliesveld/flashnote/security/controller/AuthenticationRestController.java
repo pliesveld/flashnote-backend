@@ -5,6 +5,8 @@ import com.pliesveld.flashnote.model.json.response.JwtAuthenticationResponseJson
 import com.pliesveld.flashnote.security.JwtTokenUtil;
 import com.pliesveld.flashnote.security.StudentPrincipal;
 import com.pliesveld.flashnote.spring.Profiles;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -26,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @Profile(value = Profiles.AUTH)
 public class AuthenticationRestController {
+    private static final Logger LOG = LogManager.getLogger();
 
     @Value("${jwt.header}")
     private String tokenHeader;
@@ -47,6 +50,8 @@ public class AuthenticationRestController {
 
     @RequestMapping(value = "/auth", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequestJson authenticationRequest) throws AuthenticationException {
+
+        LOG.debug("Authenticating {} / {}", authenticationRequest.getUsername(),authenticationRequest.getPassword());
 
         // Perform the security
         final Authentication authentication = authenticationManager.authenticate(

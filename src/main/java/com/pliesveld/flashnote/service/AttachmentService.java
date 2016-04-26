@@ -16,6 +16,9 @@ import java.util.List;
 
 @Validated
 public interface AttachmentService {
+    @Transactional(readOnly = true)
+    Long countAttachments();
+
     @Transactional
     AbstractAttachment findAttachmentById(int id)                        throws AttachmentNotFoundException;
 

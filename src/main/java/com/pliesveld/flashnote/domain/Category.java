@@ -43,6 +43,10 @@ public class Category extends AbstractAuditableEntity implements Serializable
     public Category() {
     }
 
+    public Category(final String name) {
+        this.name = name;
+    }
+
     public boolean isParent(String category)
     {
         Category c = this;

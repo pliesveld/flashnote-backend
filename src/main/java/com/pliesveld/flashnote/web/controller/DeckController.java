@@ -1,11 +1,16 @@
 package com.pliesveld.flashnote.web.controller;
 
 
+import com.pliesveld.flashnote.domain.Category;
 import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.domain.StudentDetails;
+import com.pliesveld.flashnote.exception.CategoryNotFoundException;
 import com.pliesveld.flashnote.exception.DeckNotFoundException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.model.json.response.CardStatistics;
+import com.pliesveld.flashnote.security.CurrentUser;
+import com.pliesveld.flashnote.security.StudentPrincipal;
+import com.pliesveld.flashnote.service.AttachmentService;
 import com.pliesveld.flashnote.service.CardService;
 import com.pliesveld.flashnote.service.StudentService;
 import org.apache.logging.log4j.LogManager;
@@ -29,6 +34,9 @@ public class DeckController {
 
     @Autowired
     private CardService cardService;
+
+    @Autowired
+    private AttachmentService attachmentService;
     
     private StudentDetails verifyStudent(int id) throws StudentNotFoundException
     {
@@ -56,8 +64,33 @@ public class DeckController {
 
     @RequestMapping(value="", method = RequestMethod.POST)
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity createDeck(@Valid @RequestBody Deck deck)
+    public ResponseEntity createDeck(@Valid @RequestBody Deck deck, @CurrentUser StudentPrincipal studentPrincipal)
     {
+        Category category = deck.getCategory();
+        if(category == null || category.getId() == null)
+        {
+            throw new CategoryNotFoundException(0);
+        }
+
+        int id = category.getId();
+        if(!cardService.doesCategoryIdExist(id))
+        {
+
+            throw new CategoryNotFoundException(id);
+        }
+
+        if(studentPrincipal == null)
+        {
+            throw new IllegalStateException("User has not been authenticated");
+        }
+        int student_id = studentPrincipal.getId();
+        StudentDetails studentDetails = studentService.findStudentDetailsById(student_id);
+
+        if(studentDetails == null) {
+            throw new StudentNotFoundException(student_id);
+        }
+
+        deck.setAuthor(studentDetails);
         deck = cardService.createDeck(deck);
 
         return ResponseEntity.created(
@@ -86,9 +119,11 @@ public class DeckController {
         LOG.info("Retrieving counts of all decks");
         CardStatistics cardStatistics = new CardStatistics();
         cardStatistics.setDeckCount(cardService.countDecks());
+        cardStatistics.setQuestionBankCount(cardService.countQuestionBanks());
         cardStatistics.setFlashCardCount(cardService.countFlashCards());
         cardStatistics.setQuestionsCount(cardService.countQuestions());
         cardStatistics.setAnswersCount(cardService.countAnswers());
+        cardStatistics.setAnswersCount(attachmentService.countAttachments());
         return new ResponseEntity<>(cardStatistics,HttpStatus.OK);
     }
 

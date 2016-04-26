@@ -45,7 +45,7 @@ public class PopulateFlashnoteContainerApplication {
 
 	public static void main(String[] args) {
 //        System.setProperty("spring.profiles.default", System.getProperty("spring.profiles.default", "local"));
-        System.setProperty("spring.profiles.active", "local");
+//        System.setProperty("spring.profiles.active", "local");
         LOG.info("Starting ApplicationContext with initially populated data");
 
         SpringApplication application = new SpringApplication(PopulateFlashnoteContainerApplication.class);

@@ -39,6 +39,12 @@ public class CategoryController {
         return list;
     }
 
+    @RequestMapping(value = "/root/{id}", method = RequestMethod.GET)
+    public List<Category> listChildCategories(@PathVariable Integer id)
+    {
+        return categoryService.childCategories(id);
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Category getCategory(@PathVariable Integer id)
     {
@@ -57,6 +63,5 @@ public class CategoryController {
                         .path("/{id}").buildAndExpand(new_category.getId()).toUri())
                     .build();
     }
-
 
 }

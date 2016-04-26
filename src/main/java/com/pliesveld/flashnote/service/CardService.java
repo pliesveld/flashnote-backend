@@ -28,6 +28,8 @@ public interface CardService {
     Long countFlashCards();
     @Transactional(readOnly = true)
     Long countDecks();
+    @Transactional(readOnly = true)
+    Long countQuestionBanks();
 
     @Transactional(readOnly = true)
     List<FlashCard> findFlashCardsByContainingQuestionId(int questionId) throws QuestionNotFoundException;
@@ -59,4 +61,7 @@ public interface CardService {
 
     @Transactional(readOnly = true)
     boolean doesCategoryIdExist(int id);
+
+
+
 }

@@ -66,7 +66,7 @@ public class QuestionBank extends AbstractAuditableEntity {
         return questions;
     }
 
-    public void setQuestions(Set<Question> questions) {
+    protected void setQuestions(Set<Question> questions) {
         this.questions = questions;
     }
 

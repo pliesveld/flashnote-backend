@@ -16,15 +16,10 @@ public class CardStatistics extends ModelBase implements JsonWebResponseSerializ
     private Long flashCardCount;
     private Long questionsCount;
     private Long answersCount;
+    private Long questionBankCount;
+    private Long attachmentsCount;
 
     public CardStatistics() {}
-
-    public CardStatistics(Long deckCount, Long flashCardCount, Long questionsCount, Long answersCount) {
-        this.deckCount = deckCount;
-        this.flashCardCount = flashCardCount;
-        this.questionsCount = questionsCount;
-        this.answersCount = answersCount;
-    }
 
     public void setDeckCount(Long deckCount) {
         this.deckCount = deckCount;
@@ -38,9 +33,11 @@ public class CardStatistics extends ModelBase implements JsonWebResponseSerializ
         this.questionsCount = questionsCount;
     }
 
-    public void setAnswersCount(Long answerssCount) {
-        this.answersCount = answerssCount;
-    }
+    public void setAnswersCount(Long answersCount) { this.answersCount = answersCount; }
+
+    public void setQuestionBankCount(Long questionBankCount) { this.questionBankCount = questionBankCount; }
+
+    public void setAttachmentsCount(Long attachmentsCount) { this.attachmentsCount = attachmentsCount; }
 
     public Long getDeckCount() {
         return deckCount;
@@ -57,4 +54,8 @@ public class CardStatistics extends ModelBase implements JsonWebResponseSerializ
     public Long getAnswersCount() {
         return answersCount;
     }
+
+    public Long getQuestionBankCount() { return questionBankCount; }
+
+    public Long getAttachmentsCount() { return attachmentsCount; }
 }

@@ -9,10 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.*;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
@@ -273,8 +270,10 @@ public class SpringSecurityConfig {
 }
 
 /* From Spring Security -- for testing */
+
 @Component
-@Profile("!" + Profiles.AUTH)
+@Primary
+//@Profile("!" + Profiles.AUTH)
 class NoOpPasswordEncoder implements PasswordEncoder {
 
     public String encode(CharSequence rawPassword) {

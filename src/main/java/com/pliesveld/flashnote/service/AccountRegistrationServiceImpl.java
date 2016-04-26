@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
@@ -46,6 +47,8 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
     @Autowired
     StudentDetailsRepository studentDetailsRepository;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Override
     public AccountRegistrationToken createAccountRegistration(@Valid Student student) throws ResourceRepositoryException {
@@ -111,7 +114,8 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
 
         Student student = new Student();
         student.setEmail(email);
-        student.setPassword(password);
+        //student.setPassword(password);
+        student.setPassword(passwordEncoder.encode(password));
         student.setRole(StudentRole.ROLE_ACCOUNT);
 
         student.setStudentDetails(studentDetails);

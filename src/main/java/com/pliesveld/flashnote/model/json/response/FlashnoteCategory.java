@@ -45,8 +45,6 @@ public class FlashnoteCategory implements JsonWebResponseSerializable {
         description = category.getDescription();
         contents_count = category.getCount();
 
-        category.getChildCategories().stream().forEach((c) -> LOG.debug("has child id = {}",c.getId()));
-
         int parent_id = category.getId();
         child_categories = category.getChildCategories().stream().map(Category::getId).filter((id) -> id != parent_id).collect(Collectors.toList());
 

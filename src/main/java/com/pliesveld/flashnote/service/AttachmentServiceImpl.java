@@ -83,6 +83,11 @@ public class AttachmentServiceImpl implements AttachmentService {
 
 
     @Override
+    public Long countAttachments() {
+        return attachmentBinaryRepository.count() + attachmentTextRepository.count();
+    }
+
+    @Override
     public List<AttachmentBinary> findBinaryAttachmentByStudentEmail(String email) throws StudentNotFoundException {
         return attachmentBinaryRepository.findAllByAuthor(email).collect(Collectors.toList());
     }
