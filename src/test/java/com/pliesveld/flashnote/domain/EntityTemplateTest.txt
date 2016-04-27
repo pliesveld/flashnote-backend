@@ -29,6 +29,7 @@ public class EntityTemplateTest extends AbstractDomainEntityUnitTest {
     @Before
     public void setupEntities()
     {
+        entity_id = null;
         entityManager.flush();
         entityManager.clear();
     }
@@ -36,13 +37,13 @@ public class EntityTemplateTest extends AbstractDomainEntityUnitTest {
     @Test
     public void testEntityContext()
     {
-
+        assertNotNull(entity_id);
     }
 
     @Test
     public void testEntitySanity()
     {
-        assertNull(null);
+
         assertNotNull(entityManager.find(Void.class, entity_id));
     }
 
