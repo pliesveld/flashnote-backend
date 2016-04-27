@@ -7,10 +7,12 @@ import com.pliesveld.flashnote.spring.data.SpringDataConfig;
 import com.pliesveld.flashnote.spring.db.PersistenceContext;
 import com.pliesveld.flashnote.spring.mail.SpringMailConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
 
@@ -21,6 +23,14 @@ import org.springframework.test.context.ActiveProfiles;
 @PropertySource("classpath:test-mail.properties" )
 public class SpringMailServiceTestConfig
 {
+
+    @Bean
+    @ConditionalOnMissingBean(PasswordEncoder.class)
+    public PasswordEncoder passwordEncoder()
+    {
+        return org.springframework.security.crypto.password.NoOpPasswordEncoder.getInstance();
+    }
+
     /*
     spring.mail.host=localhost
     spring.mail.port=2525

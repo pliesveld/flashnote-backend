@@ -8,10 +8,12 @@ import com.pliesveld.flashnote.spring.data.SpringDataConfig;
 import com.pliesveld.flashnote.spring.db.PersistenceContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -24,6 +26,13 @@ import org.springframework.test.context.ActiveProfiles;
 public class SpringServiceTestConfig
 {
     private static final Logger LOG = LogManager.getLogger();
+
+    @Bean
+    @ConditionalOnMissingBean(PasswordEncoder.class)
+    public PasswordEncoder passwordEncoder()
+    {
+        return org.springframework.security.crypto.password.NoOpPasswordEncoder.getInstance();
+    }
 
     @Bean
     public MailProvider mailProvider()
