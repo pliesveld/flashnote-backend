@@ -18,6 +18,8 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 
 import javax.persistence.Entity;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Properties;
@@ -147,15 +149,32 @@ public class DDLExport
         export.setHaltOnError(true);
         export.setOutputFile(filename_create);
 
+
+        truncate(filename_create);
+
         export.createOnly(targetTypes, metadata.buildMetadata());
+
         LOG.info("Exported:" + filename_create);
 
         String filename_drop = DIR_EXPORT_ROOT + DIR_EXPORT_PATH + DROP_EXPORT_FILE;
         export.setOutputFile(filename_drop);
 
+        truncate(filename_drop);
+
         export.drop(targetTypes, metadata.buildMetadata());
         LOG.info("Exported:" + filename_drop);
 
+    }
+
+    private void truncate(String filename) throws IOException {
+        File f = new File(filename);
+
+        if(!f.exists() || !f.isFile())
+        {
+            throw new IOException("file not found " + filename);
+        }
+
+        try { new FileOutputStream(filename).getChannel().truncate(0).close(); } catch (IOException e) { LOG.error(e); }
     }
 /*
      private MetadataImplementor buildMetadata(StandardServiceRegistry serviceRegistry) {
