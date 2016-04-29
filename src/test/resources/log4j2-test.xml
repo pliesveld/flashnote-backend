@@ -1,48 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration configDebug="false" shutdownHook="disable">
-  <Properties>
-      <Property name="filename">log/hibernate.log</Property>
-      <Property name="servicefilename">log/service.log</Property>
-      <Property name="springfilename">log/spring.log</Property>
+    <Properties>
+        <Property name="LOG_SQL_LEVEL">WARN</Property>
+        <Property name="LOG_MVC_LEVEL">WARN</Property>
+        <Property name="LOG_TRANS_LEVEL">WARN</Property>
+        <Property name="LOG_APP_LEVEL">WARN</Property>
+    </Properties>
 
-      <Property name="LOG_SQL_LEVEL">WARN</Property>
-  </Properties>
-
-  <Appenders>
-    <Console name="CONSOLE" target="SYSTEM_OUT">
-      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-    </Console>
-
-    <File name="FileHibernate" fileName="${filename}" append="false">
-      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-    </File>
-
-    <File name="FileService" fileName="${servicefilename}" append="false">
-        <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-    </File>
-
-    <File name="FileSpring" fileName="${springfilename}" append="false">
-        <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-    </File>
-
+    <Appenders>
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
     </Appenders>
-  <Loggers>
-    <logger name="com.pliesveld.flashnote" level="DEBUG" additivity="false">
-        <!-- <AppenderRef ref="FileService"/>  -->
-        <AppenderRef ref="CONSOLE"/>
-    </logger>
-     	<logger name="org.hibernate" level="WARN" additivity="false">
-  		<!-- <AppenderRef ref="FileHibernate"/>  -->
-		<AppenderRef ref="CONSOLE"/>
-  	</logger>
-  	<logger name="org.hibernate.SQL" level="${sys:LOG_SQL_LEVEL}" additivity="false">
-        <AppenderRef ref="CONSOLE"/>
-  	</logger>
-  	<logger name="org.springframework" level="DEBUG" additivity="false">
-  		<AppenderRef ref="FileSpring"/>
-  	</logger>
-    <Root level="INFO">
-      <AppenderRef ref="CONSOLE"/>
-    </Root>
-  </Loggers>
+
+    <Loggers>
+        <logger name="org.hibernate.SQL" level="${sys:LOG_SQL_LEVEL}" additivity="false">
+            <AppenderRef ref="CONSOLE"/>
+        </logger>
+
+        <logger name="com.pliesveld.flashnote" level="${sys:LOG_APP_LEVEL}" additivity="false">
+            <AppenderRef ref="CONSOLE"/>
+        </logger>
+
+        <logger name="org.springframework.transaction.interceptor" level="${sys:LOG_TRANS_LEVEL}" additivity="false">
+            <AppenderRef ref="CONSOLE"/>
+        </logger>
+
+        <Root level="WARN">
+            <AppenderRef ref="CONSOLE"/>
+        </Root>
+    </Loggers>
 </Configuration>
