@@ -1,7 +1,6 @@
 package com.pliesveld.flashnote.web.controller;
 
 import com.pliesveld.flashnote.domain.Category;
-import com.pliesveld.flashnote.model.json.response.FlashnoteCategory;
 import com.pliesveld.flashnote.service.CategoryService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,20 +22,32 @@ public class CategoryController {
     CategoryService categoryService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public List<FlashnoteCategory> listAllCategories()
+    public List<Category> listAllCategories()
     {
-        List<FlashnoteCategory> list = new ArrayList<>();
-        categoryService.allCategories().forEach((category) -> list.add(FlashnoteCategory.convert(category)));
-        return list;
+        return categoryService.allCategories();
     }
 
     @RequestMapping(value = "/root", method = RequestMethod.GET)
-    public List<FlashnoteCategory> listRootCategories()
+    public List<Category> listRootCategories()
     {
-        List<FlashnoteCategory> list = new ArrayList<>();
-        categoryService.rootCategories().forEach((category) -> list.add(FlashnoteCategory.convert(category)));
-        return list;
+        return categoryService.rootCategories();
     }
+//
+//    @RequestMapping(value = "", method = RequestMethod.GET)
+//    public List<FlashnoteCategory> listAllCategories()
+//    {
+//        List<FlashnoteCategory> list = new ArrayList<>();
+//        categoryService.allCategories().forEach((category) -> list.add(FlashnoteCategory.convert(category)));
+//        return list;
+//    }
+//
+//    @RequestMapping(value = "/root", method = RequestMethod.GET)
+//    public List<FlashnoteCategory> listRootCategories()
+//    {
+//        List<FlashnoteCategory> list = new ArrayList<>();
+//        categoryService.rootCategories().forEach((category) -> list.add(FlashnoteCategory.convert(category)));
+//        return list;
+//    }
 
     @RequestMapping(value = "/root/{id}", method = RequestMethod.GET)
     public List<Category> listChildCategories(@PathVariable Integer id)
