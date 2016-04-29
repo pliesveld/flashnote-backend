@@ -16,7 +16,7 @@ import java.util.Objects;
 public class StudentDetails implements Serializable
 {
     @Id
-    @Column(name = "STUDENT_ID")
+    @Column(name = "STUDENT_ID", nullable = false, unique = true)
     private Integer id;
 
     @MapsId
@@ -63,6 +63,7 @@ public class StudentDetails implements Serializable
     public void setStudent(Student student) {
 
         this.student = student;
+        this.id = student.getId();
         if(student.getStudentDetails() == null || !student.getStudentDetails().equals(this))
             student.setStudentDetails(this);
 

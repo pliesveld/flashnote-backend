@@ -7,6 +7,7 @@ import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.model.json.response.ExistingStudentDetails;
+import com.pliesveld.flashnote.service.AdminService;
 import com.pliesveld.flashnote.service.StudentService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,6 +28,9 @@ public class StudentController {
     @Autowired
     private StudentService studentService;
 
+    @Autowired
+    private AdminService adminService;
+
     private Student verifyStudent(int id) throws StudentNotFoundException
     {
         Student student = studentService.findStudentById(id);
@@ -40,8 +44,7 @@ public class StudentController {
     @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> removeStudent(@PathVariable Integer id)
     {
-        LOG.info("Deleting student with id " + id);
-        studentService.delete(id);
+        adminService.deleteStudent(id);
         return new ResponseEntity<>(null,HttpStatus.OK);
     }
 

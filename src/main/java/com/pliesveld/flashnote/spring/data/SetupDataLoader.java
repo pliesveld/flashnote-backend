@@ -15,9 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import static com.pliesveld.flashnote.domain.StudentRole.*;
 
 
@@ -39,9 +36,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     @Autowired
     PasswordEncoder passwordEncoder;
-
-    @PersistenceContext
-    EntityManager entityManager;
 
     @Override
     public void onApplicationEvent(final ContextRefreshedEvent event) {
@@ -83,25 +77,18 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     @Transactional
     private void createCategoryRelationship(Category parent, Category child) {
-        //entityManager.merge(parent);
-        //entityManager.merge(child);
+        parent = categoryRepository.findOne(parent.getId());
+        child = categoryRepository.findOne(child.getId());
 
-        parent.addChildCategory(child);
-       // child.setParentCategory(parent);
+        if(!child.isParent(parent))
+            parent.addChildCategory(child);
 
-        categoryRepository.save(parent);
         categoryRepository.save(child);
     }
 
-    //@Transactional
+    @Transactional
     private Category createCategoryIfNotFound(String name, String description)
     {
-        Category category;
-        category = new Category();
-        category.setName(name);
-        category.setDescription(description);
-        return category;
-        /*
         Category category = categoryRepository.findOneByNameEquals(name);
 
         if( category == null )
@@ -113,7 +100,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         }
 
         return category;
-        */
     }
 
 /*

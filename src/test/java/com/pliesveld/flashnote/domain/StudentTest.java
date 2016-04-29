@@ -36,6 +36,8 @@ public class StudentTest extends AbstractDomainEntityUnitTest {
 
         student = studentRepository.save(student);
         student_id = student.getId();
+        entityManager.flush();
+        entityManager.clear();
     }
 
     @Test

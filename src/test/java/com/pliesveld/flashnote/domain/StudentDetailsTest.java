@@ -47,6 +47,8 @@ public class StudentDetailsTest extends StudentTest {
     {
         assertStudentRepositoryCount(1);
         assertStudentDetailsRepositoryCount(1);
+        assertNotNull(studentDetailsRepository.findOne((Integer) student_id));
+        assertNotNull(studentRepository.findOne((Integer) student_id));
     }
 
     @After
@@ -62,8 +64,7 @@ public class StudentDetailsTest extends StudentTest {
         assertStudentRepositoryCount(1);
         assertStudentDetailsRepositoryCount(1);
 
-        StudentDetails studentDetails = studentDetailsRepository.findAll().iterator().next();
-//        studentDetailsRepository.delete(studentDetails);
+        StudentDetails studentDetails = studentDetailsRepository.findOne((Integer) student_id);
         assertTrue(entityManager.contains(studentDetails));
         entityManager.remove(studentDetails);
         entityManager.flush();
@@ -78,7 +79,7 @@ public class StudentDetailsTest extends StudentTest {
         assertStudentRepositoryCount(1);
         assertStudentDetailsRepositoryCount(1);
 
-        Student student = studentRepository.findAll().iterator().next();
+        Student student = studentRepository.findOne((Integer) student_id);
         studentRepository.delete(student);
         entityManager.flush();
 
