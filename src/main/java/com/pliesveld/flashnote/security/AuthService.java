@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Component
-@Transactional
+@Transactional(readOnly = true)
 public class AuthService implements UserDetailsService {
 
     private static final Logger LOG = LogManager.getLogger();
@@ -25,7 +25,6 @@ public class AuthService implements UserDetailsService {
     private StudentRepository studentRepository;
 
     @Override
-    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         final Student student = studentRepository.findOneByEmail(username);
@@ -47,7 +46,8 @@ public class AuthService implements UserDetailsService {
 //            LOG.debug(SECURITY_AUTH, sb.toString());
 //        }
 
-        return new StudentPrincipal(student,authorities);
+        StudentPrincipal principal = new StudentPrincipal(student,authorities);
+        return principal;
     }
 }
 

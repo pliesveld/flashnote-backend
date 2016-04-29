@@ -4,6 +4,7 @@ from requests.exceptions import *
 import unittest
 import sys
 import functools
+import os
 
 try:
     from .settings import *
@@ -115,6 +116,27 @@ class TokenTest(unittest.TestCase):
 
         self.assertNotIn('token', r_json)
 
+    def testToken(self):
+        token = os.getenv('TOKEN', 'INVALID')
+
+        self.assertNotEqual(token, 'INVALID')
+
+        with requests.Session() as s:
+
+            req = requests.Request(method='GET', url=USER_RESOURCE)
+            req.headers['X-AUTH-TOKEN'] = token
+            req = req.prepare()
+ 
+            log.debug("sending headers: " + str(req.headers.__dict__))
+            r = requests.models.Response()
+
+            r = s.send(req)
+
+            r_json = r.json()
+            log.debug("response: " + json.dumps(r_json, sort_keys=True, indent=4))
+
+            self.assertEqual(r.status_code, 200)
+            
 
 
 if __name__ == '__main__':
