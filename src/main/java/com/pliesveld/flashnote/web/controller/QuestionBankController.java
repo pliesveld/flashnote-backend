@@ -1,14 +1,21 @@
 package com.pliesveld.flashnote.web.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pliesveld.flashnote.domain.*;
-import com.pliesveld.flashnote.exception.*;
+import com.pliesveld.flashnote.exception.CategoryNotFoundException;
+import com.pliesveld.flashnote.exception.QuestionNotFoundException;
+import com.pliesveld.flashnote.exception.StatementNotFoundException;
+import com.pliesveld.flashnote.exception.StudentNotFoundException;
+import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.model.json.request.UpdateQuestionBankRequestJson;
 import com.pliesveld.flashnote.service.CardService;
 import com.pliesveld.flashnote.service.StudentService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
@@ -28,6 +35,15 @@ public class QuestionBankController {
 
     @Autowired
     private CardService cardService;
+
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    public void setObjectMapper(ObjectMapper jackson2ObjectMapper)
+    {
+        objectMapper = jackson2ObjectMapper;
+        Views.debug(this,objectMapper);
+    }
     
     private StudentDetails verifyStudent(int id) throws StudentNotFoundException
     {
@@ -44,14 +60,6 @@ public class QuestionBankController {
         if(que == null)
             throw new QuestionNotFoundException(id);
         return que;
-    }
-
-    private Answer verifyAnswer(int id) throws AnswerNotFoundException
-    {
-        Answer ans = cardService.findAnswerById(id);
-        if(ans == null)
-            throw new AnswerNotFoundException(id);
-        return ans;
     }
 
     private AbstractStatement verifyStatement(int id) throws StatementNotFoundException
@@ -104,16 +112,15 @@ public class QuestionBankController {
 
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity<?> retrieveQuestionBank(@PathVariable("id") int id)
-    {
+    public ResponseEntity<?> retrieveQuestionBank(@PathVariable("id") int id) throws JsonProcessingException {
         QuestionBank questionBank = cardService.findQuestionBankById(id);
 
         if(questionBank == null )
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(questionBank);
+        return ResponseEntity.ok(objectMapper.writeValueAsString(questionBank));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

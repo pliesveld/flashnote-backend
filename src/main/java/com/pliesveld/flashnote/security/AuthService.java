@@ -15,8 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.pliesveld.flashnote.logging.Markers.SECURITY_AUTH;
-
 @Component
 @Transactional
 public class AuthService implements UserDetailsService {
@@ -34,18 +32,20 @@ public class AuthService implements UserDetailsService {
 
         if(student == null)
         {
-            throw new UsernameNotFoundException(String.format("Student with an email address of %s does not exist",username));
+            throw new UsernameNotFoundException(String.format("Student with an email address of %s does not exist", username));
         }
 
+        student.getEmail();
+        student.getPassword();
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(student.getRole().toString());
 
-        if(LOG.isDebugEnabled())
-        {
-            StringBuilder sb = new StringBuilder(128);
-            sb.append("Loading UserDetails for ").append(username).append(".  Granted Authorities: ");
-            authorities.forEach((a) -> sb.append(a).append(" "));
-            LOG.debug(SECURITY_AUTH, sb.toString());
-        }
+//        if(LOG.isDebugEnabled(SECURITY_AUTH))
+//        {
+//            StringBuilder sb = new StringBuilder(128);
+//            sb.append("Loading UserDetails for ").append(username).append(".  Granted Authorities: ");
+//            authorities.forEach((a) -> sb.append(a).append(" "));
+//            LOG.debug(SECURITY_AUTH, sb.toString());
+//        }
 
         return new StudentPrincipal(student,authorities);
     }

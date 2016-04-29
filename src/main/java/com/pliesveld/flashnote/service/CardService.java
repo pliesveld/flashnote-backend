@@ -55,7 +55,7 @@ public interface CardService {
     QuestionBank createQuestionBank(QuestionBank questionBank);
 
     @Transactional(readOnly = true)
-    QuestionBank findQuestionBankById(int id);
+    QuestionBank findQuestionBankById(int id)   throws QuestionBankNotFoundException;
 
     void deleteQuestionBank(int id)             throws QuestionBankNotFoundException;
 

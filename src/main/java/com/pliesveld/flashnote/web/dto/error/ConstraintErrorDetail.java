@@ -7,7 +7,7 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ConstraintErrorDetail {
-    private long timeStamp;
+    private long timestamp;
     private String title;
     private int status;
     private String detail;
@@ -41,12 +41,12 @@ public class ConstraintErrorDetail {
         this.detail = detail;
     }
 
-    public long getTimeStamp() {
-        return timeStamp;
+    public long getTimestamp() {
+        return timestamp;
     }
 
-    public void setTimeStamp(long timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     public String getDeveloperMessage() {

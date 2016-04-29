@@ -3,6 +3,7 @@ package com.pliesveld.flashnote.service;
 import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.exception.DeckNotFoundException;
 import com.pliesveld.flashnote.exception.FlashCardCreateException;
+import com.pliesveld.flashnote.exception.QuestionBankNotFoundException;
 import com.pliesveld.flashnote.exception.QuestionNotFoundException;
 import com.pliesveld.flashnote.repository.*;
 import org.hibernate.Hibernate;
@@ -130,8 +131,7 @@ public class CardServiceImpl implements CardService {
 
         if(!answerRepository.exists(answer.getId()))
         {
-            answer.setId(null);
-            answerRepository.save(answer);
+            answer = answerRepository.save(answer);
         } else {
             FlashCard fc = flashCardRepository.findOne(new FlashCardPrimaryKey(questionId, answer.getId()));
             if(fc != null)
@@ -177,13 +177,7 @@ public class CardServiceImpl implements CardService {
     @Override
     public List<QuestionBank> findAllQuestionBanks() {
         ArrayList<QuestionBank> list = new ArrayList<>();
-        questionBankRepository.findAll().forEach(bank ->
-        {
-            //Hibernate.initialize(bank.getQuestions());
-            bank.getQuestions().forEach(Question::getId);
-            list.add(bank);
-
-        });
+        questionBankRepository.findAll().forEach(list::add);
         return list;
     }
 
@@ -195,9 +189,14 @@ public class CardServiceImpl implements CardService {
     @Override
     public QuestionBank findQuestionBankById(int id) {
         QuestionBank questionBank = questionBankRepository.findOne(id);
+        if(questionBank == null)
+        {
+            throw new QuestionBankNotFoundException(id);
+        }
         questionBank.getId();
         questionBank.getDescription();
         Hibernate.initialize(questionBank.getQuestions());
+        questionBank.getQuestions().forEach((que) -> Hibernate.initialize(que.getAnnotations()));
         return questionBank;
     }
 

@@ -16,6 +16,9 @@ package com.pliesveld.flashnote.spring;
  * https://github.com/pkainulainen/spring-data-jpa-examples/blob/master/query-methods/src/main/java/net/petrikainulainen/springdata/jpa/config/Profiles.java
  */
 public class Profiles {
+    static {
+        INTEGRATION_AUTH_TEST = new String[]{"integration-test", "auth"};
+    }
     public static final String PRODUCTION = "production";
     public static final String LOCAL = "local";
 
@@ -23,6 +26,7 @@ public class Profiles {
     public static final String OAUTH2 = "oauth2";
 
     public static final String INTEGRATION_TEST = "integration-test";
+    public static final String[] INTEGRATION_AUTH_TEST;
     public static final String NOT_INTEGRATION_TEST = "!integration-test";
 
 

@@ -37,6 +37,8 @@ import org.springframework.stereotype.Component;
 import javax.inject.Inject;
 import java.util.Collection;
 
+import static com.pliesveld.flashnote.logging.Markers.SECURITY_INIT;
+
 /*
  * Profile based security configuration
  * http://stackoverflow.com/questions/24827963/enabling-websecurityconfigurer-via-profile-does-not-work
@@ -58,7 +60,7 @@ public class SpringSecurityConfig {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
         roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_MODERATOR and ROLE_MODERATOR > ROLE_PREMIUM and ROLE_PREMIUM > ROLE_USER and ROLE_USER > ROLE_ACCOUNT");
 
-        if(LOG.isDebugEnabled())
+        if(LOG.isDebugEnabled(SECURITY_INIT))
         {
             for(StudentRole role : StudentRole.values())
             {
@@ -72,7 +74,7 @@ public class SpringSecurityConfig {
                 sb.append(" has reachable roles ");
 
                 roleHierarchy.getReachableGrantedAuthorities(authorities).forEach((grantedAuthority) -> sb.append(grantedAuthority + " "));
-                LOG.debug(sb.toString());
+                LOG.debug(SECURITY_INIT, sb.toString());
             }
         }
 

@@ -38,7 +38,6 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
-//@SpringApplicationConfiguration(classes = FlashnoteContainerApplication.class)
 @ContextConfiguration(classes = { MockServletContext.class, SpringEntityTestConfig.class }, loader = AnnotationConfigContextLoader.class)
 @WebAppConfiguration
 public class RegistrationControllerTest {
@@ -86,7 +85,7 @@ public class RegistrationControllerTest {
         when(studentService.findByName(any(String.class))).thenReturn(null);
         when(studentService.findByEmail(any(String.class))).thenReturn(null);
 
-        MvcResult result = mockMvc.perform(post("/registration/sign-up")
+        MvcResult result = mockMvc.perform(post("/account/sign-up")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JSON_DATA))
@@ -105,7 +104,7 @@ public class RegistrationControllerTest {
 
         when(accountRegistrationService.processRegistrationConfirmation(any(String.class))).thenReturn(student);
 
-        mockMvc.perform(get("/registration/confirm")
+        mockMvc.perform(get("/account/confirm")
                 .param("token", confirm_token))
                 .andExpect(status().is2xxSuccessful());
     }

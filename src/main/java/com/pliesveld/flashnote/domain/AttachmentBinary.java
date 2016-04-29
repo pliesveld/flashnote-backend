@@ -4,6 +4,7 @@ import com.pliesveld.flashnote.schema.Constants;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
@@ -13,7 +14,8 @@ public class AttachmentBinary extends AbstractAttachment implements Serializable
     public AttachmentBinary() {}
 
     @NotNull
-    @Column(name = "FILE_DATA", length = Constants.MAX_ATTACHMENT_BINARY_FILE_LENGTH)
+    @Size(max = Constants.MAX_ATTACHMENT_BINARY_FILE_LENGTH)
+    @Column(name = "FILE_DATA", length = Constants.MAX_ATTACHMENT_BINARY_FILE_LENGTH, nullable = false)
     byte[] contents;
 
     public byte[] getContents() {

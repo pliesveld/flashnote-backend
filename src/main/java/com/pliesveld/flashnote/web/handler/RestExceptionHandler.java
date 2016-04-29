@@ -1,6 +1,7 @@
 package com.pliesveld.flashnote.web.handler;
 
 import com.pliesveld.flashnote.exception.ResourceRepositoryException;
+import com.pliesveld.flashnote.logging.Markers;
 import com.pliesveld.flashnote.web.dto.error.ConstraintErrorDetail;
 import com.pliesveld.flashnote.web.dto.error.ErrorDetail;
 import com.pliesveld.flashnote.web.dto.error.ValidationError;
@@ -38,9 +39,11 @@ import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMeth
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import static com.pliesveld.flashnote.logging.Markers.REST_EXCEPTION;
 
 /**
  * Maps business exceptions to meaningful error responses
@@ -55,7 +58,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<?> handleResourceNotFoundException(ResourceRepositoryException rnfe, HttpServletRequest request)
     {
         ErrorDetail errorDetail = new ErrorDetail();
-        errorDetail.setTimeStamp(new Date().getTime());
+        errorDetail.setTimestamp(Instant.now().toEpochMilli());
         HttpStatus status = rnfe.getRepositoryStatus();
         errorDetail.setStatus(status.value());
         errorDetail.setTitle(rnfe.getRepositoryMessage());
@@ -68,7 +71,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<?> handlePersistenceError(DataIntegrityViolationException dive, HttpServletRequest request)
     {
         ErrorDetail errorDetail = new ErrorDetail();
-        errorDetail.setTimeStamp(new Date().getTime());
+        errorDetail.setTimestamp(Instant.now().toEpochMilli());
         errorDetail.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         errorDetail.setTitle("Database Integrity Violation");
 
@@ -88,7 +91,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
-        errorDetail.setTimeStamp(new Date().getTime());
+        errorDetail.setTimestamp(Instant.now().toEpochMilli());
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
 
         errorDetail.setTitle("Request parameters");
@@ -104,7 +107,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleConversionNotSupported(ConversionNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
-        errorDetail.setTimeStamp(new Date().getTime());
+        errorDetail.setTimestamp(Instant.now().toEpochMilli());
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
         errorDetail.setDetail(ex.getMessage());
 
@@ -114,7 +117,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             errorDetail.setDeveloperMessage("name: " + macnse.getName() + " parameter: " + macnse.getParameter().getContainingClass().getSimpleName() );
         }
 
-        LOG.debug("handleConversionNotSupported");
+        LOG.debug(REST_EXCEPTION, "handleConversionNotSupported");
         return handleExceptionInternal(ex, errorDetail, headers, status, request);
     }
 
@@ -122,7 +125,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<?> handleMultipartError(MultipartException me, HttpServletRequest request)
     {
         ErrorDetail errorDetail = new ErrorDetail();
-        errorDetail.setTimeStamp(new Date().getTime());
+        errorDetail.setTimestamp(Instant.now().toEpochMilli());
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
         String requestPath = (String) request.getAttribute("javax.servlet.error.request_uri");
         if(requestPath == null)
@@ -147,13 +150,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<?> handleConstraintViolation(ConstraintViolationException e)
     {
         ConstraintErrorDetail errorDetail = new ConstraintErrorDetail();
-        errorDetail.setTimeStamp(new Date().getTime());
+        errorDetail.setTimestamp(Instant.now().toEpochMilli());
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
 
         List<ValidationError> validationErrors = errorDetail.getErrors();
         for(ConstraintViolation violation : e.getConstraintViolations())
         {
-            //LOG.debug("violation -> " + violation);
+            //LOG.debug(REST_EXCEPTION, "violation -> " + violation);
             ValidationError error = new ValidationError();
             error.setCode(violation.getRootBeanClass().getSimpleName());
             error.setMessage(violation.getMessage());
@@ -166,7 +169,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
-        errorDetail.setTimeStamp(new Date().getTime());
+        errorDetail.setTimestamp(Instant.now().toEpochMilli());
         errorDetail.setStatus(status.value());
         errorDetail.setTitle("Message Not Readable");
         errorDetail.setDetail(ex.getClass().getName());
@@ -176,10 +179,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        LOG.debug("handleMethodARgumentNotValid");
+        LOG.debug(REST_EXCEPTION, "handleMethodArgumentNotValid {}", ex.getMessage());
 
         ErrorDetail errorDetail = new ErrorDetail();
-        errorDetail.setTimeStamp(new Date().getTime());
+        errorDetail.setTimestamp(Instant.now().toEpochMilli());
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
 
         errorDetail.setTitle("Validation Failed");
@@ -207,73 +210,73 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        LOG.debug("handleExceptionInternal");
+        LOG.debug(Markers.REST_EXCEPTION_INTERNAL, ex.getMessage());
         return super.handleExceptionInternal(ex, body, headers, status, request);
     }
 
     @Override
     protected ResponseEntity<Object> handleNoSuchRequestHandlingMethod(NoSuchRequestHandlingMethodException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        LOG.debug("handleNoSuchRequestHanldingMethod");
+        LOG.debug(REST_EXCEPTION, "handleNoSuchRequestHanldingMethod");
         return super.handleNoSuchRequestHandlingMethod(ex, headers, status, request);
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        LOG.debug("handleHttpRequestMethodNotSupported");
+        LOG.debug(REST_EXCEPTION, "handleHttpRequestMethodNotSupported");
         return super.handleHttpRequestMethodNotSupported(ex, headers, status, request);
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        LOG.debug("handleHttpMediaTypeNotSupported");
+        LOG.debug(REST_EXCEPTION, "handleHttpMediaTypeNotSupported", ex);
         return super.handleHttpMediaTypeNotSupported(ex, headers, status, request);
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        LOG.debug("handleHttpMediaTypeNotAcceptable");
+        LOG.debug(REST_EXCEPTION, "handleHttpMediaTypeNotAcceptable");
         return super.handleHttpMediaTypeNotAcceptable(ex, headers, status, request);
     }
 
     @Override
     protected ResponseEntity<Object> handleMissingPathVariable(MissingPathVariableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        LOG.debug("handleMissingPathVariable");
+        LOG.debug(REST_EXCEPTION, "handleMissingPathVariable");
         return super.handleMissingPathVariable(ex, headers, status, request);
     }
 
     @Override
     protected ResponseEntity<Object> handleServletRequestBindingException(ServletRequestBindingException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        LOG.debug("handleServletRequestBindingException");
+        LOG.debug(REST_EXCEPTION, "handleServletRequestBindingException");
         return super.handleServletRequestBindingException(ex, headers, status, request);
     }
 
     @Override
     protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        LOG.debug("handleTypeMismatch");
+        LOG.debug(REST_EXCEPTION, "handleTypeMismatch");
         return super.handleTypeMismatch(ex, headers, status, request);
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotWritable(HttpMessageNotWritableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        LOG.debug("handleHttpMessageNotWritable");
+        LOG.debug(REST_EXCEPTION, "handleHttpMessageNotWritable");
         return super.handleHttpMessageNotWritable(ex, headers, status, request);
     }
 
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestPart(MissingServletRequestPartException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        LOG.debug("handleMissingServletRequestPart");
+        LOG.debug(REST_EXCEPTION, "handleMissingServletRequestPart");
         return super.handleMissingServletRequestPart(ex, headers, status, request);
     }
 
     @Override
     protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        LOG.debug("handleBindException");
+        LOG.debug(REST_EXCEPTION, "handleBindException");
         return super.handleBindException(ex, headers, status, request);
     }
 
     @Override
     protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        LOG.debug("handleNoHandlerFoundException");
+        LOG.debug(REST_EXCEPTION, "handleNoHandlerFoundException");
         return super.handleNoHandlerFoundException(ex, headers, status, request);
     }
 }

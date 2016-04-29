@@ -1,12 +1,11 @@
 package com.pliesveld.flashnote.schema;
 
-import javax.persistence.GenerationType;
-
 /**
  * Single source for parameters used in schema generation
  */
 public class Constants {
-    public static final GenerationType ID_GENERATOR = GenerationType.AUTO;
+    public static final String ID_GENERATOR = "identity";
+    public static final String SEQUENCE_GENERATOR = "sequence";
 
     public static final int MIN_STUDENT_NAME_LENGTH = 3;
     public static final int MAX_STUDENT_NAME_LENGTH = 32;
@@ -33,6 +32,8 @@ public class Constants {
     public static final long PASSWORD_RESET_TOKEN_DURATION_DAYS = 7;
     public static final long REGISTRATION_TOKEN_DURATION_DAYS = 7;
 
+    public static final int ACCESS_LIMIT_LOGIN_DELAY = 30;
 
-    public static int ACCESS_LIMIT_LOGIN_DELAY = 30;
+    public static final int MAX_NOTIFICATION_MESSAGE_LENGTH = 1024;
+
 }

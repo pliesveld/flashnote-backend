@@ -1,16 +1,21 @@
 package com.pliesveld.flashnote.domain;
 
 import com.pliesveld.flashnote.domain.base.AbstractAuditableEntity;
+import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
 import com.pliesveld.flashnote.schema.Constants;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
 
 @Entity
 @Table(name = "QUESTION_BANK")
+@EntityListeners(value = { LogEntityListener.class })
 public class QuestionBank extends AbstractAuditableEntity {
 
     @Id
@@ -24,15 +29,17 @@ public class QuestionBank extends AbstractAuditableEntity {
     private Category category;
 
     @NotNull
+    @Size(max = Constants.MAX_DECK_DESCRIPTION_LENGTH)
     @Column(name = "DESCRIPTION", length = Constants.MAX_DECK_DESCRIPTION_LENGTH, nullable = false)
     private String description;
 
     @NotNull
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinTable(name = "QUESTION_BANK_COLLECTION",
             joinColumns = @JoinColumn(name = "QUESTION_BANK_ID"),
             inverseJoinColumns = @JoinColumn(name = "QUESTION_ID",referencedColumnName = "QUESTION_ID")
     )
+    @LazyCollection(LazyCollectionOption.EXTRA)
     private Set<Question> questions = new HashSet<Question>();
 
     public QuestionBank() {

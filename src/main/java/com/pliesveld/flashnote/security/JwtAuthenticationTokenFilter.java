@@ -1,5 +1,8 @@
 package com.pliesveld.flashnote.security;
 
+import com.pliesveld.flashnote.logging.Markers;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,6 +46,7 @@ https://github.com/szerhusenBC/jwt-spring-security-demo
  */
 
 public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthenticationFilter {
+    private static final Logger LOG = LogManager.getLogger();
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -59,11 +63,12 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String authToken = httpRequest.getHeader(this.tokenHeader);
-        // authToken.startsWith("Bearer ")
-        // String authToken = header.substring(7);
+
         String username = jwtTokenUtil.getUsernameFromToken(authToken);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            LOG.debug(Markers.SECURITY_AUTH_TOKEN, "Authenticating username {} with jwt {}", username, authToken);
+
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
             if (jwtTokenUtil.validateToken(authToken, userDetails)) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

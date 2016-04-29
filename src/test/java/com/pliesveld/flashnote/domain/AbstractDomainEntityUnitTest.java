@@ -69,6 +69,9 @@ public class AbstractDomainEntityUnitTest
     @Autowired(required = false)
     protected RegistrationRepository registrationRepository;
 
+    @Autowired(required = false)
+    protected NotificationRepository notificationRepository;
+
 
 
     @Transactional
@@ -88,6 +91,8 @@ public class AbstractDomainEntityUnitTest
         assertNotNull(studentRepository);
         assertNotNull(registrationRepository);
         assertNotNull(passwordResetRepository);
+        assertNotNull(notificationRepository);
+
     }
 
     protected void assertAnswerRepositoryCount(long value)
@@ -140,12 +145,17 @@ public class AbstractDomainEntityUnitTest
     }
     protected void assertRegistrationRepositoryCount(long value)
     {
-        assertEquals("The entity count of StudentRepository should be " + value, value, registrationRepository.count());
+        assertEquals("The entity count of RegistrationRepository should be " + value, value, registrationRepository.count());
     }
     protected void assertPasswordResetRepositoryCount(long value)
     {
-        assertEquals("The entity count of StudentRepository should be " + value, value, passwordResetRepository.count());
+        assertEquals("The entity count of PasswordResetRepository should be " + value, value, passwordResetRepository.count());
     }
+    protected void assertNotificationRepositoryCount(long value) {
+        assertEquals("The entity count of NotificationRepository should be " + value, value, notificationRepository.count());
+    }
+
+
 
     @Bean
     @Scope("prototype")
@@ -297,6 +307,8 @@ public class AbstractDomainEntityUnitTest
         MySessionFlushEndListener listener = (entities, collections) -> { LOG.info("Flush ended with #{} entities and col #{} collections", entities, collections); };
         entityManager.unwrap(org.hibernate.Session.class).addEventListeners(listener);
     }
+
+
 }
 
 

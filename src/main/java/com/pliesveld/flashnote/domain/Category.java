@@ -33,7 +33,8 @@ public class Category extends AbstractAuditableEntity implements Serializable
     private String description;
 
     @JsonIgnore
-    @ManyToOne(cascade = {CascadeType.PERSIST})
+    @ManyToOne(cascade = CascadeType.PERSIST, optional = true)
+    @JoinColumn(name = "CATEGORY_PARENT", referencedColumnName = "CATEGORY_ID", nullable = true, foreignKey = @ForeignKey(name = "FK_CATEGORY_PARENT"))
     private Category parentCategory;
 
     @JsonIgnore
@@ -72,6 +73,13 @@ public class Category extends AbstractAuditableEntity implements Serializable
         childCategory.setParentCategory(this);
         childCategories.add(childCategory);
     }
+
+//    public final int getId() {
+//        if (this instanceof HibernateProxy) {
+//            return (int)((HibernateProxy)this).getHibernateLazyInitializer().getIdentifier();
+//        }
+//        else { return id; }
+//    }
 
     public Integer getId()
     {

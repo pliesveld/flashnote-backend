@@ -92,12 +92,12 @@ public class EntitySerializerTest {
                 Question question = (Question) entity;
                 question.setTitle("Title");
                 question.setContent("This is a question.");
-                question.setId(1);
+//                question.setId(1);
                 break;
 
             case "Answer":
                 Answer answer = (Answer) entity;
-                answer.setId(2);
+//                answer.setId(2);
                 answer.setContent("This is an answer.");
                 break;
 

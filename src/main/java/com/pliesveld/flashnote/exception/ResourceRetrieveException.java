@@ -7,36 +7,21 @@ import java.io.Serializable;
 /**
  * Created by happs on 1/20/16.
  */
-public abstract class ResourceRetrieveException extends RuntimeException {
+public abstract class ResourceRetrieveException extends ResourceRepositoryException {
     protected Serializable id;
 
     public ResourceRetrieveException(Serializable id) {
-        super();
+        super("Resource not found");
         this.id = id;
     }
-
     public Serializable getRepositoryId()
     {
         return id;
     }
 
+
     abstract public String getRepositoryMessage();
     abstract public HttpStatus getRepositoryStatus();
 
-    public ResourceRetrieveException(String message) {
-        super(message);
-    }
-
-    public ResourceRetrieveException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public ResourceRetrieveException(Throwable cause) {
-        super(cause);
-    }
-
-    protected ResourceRetrieveException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
 
 }

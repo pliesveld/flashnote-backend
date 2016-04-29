@@ -4,9 +4,11 @@
       <Property name="filename">log/hibernate.log</Property>
       <Property name="servicefilename">log/service.log</Property>
       <Property name="springfilename">log/spring.log</Property>
+
+      <Property name="LOG_SQL_LEVEL">WARN</Property>
   </Properties>
 
-    <Appenders>
+  <Appenders>
     <Console name="CONSOLE" target="SYSTEM_OUT">
       <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
     </Console>

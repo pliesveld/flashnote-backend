@@ -1,5 +1,6 @@
 package com.pliesveld.flashnote.security;
 
+import com.pliesveld.flashnote.logging.Markers;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.AuditorAware;
@@ -24,11 +25,26 @@ public class UsernameAuditorAware implements AuditorAware<String> {
             return null;
         }
 
-        LOG.debug("getCurrentAuditor");
-        if(authentication.getPrincipal() instanceof StudentPrincipal)
-            return ((StudentPrincipal) authentication.getPrincipal()).getUsername();
+        LOG.debug(Markers.AUDIT, "Checking credentials for {}", authentication);
+
+        Object principal = authentication.getPrincipal();
+        Object details = authentication.getDetails();
+
+        if(details != null) {
+            LOG.debug(Markers.AUDIT, "Details {} : {}",details.getClass().getName(), details);
+        }
+
+//        Object credentials = authentication.getCredentials();
+//        Collection<?> authorities = authentication.getAuthorities();
+
+        if(principal instanceof StudentPrincipal)
+        {
+            StudentPrincipal studentPrincipal = (StudentPrincipal) principal;
+            LOG.debug(Markers.AUDIT, "Found StudentPrincipal : {} ", studentPrincipal);
+            return studentPrincipal.getUsername();
+        }
         else {
-            LOG.debug("auth.principal is actually: {} {}", authentication.getPrincipal().getClass().getName(),authentication.getPrincipal());
+            LOG.debug(Markers.AUDIT, "Principal {} : {}",principal.getClass().getName(), principal);
             return "SYSTEM";
         }
     }

@@ -19,6 +19,8 @@ import javax.persistence.ValidationMode;
 import javax.sql.DataSource;
 import java.util.Properties;
 
+import static com.pliesveld.flashnote.logging.Markers.SQL_INIT;
+
 @Profile(Profiles.LOCAL)
 @Configuration
 @PropertySource(value = { "classpath:dev-datasource.properties" })
@@ -41,16 +43,16 @@ public class DefaultDataSource {
 
         if(LOG.isDebugEnabled())
         {
-            LOG.debug("Initializing DataSource Bean with jdbc.url={}", dataSource.getUrl());
-            LOG.debug("Initializing DataSource Bean with jdbc.username={}", dataSource.getUsername());
+            LOG.debug(SQL_INIT, "DataSource properties");
+            LOG.debug(SQL_INIT, "jdbc.driverClassName = {}", environment.getRequiredProperty("jdbc.driverClassName"));
+            LOG.debug(SQL_INIT, "jdbc.url = {}", dataSource.getUrl());
+            LOG.debug(SQL_INIT, "jdbc.username = {}", dataSource.getUsername());
+
             /*
             dataSource.getConnectionProperties().entrySet().iterator().forEachRemaining((entry) ->            {
-                LOG.debug("Initializing DataSource with property {}={}", entry.getKey(), entry.getValue());
+                LOG.debug(SQL_INIT, "Initializing DataSource with property {}={}", entry.getKey(), entry.getValue());
             });
             */
-
-
-
         }
 
         HikariDataSource hikariDataSource = new HikariDataSource();
@@ -75,8 +77,9 @@ public class DefaultDataSource {
         */
 
         if(LOG.isDebugEnabled()) {
+            LOG.debug(SQL_INIT, "Hibernate Properties");
             properties.entrySet().iterator().forEachRemaining((entry) ->            {
-                LOG.debug("Initializing hibernateProperties with property {}={}", entry.getKey(), entry.getValue());
+                LOG.debug(SQL_INIT, "{} = {}", entry.getKey(), entry.getValue());
             });
         }
         return properties;

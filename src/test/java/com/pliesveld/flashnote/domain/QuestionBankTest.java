@@ -1,6 +1,9 @@
 package com.pliesveld.flashnote.domain;
 
 import com.pliesveld.flashnote.unit.spring.DefaultEntityTestAnnotations;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,7 +11,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUtil;
 import java.io.Serializable;
 
 import static org.junit.Assert.assertNotNull;
@@ -18,6 +23,8 @@ import static org.junit.Assert.assertNotNull;
 @Transactional
 public class QuestionBankTest extends AbstractDomainEntityUnitTest
 {
+    private static final Logger LOG = LogManager.getLogger();
+
     @PersistenceContext
     EntityManager entityManager;
 
@@ -54,16 +61,27 @@ public class QuestionBankTest extends AbstractDomainEntityUnitTest
         questionBank.setCategory(category);
         questionBank.setDescription("A sample question bank with a question.");
 
-        Question question = new Question();
-        question.setTitle("A sample question");
-        question.setContent("What is the meaning of life?");
-        entityManager.persist(question);
-        entityManager.flush();
+        for(int i = 0; i < 15;i++)
+        {
+            Question question = this.questionBean();
 
-        questionBank.add(question);
+            entityManager.persist(question);
+            entityManager.flush();
+            questionBank.add(question);
+        }
 
         entityManager.persist(questionBank);
+        Serializable qb_id = questionBank.getId();
         entityManager.flush();
+        entityManager.clear();
+
+        questionBank = entityManager.find(QuestionBank.class, qb_id);
+
+        PersistenceUtil persistenceUtil = Persistence.getPersistenceUtil();
+        LOG.info(Hibernate.isInitialized(questionBank));
+        LOG.info(persistenceUtil.isLoaded(questionBank));
+        LOG.info(persistenceUtil.isLoaded(questionBank,"id"));
+
     }
 
 

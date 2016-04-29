@@ -20,15 +20,15 @@ public class StudentDetails implements Serializable
     private Integer id;
 
     @MapsId
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "STUDENT_ID", foreignKey = @ForeignKey(name = "FK_STUDENT_DETAILS"))
 //    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     @JsonIgnore
     private Student student;
 
     @NotNull
-    @Size(min = Constants.MIN_STUDENT_NAME_LENGTH,max = Constants.MAX_STUDENT_NAME_LENGTH)
-    @Column(name = "STUDENT_NAME",  length = Constants.MAX_STUDENT_NAME_LENGTH, nullable = false)
+    @Size(min = Constants.MIN_STUDENT_NAME_LENGTH, max = Constants.MAX_STUDENT_NAME_LENGTH)
+    @Column(name = "STUDENT_NAME", length = Constants.MAX_STUDENT_NAME_LENGTH, nullable = false)
     private String name;
 
     public StudentDetails() {

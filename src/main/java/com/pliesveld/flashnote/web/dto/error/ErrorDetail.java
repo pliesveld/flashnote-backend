@@ -8,7 +8,7 @@ import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ErrorDetail {
-    private long timeStamp;
+    private long timestamp;
     private String title;
     private int status;
     private String detail;
@@ -43,12 +43,12 @@ public class ErrorDetail {
         this.detail = detail;
     }
 
-    public long getTimeStamp() {
-        return timeStamp;
+    public long getTimestamp() {
+        return timestamp;
     }
 
-    public void setTimeStamp(long timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     public String getDeveloperMessage() {

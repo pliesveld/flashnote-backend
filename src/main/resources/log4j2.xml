@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration configDebug="false" monitorInterval="30">
+<Configuration configDebug="false" monitorInterval="3">
   <Properties>
     <Property name="hibernatefilename">log/hibernate.log</Property>
     <Property name="servicefilename">log/service.log</Property>
@@ -7,13 +7,21 @@
     <Property name="springdebug">log/spring-debug.log</Property>
     <Property name="springselect">log/spring-web.log</Property>
 
+    <Property name="LOG_SQL_LEVEL">WARN</Property>
+    <Property name="LOG_MVC_LEVEL">WARN</Property>
+    <Property name="LOG_TRANS_LEVEL">DEBUG</Property>
+    <Property name="LOG_APP_LEVEL">DEBUG</Property>
+
   </Properties>
 
   <Appenders>
     <Console name="CONSOLE" target="SYSTEM_OUT">
+
+        <!--        <MarkerFilter marker="SECURITY" onMatch="DENY" onMismatch="NEUTRAL"/> -->
+
     	<PatternLayout>
       		<MarkerPatternSelector defaultPattern="[%-5level] %c{1.} %msg%n">
-        		<PatternMatch key="SECURITY" pattern="[%-5level] %c{1.} ====== %C{1.}.%M:%L %msg ======%n"/>
+        		<PatternMatch key="SECURITY_AUTH" pattern="[%-5level] %c{1.} ====== %C{1.}.%M:%L %msg ======%n"/>
     	  	</MarkerPatternSelector>
 	    </PatternLayout>
     </Console>
@@ -43,16 +51,29 @@
   <Loggers>
 
 
-    <logger name="com.pliesveld.flashnote" level="DEBUG" additivity="false">
+    <logger name="com.pliesveld.flashnote" level="${sys:LOG_APP_LEVEL}" additivity="false">
         <AppenderRef ref="FileService"/>
         <AppenderRef ref="CONSOLE"/>
     </logger>
 
-<!--
-    <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
+
+    <logger name="org.hibernate.SQL" level="${sys:LOG_SQL_LEVEL}" additivity="false">
   		<AppenderRef ref="FileHibernate"/>
+        <AppenderRef ref="CONSOLE"/>
   	</logger>
 
+    <logger name="org.springframework.transaction.interceptor" level="${sys:LOG_TRANS_LEVEL}" additivity="false">
+        <AppenderRef ref="CONSOLE"/>
+  	</logger>
+
+    <logger name="org.springframework.web.servlet.mvc" level="${sys:LOG_MVC_LEVEL}" additivity="false">
+        <AppenderRef ref="FileService"/>
+        <AppenderRef ref="CONSOLE"/>
+    </logger>
+
+
+
+<!--
     <logger name="org.springframework.boot.autoconfigure.logging.AutoConfigurationReportLoggingInitializer" level="DEBUG" additivity="false">
         <AppenderRef ref="FileSpringBootDebug"/>
     </logger>

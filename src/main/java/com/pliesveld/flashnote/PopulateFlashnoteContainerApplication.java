@@ -18,6 +18,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -42,6 +43,8 @@ public class PopulateFlashnoteContainerApplication {
     StudentDetailsRepository studentDetailsRepository;
     @Autowired
     QuestionBankRepository questionBankRepository;
+    @Autowired
+    NotificationRepository notificationRepository;
 
 	public static void main(String[] args) {
 //        System.setProperty("spring.profiles.default", System.getProperty("spring.profiles.default", "local"));
@@ -118,6 +121,8 @@ public class PopulateFlashnoteContainerApplication {
                 return;
             }
 
+            populateMessagesFor(studentDetails);
+
             Deck deck = new Deck();
             deck.setFlashcards(flashCards);
             deck.setCategory(category);
@@ -145,11 +150,28 @@ public class PopulateFlashnoteContainerApplication {
             questionBank.add(new Question("What is composition?"));
             questionBank.add(new Question("What is inheritence?"));
             questionBank.add(new Question("What is abstraction?"));
+            Question question = new Question("What is an object?");
+            question.addAnnotation(new AnnotatedStatement(studentDetails,"Add to your description the definition of a class."));
+            questionBank.add(question);
             questionBank.setCategory(category);
             questionBankRepository.save(questionBank);
 
 
         };
+    }
+
+    @Transactional
+    private void populateMessagesFor(StudentDetails studentDetails) {
+        List<Notification> list = new ArrayList<>(15);
+
+        for(int i = 0; i < 15; i++) {
+            String message = "This is a sample notification number " + i;
+
+            Notification notification = new Notification(studentDetails, message);
+            list.add(notification);
+        }
+
+        notificationRepository.save(list);
     }
 
     @Bean

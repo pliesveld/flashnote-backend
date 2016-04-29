@@ -2,10 +2,16 @@ package com.pliesveld.flashnote.domain;
 
 import com.pliesveld.flashnote.domain.base.AbstractAuditableEntity;
 import com.pliesveld.flashnote.schema.Constants;
+import org.hibernate.annotations.CollectionId;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -19,14 +25,25 @@ public abstract class AbstractStatement extends AbstractAuditableEntity
     protected Integer id;
 
     @NotNull
-    @Column(name = "CONTENT", length = Constants.MAX_STATEMENT_CONTENT_LENGTH, nullable = false)
     @Size(max = Constants.MAX_STATEMENT_CONTENT_LENGTH)
+    @Column(name = "CONTENT", length = Constants.MAX_STATEMENT_CONTENT_LENGTH, nullable = false)
     protected String content = "";
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "ANNOTATION", joinColumns = { @JoinColumn(name = "STATEMENT_ID",foreignKey = @ForeignKey(name = "FK_ANNOTATION_STATEMENT"))})
+//    @GenericGenerator(name="sequence-gen", strategy="sequence")
+    @CollectionId(
+        columns   = @Column(name = "ANNOTATION_ID"),
+        type      = @Type(type = "integer"),
+        generator = Constants.SEQUENCE_GENERATOR
+//        generator = "sequence-gen"
+    )
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    protected Collection<AnnotatedStatement> annotations = new ArrayList<AnnotatedStatement>();
 
     public AbstractStatement() {}
 
-    public String getContent()
-    {
+    public String getContent() {
         return content;
     }
 
@@ -35,16 +52,19 @@ public abstract class AbstractStatement extends AbstractAuditableEntity
         this.content = content;
     }
 
-    public Integer getId()
-    {
-        return id;
-    }
+    public Integer getId() { return id; }
 
-    public void setId(Integer id)
+    protected void setId(Integer id)
     {
         this.id = id;
     }
 
+    public Collection<AnnotatedStatement> getAnnotations() { return annotations; }
+
+    public void addAnnotation(AnnotatedStatement annotatedStatement)
+    {
+        this.annotations.add(annotatedStatement);
+    }
 
     @Override
     public int hashCode() {
@@ -62,4 +82,6 @@ public abstract class AbstractStatement extends AbstractAuditableEntity
         final AbstractStatement other = (AbstractStatement) obj;
         return Objects.equals(getContent(), other.getContent());
     }
+
+
 }

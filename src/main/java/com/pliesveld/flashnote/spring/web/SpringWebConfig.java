@@ -1,12 +1,8 @@
 package com.pliesveld.flashnote.spring.web;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.pliesveld.flashnote.logging.Markers;
+import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.web.controller.RateLimitingInterceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,20 +17,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.data.web.SortHandlerMethodArgumentResolver;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.servlet.MultipartConfigElement;
-import java.text.DateFormat;
 import java.util.List;
-import java.util.TimeZone;
 
 //import org.springframework.data.domain.PageRequest;
 //import org.springframework.data.domain.Pageable;
@@ -47,7 +39,7 @@ import java.util.TimeZone;
 //import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 
 @Configuration
-@EnableWebMvc
+//@EnableWebMvc
 @ComponentScan({
         "com.pliesveld.flashnote.security",
         "com.pliesveld.flashnote.web.service",
@@ -116,60 +108,35 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
         return new RateLimitingInterceptor();
     }
 
-    @Bean
-    public Jackson2ObjectMapperBuilder objectMapperBuilder() {
 
-        DateFormat dateTime = new com.fasterxml.jackson.databind.util.ISO8601DateFormat();
-        dateTime.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        Jackson2ObjectMapperBuilder b = new Jackson2ObjectMapperBuilder()
-                .createXmlMapper(false).dateFormat(dateTime)
-                .modulesToInstall(this.jacksonHibernateModule(),this.jacksonJavaTimeModule())
-                .serializationInclusion(JsonInclude.Include.NON_ABSENT)
-                .featuresToDisable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-
-        return b;
-    }
-
-    @Bean
-    public Module jacksonHibernateModule()
-    {
-        return new Hibernate5Module()
-                .enable(Hibernate5Module.Feature.SERIALIZE_IDENTIFIER_FOR_LAZY_NOT_LOADED_OBJECTS)
-                .disable(Hibernate5Module.Feature.USE_TRANSIENT_ANNOTATION)
-                .disable(Hibernate5Module.Feature.FORCE_LAZY_LOADING);
-    }
-
-    @Bean
-    public Module jacksonJavaTimeModule() {
-        return new JavaTimeModule();
-    }
-
-
-    @Autowired(required = true)
-    public void configureJackson(ObjectMapper jackson2ObjectMapper)
-    {
-        jackson2ObjectMapper.registerModule(this.jacksonHibernateModule());
-        jackson2ObjectMapper.registerModule(this.jacksonJavaTimeModule());
-        jackson2ObjectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        jackson2ObjectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-        jackson2ObjectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        jackson2ObjectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        jackson2ObjectMapper.enable(SerializationFeature.USE_EQUALITY_FOR_OBJECT_ID);
-        jackson2ObjectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-
-
-    }
-
+/**  UGLY HACK **/
+//    @Override
+//    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+//        for (HttpMessageConverter<?> converter : converters) {
+//            if (converter instanceof MappingJackson2HttpMessageConverter) {
+//                MappingJackson2HttpMessageConverter jsonMessageConverter = (MappingJackson2HttpMessageConverter) converter;
+//                ObjectMapper objectMapper = jsonMessageConverter.getObjectMapper();
+//                Views.debug(WebMvcConfigurerAdapter.class,objectMapper);
+//                configureJackson(objectMapper);
+//                Views.debug(this,objectMapper);
+//                break;
+//            }
+//        }
+//    }
 /**  UGLY HACK **/
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+        LOG.debug(Markers.OBJECT_MAPPER_INIT, "Scanning SpringMVC HttpMessageConverters");
+
+        int i = 0;
         for (HttpMessageConverter<?> converter : converters) {
+            LOG.debug(Markers.OBJECT_MAPPER_INIT, "Converter {}: {} ",++i, converter);
             if (converter instanceof MappingJackson2HttpMessageConverter) {
                 MappingJackson2HttpMessageConverter jsonMessageConverter = (MappingJackson2HttpMessageConverter) converter;
                 ObjectMapper objectMapper = jsonMessageConverter.getObjectMapper();
-                configureJackson(objectMapper);
-                break;
+                LOG.debug(Markers.OBJECT_MAPPER_INIT, "ObjectMapper settings for MappingJackson2HttpMessageConverter");
+                Views.debug(WebMvcConfigurerAdapter.class, objectMapper);
+              //  break;
             }
         }
     }

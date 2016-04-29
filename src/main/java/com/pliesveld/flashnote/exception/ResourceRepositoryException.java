@@ -2,8 +2,6 @@ package com.pliesveld.flashnote.exception;
 
 import org.springframework.http.HttpStatus;
 
-import java.io.Serializable;
-
 /**
  * Created by happs on 1/20/16.
  */
@@ -17,7 +15,7 @@ public abstract class ResourceRepositoryException extends RuntimeException {
     }
 
     public ResourceRepositoryException(String message, Throwable cause) {
-        super(message, cause);
+        this(message, cause, true, false);
     }
 
     public ResourceRepositoryException(Throwable cause) {
