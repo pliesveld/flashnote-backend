@@ -28,7 +28,7 @@ public class AuthService implements UserDetailsService {
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Student student = studentRepository.findOneByEmail(username);
+        final Student student = studentRepository.findOneByEmail(username);
 
         if(student == null)
         {
