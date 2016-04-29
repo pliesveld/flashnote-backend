@@ -96,6 +96,24 @@ class TokenTest(unittest.TestCase):
             log.debug("response: " + json.dumps(r_json, sort_keys=True, indent=4))
 
 
+    def testTokenBad(self):
+        auth_req = { 'username' : 'student@example.com',
+                     'password' : 'nottherightpassword' }
+
+        req = requests.Request(method='POST', url=AUTH_RESOURCE,json=auth_req)
+        req = req.prepare()
+        
+        log.debug("sending headers: " + str(req.headers.__dict__))
+        r = requests.models.Response()
+
+        with requests.Session() as s:
+            r = s.send(req)
+
+        r_json = r.json()
+
+        log.debug("response: " + json.dumps(r_json, sort_keys=True, indent=4))
+
+        self.assertNotIn('token', r_json)
 
 
 

@@ -7,10 +7,8 @@ import com.pliesveld.flashnote.spring.Profiles;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.*;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
@@ -50,6 +48,7 @@ import static com.pliesveld.flashnote.logging.Markers.SECURITY_INIT;
         com.pliesveld.flashnote.security.StudentPrincipal.class,
         com.pliesveld.flashnote.spring.security.SpringSecurityConfig.class
 })
+@PropertySource("")
 public class SpringSecurityConfig {
     private static final Logger LOG = LogManager.getLogger();
 
@@ -138,10 +137,13 @@ public class SpringSecurityConfig {
             return authenticationTokenFilter;
         }
 
+        @Value("${security.debug:false}")
+        Boolean debug;
+
         @Override
         public void configure(WebSecurity web) throws Exception {
             web
-                .debug(false)
+                .debug(debug)
                 .ignoring().antMatchers("/js/**","/css/**","/img/**");
         }
 

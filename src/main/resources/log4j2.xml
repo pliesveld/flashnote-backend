@@ -1,106 +1,128 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration configDebug="false" monitorInterval="3">
-  <Properties>
-    <Property name="hibernatefilename">log/hibernate.log</Property>
-    <Property name="servicefilename">log/service.log</Property>
-    <Property name="springbootdebug">log/spring-boot.log</Property>
-    <Property name="springdebug">log/spring-debug.log</Property>
-    <Property name="springselect">log/spring-web.log</Property>
+    <Properties>
+        <Property name="hibernatefilename">log/hibernate.log</Property>
+        <Property name="servicefilename">log/service.log</Property>
+        <Property name="springbootdebug">log/spring-boot.log</Property>
+        <Property name="springdebug">log/spring-debug.log</Property>
+        <Property name="springselect">log/spring-web.log</Property>
 
-    <Property name="LOG_SQL_LEVEL">WARN</Property>
-    <Property name="LOG_MVC_LEVEL">WARN</Property>
-    <Property name="LOG_TRANS_LEVEL">DEBUG</Property>
-    <Property name="LOG_APP_LEVEL">DEBUG</Property>
+        <Property name="LOG_JDBC_LEVEL">WARN</Property>
+        <Property name="LOG_SQL_LEVEL">WARN</Property>
+        <Property name="LOG_TRANS_LEVEL">WARN</Property>
+        <Property name="LOG_TRANS_SYNC_LEVEL">WARN</Property>
 
-  </Properties>
+        <Property name="LOG_MVC_LEVEL">WARN</Property>
+        <Property name="LOG_SECURITY_LEVEL">WARN</Property>
+        <Property name="LOG_APP_LEVEL">DEBUG</Property>
 
-  <Appenders>
-    <Console name="CONSOLE" target="SYSTEM_OUT">
+        <Property name="LOG_SPRING_LEVEL">WARN</Property>
+        <Property name="LOG_BEANS_LEVEL">WARN</Property>
+        <Property name="LOG_BEANS_CACHED_LEVEL">WARN</Property>
 
-        <!--        <MarkerFilter marker="SECURITY" onMatch="DENY" onMismatch="NEUTRAL"/> -->
+    </Properties>
+    <Appenders>
+        <Console name="CONSOLE" target="SYSTEM_OUT">
 
-    	<PatternLayout>
-      		<MarkerPatternSelector defaultPattern="[%-5level] %c{1.} %msg%n">
-        		<PatternMatch key="SECURITY_AUTH" pattern="[%-5level] %c{1.} ====== %C{1.}.%M:%L %msg ======%n"/>
-    	  	</MarkerPatternSelector>
-	    </PatternLayout>
-    </Console>
+            <!--        <MarkerFilter marker="SECURITY" onMatch="DENY" onMismatch="NEUTRAL"/> -->
 
-    <File name="FileHibernate" fileName="${hibernatefilename}" append="false">
-      <PatternLayout pattern="[%t] %-5level %logger{2.1.} - %msg%n"/>
-    </File>
+            <PatternLayout>
+                <MarkerPatternSelector defaultPattern="[%-5level] %c{1.} %msg%n">
+                    <PatternMatch key="SECURITY_AUTH" pattern="[%-5level] %c{1.} ====== %C{1.}.%M:%L %msg ======%n"/>
+                </MarkerPatternSelector>
+            </PatternLayout>
+        </Console>
 
-    <File name="FileService" fileName="${servicefilename}" append="false">
-        <PatternLayout pattern="[%t] %-5level %logger{2.1.} - %msg%n"/>
-    </File>
+        <File name="FileHibernate" fileName="${hibernatefilename}" append="false">
+            <PatternLayout pattern="[%t] %-5level %logger{2.1.} - %msg%n"/>
+        </File>
 
-    <File name="FileSpringDebug" fileName="${springdebug}" append="false">
-        <PatternLayout pattern="%-5level %c %msg%n"/>
-    </File>
+        <File name="FileService" fileName="${servicefilename}" append="false">
+            <PatternLayout pattern="[%t] %-5level %logger{2.1.} - %msg%n"/>
+        </File>
 
-    <File name="FileSpringBootDebug" fileName="${springbootdebug}" append="false">
-        <PatternLayout pattern="%-5level %c %msg%n"/>
-    </File>
+        <File name="FileSpringDebug" fileName="${springdebug}" append="false">
+            <PatternLayout pattern="%-5level %c %msg%n"/>
+        </File>
 
-    <File name="FileSpringSelect" fileName="${springselect}" append="false">
-        <PatternLayout pattern="%-5level %msg%n"/>
-    </File>
+        <File name="FileSpringBootDebug" fileName="${springbootdebug}" append="false">
+            <PatternLayout pattern="%-5level %c %msg%n"/>
+        </File>
 
-  </Appenders>
+        <File name="FileSpringSelect" fileName="${springselect}" append="false">
+            <PatternLayout pattern="%-5level %msg%n"/>
+        </File>
 
-  <Loggers>
+    </Appenders>
 
-
-    <logger name="com.pliesveld.flashnote" level="${sys:LOG_APP_LEVEL}" additivity="false">
-        <AppenderRef ref="FileService"/>
-        <AppenderRef ref="CONSOLE"/>
-    </logger>
-
-
-    <logger name="org.hibernate.SQL" level="${sys:LOG_SQL_LEVEL}" additivity="false">
-  		<AppenderRef ref="FileHibernate"/>
-        <AppenderRef ref="CONSOLE"/>
-  	</logger>
-
-    <logger name="org.springframework.transaction.interceptor" level="${sys:LOG_TRANS_LEVEL}" additivity="false">
-        <AppenderRef ref="CONSOLE"/>
-  	</logger>
-
-    <logger name="org.springframework.web.servlet.mvc" level="${sys:LOG_MVC_LEVEL}" additivity="false">
-        <AppenderRef ref="FileService"/>
-        <AppenderRef ref="CONSOLE"/>
-    </logger>
+    <Loggers>
 
 
+        <logger name="com.pliesveld.flashnote" level="${sys:LOG_APP_LEVEL}" additivity="false">
+            <AppenderRef ref="FileService"/>
+            <AppenderRef ref="CONSOLE"/>
+        </logger>
 
-<!--
-    <logger name="org.springframework.boot.autoconfigure.logging.AutoConfigurationReportLoggingInitializer" level="DEBUG" additivity="false">
-        <AppenderRef ref="FileSpringBootDebug"/>
-    </logger>
 
-    <logger name="org.springframework.security.web.access.expression.ExpressionBasedFilterInvocationSecurityMetadataSource" level="DEBUG" additivity="false">
-        <AppenderRef ref="FileSpringSelect"/>
-    </logger>
+        <logger name="org.hibernate.SQL" level="${sys:LOG_SQL_LEVEL}" additivity="false">
+            <AppenderRef ref="FileHibernate"/>
+            <AppenderRef ref="CONSOLE"/>
+        </logger>
 
-    <logger name="org.springframework.web.servlet.handler" level="INFO" additivity="false">
-        <AppenderRef ref="FileSpringSelect"/>
-    </logger>
+        <logger name="org.springframework.transaction.interceptor" level="${sys:LOG_TRANS_LEVEL}" additivity="false">
+            <AppenderRef ref="CONSOLE"/>
+        </logger>
 
-    <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="INFO" additivity="false">
-        <AppenderRef ref="FileSpringSelect"/>
-    </logger>
+        <logger name="org.springframework.web.servlet.mvc" level="${sys:LOG_MVC_LEVEL}" additivity="false">
+            <AppenderRef ref="FileService"/>
+            <AppenderRef ref="CONSOLE"/>
+        </logger>
 
-    <logger name="org.springframework" level="WARN" additivity="false">
-        <AppenderRef ref="CONSOLE"/>
-    </logger>
+        <logger name="org.springframework.web.servlet.handler" level="${sys:LOG_MVC_LEVEL}" additivity="false">
+            <AppenderRef ref="CONSOLE"/>
+        </logger>
 
-    <logger name="org.springframework" level="DEBUG" additivity="false">
-       <AppenderRef ref="FileSpringDebug"/>
-    </logger>
--->
+        <logger name="org.springframework.security" level="${sys:LOG_SECURITY_LEVEL}" additivity="false">
+            <AppenderRef ref="CONSOLE"/>
+        </logger>
 
-    <Root level="WARN">
-       <AppenderRef ref="CONSOLE"/>
-    </Root>
-  </Loggers>
+        <logger name="org.springframework.jdbc.core" level="${sys:LOG_JDBC_LEVEL}" additivity="false">
+            <AppenderRef ref="CONSOLE"/>
+        </logger>
+
+        <logger name="org.springframework.transaction.support.TransactionSynchronizationManager" level="${sys:LOG_TRANS_SYNC_LEVEL}" additivity="false">
+            <AppenderRef ref="CONSOLE"/>
+        </logger>
+
+        <logger name="org.springframework" level="${sys:LOG_SPRING_LEVEL}" additivity="false">
+            <AppenderRef ref="CONSOLE"/>
+        </logger>
+
+        <logger name="org.springframework.beans" level="${sys:LOG_BEANS_LEVEL}" additivity="false">
+            <AppenderRef ref="CONSOLE"/>
+        </logger>
+
+        <logger name="org.springframework.beans.CachedIntrospectionResults" level="${sys:LOG_BEANS_CACHED_LEVEL}" additivity="false">
+            <AppenderRef ref="CONSOLE"/>
+        </logger>
+
+        <!--
+            <logger name="org.springframework.boot.autoconfigure.logging.AutoConfigurationReportLoggingInitializer" level="DEBUG" additivity="false">
+                <AppenderRef ref="FileSpringBootDebug"/>
+            </logger>
+
+            <logger name="org.springframework.security.web.access.expression.ExpressionBasedFilterInvocationSecurityMetadataSource" level="DEBUG" additivity="false">
+                <AppenderRef ref="FileSpringSelect"/>
+            </logger>
+
+
+            <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="INFO" additivity="false">
+                <AppenderRef ref="FileSpringSelect"/>
+            </logger>
+        -->
+
+        <Root level="WARN">
+            <AppenderRef ref="CONSOLE"/>
+        </Root>
+    </Loggers>
 </Configuration>

@@ -39,5 +39,6 @@ public class Markers {
     public static final Marker REST_EXCEPTION = MarkerManager.getMarker("REST_EXCEPTION");
     public static final Marker REST_EXCEPTION_INTERNAL = MarkerManager.getMarker("REST_EXCEPTION_INTERNAL").addParents(REST_EXCEPTION);
 
-
+    public static final Marker SERVLET = MarkerManager.getMarker("SERVLET");
+    public static final Marker SERVLET_INIT = MarkerManager.getMarker("SERVLET_INIT").addParents(SERVLET);
 }

@@ -5,6 +5,7 @@ import com.pliesveld.flashnote.domain.Question;
 import com.pliesveld.flashnote.exception.FlashCardCreateException;
 import com.pliesveld.flashnote.repository.AnswerRepository;
 import com.pliesveld.flashnote.repository.QuestionRepository;
+import com.pliesveld.flashnote.repository.StatementRepository;
 import com.pliesveld.flashnote.service.CardService;
 import com.pliesveld.flashnote.unit.spring.DefaultServiceTestAnnotations;
 import org.junit.Test;
@@ -13,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Iterator;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @DefaultServiceTestAnnotations
@@ -31,6 +29,9 @@ public class CardServiceTest {
     
     @Autowired
     AnswerRepository answerRepository;
+
+    @Autowired
+    StatementRepository statementRepository;
 
     @Test
     public void flashcardCreateSimple()
@@ -72,9 +73,9 @@ public class CardServiceTest {
         questionRepository.save(que);
         answerRepository.save(ans);
 
-        Iterator<Question> statements = questionRepository.findAllByAuthor("SYSTEM").iterator();
-        assertNotNull(statements);
-        assertTrue(statements.hasNext());
+        assertEquals(1, questionRepository.findAllByAuthor("SYSTEM").count());
+        assertEquals(1, answerRepository.findAllByAuthor("SYSTEM").count());
+        assertEquals(2, statementRepository.findAllByAuthor("SYSTEM").count());
     }
 
 
