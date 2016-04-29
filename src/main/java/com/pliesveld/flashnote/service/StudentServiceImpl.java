@@ -73,6 +73,7 @@ public class StudentServiceImpl implements StudentService {
 
         // delete RegistrationToken
         // delete PasswordResetToken
+        // delete Deck
 
         StudentDetails deletedStudentDetails = studentDetailsRepository.findOne(id);
         if(deletedStudentDetails == null)

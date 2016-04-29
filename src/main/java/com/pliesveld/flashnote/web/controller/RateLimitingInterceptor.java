@@ -2,7 +2,7 @@ package com.pliesveld.flashnote.web.controller;
 
 import com.pliesveld.flashnote.exception.TooManyRequestsException;
 import com.pliesveld.flashnote.schema.Constants;
-import com.pliesveld.flashnote.service.RateLimitService;
+import com.pliesveld.flashnote.security.service.RateLimitService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

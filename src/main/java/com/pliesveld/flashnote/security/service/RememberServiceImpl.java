@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.service;
+package com.pliesveld.flashnote.security.service;
 
 import com.pliesveld.flashnote.domain.AccountRememberMeToken;
 import com.pliesveld.flashnote.exception.ResourceNotFoundException;

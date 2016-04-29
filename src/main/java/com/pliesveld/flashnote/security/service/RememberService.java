@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.service;
+package com.pliesveld.flashnote.security.service;
 
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.transaction.annotation.Transactional;

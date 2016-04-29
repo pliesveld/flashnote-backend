@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.service;
+package com.pliesveld.flashnote.security.service;
 
 public interface RateLimitService {
     void recordRemoteAccess(String ipAddr);
