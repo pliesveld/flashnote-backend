@@ -3,19 +3,18 @@ package com.pliesveld.flashnote.spring.security;
 import com.pliesveld.flashnote.domain.StudentRole;
 import com.pliesveld.flashnote.security.JwtAuthenticationEntryPoint;
 import com.pliesveld.flashnote.security.JwtAuthenticationTokenFilter;
-import com.pliesveld.flashnote.service.RememberService;
 import com.pliesveld.flashnote.spring.Profiles;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,7 +31,6 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.util.Collection;
@@ -97,9 +95,6 @@ public class SpringSecurityConfig {
         UserDetailsService userDetailsService;
 
         @Autowired
-        RememberService rememberService;
-
-        @Autowired
         RoleHierarchyImpl roleHierarchy;
 
         @Bean
@@ -108,18 +103,39 @@ public class SpringSecurityConfig {
             return new BCryptPasswordEncoder(11);
         }
 
-        @Bean
-        public AuthenticationProvider authenticationProvider() {
-            DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-            authProvider.setUserDetailsService(userDetailsService);
-            authProvider.setPasswordEncoder(this.passwordEncoder());
-            return authProvider;
+        @Override
+        protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+            authenticationManagerBuilder
+                    .userDetailsService(this.userDetailsService)
+                    .passwordEncoder(this.passwordEncoder());
         }
 
+        @Bean
+        public AuthenticationEntryPoint authenticationEntryPoint() {
+            return new JwtAuthenticationEntryPoint();
+        }
+
+        private SecurityExpressionHandler<FilterInvocation> webExpressionHandler() {
+            DefaultWebSecurityExpressionHandler defaultWebSecurityExpressionHandler = new DefaultWebSecurityExpressionHandler();
+            defaultWebSecurityExpressionHandler.setRoleHierarchy(roleHierarchy);
+            return defaultWebSecurityExpressionHandler;
+        }
+
+//        @Qualifier("myAuthenticationManager")
+//        @Autowired
+//        AuthenticationManager authenticationManager;
+
+        @Bean
         @Override
-        protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-            auth
-                    .authenticationProvider(this.authenticationProvider());
+        public AuthenticationManager authenticationManagerBean() throws Exception {
+            return super.authenticationManagerBean();
+        }
+
+        @Bean
+        public JwtAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
+            JwtAuthenticationTokenFilter authenticationTokenFilter = new JwtAuthenticationTokenFilter();
+            authenticationTokenFilter.setAuthenticationManager(authenticationManagerBean());
+            return authenticationTokenFilter;
         }
 
         @Override
@@ -131,29 +147,22 @@ public class SpringSecurityConfig {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-/*
-            http.authorizeRequests().antMatchers("/**").hasRole("USER");
-            http.formLogin().permitAll();
-            http.rememberMe().tokenRepository(this.rememberService).userDetailsService(this.userDetailsService);
-*/
 
-            //http.httpBasic().realmName("FlashNote");
-            //http.addFilter(this.authenticationFilter());
             http.authorizeRequests()
                     .antMatchers(HttpMethod.OPTIONS).permitAll()
                     .antMatchers("/account/sign-up", "/account/confirm", "/account/reset", "/account/reset/confirm").permitAll()
-                    .antMatchers("/auth", "/refresh","/user").permitAll()
+                    .antMatchers("/auth", "/refresh").permitAll()
+                    .antMatchers("/user").authenticated()
                     .antMatchers(HttpMethod.POST, "/account/password").fullyAuthenticated()
                     .antMatchers(HttpMethod.HEAD, "/categories/**", "/attachments/**").permitAll()
                     .antMatchers(HttpMethod.GET, "/", "/students/**", "/categories/**", "/attachments/**",
-                            "/decks/**", "/statements/**", "/questions/**", "/answers/**").permitAll()
+                            "/decks/**", "/statements/**", "/questions/**", "/answers/**")
+                .permitAll()
                     .expressionHandler(webExpressionHandler())
 
                     .antMatchers("/anon/**").permitAll()
                     .antMatchers("/auth/**").hasRole("USER")
                     .antMatchers("/admin/**").hasRole("ADMIN");
-
-            http.userDetailsService(this.userDetailsService);
 
             http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
@@ -164,6 +173,27 @@ public class SpringSecurityConfig {
             http.csrf().disable();
 
             http.headers().disable();
+
+        }
+
+/*
+
+    Form based authentication configuration
+
+
+        @Autowired
+        RememberService rememberService;
+
+        protected void configure(HttpSecurity http) throws Exception {
+
+
+            http.authorizeRequests().antMatchers("/**").hasRole("USER");
+            http.formLogin().permitAll();
+            http.rememberMe().tokenRepository(this.rememberService).userDetailsService(this.userDetailsService);
+
+
+            //http.httpBasic().realmName("FlashNote");
+            //http.addFilter(this.authenticationFilter());
 
 /*            http.formLogin()
  *                   .successHandler(this.savedRequestAwareAuthenticationSuccessHandler())
@@ -185,40 +215,22 @@ public class SpringSecurityConfig {
 */
 
 
-
-        }
-
-        @Bean
-        public AuthenticationEntryPoint authenticationEntryPoint() {
-            return new JwtAuthenticationEntryPoint();
-        }
-
-        private SecurityExpressionHandler<FilterInvocation> webExpressionHandler() {
-            DefaultWebSecurityExpressionHandler defaultWebSecurityExpressionHandler = new DefaultWebSecurityExpressionHandler();
-            defaultWebSecurityExpressionHandler.setRoleHierarchy(roleHierarchy);
-            return defaultWebSecurityExpressionHandler;
-        }
-
-
-        @Qualifier("myAuthenticationManager")
-        @Autowired
-        AuthenticationManager authenticationManager;
-
-        @Bean(name = "myAuthenticationManager")
-        @Override
-        public AuthenticationManager authenticationManagerBean() throws Exception {
-            return super.authenticationManagerBean();
-        }
-
-        @Bean
-        public JwtAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
-            JwtAuthenticationTokenFilter authenticationTokenFilter = new JwtAuthenticationTokenFilter();
-
-            authenticationTokenFilter.setAuthenticationManager(authenticationManagerBean());
-            return authenticationTokenFilter;
-        }
-
 /*
+        @Bean
+        public AuthenticationProvider authenticationProvider() {
+            DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+            authProvider.setUserDetailsService(userDetailsService);
+            authProvider.setPasswordEncoder(this.passwordEncoder());
+            return authProvider;
+        }
+
+        @Override
+        protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+            auth
+                    .authenticationProvider(this.authenticationProvider());
+        }
+
+
         @Bean
         public MyAuthenticationFilter authenticationFilter() {
             MyAuthenticationFilter authFilter = new MyAuthenticationFilter();
@@ -271,30 +283,6 @@ public class SpringSecurityConfig {
     }
 }
 
-/* From Spring Security -- for testing */
-
-@Component
-@Primary
-//@Profile("!" + Profiles.AUTH)
-class NoOpPasswordEncoder implements PasswordEncoder {
-
-    public String encode(CharSequence rawPassword) {
-        return rawPassword.toString();
-    }
-
-    public boolean matches(CharSequence rawPassword, String encodedPassword) {
-        return rawPassword.toString().equals(encodedPassword);
-    }
-
-    /**
-     * Get the singleton {@link NoOpPasswordEncoder}.
-     */
-    public static PasswordEncoder getInstance() {
-        return INSTANCE;
-    }
-
-    private static final PasswordEncoder INSTANCE = new NoOpPasswordEncoder();
-}
 
 
 
