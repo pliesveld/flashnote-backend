@@ -26,6 +26,20 @@ import static org.junit.Assert.assertNotNull;
 public class AbstractDomainEntityUnitTest
 {
     protected static final Logger LOG = LogManager.getLogger("BaseEntityTests");
+    private final static String LOG_TAG = "LOG_SQL_LEVEL";
+
+    protected static void disableSQL()
+    {
+        System.setProperty(LOG_TAG, "ERROR");
+        ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
+    }
+
+    protected static void enableSQL()
+    {
+        System.setProperty(LOG_TAG, "DEBUG");
+        ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
+    }
+
 
     @Autowired(required = false)
     protected AnswerRepository answerRepository;
@@ -308,12 +322,6 @@ public class AbstractDomainEntityUnitTest
         entityManager.unwrap(org.hibernate.Session.class).addEventListeners(listener);
     }
 
-
-    public Question questionBean(EntityManager entityManager) {
-        Question question = questionBean();
-        entityManager.persist(question);
-        return question;
-    }
 }
 
 
