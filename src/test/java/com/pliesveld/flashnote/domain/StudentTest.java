@@ -34,17 +34,24 @@ public class StudentTest extends AbstractDomainEntityUnitTest {
         assertNotNull(student);
         assertNull(student.getStudentDetails());
 
-        student = studentRepository.save(student);
+//        student = studentRepository.save(student);
+        entityManager.persist(student);
         student_id = student.getId();
-        entityManager.flush();
-        entityManager.clear();
+
+        /*
+            Do not call flush / clear
+            subclasses of this test expect student to
+            be in the persistence context
+         */
+//        entityManager.flush();
+//        entityManager.clear();
     }
 
     @Test
     public void testEntitySanity()
     {
         assertNotNull(student_id);
-        assertNotNull(entityManager.find(Student.class,student_id));
+        assertNotNull(entityManager.getReference(Student.class,student_id));
     }
 
     @After

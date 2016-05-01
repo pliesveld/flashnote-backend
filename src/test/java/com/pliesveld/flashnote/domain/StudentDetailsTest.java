@@ -3,7 +3,6 @@ package com.pliesveld.flashnote.domain;
 import com.pliesveld.flashnote.unit.spring.DefaultEntityTestAnnotations;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,10 +28,17 @@ public class StudentDetailsTest extends StudentTest {
     @Override
     public void setupEntities()
     {
+        /*
+            Load Student into persistence context
+         */
         super.setupEntities();
 
         assertNotNull(student_id);
 
+        /*
+            Get a uninitialized proxy.  If in persistence context, it
+             should be loaded.
+         */
         Student student = entityManager.getReference(Student.class, student_id);
         assertTrue(entityManager.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(student));
 
@@ -43,49 +49,14 @@ public class StudentDetailsTest extends StudentTest {
     }
 
     @Test
+    @Override
     public void testEntitySanity()
     {
-        assertStudentRepositoryCount(1);
-        assertStudentDetailsRepositoryCount(1);
-        assertNotNull(studentDetailsRepository.findOne((Integer) student_id));
-        assertNotNull(studentRepository.findOne((Integer) student_id));
+        super.testEntitySanity();
+        assertNotNull(student_id);
+        assertNotNull(entityManager.getReference(StudentDetails.class,student_id));
     }
 
-    @After
-    @Override
-    public void flushAfter()
-    {
-        entityManager.flush();
-    }
-
-    @Test
-    public void removalDetailsCascadesToAccountTest()
-    {
-        assertStudentRepositoryCount(1);
-        assertStudentDetailsRepositoryCount(1);
-
-        StudentDetails studentDetails = studentDetailsRepository.findOne((Integer) student_id);
-        assertTrue(entityManager.contains(studentDetails));
-        entityManager.remove(studentDetails);
-        entityManager.flush();
-
-        assertStudentDetailsRepositoryCount(0);
-        assertStudentRepositoryCount(0);
-    }
-
-    @Test
-    public void removalAccountCascadesToDetailsTest()
-    {
-        assertStudentRepositoryCount(1);
-        assertStudentDetailsRepositoryCount(1);
-
-        Student student = studentRepository.findOne((Integer) student_id);
-        studentRepository.delete(student);
-        entityManager.flush();
-
-        assertStudentRepositoryCount(0);
-        assertStudentDetailsRepositoryCount(0);
-    }
 
     /*
     @Test

@@ -34,13 +34,15 @@ public class DeckTest extends StudentDetailsTest
         super.setupEntities();
         assertNotNull(student_id);
 
-        StudentDetails studentDetails = entityManager.getReference(StudentDetails.class, student_id);
-        assertTrue(entityManager.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(studentDetails));
+        author = entityManager.getReference(StudentDetails.class, student_id);
+        assertTrue(entityManager.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(author));
 
-        author = entityManager.find(StudentDetails.class,student_id);
         category = categoryBean();
         entityManager.persist(category);
+
     }
+
+
 
     @Test
     public void testEntitySanity()

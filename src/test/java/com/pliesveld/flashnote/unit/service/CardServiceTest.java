@@ -8,18 +8,22 @@ import com.pliesveld.flashnote.repository.QuestionRepository;
 import com.pliesveld.flashnote.repository.StatementRepository;
 import com.pliesveld.flashnote.service.CardService;
 import com.pliesveld.flashnote.unit.spring.DefaultServiceTestAnnotations;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.assertEquals;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @DefaultServiceTestAnnotations
 @Transactional
 public class CardServiceTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
 
     @Autowired
     CardService cardService;
@@ -51,7 +55,7 @@ public class CardServiceTest {
         cardService.createFlashCard(que, ans);
     }
     
-    @Test(expected = FlashCardCreateException.class)
+    @Test
     public void accoutCreationDuplicateByReference()
     {
         Question que = new Question("que?");
@@ -61,22 +65,10 @@ public class CardServiceTest {
         answerRepository.save(ans);
         
         cardService.createFlashCardReferecingQuestion(que.getId(), ans);
+        thrown.expect(FlashCardCreateException.class);
         cardService.createFlashCardReferecingQuestion(que.getId(), ans);
     }
 
-    @Test
-    public void findByEmail()
-    {
-        Question que = new Question("que?");
-        Answer ans = new Answer("Ans.");
-
-        questionRepository.save(que);
-        answerRepository.save(ans);
-
-        assertEquals(1, questionRepository.findAllByAuthor("SYSTEM").count());
-        assertEquals(1, answerRepository.findAllByAuthor("SYSTEM").count());
-        assertEquals(2, statementRepository.findAllByAuthor("SYSTEM").count());
-    }
 
 
 
