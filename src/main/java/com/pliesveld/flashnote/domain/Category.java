@@ -1,9 +1,13 @@
 package com.pliesveld.flashnote.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.pliesveld.flashnote.domain.base.AbstractAuditableEntity;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import com.pliesveld.flashnote.schema.Constants;
+import com.pliesveld.flashnote.serializer.DomainObjectSerializer;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -11,41 +15,56 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
+
 
 @Entity
 @Table(name = "CATEGORY",
         uniqueConstraints = @UniqueConstraint(name = "UNIQUE_CATEGORY_NAME",columnNames = {"CATEGORY_NAME"}))
-public class Category extends AbstractAuditableEntity implements Serializable
+public class Category extends DomainBaseEntity<Integer> implements Serializable
 {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "CATEGORY_ID")
+
     private Integer id;
-
-    @NotNull
-    @Column(name = "CATEGORY_NAME", length = Constants.MAX_CATEGORY_NAME_LENGTH, nullable = false)
     private String name;
-
-    @NotNull
-    @Column(name = "CATEGORY_DESC", length = Constants.MAX_CATEGORY_DESCRIPTION_LENGTH, nullable = false)
     private String description;
-
-    @JsonIgnore
-    @ManyToOne(cascade = CascadeType.PERSIST, optional = true)
-    @JoinColumn(name = "CATEGORY_PARENT", referencedColumnName = "CATEGORY_ID", nullable = true, foreignKey = @ForeignKey(name = "FK_CATEGORY_PARENT"))
     private Category parentCategory;
-
-    @JsonIgnore
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "parentCategory")
     private Set<Category> childCategories = new HashSet<>();
 
     public Category() {
     }
 
-    public Category(final String name) {
-        this.name = name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "CATEGORY_ID")
+    public Integer getId() {
+        return id;
+    }
+
+    @NotNull
+    @Column(name = "CATEGORY_NAME", length = Constants.MAX_CATEGORY_NAME_LENGTH, nullable = false)
+    public String getName()
+    {
+        return name;
+    }
+
+    @NotNull
+    @Column(name = "CATEGORY_DESC", length = Constants.MAX_CATEGORY_DESCRIPTION_LENGTH, nullable = false)
+    public String getDescription() { return description; }
+
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "CATEGORY_PARENT_ID", referencedColumnName = "CATEGORY_ID", nullable = true, foreignKey = @ForeignKey(name = "FK_CATEGORY_PARENT"))
+    @LazyToOne(LazyToOneOption.PROXY)
+    @JsonSerialize(using = DomainObjectSerializer.class)
+    public Category getParentCategory()
+    {
+        return parentCategory;
+    }
+
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "parentCategory", fetch = FetchType.EAGER)
+    @LazyCollection(LazyCollectionOption.EXTRA)
+    @JsonSerialize(contentUsing = DomainObjectSerializer.class)
+    public Set<Category> getChildCategories()
+    {
+        return childCategories;
     }
 
     public boolean isParent(String category)
@@ -74,26 +93,9 @@ public class Category extends AbstractAuditableEntity implements Serializable
         childCategories.add(childCategory);
     }
 
-//    public final int getId() {
-//        if (this instanceof HibernateProxy) {
-//            return (int)((HibernateProxy)this).getHibernateLazyInitializer().getIdentifier();
-//        }
-//        else { return id; }
-//    }
-
-    public Integer getId()
-    {
-        return id;
-    }
-
     public void setId(Integer id)
     {
         this.id = id;
-    }
-
-    public String getName()
-    {
-        return name;
     }
 
     public void setName(String name)
@@ -101,19 +103,9 @@ public class Category extends AbstractAuditableEntity implements Serializable
         this.name = name;
     }
 
-    public String getDescription()
-    {
-        return description;
-    }
-
     public void setDescription(String description)
     {
         this.description = description;
-    }
-
-    public Category getParentCategory()
-    {
-        return parentCategory;
     }
 
     public void setParentCategory(Category parentCategory)
@@ -121,31 +113,9 @@ public class Category extends AbstractAuditableEntity implements Serializable
         this.parentCategory = parentCategory;
     }
 
-    public Set<Category> getChildCategories()
-    {
-        return childCategories;
-    }
-
-    public void setChildCategories(Set<Category> childCategories)
+    protected void setChildCategories(Set<Category> childCategories)
     {
         this.childCategories = childCategories;
-    }
-
-
-    @JsonProperty("contents_count")
-    @Transient
-    public int getCount() {return ThreadLocalRandom.current().nextInt(0,15);}
-
-    @Transient
-    @JsonProperty("parent")
-    public Integer getParentId() {
-        return this.getParentCategory() == null ? null : this.getParentCategory().getId();
-    }
-
-    @Transient
-    @JsonProperty("children")
-    public Set<Integer> getChildrenIds() {
-        return this.getChildCategories().stream().map(Category::getId).collect(Collectors.toSet());
     }
 
     @Override
