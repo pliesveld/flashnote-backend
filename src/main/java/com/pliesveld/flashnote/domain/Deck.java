@@ -3,6 +3,8 @@ package com.pliesveld.flashnote.domain;
 import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
 import com.pliesveld.flashnote.schema.Constants;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -16,19 +18,18 @@ import java.util.Objects;
 @Table(name = "DECK",
         indexes = { @Index(name = "IDX_DECK_AUTHOR_ID",
                            columnList = "STUDENT_ID") })
-@NamedQueries(
-        @NamedQuery(name = "Deck.count", query = "SELECT COUNT(d) FROM Deck d")
-)
 @EntityListeners(value = { LogEntityListener.class })
 public class Deck extends DomainBaseEntity implements Serializable
 {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "DECK_ID")
     private Integer id;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "STUDENT_ID", foreignKey = @ForeignKey(name = "FK_DECK_AUTHOR"), nullable = false)
+    @LazyToOne(LazyToOneOption.PROXY)
     private StudentDetails author;
 
     @OneToMany(cascade = {CascadeType.ALL})
@@ -53,8 +54,9 @@ public class Deck extends DomainBaseEntity implements Serializable
     private String description = "Untitled";
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "CATEGORY_ID", foreignKey = @ForeignKey(name = "FK_DECK_CATEGORY"), nullable = false)
+    @LazyToOne(LazyToOneOption.PROXY)
     private Category category;
 
     public Deck() {}

@@ -309,6 +309,11 @@ public class AbstractDomainEntityUnitTest
     }
 
 
+    public Question questionBean(EntityManager entityManager) {
+        Question question = questionBean();
+        entityManager.persist(question);
+        return question;
+    }
 }
 
 
