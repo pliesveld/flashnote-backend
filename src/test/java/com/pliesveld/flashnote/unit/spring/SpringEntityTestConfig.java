@@ -10,7 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @Configuration
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
-@Import({SpringDataConfig.class,PersistenceContext.class})
+@Import({SpringSerializationTestConfig.class,SpringDataConfig.class,PersistenceContext.class})
 public class SpringEntityTestConfig
 {
 

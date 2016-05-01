@@ -1,10 +1,7 @@
 package com.pliesveld.flashnote.spring.serializer;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.Module;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.pliesveld.flashnote.logging.Markers;
@@ -23,8 +20,6 @@ import java.util.TimeZone;
 
 @Configuration
 @ComponentScan({
-        "com.pliesveld.flashnote.web.service",
-        "com.pliesveld.flashnote.web.controller",
         "com.pliesveld.flashnote.serializer"
 })
 @PropertySource(value = {"classpath:mapper.properties"})
@@ -54,9 +49,9 @@ public class SpringJacksonConfig {
 
         Jackson2ObjectMapperBuilder b = Jackson2ObjectMapperBuilder.json()
                 .dateFormat(dateTime)
-//                .modulesToInstall(this.jacksonHibernateModule(),this.jacksonJavaTimeModule())
+                .modulesToInstall(this.jacksonHibernateModule(),this.jacksonJavaTimeModule())
 //                .modules(this.jacksonHibernateModule())
-                .serializationInclusion(JsonInclude.Include.NON_ABSENT)
+                .serializationInclusion(JsonInclude.Include.NON_NULL)
                 .defaultViewInclusion(false)
                 .failOnEmptyBeans(false)
                 .indentOutput(true);
@@ -88,20 +83,20 @@ public class SpringJacksonConfig {
 
 //    @Autowired
 //    @Bean
-    public ObjectMapper configureJackson(Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder)
-    {
-        ObjectMapper jackson2ObjectMapper = jackson2ObjectMapperBuilder.build();
-        LOG.debug("configuring {}",jackson2ObjectMapper);
-        jackson2ObjectMapper.registerModule(this.jacksonHibernateModule());
-        //jackson2ObjectMapper.registerModule(this.jacksonJavaTimeModule());
-        jackson2ObjectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        jackson2ObjectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-
-        jackson2ObjectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        jackson2ObjectMapper.enable(SerializationFeature.USE_EQUALITY_FOR_OBJECT_ID);
-        jackson2ObjectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-        return jackson2ObjectMapper;
-    }
+//    public ObjectMapper configureJackson(Jackson2ObjectMapperBuilder jackson2ObjectMapperBuilder)
+//    {
+//        ObjectMapper jackson2ObjectMapper = jackson2ObjectMapperBuilder.build();
+//        LOG.debug("configuring {}",jackson2ObjectMapper);
+//        jackson2ObjectMapper.registerModule(this.jacksonHibernateModule());
+//        //jackson2ObjectMapper.registerModule(this.jacksonJavaTimeModule());
+//        jackson2ObjectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+//        jackson2ObjectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+//
+//        jackson2ObjectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+//        jackson2ObjectMapper.enable(SerializationFeature.USE_EQUALITY_FOR_OBJECT_ID);
+//        jackson2ObjectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+//        return jackson2ObjectMapper;
+//    }
 //    public void configureJackson(ObjectMapper jackson2ObjectMapper)
 //    {
 //        LOG.debug("configuring {}",jackson2ObjectMapper);

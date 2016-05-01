@@ -5,17 +5,21 @@
         <Property name="LOG_MVC_LEVEL">WARN</Property>
         <Property name="LOG_TRANS_LEVEL">WARN</Property>
         <Property name="LOG_APP_LEVEL">WARN</Property>
+        <Property name="LOG_AUDIT_LEVEL">WARN</Property>
     </Properties>
 
     <Appenders>
         <Console name="CONSOLE" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
+        <Console name="CONSOLE_MSG_ONLY">
+            <PatternLayout pattern="%msg%n"/>
+        </Console>
     </Appenders>
 
     <Loggers>
         <logger name="org.hibernate.SQL" level="${sys:LOG_SQL_LEVEL}" additivity="false">
-            <AppenderRef ref="CONSOLE"/>
+            <AppenderRef ref="CONSOLE_MSG_ONLY"/>
         </logger>
 
         <logger name="com.pliesveld.flashnote" level="${sys:LOG_APP_LEVEL}" additivity="false">
@@ -25,6 +29,15 @@
         <logger name="org.springframework.transaction.interceptor" level="${sys:LOG_TRANS_LEVEL}" additivity="false">
             <AppenderRef ref="CONSOLE"/>
         </logger>
+
+        <logger name="org.springframework.data.auditing" level="${sys:LOG_AUDIT_LEVEL}" additivity="false">
+            <AppenderRef ref="CONSOLE"/>
+        </logger>
+
+
+        <!--<logger name="org.springframework.beans" level="DEBUG" additivity="false">-->
+            <!--<AppenderRef ref="CONSOLE"/>-->
+        <!--</logger>-->
 
         <Root level="WARN">
             <AppenderRef ref="CONSOLE"/>
