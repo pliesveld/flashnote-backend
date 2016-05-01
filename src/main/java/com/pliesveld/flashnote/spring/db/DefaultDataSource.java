@@ -15,6 +15,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.SharedCacheMode;
 import javax.persistence.ValidationMode;
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -96,12 +97,13 @@ public class DefaultDataSource {
 //        vendorAdapter.setDatabase(Database.POSTGRESQL);
 
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
-        //        entityManagerFactoryBean.setPersistenceProviderClass(HibernatePersistenceProvider.class);
+//                entityManagerFactoryBean.setPersistenceProviderClass(HibernatePersistenceProvider.class);
         //        entityManagerFactoryBean.setPersistenceUnitName("mainPU");
         entityManagerFactoryBean.setJpaVendorAdapter(vendorAdapter);
         entityManagerFactoryBean.setPackagesToScan(environment.getRequiredProperty(PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN));
         entityManagerFactoryBean.setDataSource(dataSource);
         entityManagerFactoryBean.setJpaProperties(hibernateProperties());
+        entityManagerFactoryBean.setSharedCacheMode(SharedCacheMode.ENABLE_SELECTIVE);
         entityManagerFactoryBean.setValidationMode(ValidationMode.NONE);
 
         entityManagerFactoryBean.afterPropertiesSet();

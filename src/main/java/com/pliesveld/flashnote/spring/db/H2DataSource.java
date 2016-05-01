@@ -18,6 +18,8 @@ import javax.sql.DataSource;
 import java.sql.Driver;
 import java.util.Properties;
 
+import static javax.persistence.SharedCacheMode.ENABLE_SELECTIVE;
+
 @Profile(Profiles.INTEGRATION_TEST)
 @Configuration
 @PropertySource(value = { "classpath:test-datasource.properties" })
@@ -89,7 +91,8 @@ public class H2DataSource {
         entityManagerFactoryBean.setPackagesToScan(environment.getRequiredProperty(PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN));
         entityManagerFactoryBean.setDataSource(dataSource);
         entityManagerFactoryBean.setJpaProperties(hibernateProperties());
-        entityManagerFactoryBean.setValidationMode(ValidationMode.AUTO); // NONE, CALLBACK, AUTO
+        entityManagerFactoryBean.setValidationMode(ValidationMode.NONE); // NONE, CALLBACK, AUTO
+        entityManagerFactoryBean.setSharedCacheMode(ENABLE_SELECTIVE);
         entityManagerFactoryBean.afterPropertiesSet();
         return entityManagerFactoryBean.getObject();
     }
