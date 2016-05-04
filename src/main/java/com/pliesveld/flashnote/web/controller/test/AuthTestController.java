@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.web.controller;
+package com.pliesveld.flashnote.web.controller.test;
 
 
 import com.pliesveld.flashnote.security.CurrentUser;

@@ -13,11 +13,11 @@ import java.io.Serializable;
 public class FlashCardPrimaryKey implements Serializable, Comparable<FlashCardPrimaryKey> {
 
     @NotNull
-    @Column(name = "QUESTION_ID",nullable = false)
+    @Column(name = "QUESTION_ID", nullable = false)
     private Integer questionId;
 
     @NotNull
-    @Column(name = "ANSWER_ID",nullable = false)
+    @Column(name = "ANSWER_ID", nullable = false)
     private Integer answerId;
 
     public FlashCardPrimaryKey() {

@@ -1,6 +1,8 @@
 package com.pliesveld.flashnote.web.controller;
 
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.boot.autoconfigure.web.ErrorController;
@@ -16,8 +18,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/error")
 public class SimpleErrorController implements ErrorController {
-    private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger();
-
+    private static final Logger LOG = LogManager.getLogger();
 
     private final ErrorAttributes errorAttributes;
 

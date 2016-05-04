@@ -29,27 +29,56 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AbstractAuditableEntity<ID extends Serializable> extends DomainBaseEntity<ID> {
 
+    protected Instant createdOn;
+    protected Instant modifiedOn;
+
+    protected String createdByUser;
+    protected String modifiedByUser;
+
     @Column(name = "CREATED")
     @Convert(converter = InstantConverter.class)
     @CreatedDate
     @JsonProperty(value = "created", access = READ_ONLY)
-    protected Instant createdOn;
+    public Instant getCreatedOn() {
+        return createdOn;
+    }
 
     @Column(name = "MODIFIED")
     @Convert(converter = InstantConverter.class)
     @LastModifiedDate
     @JsonProperty(value = "modified", access = READ_ONLY)
-    protected Instant modifiedOn;
+    public Instant getModifiedOn() { return modifiedOn; }
 
     @Column(name = "CREATED_BY")
     @CreatedBy
     @JsonProperty(value = "created_by", access = READ_ONLY)
-    protected String createdByUser;
+    public String getCreatedByUser() {
+        return createdByUser;
+    }
 
     @Column(name = "MODIFIED_BY")
     @LastModifiedBy
     @JsonProperty(value = "modified_by", access = READ_ONLY)
-    protected String modifiedByUser;
+    public String getModifiedByUser() {
+        return modifiedByUser;
+    }
+
+
+    public void setCreatedOn(Instant createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public void setModifiedOn(Instant modifiedOn) {
+        this.modifiedOn = modifiedOn;
+    }
+
+    public void setCreatedByUser(String createdByUser) {
+        this.createdByUser = createdByUser;
+    }
+
+    public void setModifiedByUser(String modifiedByUser) {
+        this.modifiedByUser = modifiedByUser;
+    }
 
     @PrePersist
     protected void onCreate()
@@ -73,17 +102,4 @@ public abstract class AbstractAuditableEntity<ID extends Serializable> extends D
             modifiedByUser = "SYSTEM";
     }
 
-    public Instant getCreatedOn() {
-        return createdOn;
-    }
-
-    public Instant getModifiedOn() { return modifiedOn; }
-
-    public String getCreatedByUser() {
-        return createdByUser;
-    }
-
-    public String getModifiedByUser() {
-        return modifiedByUser;
-    }
 }

@@ -96,8 +96,8 @@ public class DomainEntities {
    public Deck deckBean(StudentDetails studentDetailsBean, Category categoryBean)
    {
 
-       domainBeanHelperService.makeEntityIfNotFound(categoryBean);
-       domainBeanHelperService.makeEntityIfNotFound(studentDetailsBean);
+       categoryBean = domainBeanHelperService.makeEntityIfNotFound(categoryBean);
+       studentDetailsBean = domainBeanHelperService.makeEntityIfNotFound(studentDetailsBean);
 
        Deck deck = new Deck();
 
@@ -119,7 +119,7 @@ public class DomainEntities {
     @Autowired
     public QuestionBank questionBankBean(Category categoryBean)
     {
-        domainBeanHelperService.makeEntityIfNotFound(categoryBean);
+        categoryBean = domainBeanHelperService.makeEntityIfNotFound(categoryBean);
 
         QuestionBank questionBank = new QuestionBank(categoryBean, UUID.randomUUID().toString());
 

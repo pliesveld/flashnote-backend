@@ -24,9 +24,6 @@ public interface StudentService {
     @Transactional
     StudentDetails delete(int id)                        throws StudentNotFoundException;
 
-    @Transactional
-    StudentDetails update(StudentDetails studentDetails) throws StudentNotFoundException;
-
     StudentDetails findStudentDetailsById(int id)        throws StudentNotFoundException;
 
     Student findStudentById(int id)                      throws StudentNotFoundException;

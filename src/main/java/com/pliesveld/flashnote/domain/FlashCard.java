@@ -2,6 +2,8 @@ package com.pliesveld.flashnote.domain;
 
 import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
@@ -13,8 +15,7 @@ import java.util.Objects;
 @Table(name = "FLASHCARD")
 public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey> implements Comparable<FlashCard>
 {
-    private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger();
-
+    private static final Logger LOG = LogManager.getLogger();
 
     @EmbeddedId
     private FlashCardPrimaryKey id = new FlashCardPrimaryKey();
@@ -42,7 +43,7 @@ public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey> implements 
         super();
     }
 
-    public FlashCard(Integer questionId,Integer answerId) {
+    public FlashCard(Integer questionId, Integer answerId) {
         this();
         /*
         if(questionId == null || answerId == null)

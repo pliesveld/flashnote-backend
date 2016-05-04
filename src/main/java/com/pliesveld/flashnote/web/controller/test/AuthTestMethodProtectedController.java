@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.web.controller;
+package com.pliesveld.flashnote.web.controller.test;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -27,15 +27,16 @@ public class Notification extends DomainBaseEntity<Integer> {
     private StudentDetails recipient;
 
     @NotNull
-    @Size(max = Constants.MAX_NOTIFICATION_MESSAGE_LENGTH)
+    @Size(min = Constants.MIN_NOTIFICATION_MESSAGE_LENGTH, max = Constants.MAX_NOTIFICATION_MESSAGE_LENGTH)
     @Column(name = "MESSAGE", length = Constants.MAX_NOTIFICATION_MESSAGE_LENGTH, nullable = false)
     private String message;
 
     @Column(name = "DATE_CREATED", nullable = false)
     @Convert(converter = InstantConverter.class)
-    @JsonProperty("created")
+    @JsonProperty(value = "created", access = JsonProperty.Access.READ_ONLY)
     private Instant createdOn;
 
+    @NotNull
     @Column(name = "TYPE", nullable = false)
     @Convert(converter = NotificationTypeConverter.class)
     private NotificationType type;

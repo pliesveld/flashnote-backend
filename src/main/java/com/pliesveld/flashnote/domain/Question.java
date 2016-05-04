@@ -10,21 +10,7 @@ import java.io.Serializable;
 @PrimaryKeyJoinColumn(name = "QUESTION_ID", foreignKey = @ForeignKey(name = "FK_QUESTION_ID"))
 public class Question extends AbstractStatement implements Serializable
 {
-    @Column(name = "QUESTION_TITLE")
     private String title;
-
-    @PrePersist
-    public void prePersist() {
-        if(title == null)
-            title = "Untitled Question";
-    }
-
-    public final Integer getId() {
-        if (this instanceof HibernateProxy) {
-            return (Integer)((HibernateProxy)this).getHibernateLazyInitializer().getIdentifier();
-        }
-        else { return id; }
-    }
 
     public Question() {
         super();
@@ -35,6 +21,7 @@ public class Question extends AbstractStatement implements Serializable
         setContent(content);
     }
 
+    @Column(name = "QUESTION_TITLE")
     public String getTitle() {
         return title;
     }
@@ -43,5 +30,10 @@ public class Question extends AbstractStatement implements Serializable
         this.title = title;
     }
 
+    @PrePersist
+    public void prePersist() {
+        if(title == null)
+            title = "Untitled Question";
+    }
 
 }

@@ -5,8 +5,8 @@
         <Property name="LOG_MVC_LEVEL">WARN</Property>
         <Property name="LOG_TRANS_LEVEL">WARN</Property>
         <Property name="LOG_APP_LEVEL">WARN</Property>
-        <Property name="LOG_AUDIT_LEVEL">INFO</Property>
-        <Property name="LOG_BEANS_LEVEL">INFO</Property>
+        <Property name="LOG_AUDIT_LEVEL">WARN</Property>
+        <Property name="LOG_BEANS_LEVEL">WARN</Property>
     </Properties>
 
     <Appenders>

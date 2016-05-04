@@ -84,17 +84,6 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentDetails update(StudentDetails studentDetails) throws StudentNotFoundException {
-        StudentDetails updatedStudentDetails = studentDetailsRepository.findOne(studentDetails.getId());
-
-        if(updatedStudentDetails == null)
-            throw new StudentNotFoundException(studentDetails.getId());
-
-        updatedStudentDetails.setName(studentDetails.getName());
-        return updatedStudentDetails;
-    }
-
-    @Override
     public Long count() {
         return studentDetailsRepository.count();
     }

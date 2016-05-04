@@ -17,6 +17,7 @@ public class Constants {
     public static final int MAX_STUDENT_PASSWORD_LENGTH = 60;
 
     public static final int MAX_STATEMENT_CONTENT_LENGTH = 65600;
+    public static final int MIN_STATEMENT_CONTENT_LENGTH = 12;
 
     public static final int MAX_ATTACHMENT_TEXT_FILE_LENGTH = 65600;
     public static final int MAX_ATTACHMENT_BINARY_FILE_LENGTH = 3145728;
@@ -25,6 +26,7 @@ public class Constants {
     public static final int MAX_CATEGORY_NAME_LENGTH = 34;
     public static final int MAX_CATEGORY_DESCRIPTION_LENGTH = 512;
 
+    public static final int MIN_DECK_DESCRIPTION_LENGTH = 12;
     public static final int MAX_DECK_DESCRIPTION_LENGTH = 512;
 
     public static final int MAX_ACCOUNT_TOKEN_LENGTH = 64;
@@ -34,6 +36,9 @@ public class Constants {
 
     public static final int ACCESS_LIMIT_LOGIN_DELAY = 30;
 
+    public static final int MIN_NOTIFICATION_MESSAGE_LENGTH = 12;
     public static final int MAX_NOTIFICATION_MESSAGE_LENGTH = 1024;
+
+
 
 }

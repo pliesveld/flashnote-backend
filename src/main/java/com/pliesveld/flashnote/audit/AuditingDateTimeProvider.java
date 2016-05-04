@@ -8,7 +8,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 /**
- * Implements a Spring-data
+ * Implements Spring-Data auditing component that retrieves the current time for audited entities.
  */
 
 @Component

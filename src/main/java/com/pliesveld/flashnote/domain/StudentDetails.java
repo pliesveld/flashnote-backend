@@ -12,7 +12,6 @@ import java.util.Objects;
 @Entity
 @Table(name = "STUDENT_DETAILS",
         uniqueConstraints = @UniqueConstraint(name = "UNIQUE_STUDENT_NAME", columnNames = "STUDENT_NAME"))
-/*@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")*/
 public class StudentDetails extends DomainBaseEntity<Integer> implements Serializable
 {
     @Id
@@ -42,7 +41,7 @@ public class StudentDetails extends DomainBaseEntity<Integer> implements Seriali
         return id;
     }
 
-    public void setId(Integer id)
+    protected void setId(Integer id)
     {
         this.id = id;
     }
@@ -52,7 +51,7 @@ public class StudentDetails extends DomainBaseEntity<Integer> implements Seriali
         return name;
     }
 
-    public void setName(String name)
+    protected void setName(String name)
     {
         this.name = name;
     }

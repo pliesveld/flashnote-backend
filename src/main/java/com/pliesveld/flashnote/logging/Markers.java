@@ -11,6 +11,7 @@ import org.apache.logging.log4j.MarkerManager;
  */
 public class Markers {
 
+    public static final Marker CACHE = MarkerManager.getMarker("CACHE");
     public static final Marker SQL_MARKER = MarkerManager.getMarker("SQL");
 
     public static final Marker SQL_INIT = MarkerManager.getMarker("SQL_INIT").addParents(SQL_MARKER);
@@ -23,6 +24,7 @@ public class Markers {
     public static final Marker SECURITY_INIT = MarkerManager.getMarker("SECURITY_INIT").addParents(SECURITY);
     public static final Marker SECURITY_AUTH = MarkerManager.getMarker("SECURITY_AUTH").addParents(SECURITY);
     public static final Marker SECURITY_AUTH_TOKEN = MarkerManager.getMarker("SECURITY_AUTH_TOKEN").addParents(SECURITY_AUTH);
+    public static final Marker SECURITY_CACHE = MarkerManager.getMarker("SECURITY_CACHE").addParents(SECURITY_AUTH_TOKEN, CACHE);
 
     public static final Marker SERVICE = MarkerManager.getMarker("SERVICE");
     public static final Marker SERVICE_ATTACHMENT = MarkerManager.getMarker("SERVICE_ATTACHMENT").addParents(SERVICE);
@@ -41,4 +43,6 @@ public class Markers {
 
     public static final Marker SERVLET = MarkerManager.getMarker("SERVLET");
     public static final Marker SERVLET_INIT = MarkerManager.getMarker("SERVLET_INIT").addParents(SERVLET);
+
+
 }

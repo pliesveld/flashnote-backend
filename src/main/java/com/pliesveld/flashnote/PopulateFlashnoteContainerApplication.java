@@ -26,7 +26,6 @@ import java.util.stream.Stream;
 @Configuration
 @EnableAutoConfiguration //(exclude = {SecurityAutoConfiguration.class, WebMvcAutoConfiguration.class, ErrorMvcAutoConfiguration.class, DispatcherServletAutoConfiguration.class, EmbeddedServletContainerAutoConfiguration.class})
 @ComponentScan(basePackages = { "com.pliesveld" })
-//@EnableScheduling
 @EnableTransactionManagement
 public class PopulateFlashnoteContainerApplication {
     private static final Logger LOG = LogManager.getLogger();
@@ -53,7 +52,7 @@ public class PopulateFlashnoteContainerApplication {
 
         SpringApplication application = new SpringApplication(PopulateFlashnoteContainerApplication.class);
         //application.setWebEnvironment(false);
-        //application.addListeners(new ApplicationPidFileWriter("./bin/app.pid"));
+//        application.addListeners(new ApplicationPidFileWriter("./bin/app.pid"));
         application.run(args);
 	}
 
@@ -145,14 +144,13 @@ public class PopulateFlashnoteContainerApplication {
             questionBank = new QuestionBank(category, "Object Oriented Programming");
             questionBank.add(new Question("What is encapsulation?"));
             questionBank.add(new Question("What is composition?"));
-            questionBank.add(new Question("What is inheritence?"));
+            questionBank.add(new Question("What is inheritance?"));
             questionBank.add(new Question("What is abstraction?"));
             Question question = new Question("What is an object?");
             question.addAnnotation(new AnnotatedStatement(studentDetails,"Add to your description the definition of a class."));
             questionBank.add(question);
             questionBank.setCategory(category);
             questionBankRepository.save(questionBank);
-
 
         };
     }

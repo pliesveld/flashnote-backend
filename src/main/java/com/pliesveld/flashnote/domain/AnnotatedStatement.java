@@ -12,21 +12,8 @@ import java.time.Instant;
 @Embeddable
 public class AnnotatedStatement {
 
-    @NotNull
-    @Column(name = "DATE_CREATED", nullable = false)
-    @Convert(converter = InstantConverter.class)
-    @JsonProperty("created")
     private Instant createdOn;
-
-    @NotNull
-    @ManyToOne(targetEntity = StudentDetails.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "STUDENT_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_ANNOTATION_STUDENT"))
-    @JsonProperty("created_by")
     private StudentDetails createdBy;
-
-    @NotNull
-    @Size(max = Constants.MAX_NOTIFICATION_MESSAGE_LENGTH)
-    @Column(name = "MESSAGE", length = Constants.MAX_NOTIFICATION_MESSAGE_LENGTH, nullable = false)
     private String message;
 
     protected AnnotatedStatement()
@@ -41,9 +28,26 @@ public class AnnotatedStatement {
         this.message = message;
     }
 
+    @NotNull
+    @Column(name = "DATE_CREATED", nullable = false)
+    @Convert(converter = InstantConverter.class)
+    @JsonProperty("created")
     public Instant getCreatedOn() { return createdOn; }
 
+    @NotNull
+    @ManyToOne(targetEntity = StudentDetails.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "STUDENT_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_ANNOTATION_STUDENT"))
+    @JsonProperty("created_by")
     public StudentDetails getCreatedBy() { return createdBy; }
 
+    @NotNull
+    @Size(min = Constants.MIN_NOTIFICATION_MESSAGE_LENGTH, max = Constants.MAX_NOTIFICATION_MESSAGE_LENGTH)
+    @Column(name = "MESSAGE", length = Constants.MAX_NOTIFICATION_MESSAGE_LENGTH, nullable = false)
     public String getMessage() { return message; }
+
+    protected void setCreatedOn(Instant createdOn) { this.createdOn = createdOn; }
+
+    protected void setCreatedBy(StudentDetails createdBy) {this.createdBy = createdBy; }
+
+    protected void setMessage(String message) { this.message = message; }
 }

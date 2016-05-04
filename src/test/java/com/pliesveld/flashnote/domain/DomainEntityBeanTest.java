@@ -78,8 +78,6 @@ public class DomainEntityBeanTest {
 
         TestEntityConfig testRepositoryConfig = ctx.getBean(TestEntityConfig.class);
         assertNotNull(testRepositoryConfig);
-        assertNotNull(testRepositoryConfig.question);
-        assertNotNull(testRepositoryConfig.deck);
         assertNotNull(testRepositoryConfig.hibernateAwareObjectMapper);
         assertNotNull(testRepositoryConfig.questionRepository);
 
@@ -244,11 +242,11 @@ public class DomainEntityBeanTest {
 @Import(value = {SpringEntityTestConfig.class})
 class TestEntityConfig {
 
-    @Autowired(required = false)
-    Question question;
-
-    @Autowired(required = false)
-    Deck deck;
+//    @Autowired(required = false)
+//    Question question;
+//
+//    @Autowired(required = false)
+//    Deck deck;
 
     @Autowired(required = false)
     HibernateAwareObjectMapper hibernateAwareObjectMapper;
