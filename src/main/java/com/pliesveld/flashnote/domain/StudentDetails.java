@@ -1,6 +1,6 @@
 package com.pliesveld.flashnote.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import com.pliesveld.flashnote.schema.Constants;
 
 import javax.persistence.*;
@@ -13,17 +13,14 @@ import java.util.Objects;
 @Table(name = "STUDENT_DETAILS",
         uniqueConstraints = @UniqueConstraint(name = "UNIQUE_STUDENT_NAME", columnNames = "STUDENT_NAME"))
 /*@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")*/
-public class StudentDetails implements Serializable
+public class StudentDetails extends DomainBaseEntity<Integer> implements Serializable
 {
     @Id
-    @Column(name = "STUDENT_ID", nullable = false, unique = true)
     private Integer id;
 
     @MapsId
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JoinColumn(name = "STUDENT_ID", foreignKey = @ForeignKey(name = "FK_STUDENT_DETAILS"))
-//    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
-    @JsonIgnore
     private Student student;
 
     @NotNull
@@ -31,10 +28,12 @@ public class StudentDetails implements Serializable
     @Column(name = "STUDENT_NAME", length = Constants.MAX_STUDENT_NAME_LENGTH, nullable = false)
     private String name;
 
-    public StudentDetails() {
+    protected StudentDetails() {
+        super();
     }
 
     public StudentDetails(String name) {
+        this();
         this.name = name;
     }
 

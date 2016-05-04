@@ -5,6 +5,8 @@ import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
 import com.pliesveld.flashnote.schema.Constants;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -16,7 +18,7 @@ import java.util.Set;
 @Entity
 @Table(name = "QUESTION_BANK")
 @EntityListeners(value = { LogEntityListener.class })
-public class QuestionBank extends AbstractAuditableEntity {
+public class QuestionBank extends AbstractAuditableEntity<Integer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,7 +27,8 @@ public class QuestionBank extends AbstractAuditableEntity {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CATEGORY_ID", nullable = false)
+    @JoinColumn(name = "CATEGORY_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_QUESTION_BANK_CATEGORY_ID"))
+    @LazyToOne(LazyToOneOption.PROXY)
     private Category category;
 
     @NotNull
@@ -35,14 +38,23 @@ public class QuestionBank extends AbstractAuditableEntity {
 
     @NotNull
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinTable(name = "QUESTION_BANK_COLLECTION",
-            joinColumns = @JoinColumn(name = "QUESTION_BANK_ID"),
-            inverseJoinColumns = @JoinColumn(name = "QUESTION_ID",referencedColumnName = "QUESTION_ID")
+    @JoinTable(name = "QUESTION_BANK_COLLECTION", foreignKey = @ForeignKey(name = "FK_QUESTION_BANK_COLLECTION_QUESTION_BANK_ID"),
+            joinColumns = @JoinColumn(name = "QUESTION_BANK_ID", foreignKey = @ForeignKey(name = "QUESTION_BANK_WHAT")),
+            inverseJoinColumns = @JoinColumn(name = "QUESTION_ID",
+                                             referencedColumnName = "QUESTION_ID",
+                                             foreignKey = @ForeignKey(name = "FK_QUESTION_BANK_COLLECTION_QUESTION_ID"))
     )
     @LazyCollection(LazyCollectionOption.EXTRA)
     private Set<Question> questions = new HashSet<Question>();
 
-    public QuestionBank() {
+    protected QuestionBank() {
+        super();
+    }
+
+    public QuestionBank(@NotNull Category category, @NotNull String description) {
+        this();
+        this.category = category;
+        this.description = description;
     }
 
     public Integer getId() {
@@ -53,10 +65,12 @@ public class QuestionBank extends AbstractAuditableEntity {
         this.id = id;
     }
 
+//    @JsonSerialize(using = DomainObjectSerializer.class)
     public Category getCategory() {
         return category;
     }
 
+//    @JsonDeserialize(using = CategoryDeserializer.class)
     public void setCategory(Category category) {
         this.category = category;
     }
@@ -69,10 +83,12 @@ public class QuestionBank extends AbstractAuditableEntity {
         this.description = description;
     }
 
+//    @JsonSerialize(contentUsing = DomainObjectSerializer.class)
     public Set<Question> getQuestions() {
         return questions;
     }
 
+//    @JsonDeserialize(contentUsing = QuestionSetDeserializer.class)
     protected void setQuestions(Set<Question> questions) {
         this.questions = questions;
     }

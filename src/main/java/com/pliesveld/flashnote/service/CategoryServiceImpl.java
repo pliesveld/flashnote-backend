@@ -4,9 +4,13 @@ import com.pliesveld.flashnote.domain.Category;
 import com.pliesveld.flashnote.exception.CategoryNotFoundException;
 import com.pliesveld.flashnote.exception.CategorySearchException;
 import com.pliesveld.flashnote.repository.CategoryRepository;
+import com.pliesveld.flashnote.repository.specifications.CategorySpecification;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -79,5 +83,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     public Category createCategory(Category category) {
         return categoryRepository.save(category);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Category> findBySearchTerm(String searchTerm, Pageable pageRequest) {
+        Specification<Category> searchSpec = CategorySpecification.titleOrDescriptionContainsIgnoreCase(searchTerm);
+        return categoryRepository.findAll(searchSpec,pageRequest);
     }
 }

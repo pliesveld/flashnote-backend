@@ -11,7 +11,9 @@ import java.io.Serializable;
 @Table(name = "ATTACHMENT_BINARY")
 @PrimaryKeyJoinColumn(name = "ATTACHMENT_ID", foreignKey = @ForeignKey(name = "FK_ATTACHMENT_BINARY"))
 public class AttachmentBinary extends AbstractAttachment implements Serializable {
-    public AttachmentBinary() {}
+    public AttachmentBinary() {
+        super();
+    }
 
     @NotNull
     @Size(max = Constants.MAX_ATTACHMENT_BINARY_FILE_LENGTH)
@@ -25,6 +27,13 @@ public class AttachmentBinary extends AbstractAttachment implements Serializable
     public void setContents(byte[] contents) {
         this.contents = contents;
         setFileLength(contents.length);
+    }
+
+    @PrePersist
+    public void prePersist()
+    {
+        if(attachmentType == null)
+            attachmentType = AttachmentType.BINARY;
     }
 
 }

@@ -1,0 +1,32 @@
+package com.pliesveld.flashnote.repository.specifications;
+
+import com.pliesveld.flashnote.domain.Category;
+import com.pliesveld.flashnote.domain.Category_;
+import org.springframework.data.jpa.domain.Specification;
+
+/**
+ * Created by happs on 5/1/16.
+ */
+final public class CategorySpecification {
+    private CategorySpecification() {}
+
+    public static Specification<Category> titleOrDescriptionContainsIgnoreCase(String searchTerm) {
+        return (root, query, cb) -> {
+            String containsLikePattern = getContainsLikePattern(searchTerm);
+
+            return cb.or(
+                    cb.like(cb.lower(root.<String>get(Category_.name)),containsLikePattern),
+                    cb.like(cb.lower(root.<String>get(Category_.description)),containsLikePattern)
+            );
+        };
+    }
+
+    private static String getContainsLikePattern(String searchTerm) {
+
+        if(searchTerm == null || (searchTerm = searchTerm.trim()).isEmpty()) {
+            return "%";
+        } else {
+            return "%" + searchTerm.toLowerCase() + "%";
+        }
+    }
+}

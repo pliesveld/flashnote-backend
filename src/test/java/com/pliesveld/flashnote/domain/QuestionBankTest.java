@@ -16,6 +16,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUtil;
 import java.io.Serializable;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -61,7 +62,7 @@ public class QuestionBankTest extends AbstractDomainEntityUnitTest
         questionBank.setCategory(category);
         questionBank.setDescription("A sample question bank with a question.");
 
-        for(int i = 0; i < 15;i++)
+        for(int i = 0; i < 3;i++)
         {
             Question question = this.questionBean();
 
@@ -76,11 +77,29 @@ public class QuestionBankTest extends AbstractDomainEntityUnitTest
         entityManager.clear();
 
         questionBank = entityManager.find(QuestionBank.class, qb_id);
+        assertNotNull(questionBank);
 
         PersistenceUtil persistenceUtil = Persistence.getPersistenceUtil();
+
         LOG.info(Hibernate.isInitialized(questionBank));
         LOG.info(persistenceUtil.isLoaded(questionBank));
         LOG.info(persistenceUtil.isLoaded(questionBank,"id"));
+        LOG.info(persistenceUtil.isLoaded(questionBank,"questions"));
+
+        enableSQL();
+        assertEquals(questionBank.getQuestions().size(),3);
+        LOG.info(persistenceUtil.isLoaded(questionBank,"questions"));
+
+        questionBank.getQuestions().forEach(
+                (q) ->
+                {
+                    LOG.info(persistenceUtil.isLoaded(q,"id"));
+                }
+
+        );
+        LOG.info(persistenceUtil.isLoaded(questionBank,"questions"));
+        disableSQL();
+
 
     }
 

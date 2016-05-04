@@ -84,8 +84,7 @@ public class StudentGenerator
         Student student = new Student();
 
         if(andDetails) {
-            StudentDetails studentDetails = new StudentDetails();
-            studentDetails.setName(random_name);
+            StudentDetails studentDetails = new StudentDetails(random_name);
             student.setStudentDetails(studentDetails);
         }
 
@@ -111,8 +110,7 @@ public class StudentGenerator
         int rand_num = ThreadLocalRandom.current().nextInt(0,1000);
         String random_name = String.format("%s%d",randomValue(GIRL_NAMES),rand_num);
 
-        StudentDetails studentDetails = new StudentDetails();
-        studentDetails.setName(random_name);
+        StudentDetails studentDetails = new StudentDetails(random_name);
         return studentDetails;
     }
 

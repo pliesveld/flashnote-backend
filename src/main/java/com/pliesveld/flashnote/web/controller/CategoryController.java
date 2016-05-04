@@ -5,6 +5,8 @@ import com.pliesveld.flashnote.service.CategoryService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
@@ -60,6 +62,11 @@ public class CategoryController {
     {
         Category category = categoryService.getCategoryById(id);
         return category;
+    }
+
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    public Page<Category> findBySearchTerm(@RequestParam("q") String searchTerm, Pageable pageRequest) {
+        return categoryService.findBySearchTerm(searchTerm, pageRequest);
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)

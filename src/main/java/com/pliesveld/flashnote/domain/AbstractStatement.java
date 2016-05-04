@@ -17,7 +17,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "STATEMENT")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class AbstractStatement extends AbstractAuditableEntity
+public abstract class AbstractStatement extends AbstractAuditableEntity<Integer>
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -41,7 +41,9 @@ public abstract class AbstractStatement extends AbstractAuditableEntity
     @LazyCollection(LazyCollectionOption.EXTRA)
     protected Collection<AnnotatedStatement> annotations = new ArrayList<AnnotatedStatement>();
 
-    public AbstractStatement() {}
+    public AbstractStatement() {
+        super();
+    }
 
     public String getContent() {
         return content;

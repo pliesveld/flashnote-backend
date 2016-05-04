@@ -19,7 +19,7 @@ import java.util.Objects;
         indexes = { @Index(name = "IDX_DECK_AUTHOR_ID",
                            columnList = "STUDENT_ID") })
 @EntityListeners(value = { LogEntityListener.class })
-public class Deck extends DomainBaseEntity implements Serializable
+public class Deck extends DomainBaseEntity<Integer> implements Serializable
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,7 +28,7 @@ public class Deck extends DomainBaseEntity implements Serializable
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "STUDENT_ID", foreignKey = @ForeignKey(name = "FK_DECK_AUTHOR"), nullable = false)
+    @JoinColumn(name = "STUDENT_ID", foreignKey = @ForeignKey(name = "FK_DECK_STUDENT_ID"), nullable = false)
     @LazyToOne(LazyToOneOption.PROXY)
     private StudentDetails author;
 
@@ -37,14 +37,14 @@ public class Deck extends DomainBaseEntity implements Serializable
     @JoinTable(name = "DECK_FLASHCARD",
             foreignKey = @ForeignKey(name = "FK_DECK"),
 
-            joinColumns = {@JoinColumn(name = "DECK_ID")},
+            joinColumns = {@JoinColumn(name = "DECK_ID", foreignKey = @ForeignKey(name = "FK_DECK_FLASHCARD_DECK_ID"))},
 
             inverseForeignKey = @ForeignKey(name = "FK_FLASHCARD"),
             inverseJoinColumns = {
-                            @JoinColumn(table = "QUESTION",  name = "QUESTION_ID", foreignKey= @ForeignKey(name="FK_DECK_FLASHCARD_QUESTION_ID")),
-                            @JoinColumn(table = "ANSWER",    name = "ANSWER_ID",   foreignKey= @ForeignKey(name="FK_DECK_FLASHCARD_ANSWER_ID"))
-            }
-            /*,uniqueConstraints = {@UniqueConstraint(name="UNIQUE_FLASHCARD",columnNames = {"QUESTION_ID","ANSWER_ID"})}*/
+                            @JoinColumn(table = "QUESTION",  name = "QUESTION_ID", foreignKey= @ForeignKey(name = "FK_DECK_FLASHCARD_QUESTION_ID")),
+                            @JoinColumn(table = "ANSWER",    name = "ANSWER_ID",   foreignKey= @ForeignKey(name = "FK_DECK_FLASHCARD_ANSWER_ID"))
+            },
+            uniqueConstraints = {@UniqueConstraint(name="UNIQUE_FLASHCARD",columnNames = {"QUESTION_ID","ANSWER_ID"})}
 
     )
     private List<FlashCard> flashcards = new ArrayList<>();
@@ -55,13 +55,16 @@ public class Deck extends DomainBaseEntity implements Serializable
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "CATEGORY_ID", foreignKey = @ForeignKey(name = "FK_DECK_CATEGORY"), nullable = false)
+    @JoinColumn(name = "CATEGORY_ID", foreignKey = @ForeignKey(name = "FK_DECK_CATEGORY_ID"), nullable = false)
     @LazyToOne(LazyToOneOption.PROXY)
     private Category category;
 
-    public Deck() {}
+    public Deck() {
+        super();
+    }
 
     public Deck(StudentDetails author) {
+        this();
         setAuthor(author);
     }
 

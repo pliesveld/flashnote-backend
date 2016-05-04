@@ -1,7 +1,8 @@
 package com.pliesveld.flashnote.unit.dao.repository;
 
+import com.pliesveld.flashnote.domain.Category;
 import com.pliesveld.flashnote.domain.Student;
-import com.pliesveld.flashnote.domain.StudentDetails;
+import com.pliesveld.flashnote.repository.CategoryRepository;
 import com.pliesveld.flashnote.repository.QuestionRepository;
 import com.pliesveld.flashnote.repository.StudentDetailsRepository;
 import com.pliesveld.flashnote.repository.StudentRepository;
@@ -16,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.*;
 
@@ -26,6 +28,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextConfiguration(classes = SpringDataTestConfig.class, loader = AnnotationConfigContextLoader.class)
+@Transactional
 public class StudentTest {
     private static final Logger LOG = LogManager.getLogger();
 
@@ -38,11 +41,17 @@ public class StudentTest {
     @Autowired
     QuestionRepository questionRepository;
 
+
+    @Autowired
+    CategoryRepository categoryRepository;
+
     @Test
     public void testLoadRepositoryFromJson()
     {
         assertTrue(studentRepository.count() > 0);
-        assertTrue(studentDetailsRepository.count() > 0);
+        assertTrue(questionRepository.count() > 0);
+        assertTrue(categoryRepository.count() > 0);
+
     }
 
     @Test
@@ -55,20 +64,16 @@ public class StudentTest {
     }
 
     @Test
-    public void testFindStudentById()
+    public void testFindCategoryInJson()
     {
-        Student student = studentRepository.findOne(1);
-        assertNotNull(student);
+
+        assertTrue(categoryRepository.count() > 0);
+
+        Category category = categoryRepository.findOne(5);
+        assertNotNull(category);
     }
-
-    @Test
-    public void testFindStudentDetailsById()
-    {
-        StudentDetails studentDetails = studentDetailsRepository.findOne(1);
-        assertNotNull(studentDetails);
-        assertEquals(studentDetails.getName(),"account");
-    }
-
-
 
 }
+
+
+

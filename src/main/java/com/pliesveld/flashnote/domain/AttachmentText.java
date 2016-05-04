@@ -19,7 +19,9 @@ public class AttachmentText extends AbstractAttachment {
     @Size(max = Constants.MAX_ATTACHMENT_TEXT_FILE_LENGTH)
     String contents;
 
-    public AttachmentText() {}
+    public AttachmentText() {
+        super();
+    }
 
     public String getContents() {
         return contents;
@@ -35,4 +37,12 @@ public class AttachmentText extends AbstractAttachment {
         CharsetDecoder cs = Charset.forName("UTF-8").newDecoder();
         this.contents = new String(contents, StringUtils.toEncodedString(contents, Charset.forName("UTF-8")));
     }
+
+    @PrePersist
+    public void prePersist()
+    {
+        if(attachmentType == null)
+            attachmentType = AttachmentType.TEXT;
+    }
+
 }

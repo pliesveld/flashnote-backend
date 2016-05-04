@@ -31,9 +31,11 @@ public class AnnotatedStatement {
 
     protected AnnotatedStatement()
     {
+        super();
     }
 
     public AnnotatedStatement(StudentDetails createdBy, String message) {
+        this();
         this.createdOn = Instant.now();
         this.createdBy = createdBy;
         this.message = message;

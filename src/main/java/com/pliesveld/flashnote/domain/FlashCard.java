@@ -2,6 +2,8 @@ package com.pliesveld.flashnote.domain;
 
 import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -9,16 +11,13 @@ import java.util.Objects;
 @Entity
 @EntityListeners(value = { LogEntityListener.class })
 @Table(name = "FLASHCARD")
-@NamedQueries(
-        @NamedQuery(name = "FlashCard.count", query = "SELECT COUNT(f) FROM FlashCard f")
-)
-public class FlashCard extends DomainBaseEntity implements Comparable<FlashCard>
+public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey> implements Comparable<FlashCard>
 {
     private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger();
 
 
     @EmbeddedId
-    private FlashCardPrimaryKey id;
+    private FlashCardPrimaryKey id = new FlashCardPrimaryKey();
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH},
             targetEntity = com.pliesveld.flashnote.domain.Question.class)
@@ -26,6 +25,7 @@ public class FlashCard extends DomainBaseEntity implements Comparable<FlashCard>
             nullable = false, insertable = false, updatable = false,
             foreignKey = @ForeignKey(name = "FK_QUESTION"))
     @MapsId("questionId")
+    @LazyToOne(LazyToOneOption.PROXY)
     private Question question;
 
     @ManyToOne(cascade = {CascadeType.ALL},
@@ -34,14 +34,16 @@ public class FlashCard extends DomainBaseEntity implements Comparable<FlashCard>
             nullable = false, insertable = false, updatable = false,
             foreignKey = @ForeignKey(name = "FK_ANSWER"))
     @MapsId("answerId")
+    @LazyToOne(LazyToOneOption.PROXY)
     private Answer answer;
 
 
     public FlashCard() {
-        id = new FlashCardPrimaryKey();
+        super();
     }
 
     public FlashCard(Integer questionId,Integer answerId) {
+        this();
         /*
         if(questionId == null || answerId == null)
         {
@@ -49,7 +51,8 @@ public class FlashCard extends DomainBaseEntity implements Comparable<FlashCard>
         }
         */
 
-        id = new FlashCardPrimaryKey(questionId,answerId);
+        id.setQuestionId(questionId);
+        id.setAnswerId(answerId);
     }
 
     public FlashCardPrimaryKey getId()        { return id; }

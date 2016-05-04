@@ -12,9 +12,11 @@ import java.io.Serializable;
 public class Answer extends AbstractStatement implements Serializable
 {
     public Answer() {
+        super();
     }
 
     public Answer(String content) {
+        this();
         setContent(content);
     }
 

@@ -1,0 +1,30 @@
+{
+    "_class" : "com.pliesveld.flashnote.unit.dao.spring.DataSet",
+
+    "questions" : [
+    ],
+    "students" : [
+    ],
+    "categories" : [
+        {
+            "@id" : 99,
+            "name" : "Category 1",
+            "description" : "T H I S I S A C A T E G O R Y",
+            "childCategories" : [ 88 ]
+        },
+        {
+            "@id" : 88,
+            "name" : "Category 2",
+            "description" : "T H I S I S A S E C O N D C A T E G O R Y",
+            "parentCategory" : 99
+        }
+
+
+    ],
+    "questionBanks" : [{
+        "category" : 99,
+        "description" : "b4250e47-55fb-4983-a71a-1856b78dab62",
+        "questions" : []
+    }]
+}
+

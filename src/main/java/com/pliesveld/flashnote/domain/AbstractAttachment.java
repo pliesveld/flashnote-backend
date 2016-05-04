@@ -12,19 +12,12 @@ import java.util.Objects;
 @Entity
 @Table(name = "ATTACHMENT")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class AbstractAttachment extends AbstractAuditableEntity {
+public abstract class AbstractAttachment extends AbstractAuditableEntity<Integer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ATTACHMENT_ID")
     @Access(AccessType.PROPERTY)
-    /* for lazy-loading of subclasses when using .findOne(id),
-            use em.getReference() within transaction context for proxy-object
-            to load assosciated entities.
-            or use fetch in JPQL query.
-
-            Move all annontations to property? including embedded entities?
-     */
     Integer id;
 
     @NotNull
@@ -39,6 +32,10 @@ public abstract class AbstractAttachment extends AbstractAuditableEntity {
     @NotNull
     @Column(name = "FILE_LENGTH", nullable = false)
     int fileLength;
+
+    protected AbstractAttachment() {
+        super();
+    }
 
     public abstract void setContents(byte[] contents) throws UnsupportedEncodingException;
 

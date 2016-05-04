@@ -103,7 +103,6 @@ public class PopulateFlashnoteContainerApplication {
 
             Stream<FlashCard> cards = Stream.of(
                 new FlashCard(new Question("What is the difference between a HTTP Redirect and a HTTP Forward?"),new Answer("In an HTTP forward control is processed internally by the server.   A redirect instructs the browser to a different url, potentially on another host.")),
-//                new FlashCard(new Question(),new Answer()),
                 new FlashCard(new Question("Describe the HTTP status code categories: 1xx, 2xx, 3xx, 4xx, 5xx"),new Answer("1xx informational\n2xx success\n 3xx redirection\n4xx client error\n5xx server error"))
             );
             List<FlashCard> flashCards = cards.collect(Collectors.toList());
@@ -135,8 +134,7 @@ public class PopulateFlashnoteContainerApplication {
                 LOG.catching(Level.WARN, pe.getCause());
             }
 
-            QuestionBank questionBank = new QuestionBank();
-            questionBank.setDescription("Commonly asked web developer questions.");
+            QuestionBank questionBank = new QuestionBank(category, "Commonly asked web developer questions.");
             questionBank.add(new Question("What is a RESTful web service?"));
             questionBank.add(new Question("What methods are supported by the HTTP specification?"));
             questionBank.add(new Question("What is a Cross-Origin-Request?"));
@@ -144,8 +142,7 @@ public class PopulateFlashnoteContainerApplication {
             questionBank.setCategory(category);
             questionBankRepository.save(questionBank);
 
-            questionBank = new QuestionBank();
-            questionBank.setDescription("Object Oriented Programming");
+            questionBank = new QuestionBank(category, "Object Oriented Programming");
             questionBank.add(new Question("What is encapsulation?"));
             questionBank.add(new Question("What is composition?"));
             questionBank.add(new Question("What is inheritence?"));

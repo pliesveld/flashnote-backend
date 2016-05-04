@@ -2,7 +2,7 @@ package com.pliesveld.flashnote.spring.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pliesveld.flashnote.logging.Markers;
-import com.pliesveld.flashnote.model.json.Views;
+import com.pliesveld.flashnote.spring.serializer.ObjectMapperDebug;
 import com.pliesveld.flashnote.web.controller.RateLimitingInterceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -135,7 +135,7 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
                 MappingJackson2HttpMessageConverter jsonMessageConverter = (MappingJackson2HttpMessageConverter) converter;
                 ObjectMapper objectMapper = jsonMessageConverter.getObjectMapper();
                 LOG.debug(Markers.OBJECT_MAPPER_INIT, "ObjectMapper settings for MappingJackson2HttpMessageConverter");
-                Views.debug(WebMvcConfigurerAdapter.class, objectMapper);
+                ObjectMapperDebug.debug(WebMvcConfigurerAdapter.class, objectMapper);
               //  break;
             }
         }

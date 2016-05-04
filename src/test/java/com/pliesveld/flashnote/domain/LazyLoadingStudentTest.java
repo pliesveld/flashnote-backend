@@ -82,9 +82,8 @@ public class LazyLoadingStudentTest extends AbstractDomainEntityUnitTest {
     @Test
     public void givenStudent_whenLoading_thenStudentDetailsNotLoaded()
     {
-        entityManager.flush();
-        entityManager.clear();
         Student student = studentRepository.getOne((Integer) student_id);
+        assertFalse(Hibernate.isInitialized(student));
         student.getId();
         assertTrue(entityManager.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(student));
         assertFalse(entityManager.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(student, "studentDetails"));

@@ -8,10 +8,10 @@ import com.pliesveld.flashnote.exception.CategoryNotFoundException;
 import com.pliesveld.flashnote.exception.QuestionNotFoundException;
 import com.pliesveld.flashnote.exception.StatementNotFoundException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
-import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.model.json.request.UpdateQuestionBankRequestJson;
 import com.pliesveld.flashnote.service.CardService;
 import com.pliesveld.flashnote.service.StudentService;
+import com.pliesveld.flashnote.spring.serializer.ObjectMapperDebug;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class QuestionBankController {
     public void setObjectMapper(ObjectMapper jackson2ObjectMapper)
     {
         objectMapper = jackson2ObjectMapper;
-        Views.debug(this,objectMapper);
+        ObjectMapperDebug.debug(this, objectMapper);
     }
     
     private StudentDetails verifyStudent(int id) throws StudentNotFoundException

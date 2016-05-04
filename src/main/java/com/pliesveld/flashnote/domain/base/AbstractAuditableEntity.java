@@ -9,7 +9,10 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.Instant;
+
+import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
 
 /**
  * Entities that inherit from this @MappedSuperclass-annotated class
@@ -24,28 +27,28 @@ import java.time.Instant;
  */
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class AbstractAuditableEntity extends DomainBaseEntity {
+public abstract class AbstractAuditableEntity<ID extends Serializable> extends DomainBaseEntity<ID> {
 
     @Column(name = "CREATED")
     @Convert(converter = InstantConverter.class)
     @CreatedDate
-    @JsonProperty("created")
+    @JsonProperty(value = "created", access = READ_ONLY)
     protected Instant createdOn;
 
     @Column(name = "MODIFIED")
     @Convert(converter = InstantConverter.class)
     @LastModifiedDate
-    @JsonProperty("modified")
+    @JsonProperty(value = "modified", access = READ_ONLY)
     protected Instant modifiedOn;
 
     @Column(name = "CREATED_BY")
     @CreatedBy
-    @JsonProperty("created_by")
+    @JsonProperty(value = "created_by", access = READ_ONLY)
     protected String createdByUser;
 
     @Column(name = "MODIFIED_BY")
     @LastModifiedBy
-    @JsonProperty("modified_by")
+    @JsonProperty(value = "modified_by", access = READ_ONLY)
     protected String modifiedByUser;
 
     @PrePersist
@@ -74,17 +77,13 @@ public abstract class AbstractAuditableEntity extends DomainBaseEntity {
         return createdOn;
     }
 
-    public void setCreatedOn(Instant createdOn) {
-        this.createdOn = createdOn;
+    public Instant getModifiedOn() { return modifiedOn; }
+
+    public String getCreatedByUser() {
+        return createdByUser;
     }
 
-    public Instant getModifiedOn() {
-        return modifiedOn;
+    public String getModifiedByUser() {
+        return modifiedByUser;
     }
-
-    public void setModifiedOn(Instant modifiedOn) {
-        this.modifiedOn = modifiedOn;
-    }
-
-
 }

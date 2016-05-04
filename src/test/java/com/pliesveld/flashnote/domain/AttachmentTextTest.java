@@ -1,5 +1,6 @@
 package com.pliesveld.flashnote.domain;
 
+import com.pliesveld.flashnote.unit.dao.spring.LogHibernateTestExecutionListener;
 import com.pliesveld.flashnote.unit.spring.DefaultEntityTestAnnotations;
 import org.junit.After;
 import org.junit.Before;
@@ -7,6 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @DefaultEntityTestAnnotations
 @Transactional
+@TestExecutionListeners(listeners = LogHibernateTestExecutionListener.class, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 public class AttachmentTextTest extends AbstractDomainEntityUnitTest {
 
     @Rule
@@ -35,13 +38,26 @@ public class AttachmentTextTest extends AbstractDomainEntityUnitTest {
         AttachmentText attachmentText = attachmentTextBean();
         attachmentText = attachmentTextRepository.save(attachmentText);
         attachment_id = attachmentText.getId();
+        entityManager.flush();
+        entityManager.clear();
     }
 
     @Test
     public void testEntitySanity()
     {
         assertNotNull(entityManager.find(AttachmentText.class,attachment_id));
+    }
 
+    @Test
+    public void givenTextAttachment_whenLoadingBaseRepositoryById()
+    {
+        assertNotNull(attachmentRepository.findOneById((Integer) attachment_id));
+    }
+
+    @Test
+    public void givenTextAttachment_whenLoadingTextRepositoryById()
+    {
+        assertNotNull(attachmentTextRepository.findOneById((Integer) attachment_id));
     }
 
     @After

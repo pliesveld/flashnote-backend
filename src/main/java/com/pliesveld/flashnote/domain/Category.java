@@ -30,6 +30,7 @@ public class Category extends DomainBaseEntity<Integer> implements Serializable
     private Set<Category> childCategories = new HashSet<>();
 
     public Category() {
+        super();
     }
 
     @Id

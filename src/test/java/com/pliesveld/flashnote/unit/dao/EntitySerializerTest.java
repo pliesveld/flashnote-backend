@@ -1,10 +1,10 @@
 package com.pliesveld.flashnote.unit.dao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.repository.QuestionRepository;
 import com.pliesveld.flashnote.serializer.HibernateAwareObjectMapper;
 import com.pliesveld.flashnote.spring.Profiles;
+import com.pliesveld.flashnote.spring.serializer.ObjectMapperDebug;
 import com.pliesveld.flashnote.unit.spring.SpringEntityTestConfig;
 import com.pliesveld.flashnote.unit.spring.SpringSerializationTestConfig;
 import org.apache.logging.log4j.LogManager;
@@ -70,7 +70,7 @@ public class EntitySerializerTest {
         assertNotNull(testRepositoryConfig.entityManager);
 
         if(testRepositoryConfig.hibernateAwareObjectMapper != null)
-            Views.debug(this, (ObjectMapper) testRepositoryConfig.hibernateAwareObjectMapper);
+            ObjectMapperDebug.debug(this, (ObjectMapper) testRepositoryConfig.hibernateAwareObjectMapper);
     }
 
 

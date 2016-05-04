@@ -1,6 +1,7 @@
 package com.pliesveld.flashnote.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import com.pliesveld.flashnote.domain.converter.InstantConverter;
 import com.pliesveld.flashnote.domain.converter.NotificationTypeConverter;
 import com.pliesveld.flashnote.schema.Constants;
@@ -13,7 +14,7 @@ import java.time.Instant;
 @Entity
 @Table(name = "NOTIFICATION")
 @org.hibernate.annotations.Immutable
-public class Notification {
+public class Notification extends DomainBaseEntity<Integer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -40,15 +41,18 @@ public class Notification {
     private NotificationType type;
 
     protected Notification() {
+        super();
     }
 
     public Notification(NotificationType type, StudentDetails recipient, String message) {
+        this();
         this.recipient = recipient;
         this.message = message;
         this.type = type;
     }
 
     public Notification(StudentDetails recipient, String message) {
+        this();
         this.recipient = recipient;
         this.message = message;
         this.type = NotificationType.SYSTEM_ERROR;

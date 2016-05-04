@@ -109,12 +109,11 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
         if(other != null)
             throw new StudentCreateException(email);
 
-        StudentDetails studentDetails = new StudentDetails();
-        studentDetails.setName(name);
+        StudentDetails studentDetails = new StudentDetails(name);
 
         Student student = new Student();
         student.setEmail(email);
-        //student.setPassword(password);
+
         student.setPassword(passwordEncoder.encode(password));
         student.setRole(StudentRole.ROLE_ACCOUNT);
 
@@ -268,6 +267,5 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
     @Override
     public void emailPasswordResetToAccountHolder(String email, String confirmURL) {
         mailProvider.emailAccountPasswordResetConfirmationLink(email, confirmURL);
-
     }
 }

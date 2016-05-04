@@ -1,5 +1,7 @@
 package com.pliesveld.flashnote.domain;
 
+import org.hibernate.proxy.HibernateProxy;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -17,10 +19,19 @@ public class Question extends AbstractStatement implements Serializable
             title = "Untitled Question";
     }
 
+    public final Integer getId() {
+        if (this instanceof HibernateProxy) {
+            return (Integer)((HibernateProxy)this).getHibernateLazyInitializer().getIdentifier();
+        }
+        else { return id; }
+    }
+
     public Question() {
+        super();
     }
 
     public Question(String content) {
+        this();
         setContent(content);
     }
 
