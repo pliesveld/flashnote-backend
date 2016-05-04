@@ -6,6 +6,7 @@
         <Property name="LOG_TRANS_LEVEL">WARN</Property>
         <Property name="LOG_APP_LEVEL">WARN</Property>
         <Property name="LOG_AUDIT_LEVEL">INFO</Property>
+        <Property name="LOG_BEANS_LEVEL">INFO</Property>
     </Properties>
 
     <Appenders>
@@ -38,10 +39,9 @@
             <AppenderRef ref="CONSOLE"/>
         </logger>
 
-
-        <!--<logger name="org.springframework.beans" level="DEBUG" additivity="false">-->
-            <!--<AppenderRef ref="CONSOLE"/>-->
-        <!--</logger>-->
+        <logger name="org.springframework.beans" level="${sys:LOG_BEANS_LEVEL}" additivity="false">
+            <AppenderRef ref="CONSOLE"/>
+        </logger>
 
         <Root level="WARN">
             <AppenderRef ref="CONSOLE"/>
