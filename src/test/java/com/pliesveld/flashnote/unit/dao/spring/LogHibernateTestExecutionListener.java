@@ -1,5 +1,6 @@
 package com.pliesveld.flashnote.unit.dao.spring;
 
+import io.jsonwebtoken.lang.Assert;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.test.context.TestContext;
@@ -70,7 +71,8 @@ public class LogHibernateTestExecutionListener extends AbstractTestExecutionList
             {
                 last = cause;
 
-                cause.setStackTrace(new StackTraceElement[]{});
+                if(cause.getClass() != AssertionError.class)
+                    cause.setStackTrace(new StackTraceElement[]{});
 
                 cause = cause.getCause();
                 if(cause != null)
@@ -78,7 +80,8 @@ public class LogHibernateTestExecutionListener extends AbstractTestExecutionList
             }
 
             LOG.debug(last.toString());
-            thrown.setStackTrace(new StackTraceElement[]{});
+            if(thrown.getClass() != AssertionError.class)
+                thrown.setStackTrace(new StackTraceElement[]{});
 
             testContext.updateState(
                 testContext.getTestInstance(),

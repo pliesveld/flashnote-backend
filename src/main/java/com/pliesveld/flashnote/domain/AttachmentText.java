@@ -14,15 +14,14 @@ import java.nio.charset.CharsetDecoder;
 @Table(name = "ATTACHMENT_TEXT")
 @PrimaryKeyJoinColumn(name = "ATTACHMENT_ID", foreignKey = @ForeignKey(name = "FK_ATTACHMENT_TEXT"))
 public class AttachmentText extends AbstractAttachment {
+
+
+    private String contents;
+
     @NotNull
-    @Column(name = "FILE_TEXT", length = Constants.MAX_ATTACHMENT_TEXT_FILE_LENGTH, nullable = false)
     @Size(max = Constants.MAX_ATTACHMENT_TEXT_FILE_LENGTH)
-    String contents;
-
-    public AttachmentText() {
-        super();
-    }
-
+    @Column(name = "FILE_TEXT", length = Constants.MAX_ATTACHMENT_TEXT_FILE_LENGTH, nullable = false)
+    @Basic(fetch = FetchType.LAZY, optional = false)
     public String getContents() {
         return contents;
     }
@@ -36,6 +35,10 @@ public class AttachmentText extends AbstractAttachment {
     public void setContents(byte[] contents) throws UnsupportedEncodingException {
         CharsetDecoder cs = Charset.forName("UTF-8").newDecoder();
         this.contents = new String(contents, StringUtils.toEncodedString(contents, Charset.forName("UTF-8")));
+    }
+
+    public AttachmentText() {
+        super();
     }
 
     @PrePersist

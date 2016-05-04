@@ -6,6 +6,7 @@ import com.pliesveld.flashnote.schema.Constants;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.UnsupportedEncodingException;
 import java.util.Objects;
 
@@ -14,24 +15,33 @@ import java.util.Objects;
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class AbstractAttachment extends AbstractAuditableEntity<Integer> {
 
+    protected Integer id;
+    protected AttachmentType attachmentType;
+    protected String fileName;
+    protected int fileLength;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ATTACHMENT_ID")
-    @Access(AccessType.PROPERTY)
-    Integer id;
+    public Integer getId() {
+        return id;
+    }
 
     @NotNull
     @Column(name = "CONTENT_TYPE", length = 16, nullable = false)
     @Convert(converter = AttachmentTypeConverter.class)
-    AttachmentType attachmentType;
+    public AttachmentType getAttachmentType() {
+        return attachmentType;
+    }
 
     @NotNull
+    @Size(min = Constants.MIN_ATTACHMENT_FILENAME_LENGTH, max = Constants.MAX_ATTACHMENT_FILENAME_LENGTH)
     @Column(name = "FILENAME", length = Constants.MAX_ATTACHMENT_FILENAME_LENGTH, nullable = false)
-    String fileName;
+    public String getFileName() { return fileName; }
 
     @NotNull
     @Column(name = "FILE_LENGTH", nullable = false)
-    int fileLength;
+    public int getFileLength() { return fileLength; }
 
     protected AbstractAttachment() {
         super();
@@ -39,25 +49,17 @@ public abstract class AbstractAttachment extends AbstractAuditableEntity<Integer
 
     public abstract void setContents(byte[] contents) throws UnsupportedEncodingException;
 
-    public Integer getId() {
-        return id;
-    }
+
     public void setId(Integer id) {
         this.id = id;
     }
 
-    public AttachmentType getAttachmentType() {
-        return attachmentType;
-    }
     public void setAttachmentType(AttachmentType attachmentType) { this.attachmentType = attachmentType; }
 
     public String getMimeContentType() { return attachmentType.getMime(); }
 
-    public String getFileName() { return fileName; }
-
     public void setFileName(String fileName) { this.fileName = fileName; }
 
-    public int getFileLength() { return fileLength; }
     protected void setFileLength(int fileLength) { this.fileLength = fileLength; }
 
     @Override

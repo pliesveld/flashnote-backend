@@ -14,38 +14,24 @@ import java.util.Objects;
         uniqueConstraints = @UniqueConstraint(name = "UNIQUE_STUDENT_NAME", columnNames = "STUDENT_NAME"))
 public class StudentDetails extends DomainBaseEntity<Integer> implements Serializable
 {
-    @Id
     private Integer id;
-
-    @MapsId
-    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    @JoinColumn(name = "STUDENT_ID", foreignKey = @ForeignKey(name = "FK_STUDENT_DETAILS"))
     private Student student;
-
-    @NotNull
-    @Size(min = Constants.MIN_STUDENT_NAME_LENGTH, max = Constants.MAX_STUDENT_NAME_LENGTH)
-    @Column(name = "STUDENT_NAME", length = Constants.MAX_STUDENT_NAME_LENGTH, nullable = false)
     private String name;
 
-    protected StudentDetails() {
-        super();
-    }
-
-    public StudentDetails(String name) {
-        this();
-        this.name = name;
-    }
-
+    @Id
     public Integer getId()
     {
         return id;
     }
 
-    protected void setId(Integer id)
-    {
-        this.id = id;
-    }
+    @MapsId
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "STUDENT_ID", foreignKey = @ForeignKey(name = "FK_STUDENT_DETAILS"))
+    public Student getStudent() { return student; }
 
+    @NotNull
+    @Size(min = Constants.MIN_STUDENT_NAME_LENGTH, max = Constants.MAX_STUDENT_NAME_LENGTH)
+    @Column(name = "STUDENT_NAME", length = Constants.MAX_STUDENT_NAME_LENGTH, nullable = false)
     public String getName()
     {
         return name;
@@ -56,7 +42,10 @@ public class StudentDetails extends DomainBaseEntity<Integer> implements Seriali
         this.name = name;
     }
 
-    public Student getStudent() { return student; }
+    protected void setId(Integer id)
+    {
+        this.id = id;
+    }
 
     public void setStudent(Student student) {
 
@@ -66,6 +55,16 @@ public class StudentDetails extends DomainBaseEntity<Integer> implements Seriali
             student.setStudentDetails(this);
 
     }
+
+    protected StudentDetails() {
+        super();
+    }
+
+    public StudentDetails(String name) {
+        this();
+        this.name = name;
+    }
+
 
     @Override
     public int hashCode() {

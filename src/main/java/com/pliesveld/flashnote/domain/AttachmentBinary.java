@@ -11,15 +11,13 @@ import java.io.Serializable;
 @Table(name = "ATTACHMENT_BINARY")
 @PrimaryKeyJoinColumn(name = "ATTACHMENT_ID", foreignKey = @ForeignKey(name = "FK_ATTACHMENT_BINARY"))
 public class AttachmentBinary extends AbstractAttachment implements Serializable {
-    public AttachmentBinary() {
-        super();
-    }
+
+    private byte[] contents;
 
     @NotNull
     @Size(max = Constants.MAX_ATTACHMENT_BINARY_FILE_LENGTH)
     @Column(name = "FILE_DATA", length = Constants.MAX_ATTACHMENT_BINARY_FILE_LENGTH, nullable = false)
-    byte[] contents;
-
+    @Basic(fetch = FetchType.LAZY, optional = false)
     public byte[] getContents() {
         return contents;
     }
@@ -27,6 +25,10 @@ public class AttachmentBinary extends AbstractAttachment implements Serializable
     public void setContents(byte[] contents) {
         this.contents = contents;
         setFileLength(contents.length);
+    }
+
+    public AttachmentBinary() {
+        super();
     }
 
     @PrePersist

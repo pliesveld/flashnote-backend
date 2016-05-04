@@ -75,7 +75,7 @@ public class LazyLoadingStudentTest extends AbstractDomainEntityUnitTest {
         StudentDetails studentDetails = studentDetailsRepository.getOne((Integer) student_id);
         assertFalse(Hibernate.isInitialized(studentDetails));
         studentDetails.getId();
-        assertTrue(entityManager.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(studentDetails));
+        assertFalse(entityManager.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(studentDetails));
         assertFalse(entityManager.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(studentDetails, "student"));
     }
 
@@ -85,7 +85,7 @@ public class LazyLoadingStudentTest extends AbstractDomainEntityUnitTest {
         Student student = studentRepository.getOne((Integer) student_id);
         assertFalse(Hibernate.isInitialized(student));
         student.getId();
-        assertTrue(entityManager.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(student));
+        assertFalse(entityManager.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(student));
         assertFalse(entityManager.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(student, "studentDetails"));
     }
 

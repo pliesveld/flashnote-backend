@@ -21,6 +21,7 @@ public class Constants {
 
     public static final int MAX_ATTACHMENT_TEXT_FILE_LENGTH = 65600;
     public static final int MAX_ATTACHMENT_BINARY_FILE_LENGTH = 3145728;
+    public static final int MIN_ATTACHMENT_FILENAME_LENGTH = 4;
     public static final int MAX_ATTACHMENT_FILENAME_LENGTH = 48;
 
     public static final int MAX_CATEGORY_NAME_LENGTH = 34;

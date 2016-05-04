@@ -19,40 +19,58 @@ import static com.pliesveld.flashnote.schema.Constants.*;
         uniqueConstraints = @UniqueConstraint(name = "UNIQUE_STUDENT_EMAIL", columnNames = "STUDENT_EMAIL"))
 public class Student extends DomainBaseEntity<Integer> {
 
+    private Integer id;
+    private StudentDetails studentDetails;
+    private String email;
+    private String password;
+    private StudentRole role;
+    private boolean temporaryPassword;
+    private Instant lastPasswordResetDate;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "STUDENT_ID")
-    private Integer id;
+    public Integer getId() { return id; }
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "student")
-    private StudentDetails studentDetails;
+    public StudentDetails getStudentDetails() { return studentDetails; }
 
     @NotNull
     @Size(min = MIN_STUDENT_EMAIL_LENGTH,max = MAX_STUDENT_EMAIL_LENGTH)
     @Email
     @Column(name = "STUDENT_EMAIL", length = MAX_STUDENT_EMAIL_LENGTH, nullable = false)
-    private String email;
+    public String getEmail() {
+        return email;
+    }
 
     @NotNull
     @Size(min = MIN_STUDENT_PASSWORD_LENGTH, max = MAX_STUDENT_PASSWORD_LENGTH)
     @Column(name = "STUDENT_PASSWORD", length = MAX_STUDENT_PASSWORD_LENGTH, nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String password;
+    public String getPassword() {
+        return password;
+    }
 
     @NotNull
     @Column(name = "STUDENT_ROLE", nullable = false)
     @Convert(converter = StudentRoleConverter.class)
     @Basic(fetch = FetchType.EAGER)
-    private StudentRole role;
+    public StudentRole getRole() {
+        return role;
+    }
 
     @NotNull
     @Column(name = "MUST_CHANGE_PASSWORD", nullable = false)
-    private boolean temporaryPassword;
+    public boolean isTemporaryPassword() {
+        return temporaryPassword;
+    }
 
     @NotNull
     @Column(name = "LAST_PASSWORD_RESET", nullable = false)
     @Convert(converter = InstantConverter.class)
-    private Instant lastPasswordResetDate;
+    public Instant getLastPasswordResetDate() {
+        return lastPasswordResetDate;
+    }
 
     public Student() {
         super();
@@ -66,11 +84,7 @@ public class Student extends DomainBaseEntity<Integer> {
         lastPasswordResetDate = Instant.now();
     }
 
-    public Integer getId() { return id; }
-
     public void setId(Integer id) { this.id = id; }
-
-    public StudentDetails getStudentDetails() { return studentDetails; }
 
     public void setStudentDetails(StudentDetails studentDetails)
     {
@@ -79,24 +93,12 @@ public class Student extends DomainBaseEntity<Integer> {
             studentDetails.setStudent(this);
     }
 
-    public String getEmail() {
-        return email;
-    }
-
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public StudentRole getRole() {
-        return role;
     }
 
     public void setRole(StudentRole role) {
@@ -105,14 +107,6 @@ public class Student extends DomainBaseEntity<Integer> {
 
     public void setTemporaryPassword(boolean temporaryPassword) {
         this.temporaryPassword = temporaryPassword;
-    }
-
-    public boolean isTemporaryPassword() {
-        return temporaryPassword;
-    }
-
-    public Instant getLastPasswordResetDate() {
-        return lastPasswordResetDate;
     }
 
     public void setLastPasswordResetDate(Instant lastPasswordResetDate) {
