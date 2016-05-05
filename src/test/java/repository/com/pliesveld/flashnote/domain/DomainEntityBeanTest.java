@@ -8,7 +8,7 @@ import com.pliesveld.flashnote.repository.QuestionRepository;
 import com.pliesveld.flashnote.serializer.HibernateAwareObjectMapper;
 import com.pliesveld.flashnote.spring.Profiles;
 import com.pliesveld.flashnote.spring.SpringEntityTestConfig;
-import com.pliesveld.flashnote.spring.beans.DomainEntities;
+import com.pliesveld.tests.beans.DomainEntities;
 import com.pliesveld.tests.entitymanager.EMOP;
 import com.pliesveld.tests.entitymanager.EMOP_ASSERT;
 import com.pliesveld.tests.entitymanager.EMOP_ENTITY;

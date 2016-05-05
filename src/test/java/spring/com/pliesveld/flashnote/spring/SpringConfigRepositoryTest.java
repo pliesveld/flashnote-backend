@@ -30,7 +30,7 @@ public class SpringConfigRepositoryTest {
 
         LOG.info(StringUtils.arrayToCommaDelimitedString(ctx.getEnvironment().getActiveProfiles()));
         try {
-        ctx.register(SpringRootConfig.class);
+        ctx.register(SpringDataTestConfig.class);
         ctx.register(TestRepositoryConfig.class);
 
 
@@ -53,7 +53,7 @@ public class SpringConfigRepositoryTest {
 }
 
 @Configuration
-@Import(value = {SpringDataConfig.class,PersistenceContext.class})
+@Import(value = {SpringDataConfig.class, PersistenceContext.class})
 class TestRepositoryConfig {
 
     @Autowired

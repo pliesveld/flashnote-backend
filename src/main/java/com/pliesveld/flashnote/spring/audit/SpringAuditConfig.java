@@ -10,19 +10,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.auditing.DateTimeProvider;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@EnableJpaAuditing(dateTimeProviderRef = "dateTimeProvider")
+@EnableJpaAuditing(dateTimeProviderRef = "dateTimeProvider", auditorAwareRef = "auditorAware")
 @ComponentScan(basePackageClasses = { FlashCardRepository.class, AuditingDateTimeProvider.class })
 public class SpringAuditConfig {
     @Bean
-    DateTimeProvider dateTimeProvider(DateTimeService dateTimeService) {
+    protected DateTimeProvider dateTimeProvider(DateTimeService dateTimeService) {
         return new AuditingDateTimeProvider(dateTimeService);
     }
 
-    @Bean
-    AuditorAware<String> auditorAware() {
+    @Bean(name = "auditorAware")
+    protected AuditorAware<String> auditorAware() {
         return new UsernameAuditorAware();
     }
 }

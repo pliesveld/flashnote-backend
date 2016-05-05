@@ -6,7 +6,9 @@ import com.pliesveld.flashnote.web.validator.ImageMetadataReader;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -18,39 +20,71 @@ import javax.imageio.metadata.IIOMetadataFormat;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 
 
 public class ImageMetadataReaderTest {
     private static final Logger LOG = LogManager.getLogger();
 
-    private static String[] IMAGES = { "1920x1080.bmp", "1920x1080.jpg", "1920x1080.png" };
-
     @Test
-    public void ImageMetadataReaderTest() {
-        URL baseURL = ImageMetadataReaderTest.class.getResource("");
-        LOG.debug("Checking for test resources in {}",baseURL);
+    public void ImageMetadataReaderTest() throws IOException {
 
-        for(String image : IMAGES)
+        ClassPathResource classPathResource = new ClassPathResource("/scripts/tests/test-data/image/");
+        if(!classPathResource.exists())
         {
-            URL fileURL = ImageMetadataReaderTest.class.getResource(image);
-            if(fileURL == null)
-            {
-                LOG.error("Could not find {}",image);
-                continue;
+            LOG.error("Classpath not found {}", classPathResource);
+            Assert.fail();
+            return;
+        }
+
+        final ArrayList<Path> image_files = new ArrayList<>();
+
+        Files.walkFileTree(classPathResource.getFile().toPath(), new FileVisitor<Path>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                return FileVisitResult.CONTINUE;
             }
 
-            File file = new File(fileURL.getFile());
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                image_files.add(file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                return null;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                return FileVisitResult.CONTINUE;
+            }
+        });
+
+        Assert.assertNotEquals(0,image_files.size());
+        int found = 0;
+
+        for(Path image : image_files)
+        {
+            File file = image.toFile();
+
             if(!file.exists())
             {
-                LOG.warn("File {0} does not exist.",fileURL);
+                LOG.warn("File {0} does not exist.", file);
                 continue;
             }
 
             try {
                 byte[] contents = openToByteArray(file);
-                ImageMetadata imd = ImageMetadataReader.readImageMetaData(file.getName(), contents);
-                LOG.info(imd);
+                ImageMetadata imd = ImageMetadataReader.readImageMetaData(file.getPath(), contents);
+                LOG.info("image {} -> {}", file, imd);
+                found++;
             } catch(IOException ex) {
                 LOG.error("reader could not open {}",file.getName());
             }
@@ -58,12 +92,19 @@ public class ImageMetadataReaderTest {
 
         logImageSupport();
 
+        Assert.assertNotEquals(0, found);
+
     }
 
 
 
     byte[] openToByteArray(File file) throws IOException {
-        return IOUtils.toByteArray(new FileInputStream(file));
+        try {
+            return IOUtils.toByteArray(new FileInputStream(file));
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     void logImageSupport()

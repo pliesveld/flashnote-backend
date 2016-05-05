@@ -35,7 +35,7 @@ public abstract class AbstractAuditableEntity<ID extends Serializable> extends D
     protected String createdByUser;
     protected String modifiedByUser;
 
-    @Column(name = "CREATED")
+    @Column(name = "CREATED", updatable = false)
     @Convert(converter = InstantConverter.class)
     @CreatedDate
     @JsonProperty(value = "created", access = READ_ONLY)
@@ -49,7 +49,7 @@ public abstract class AbstractAuditableEntity<ID extends Serializable> extends D
     @JsonProperty(value = "modified", access = READ_ONLY)
     public Instant getModifiedOn() { return modifiedOn; }
 
-    @Column(name = "CREATED_BY")
+    @Column(name = "CREATED_BY", updatable = false)
     @CreatedBy
     @JsonProperty(value = "created_by", access = READ_ONLY)
     public String getCreatedByUser() {
