@@ -65,7 +65,7 @@ public class CategoryController {
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public Page<Category> findBySearchTerm(@RequestParam("q") String searchTerm, Pageable pageRequest) {
+    public Page<Category> findBySearchTerm(@RequestParam("query") String searchTerm, Pageable pageRequest) {
         return categoryService.findBySearchTerm(searchTerm, pageRequest);
     }
 

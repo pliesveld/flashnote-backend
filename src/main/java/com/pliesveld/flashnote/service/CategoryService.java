@@ -14,6 +14,8 @@ import java.util.List;
 @Validated
 @Transactional(readOnly = true)
 public interface CategoryService {
+    boolean doesCategoryIdExist(int id);
+
     Category getCategoryById(Integer id)                                throws CategoryNotFoundException;
     List<Category> rootCategories();
     List<Category> childCategories(int categoryId)                      throws CategoryNotFoundException;

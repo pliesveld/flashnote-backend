@@ -1,5 +1,7 @@
 package com.pliesveld.flashnote.repository;
 
+import com.pliesveld.flashnote.domain.QuestionBank;
+import com.pliesveld.flashnote.repository.specifications.QuestionBankSpecification;
 import com.pliesveld.flashnote.spring.CustomRepositoryPopulatorFactoryBean;
 import com.pliesveld.flashnote.spring.Profiles;
 import com.pliesveld.flashnote.spring.SpringDataTestConfig;
@@ -9,11 +11,15 @@ import org.junit.runner.RunWith;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
@@ -56,6 +62,19 @@ public class RepositoryQuestionBanksTest extends AbstractRepositoryUnitTest {
     }
 
 
+    @Test
+    @Transactional
+    public void testQuestionBankSpec() {
+        enableSQL();
+        Specification<QuestionBank> spec = QuestionBankSpecification.descriptionContainsIgnoreCase("FINDME");
+        List<QuestionBank> qb = questionBankRepository.findAll(spec);
+
+        LOG_SQL.debug("QuestionBanks returned: {}", qb.size());
+
+        qb.forEach(LOG_SQL::debug);
+        qb.forEach((bank) -> {debug(bank); });
+
+    }
 
 }
 

@@ -10,12 +10,12 @@ import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.model.json.response.CardStatistics;
 import com.pliesveld.flashnote.security.CurrentUser;
 import com.pliesveld.flashnote.security.StudentPrincipal;
-import com.pliesveld.flashnote.service.AttachmentService;
-import com.pliesveld.flashnote.service.CardService;
-import com.pliesveld.flashnote.service.StudentService;
+import com.pliesveld.flashnote.service.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +33,13 @@ public class DeckController {
     private StudentService studentService;
 
     @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
     private CardService cardService;
+
+    @Autowired
+    private DeckService deckService;
 
     @Autowired
     private AttachmentService attachmentService;
@@ -49,7 +55,7 @@ public class DeckController {
     
     private Deck verifyDeck(int id) throws DeckNotFoundException
     {
-        Deck deck = cardService.findDeckById(id);
+        Deck deck = deckService.findDeckById(id);
         if(deck == null)
             throw new DeckNotFoundException(id);
         return deck;
@@ -59,7 +65,7 @@ public class DeckController {
     @ResponseBody @ResponseStatus(code = HttpStatus.OK)
     public List<Deck> retrieveAllDecks()
     {
-        return cardService.findAllDecks();
+        return deckService.findAllDecks();
     }
 
     @RequestMapping(value="", method = RequestMethod.POST)
@@ -73,7 +79,7 @@ public class DeckController {
         }
 
         int id = category.getId();
-        if(!cardService.doesCategoryIdExist(id))
+        if(!categoryService.doesCategoryIdExist(id))
         {
 
             throw new CategoryNotFoundException(id);
@@ -90,7 +96,7 @@ public class DeckController {
             throw new StudentNotFoundException(student_id);
         }
 
-        deck = cardService.createDeck(deck);
+        deck = deckService.createDeck(deck);
 
         return ResponseEntity.created(
                 MvcUriComponentsBuilder.fromController(DeckController.class)
@@ -109,7 +115,7 @@ public class DeckController {
     @ResponseStatus(code = HttpStatus.OK)
     public void deleteDeck(@PathVariable("id") int id)
     {
-        cardService.deleteDeck(id);
+        deckService.deleteDeck(id);
     }
 
     @RequestMapping(value="/count", method = RequestMethod.GET)
@@ -126,6 +132,9 @@ public class DeckController {
         return new ResponseEntity<>(cardStatistics,HttpStatus.OK);
     }
 
-
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    public Page<Deck> findBySearchTerm(@RequestParam("query") String searchTerm, Pageable pageRequest) {
+        return deckService.findBySearchTerm(searchTerm, pageRequest);
+    }
 
 }

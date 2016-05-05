@@ -9,12 +9,16 @@ import com.pliesveld.flashnote.exception.QuestionNotFoundException;
 import com.pliesveld.flashnote.exception.StatementNotFoundException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.model.json.request.UpdateQuestionBankRequestJson;
+import com.pliesveld.flashnote.service.BankService;
 import com.pliesveld.flashnote.service.CardService;
+import com.pliesveld.flashnote.service.CategoryService;
 import com.pliesveld.flashnote.service.StudentService;
 import com.pliesveld.flashnote.spring.serializer.ObjectMapperDebug;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +38,13 @@ public class QuestionBankController {
     private StudentService studentService;
 
     @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
     private CardService cardService;
+
+    @Autowired
+    private BankService bankService;
 
     private ObjectMapper objectMapper;
 
@@ -81,7 +91,7 @@ public class QuestionBankController {
     @ResponseBody
     public ResponseEntity<?> retrieveAllQuestionBanks()
     {
-        List<QuestionBank> questionBanks = cardService.findAllQuestionBanks();
+        List<QuestionBank> questionBanks = bankService.findAllQuestionBanks();
         return ResponseEntity.ok(questionBanks);
     }
 
@@ -95,13 +105,13 @@ public class QuestionBankController {
         }
 
         int id = category.getId();
-        if(!cardService.doesCategoryIdExist(id))
+        if(!categoryService.doesCategoryIdExist(id))
         {
 
             throw new CategoryNotFoundException(id);
         }
 
-        questionBank = cardService.createQuestionBank(questionBank);
+        questionBank = bankService.createQuestionBank(questionBank);
 
         return ResponseEntity.created(
                 MvcUriComponentsBuilder
@@ -115,7 +125,7 @@ public class QuestionBankController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public ResponseEntity<?> retrieveQuestionBank(@PathVariable("id") int id) throws JsonProcessingException {
-        QuestionBank questionBank = cardService.findQuestionBankById(id);
+        QuestionBank questionBank = bankService.findQuestionBankById(id);
 
         if(questionBank == null )
             return ResponseEntity.notFound().build();
@@ -127,7 +137,7 @@ public class QuestionBankController {
     @ResponseBody
     public ResponseEntity<?> deleteQuestionBank(@PathVariable("id") int id)
     {
-        cardService.deleteQuestionBank(id);
+        bankService.deleteQuestionBank(id);
         return ResponseEntity.ok().build();
     }
 
@@ -140,6 +150,9 @@ public class QuestionBankController {
         return ResponseEntity.ok().build();
     }
 
-
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    public Page<QuestionBank> findBySearchTerm(@RequestParam("query") String searchTerm, Pageable pageRequest) {
+        return bankService.findBySearchTerm(searchTerm, pageRequest);
+    }
 
 }

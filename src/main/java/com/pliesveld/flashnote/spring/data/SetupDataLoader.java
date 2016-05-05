@@ -48,14 +48,10 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createStudentIfNotFound("mod@example.com",     ROLE_MODERATOR,  "moderator");
         createStudentIfNotFound("admin@example.com",   ROLE_ADMIN,      "admin");
 
-
-
         Category test_category = createCategoryIfNotFound("TEST CATEGORY", "A sample container for testing.");
         Category test_category_nested = createCategoryIfNotFound("TEST SUB CATEGORY", "A sample sub-category for testing.");
         createCategoryRelationship(test_category,test_category_nested);
     }
-
-
 
     @Transactional
     private Student createStudentIfNotFound(String email, StudentRole role, String name) {

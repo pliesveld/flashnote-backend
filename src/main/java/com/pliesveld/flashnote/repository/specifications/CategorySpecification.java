@@ -21,6 +21,11 @@ final public class CategorySpecification {
         };
     }
 
+    public static Specification<Category> categoryId(int categoryId) {
+        return (root, query, cb) -> cb.and(cb.equal(root.<Integer>get(Category_.id),categoryId));
+
+    }
+
     private static String getContainsLikePattern(String searchTerm) {
 
         if(searchTerm == null || (searchTerm = searchTerm.trim()).isEmpty()) {

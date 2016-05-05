@@ -1,20 +1,14 @@
 package com.pliesveld.flashnote.service;
 
 import com.pliesveld.flashnote.domain.*;
-import com.pliesveld.flashnote.exception.DeckNotFoundException;
 import com.pliesveld.flashnote.exception.FlashCardCreateException;
-import com.pliesveld.flashnote.exception.QuestionBankNotFoundException;
 import com.pliesveld.flashnote.exception.QuestionNotFoundException;
 import com.pliesveld.flashnote.repository.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service(value = "cardService")
@@ -28,22 +22,16 @@ public class CardServiceImpl implements CardService {
     QuestionRepository questionRepository;
 
     @Autowired
-    AnswerRepository answerRepository;
+    QuestionBankRepository questionBankRepository;
 
     @Autowired
-    CategoryRepository categoryRepositry;
+    AnswerRepository answerRepository;
 
     @Autowired
     FlashCardRepository flashCardRepository;
 
     @Autowired
     DeckRepository deckRepository;
-
-    @Autowired
-    QuestionBankRepository questionBankRepository;
-
-    @PersistenceContext
-    EntityManager entityManager;
 
     @Override
     public Question findQuestionById(int id) {
@@ -58,18 +46,6 @@ public class CardServiceImpl implements CardService {
     @Override
     public AbstractStatement findStatementById(int id) {
         return statementRepository.findOneById(id);
-    }
-
-    @Override
-    public Deck findDeckById(int id) throws DeckNotFoundException {
-        Deck deck = deckRepository.findOne(id);
-        if(deck == null)
-            throw new DeckNotFoundException(id);
-
-        Hibernate.initialize(deck.getFlashcards());
-        deck.getCategory().getId();
-        deck.getDescription();
-        return deck;
     }
 
     @Override
@@ -141,73 +117,4 @@ public class CardServiceImpl implements CardService {
         return createFlashCard(question,answer);
     }
 
-    @Override
-    public void addToDeckFlashCard(Deck deck, FlashCard flashCard) {
-        deck = entityManager.merge(deck);
-        flashCard = entityManager.merge(flashCard);
-        deck.getFlashcards().add(flashCard);
-    }
-
-    @Override
-    public List<Deck> findAllDecks() {
-        List<Deck> list = new ArrayList<>();
-        deckRepository.findAll().forEach(deck -> {
-            deck.getFlashcards().forEach(flashcard -> {
-                flashcard.getId();
-                flashcard.getQuestion().getId();
-                flashcard.getAnswer().getId();
-            });
-            //Hibernate.initialize(flashcard.getFlashcards());
-        });
-        return list;
-    }
-
-    public Deck createDeck(Deck deck) {
-        return deckRepository.save(deck);
-    }
-
-    @Override
-    public void deleteDeck(int id) {
-        if(!deckRepository.exists(id))
-            throw new DeckNotFoundException(id);
-        deckRepository.delete(id);
-    }
-
-    @Override
-    public List<QuestionBank> findAllQuestionBanks() {
-        ArrayList<QuestionBank> list = new ArrayList<>();
-        questionBankRepository.findAll().forEach(list::add);
-        return list;
-    }
-
-    @Override
-    public QuestionBank createQuestionBank(QuestionBank questionBank) {
-        return questionBankRepository.save(questionBank);
-    }
-
-    @Override
-    public QuestionBank findQuestionBankById(int id) {
-        QuestionBank questionBank = questionBankRepository.findOne(id);
-        if(questionBank == null)
-        {
-            throw new QuestionBankNotFoundException(id);
-        }
-        questionBank.getId();
-        questionBank.getDescription();
-        Hibernate.initialize(questionBank.getQuestions());
-        questionBank.getQuestions().forEach((que) -> Hibernate.initialize(que.getAnnotations()));
-        return questionBank;
-    }
-
-    @Override
-    public void deleteQuestionBank(int id) {
-        if(!questionBankRepository.exists(id))
-            throw new QuestionNotFoundException(id);
-        questionBankRepository.delete(id);
-    }
-
-    @Override
-    public boolean doesCategoryIdExist(int id) {
-        return categoryRepositry.exists(id);
-    }
 }

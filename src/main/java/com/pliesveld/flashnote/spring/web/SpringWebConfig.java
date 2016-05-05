@@ -3,7 +3,7 @@ package com.pliesveld.flashnote.spring.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pliesveld.flashnote.logging.Markers;
 import com.pliesveld.flashnote.spring.serializer.ObjectMapperDebug;
-import com.pliesveld.flashnote.web.controller.RateLimitingInterceptor;
+import com.pliesveld.flashnote.web.handler.RateLimitingHandlerInterceptor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.validator.HibernateValidator;
@@ -103,9 +103,9 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public RateLimitingInterceptor rateLimitingInterceptor()
+    public RateLimitingHandlerInterceptor rateLimitingInterceptor()
     {
-        return new RateLimitingInterceptor();
+        return new RateLimitingHandlerInterceptor();
     }
 
 

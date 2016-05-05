@@ -2,6 +2,7 @@ package com.pliesveld.tests;
 
 import com.pliesveld.flashnote.repository.*;
 import com.pliesveld.tests.listeners.LogHibernateTestExecutionListener;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -159,5 +160,11 @@ public class AbstractRepositoryUnitTest
     }
     protected void assertNotificationRepositoryCount(long value) {
         assertEquals("The entity count of NotificationRepository should be " + value, value, notificationRepository.count());
+    }
+
+    protected static void debug(Object obj) {
+        //  Will cause problems if used on hibernate proxy objects, and on circular references.
+        //  Use with care.
+        LOG_SQL.debug(ReflectionToStringBuilder.toString(obj));
     }
 }

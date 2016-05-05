@@ -41,6 +41,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public boolean doesCategoryIdExist(int id) {
+        return categoryRepository.exists(id);
+    }
+
+    @Override
     public List<Category> rootCategories() {
         return categoryRepository.findByParentCategoryIsNull();
     }
@@ -81,4 +86,6 @@ public class CategoryServiceImpl implements CategoryService {
         Specification<Category> searchSpec = CategorySpecification.titleOrDescriptionContainsIgnoreCase(searchTerm);
         return categoryRepository.findAll(searchSpec,pageRequest);
     }
+
+
 }

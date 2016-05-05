@@ -6,6 +6,7 @@ import com.pliesveld.flashnote.domain.FlashCard;
 import com.pliesveld.flashnote.domain.Question;
 import com.pliesveld.flashnote.exception.DeckNotFoundException;
 import com.pliesveld.flashnote.service.CardService;
+import com.pliesveld.flashnote.service.DeckService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,12 @@ public class ConstructController {
     @Autowired
     private CardService cardService;
 
+    @Autowired
+    private DeckService deckService;
+
     private Deck verifyDeck(int id) throws DeckNotFoundException
     {
-        Deck deck = cardService.findDeckById(id);
+        Deck deck = deckService.findDeckById(id);
         if(deck == null)
             throw new DeckNotFoundException(id);
         return deck;
@@ -45,7 +49,7 @@ public class ConstructController {
 
         FlashCard fc = cardService.createFlashCard(question,answer);
 
-        cardService.addToDeckFlashCard(deck,fc);
+        deckService.addToDeckFlashCard(deck,fc);
 
         HttpHeaders responseHeaders = new HttpHeaders();
         URI newStudentUri = MvcUriComponentsBuilder
