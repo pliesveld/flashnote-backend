@@ -78,7 +78,7 @@ public class DeckTest extends StudentDetailsTest
         entityManager.persist(fc1);
         entityManager.persist(fc2);
 
-        Deck deck = new Deck(author);
+        Deck deck = new Deck();
         deck.getFlashcards().add(fc1);
         deck.getFlashcards().add(fc2);
         deck.setCategory(category);
@@ -104,7 +104,7 @@ public class DeckTest extends StudentDetailsTest
         assertFlashCardRepositoryCount(0);
 
 
-        Deck deck = new Deck(author);
+        Deck deck = new Deck();
         deck.setDescription("This is an example Deck.");
         deck.setCategory(category);
 
@@ -149,7 +149,7 @@ public class DeckTest extends StudentDetailsTest
 
         assertFlashCardRepositoryCount(0);
 
-        Deck deck = new Deck(author);
+        Deck deck = new Deck();
         deck.setDescription("This is an example Deck.");
         deck.setCategory(category);
 
@@ -204,7 +204,7 @@ public class DeckTest extends StudentDetailsTest
         assertFlashCardRepositoryCount(0);
 //        assertEquals("FlashCard count should be zero",0,((Long)cardService.countFlashCards()).intValue());
 
-        Deck deck = new Deck(author);
+        Deck deck = new Deck();
         deck.setDescription("This is an example Deck.");
         deck.setCategory(category);
 

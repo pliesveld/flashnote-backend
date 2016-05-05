@@ -40,7 +40,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<Deck> findDecksByOwner(int id) {
-        return deckRepository.findByAuthor_Id(id);
+        return deckRepository.findByOwner(id);
     }
 
     @Override

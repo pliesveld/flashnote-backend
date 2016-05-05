@@ -124,7 +124,6 @@ public class PopulateFlashnoteContainerApplication {
             Deck deck = new Deck();
             deck.setFlashcards(flashCards);
             deck.setCategory(category);
-            deck.setAuthor(studentDetails);
 
             try {
                 deckRepository.save(deck);

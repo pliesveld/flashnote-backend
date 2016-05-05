@@ -27,7 +27,7 @@ public class Constants {
     public static final int MAX_CATEGORY_NAME_LENGTH = 34;
     public static final int MAX_CATEGORY_DESCRIPTION_LENGTH = 512;
 
-    public static final int MIN_DECK_DESCRIPTION_LENGTH = 12;
+    public static final int MIN_DECK_DESCRIPTION_LENGTH = 8;
     public static final int MAX_DECK_DESCRIPTION_LENGTH = 512;
 
     public static final int MAX_ACCOUNT_TOKEN_LENGTH = 64;

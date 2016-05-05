@@ -69,7 +69,7 @@ public class DeckFlashcardRemovalTest extends StudentDetailsTest
             entityManager.persist(ans);
             
             FlashCard fc = new FlashCard(que,ans);
-            Deck deck = new Deck(studentDetails1);
+            Deck deck = new Deck();
             deck.getFlashcards().add(fc);
             deck.setCategory(category);
 

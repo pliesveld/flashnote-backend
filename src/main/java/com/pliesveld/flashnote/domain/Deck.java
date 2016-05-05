@@ -17,8 +17,8 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "DECK",
-        indexes = { @Index(name = "IDX_DECK_AUTHOR_ID",
-                           columnList = "STUDENT_ID") })
+        indexes = { @Index(name = "IDX_DECK_OWNER_ID",
+                           columnList = "OWNER_ID") })
 @EntityListeners(value = { LogEntityListener.class })
 public class Deck extends DomainBaseEntity<Integer> implements Serializable
 {
@@ -26,12 +26,6 @@ public class Deck extends DomainBaseEntity<Integer> implements Serializable
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "DECK_ID")
     private Integer id;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "STUDENT_ID", foreignKey = @ForeignKey(name = "FK_DECK_STUDENT_ID"), nullable = false)
-    @LazyToOne(LazyToOneOption.PROXY)
-    private StudentDetails author;
 
     @OneToMany(cascade = {CascadeType.ALL})
 //    @OrderColumn(name = "FLASHCARD_ORDER",updatable=false)
@@ -61,25 +55,24 @@ public class Deck extends DomainBaseEntity<Integer> implements Serializable
     @LazyToOne(LazyToOneOption.PROXY)
     private Category category;
 
-    public Deck() {
+    @NotNull
+    @Column(name = "OWNER_ID")
+    @Basic(optional = false)
+    int owner;
+
+    protected Deck() {
         super();
     }
 
-    public Deck(StudentDetails author) {
-        this();
-        setAuthor(author);
-    }
-
-    public Deck(StudentDetails author, FlashCard... cards) {
-        this(author);
+    public Deck(FlashCard... cards) {
         for(FlashCard fc : cards)
         {
             flashcards.add(fc);
         }
     }
 
-    public Deck(StudentDetails author, String description, FlashCard... flashcards) {
-        this(author, flashcards);
+    public Deck(String description, FlashCard... flashcards) {
+        this(flashcards);
         this.description = description;
     }
 
@@ -116,15 +109,6 @@ public class Deck extends DomainBaseEntity<Integer> implements Serializable
     public void setCategory(Category category) {
         this.category = category;
     }
-
-    public StudentDetails getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(StudentDetails author) {
-        this.author = author;
-    }
-
 
     @Override
     public int hashCode() {

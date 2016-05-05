@@ -16,7 +16,9 @@ import java.util.Set;
 
 
 @Entity
-@Table(name = "QUESTION_BANK")
+@Table(name = "QUESTION_BANK",
+        indexes = { @Index(name = "IDX_QUESTION_BANK_OWNER_ID",
+                columnList = "OWNER_ID") })
 @EntityListeners(value = { LogEntityListener.class })
 public class QuestionBank extends AbstractAuditableEntity<Integer> {
 
@@ -32,7 +34,7 @@ public class QuestionBank extends AbstractAuditableEntity<Integer> {
     private Category category;
 
     @NotNull
-    @Size(max = Constants.MAX_DECK_DESCRIPTION_LENGTH)
+    @Size(min = Constants.MIN_DECK_DESCRIPTION_LENGTH, max = Constants.MAX_DECK_DESCRIPTION_LENGTH)
     @Column(name = "DESCRIPTION", length = Constants.MAX_DECK_DESCRIPTION_LENGTH, nullable = false)
     private String description;
 
@@ -46,6 +48,11 @@ public class QuestionBank extends AbstractAuditableEntity<Integer> {
     )
     @LazyCollection(LazyCollectionOption.EXTRA)
     private Set<Question> questions = new HashSet<Question>();
+
+    @NotNull
+    @Column(name = "OWNER_ID")
+    @Basic(optional = false)
+    int owner;
 
     protected QuestionBank() {
         super();

@@ -68,7 +68,6 @@ public class CardServiceImpl implements CardService {
 
         Hibernate.initialize(deck.getFlashcards());
         deck.getCategory().getId();
-        deck.getAuthor();
         deck.getDescription();
         return deck;
     }

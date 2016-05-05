@@ -101,7 +101,6 @@ public class DomainEntities {
 
        Deck deck = new Deck();
 
-       deck.setAuthor(studentDetailsBean);
        deck.setDescription("Deck title #" + incrementCounter());
        deck.setCategory(categoryBean);
         List<FlashCard> list = new ArrayList<FlashCard>();

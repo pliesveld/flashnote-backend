@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface DeckRepository extends CrudRepository<Deck,Integer> {
-    List<Deck> findByAuthor_Id(int id);
+    List<Deck> findByOwner(int id);
+//    List<Deck> findByAuthor_Id(int id);
 }

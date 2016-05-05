@@ -90,7 +90,6 @@ public class DeckController {
             throw new StudentNotFoundException(student_id);
         }
 
-        deck.setAuthor(studentDetails);
         deck = cardService.createDeck(deck);
 
         return ResponseEntity.created(

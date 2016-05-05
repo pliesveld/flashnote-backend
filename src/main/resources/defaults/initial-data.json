@@ -1,0 +1,73 @@
+{
+    "_class" : "com.pliesveld.flashnote.spring.DataSet",
+
+    "questions" : [
+    ],
+    "students" : [
+    ],
+    "categories" : [
+        {
+            "name" : "Computer Programming",
+            "description" : "Broadly related computer programming category.  Flashnote decks with this category may covers topics such as programming language definitions, data structures, algorithms, operating system principles, and computer science theory"
+        },
+        {
+            "@id" : 5,
+            "name" :  "Software Development",
+            "description" : "The software development category focuses on the application of computer technology in the workplace.   Study common libraries and web development frameworks.  Software development theory includes topics like: object oriented programming, design patterns, user experience, and agile development.",
+            "childCategories" : [ 50 ]
+        },
+        {
+            "name" : "Information Technology",
+            "description" : "Focus on the configuration and administration of operating systems, network components, and application services."
+        },
+        {
+            "name" : "The Software Interview",
+            "description" : "Practice the topics commonly asked when applying for a software engineering position.  Can cover the technical explanation of definitions; includes commonly asked questions in algorithms, data structures, languages, modeling, databases, and networking.  May also include the soft interview questions.  Commonly asked questions designed to measure personality traits and team culture fits."
+        },
+        {
+            "@id" : 50,
+            "name" : "Web Development",
+            "description" : "Discusses the topics of web servers, browsers and the HTTP specification",
+            "parentCategory" : 5
+        }
+    ],
+    "questionBanks" : [
+        {
+            "category" :  50,
+            "description" : "Commonly asked web developer questions.",
+            "questions" : [
+                {
+                    "content" : "What is a RESTful web service?"
+                },
+                {
+                    "content" : "What methods are supported by the HTTP specification?"
+                },
+                {
+                    "content" : "What is a Cross-Origin-Request?"
+                },
+                {
+                    "content" : "Give an example of a stateless request."
+                }
+            ]
+        },
+        {
+            "category" :  5,
+            "description" : "Object Oriented Programming",
+            "questions" : [
+                {
+                    "content" : "What is encapsulation?"
+                },
+                {
+                    "content" : "What is composition?"
+                },
+                {
+                    "content" : "What is inheritance?"
+                },
+                {
+                    "content" : "What is an object?"
+                }
+            ]
+        }
+    ]
+}
+
