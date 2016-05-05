@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration configDebug="false" monitorInterval="3">
     <Properties>
+        <Property name="logFolder">log</Property>
+
         <Property name="hibernatefilename">log/hibernate.log</Property>
         <Property name="servicefilename">log/service.log</Property>
         <Property name="springbootdebug">log/spring-boot.log</Property>

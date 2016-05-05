@@ -1,0 +1,62 @@
+package com.pliesveld.flashnote.domain;
+
+
+import com.pliesveld.flashnote.spring.DefaultEntityTestAnnotations;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.io.Serializable;
+
+import static org.junit.Assert.*;
+
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@DefaultEntityTestAnnotations
+@Transactional
+public class EntityTemplateTest extends AbstractDomainEntityUnitTest {
+
+    @PersistenceContext
+    EntityManager entityManager;
+
+    Serializable entity_id = null;
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    @Before
+    public void setupEntities()
+    {
+        entity_id = null;
+        entityManager.flush();
+        entityManager.clear();
+    }
+
+    @After
+    public void flushAfter()
+    {
+        entityManager.flush();
+    }
+
+    @Test
+    public void testEntityContext()
+    {
+//        assertNotNull(entity_id);
+    }
+
+    @Test
+    public void testEntitySanity()
+    {
+
+//        assertNotNull(entityManager.find(Void.class, entity_id));
+    }
+
+
+}
