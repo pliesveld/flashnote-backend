@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.web.controller;
+package com.pliesveld.flashnote.web.handler;
 
 import com.pliesveld.flashnote.exception.TooManyRequestsException;
 import com.pliesveld.flashnote.schema.Constants;
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Component
-public class RateLimitingInterceptor extends HandlerInterceptorAdapter {
+public class RateLimitingHandlerInterceptor extends HandlerInterceptorAdapter {
     private static final Logger LOG = LogManager.getLogger();
 
     @Autowired

@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.web.controller;
+package com.pliesveld.flashnote.web.controller.error;
 
 
 import org.apache.logging.log4j.LogManager;

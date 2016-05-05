@@ -1,6 +1,7 @@
-package com.pliesveld.flashnote.domain;
+package com.pliesveld.flashnote.exporter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.serializer.HibernateAwareObjectMapperImpl;
 import com.pliesveld.flashnote.spring.DefaultEntityTestAnnotations;
 import com.pliesveld.tests.listeners.LogHibernateTestExecutionListener;
