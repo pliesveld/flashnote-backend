@@ -25,7 +25,7 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
-@Service
+@Service("accountRegistrationService")
 public class AccountRegistrationServiceImpl implements AccountRegistrationService {
     private static final Logger LOG = LogManager.getLogger();
     private static final Logger taskLogger =
@@ -261,7 +261,7 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
 
     @Override
     public void emailTemporaryPasswordToAccountHolder(String email, String temp_password) {
-        mailProvider.emailAccountTemporaryPassword(email,temp_password);
+        mailProvider.emailAccountTemporaryPassword(email, temp_password);
     }
 
     @Override

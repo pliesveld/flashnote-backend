@@ -11,28 +11,32 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 
 @Validated
-@Transactional
+@Transactional(readOnly = true)
 public interface AccountRegistrationService {
 
-    @Transactional(readOnly = true)
     long countAccountRegistration();
-    @Transactional(readOnly = true)
     long countStudent();
-    @Transactional(readOnly = true)
     long countStudentDetails();
 
+    @Transactional
 	void taskPurgeExpiredAccounts();
 
+    @Transactional
     AccountRegistrationToken deleteAccountRegistration(int id);
 
+    @Transactional
     Student createStudent(String name, String email, String password) throws StudentCreateException;
 
+    @Transactional
     AccountRegistrationToken createAccountRegistration(@Valid Student student) throws ResourceRepositoryException;
 
+    @Transactional
     AccountPasswordResetToken findOrCreatePasswordResetToken(@Valid Student student);
 
-	Student processRegistrationConfirmation(String token);
+    @Transactional
+    Student processRegistrationConfirmation(String token);
 
+    @Transactional
     Student processPasswordResetConfirmation(String token);
 
     void emailVerificationConfirmationURLtoAccountHolder(Student student, String confirmURL);

@@ -1,10 +1,15 @@
 package com.pliesveld.flashnote.service;
 
-/**
- * Created by happs on 1/29/16.
- */
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
+
+@Validated
+@Transactional(readOnly = true)
 public interface HousekeepingService {
+    @Transactional
     public void expiredAccountPurgeJob();
+    @Transactional
     public void expiredDeckPurgeJob();
+    @Transactional
     public void indexDeckCollectionJob();
 }

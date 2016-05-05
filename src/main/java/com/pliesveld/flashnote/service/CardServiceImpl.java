@@ -6,6 +6,8 @@ import com.pliesveld.flashnote.exception.FlashCardCreateException;
 import com.pliesveld.flashnote.exception.QuestionBankNotFoundException;
 import com.pliesveld.flashnote.exception.QuestionNotFoundException;
 import com.pliesveld.flashnote.repository.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,8 +19,7 @@ import java.util.List;
 
 @Service(value = "cardService")
 public class CardServiceImpl implements CardService {
-    
-    private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
     @Autowired
     StatementRepository statementRepository;
@@ -43,7 +44,6 @@ public class CardServiceImpl implements CardService {
 
     @PersistenceContext
     EntityManager entityManager;
-
 
     @Override
     public Question findQuestionById(int id) {

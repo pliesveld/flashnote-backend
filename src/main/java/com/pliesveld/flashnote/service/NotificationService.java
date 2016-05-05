@@ -3,10 +3,12 @@ package com.pliesveld.flashnote.service;
 import com.pliesveld.flashnote.domain.Notification;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.Instant;
 import java.util.List;
 
+@Validated
 @Transactional(readOnly = true)
 public interface NotificationService {
 

@@ -5,9 +5,14 @@ import com.pliesveld.flashnote.exception.CategoryNotFoundException;
 import com.pliesveld.flashnote.exception.CategorySearchException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import java.util.List;
 
+@Validated
+@Transactional(readOnly = true)
 public interface CategoryService {
     Category getCategoryById(Integer id)                                throws CategoryNotFoundException;
     List<Category> rootCategories();
@@ -18,6 +23,6 @@ public interface CategoryService {
     Page<Category> findBySearchTerm(String searchTerm, Pageable pageRequest);
     List<Category> allCategories();
 
-
-    Category createCategory(Category category);
+    @Transactional
+    Category createCategory(@Valid Category category);
 }
