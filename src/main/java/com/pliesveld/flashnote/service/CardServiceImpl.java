@@ -92,6 +92,12 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
+    public void update(Question question) {
+        questionRepository.save(question);
+
+    }
+
+    @Override
     public FlashCard createFlashCard(Question question, Answer answer) {
                    
         FlashCard fc = new FlashCard(question,answer);

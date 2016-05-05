@@ -8,6 +8,7 @@ import com.pliesveld.flashnote.model.json.response.AttachmentHeader;
 import com.pliesveld.flashnote.repository.AttachmentBinaryRepository;
 import com.pliesveld.flashnote.repository.AttachmentRepository;
 import com.pliesveld.flashnote.repository.AttachmentTextRepository;
+import com.pliesveld.flashnote.repository.QuestionRepository;
 import com.pliesveld.flashnote.web.validator.ValidAttachment;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,6 +33,9 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Autowired
     AttachmentTextRepository attachmentTextRepository;
+
+    @Autowired
+    QuestionRepository questionRepository;
 
     @Autowired
     StudentService studentService;
@@ -139,14 +143,23 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Override
     public void removeAttachmentById(int id) throws AttachmentNotFoundException {
-        if(attachmentBinaryRepository.exists(id))
+        if(attachmentRepository.exists(id))
         {
-            attachmentBinaryRepository.delete(id);
-        } else if(attachmentTextRepository.exists(id)) {
-            attachmentTextRepository.delete(id);
-        } else {
-            throw new AttachmentNotFoundException("Could not find id " + id);
+            questionRepository.findByAttachmentId(id).forEach((stmt) -> stmt.setAttachment(null));
+
+            attachmentRepository.delete(id);
         }
+//
+//        if(attachmentBinaryRepository.exists(id))
+//        {
+//
+//
+//        } else if(attachmentTextRepository.exists(id)) {
+//            questionRepository.findByAttachmentId(id).forEach((stmt) -> stmt.setAttachment(null));
+//            attachmentRepository.delete(id);
+//        } else {
+//            throw new AttachmentNotFoundException("Could not find id " + id);
+//        }
     }
 
     @Override

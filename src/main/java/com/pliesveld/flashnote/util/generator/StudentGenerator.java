@@ -114,4 +114,9 @@ public class StudentGenerator
         return studentDetails;
     }
 
+    public static String randomizedName() {
+        int rand_num = ThreadLocalRandom.current().nextInt(0,1000);
+        String random_name = String.format("%s%d",randomValue(GIRL_NAMES),rand_num);
+        return random_name;
+    }
 }

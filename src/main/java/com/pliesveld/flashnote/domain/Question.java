@@ -1,7 +1,5 @@
 package com.pliesveld.flashnote.domain;
 
-import org.hibernate.proxy.HibernateProxy;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -10,7 +8,8 @@ import java.io.Serializable;
 @PrimaryKeyJoinColumn(name = "QUESTION_ID", foreignKey = @ForeignKey(name = "FK_QUESTION_ID"))
 public class Question extends AbstractStatement implements Serializable
 {
-    private String title;
+    protected String title;
+    protected AbstractAttachment attachment;
 
     public Question() {
         super();
@@ -26,8 +25,19 @@ public class Question extends AbstractStatement implements Serializable
         return title;
     }
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = true, targetEntity = AbstractAttachment.class)
+    @JoinColumn(name = "ATTACHMENT_ID", nullable = true, foreignKey = @ForeignKey(name = "FK_QUESTION_ATTACHMENT_ID"))
+    public <T extends AbstractAttachment> T getAttachment() {
+        return (T) attachment;
+    }
+
     public void setTitle(String title) {
         this.title = title;
+    }
+
+
+    public <T extends AbstractAttachment> void setAttachment(T attachment) {
+        this.attachment = attachment;
     }
 
     @PrePersist

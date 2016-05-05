@@ -4,13 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.serializer.HibernateAwareObjectMapperImpl;
 import com.pliesveld.flashnote.spring.DefaultEntityTestAnnotations;
-import com.pliesveld.tests.listeners.LogHibernateTestExecutionListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @DefaultEntityTestAnnotations
 @Transactional
-@TestExecutionListeners(listeners = LogHibernateTestExecutionListener.class, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
+//@TestExecutionListeners(listeners = LogHibernateTestExecutionListener.class, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 public class HibernateSerializationTest extends AbstractDomainEntityUnitTest {
     private static final Logger LOG = LogManager.getLogger();
 

@@ -19,13 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/attachments")
-/*
-@MultipartConfig(location = "/tmp/upload",
-        fileSizeThreshold = 1024*1024*5*5, // The file size in bytes after which the file will be temporarily stored on disk
-        maxFileSize = 1024*1024*5*5,     // Maximum file size of each file
-        maxRequestSize = 1024*1024*5*5 // Total files must be below this request size
-
-)*/
 public class AttachmentController  {
     private static final Logger LOG = LogManager.getLogger();
 

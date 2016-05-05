@@ -1,9 +1,7 @@
 package com.pliesveld.flashnote.web.controller;
 
 
-import com.pliesveld.flashnote.domain.AttachmentBinary;
-import com.pliesveld.flashnote.domain.AttachmentText;
-import com.pliesveld.flashnote.domain.AttachmentType;
+import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.exception.AttachmentUploadException;
 import com.pliesveld.flashnote.service.AttachmentService;
 import com.pliesveld.flashnote.service.CardService;
@@ -53,9 +51,15 @@ public class AttachmentUploadController {
     @RequestMapping(value="/upload", method = RequestMethod.POST)
     public ResponseEntity<?> handleFileupload(
             @RequestParam("file") MultipartFile file,
+            @RequestParam("question_id") Integer question_id,
             HttpServletRequest request) throws AttachmentUploadException
     {
         Principal principal = request.getUserPrincipal();
+
+        Question question = null;
+        if(question_id != null) {
+            question = cardService.findQuestionById(question_id);
+        }
 
         LOG.info("Uploading attachment ip: {} size: {} user: {} file: {} orig: {}", request.getRemoteAddr(),file.getSize() ,principal,file.getName(),file.getOriginalFilename());
 
@@ -82,11 +86,13 @@ public class AttachmentUploadController {
 
         int id = 0;
 
+        AbstractAttachment abstractAttachment = null;
         if(attachmentType.isBinary()) {
             AttachmentBinary attachment = new AttachmentBinary();
             attachment.setContents(contents);
             attachment.setAttachmentType(attachmentType);
             attachment.setFileName(fileName);
+            abstractAttachment = attachment;
             id = attachmentService.storeAttachment(attachment).getId();
         } else {
             AttachmentText attachment = new AttachmentText();
@@ -97,7 +103,15 @@ public class AttachmentUploadController {
             }
             attachment.setAttachmentType(attachmentType);
             attachment.setFileName(fileName);
+            abstractAttachment = attachment;
             id = attachmentService.storeAttachment(attachment).getId();
+        }
+
+
+        if(question != null )
+        {
+            question.setAttachment(abstractAttachment);
+            cardService.update(question);
         }
 
         HttpHeaders responseHeaders = new HttpHeaders();

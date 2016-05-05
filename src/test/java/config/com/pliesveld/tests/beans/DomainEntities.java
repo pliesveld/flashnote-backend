@@ -1,6 +1,7 @@
 package com.pliesveld.tests.beans;
 
 import com.pliesveld.flashnote.domain.*;
+import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import com.pliesveld.flashnote.util.generator.QuestionGenerator;
 import com.pliesveld.flashnote.util.generator.StudentGenerator;
 import org.apache.commons.lang3.RandomUtils;
@@ -34,9 +35,14 @@ public class DomainEntities {
 
     @Bean
     @Scope("prototype")
-    public StudentDetails studentDetailsBean()
+    @Autowired
+    public StudentDetails studentDetailsBean(Student student)
     {
-        return StudentGenerator.randomizedStudentDetails(false);
+        StudentDetails details = new StudentDetails(StudentGenerator.randomizedName());
+        details.setStudent(student);
+        student.setStudentDetails(details);
+        domainBeanHelperService.makeEntityIfNotFound(student);
+        return details;
     }
 
     @Bean
@@ -137,6 +143,8 @@ public class DomainEntities {
    {
        Question question = this.questionBean();
        Answer answer = this.answerBean();
+       question = domainBeanHelperService.makeEntityIfNotFound(question);
+       answer = domainBeanHelperService.makeEntityIfNotFound(answer);
        FlashCard flashCard = new FlashCard(question,answer);
        return flashCard;
    }
@@ -159,21 +167,31 @@ class DomainBeanHelperService
     @PersistenceContext
     EntityManager entityManager;
 
-    Category makeEntityIfNotFound(Category category) {
-        if(category.getId() == null || entityManager.find(Category.class,category.getId()) == null)
-        {
-            entityManager.persist(category);
+    private <T extends DomainBaseEntity<Integer>> T persist(Class<?> clazz, T domainObj) {
+        if(domainObj.getId() == null || entityManager.find(clazz, domainObj.getId()) == null) {
+            entityManager.persist(domainObj);
         }
-        return category;
+        return domainObj;
+    }
 
+    Category makeEntityIfNotFound(Category category) {
+        return persist(Category.class, category);
     }
 
     StudentDetails makeEntityIfNotFound(StudentDetails studentDetails) {
-        if(studentDetails.getId() == null || entityManager.find(Category.class,studentDetails.getId()) == null)
-        {
-            entityManager.persist(studentDetails);
-        }
-        return studentDetails;
+        return persist(StudentDetails.class, studentDetails);
+    }
+
+    Question makeEntityIfNotFound(Question question) {
+        return persist(Question.class, question);
+    }
+
+    Answer makeEntityIfNotFound(Answer answer) {
+        return persist(Answer.class, answer);
+    }
+
+    Student makeEntityIfNotFound(Student student) {
+        return persist(Student.class, student);
     }
 }
 

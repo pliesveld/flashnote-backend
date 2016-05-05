@@ -45,4 +45,6 @@ public interface CardService {
     @Transactional
     Answer createAnswer(Answer answer);
 
+    @Transactional
+    void update(Question question);
 }
