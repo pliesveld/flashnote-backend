@@ -56,6 +56,7 @@ public abstract class AbstractAttachment extends AbstractAuditableEntity<Integer
 
     public void setAttachmentType(AttachmentType attachmentType) { this.attachmentType = attachmentType; }
 
+    @Transient
     public String getMimeContentType() { return attachmentType.getMime(); }
 
     public void setFileName(String fileName) { this.fileName = fileName; }
