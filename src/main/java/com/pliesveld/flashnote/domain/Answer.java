@@ -20,5 +20,4 @@ public class Answer extends AbstractStatement implements Serializable
         setContent(content);
     }
 
-
 }

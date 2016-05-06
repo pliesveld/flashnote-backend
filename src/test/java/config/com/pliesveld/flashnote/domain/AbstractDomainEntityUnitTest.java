@@ -27,7 +27,7 @@ public class AbstractDomainEntityUnitTest implements ApplicationContextAware
     protected static final Logger LOG = LogManager.getLogger("BaseEntityTests");
     private final static String LOG_TAG = "LOG_SQL_LEVEL";
 
-    private ApplicationContext ctx;
+    protected ApplicationContext ctx;
 
     protected static void disableSQL()
     {
@@ -257,7 +257,7 @@ public class AbstractDomainEntityUnitTest implements ApplicationContextAware
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    final public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.ctx = applicationContext;
     }
 }

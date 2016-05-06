@@ -49,9 +49,10 @@ public class SpringJacksonConfig {
 
         Jackson2ObjectMapperBuilder b = Jackson2ObjectMapperBuilder.json()
                 .dateFormat(dateTime)
-                .modulesToInstall(this.jacksonHibernateModule(),this.jacksonJavaTimeModule())
+                .modulesToInstall(this.jacksonHibernateModule(),this.jacksonJavaTimeModule(),this.myPageModule())
 //                .modules(this.jacksonHibernateModule())
-                .serializationInclusion(JsonInclude.Include.NON_NULL)
+//                .serializationInclusion(JsonInclude.Include.NON_NULL)
+                .serializationInclusion(JsonInclude.Include.ALWAYS)
                 .defaultViewInclusion(false)
                 .failOnEmptyBeans(false)
                 .indentOutput(true);
@@ -79,6 +80,11 @@ public class SpringJacksonConfig {
     @Bean
     public Module jacksonJavaTimeModule() {
         return new JavaTimeModule();
+    }
+
+    @Bean
+    public MyPageModule myPageModule() {
+        return new MyPageModule();
     }
 
 //    @Autowired

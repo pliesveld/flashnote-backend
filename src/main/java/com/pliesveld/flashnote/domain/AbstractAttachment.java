@@ -1,7 +1,9 @@
 package com.pliesveld.flashnote.domain;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.pliesveld.flashnote.domain.base.AbstractAuditableEntity;
 import com.pliesveld.flashnote.domain.converter.AttachmentTypeConverter;
+import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.schema.Constants;
 
 import javax.persistence.*;
@@ -23,6 +25,7 @@ public abstract class AbstractAttachment extends AbstractAuditableEntity<Integer
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ATTACHMENT_ID")
+    @JsonView(Views.Summary.class)
     public Integer getId() {
         return id;
     }
@@ -30,6 +33,7 @@ public abstract class AbstractAttachment extends AbstractAuditableEntity<Integer
     @NotNull
     @Column(name = "CONTENT_TYPE", length = 16, nullable = false)
     @Convert(converter = AttachmentTypeConverter.class)
+    @JsonView(Views.Summary.class)
     public AttachmentType getAttachmentType() {
         return attachmentType;
     }
@@ -37,10 +41,12 @@ public abstract class AbstractAttachment extends AbstractAuditableEntity<Integer
     @NotNull
     @Size(min = Constants.MIN_ATTACHMENT_FILENAME_LENGTH, max = Constants.MAX_ATTACHMENT_FILENAME_LENGTH)
     @Column(name = "FILENAME", length = Constants.MAX_ATTACHMENT_FILENAME_LENGTH, nullable = false)
+    @JsonView(Views.Summary.class)
     public String getFileName() { return fileName; }
 
     @NotNull
     @Column(name = "FILE_LENGTH", nullable = false)
+    @JsonView(Views.Summary.class)
     public int getFileLength() { return fileLength; }
 
     protected AbstractAttachment() {

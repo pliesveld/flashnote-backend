@@ -5,8 +5,10 @@ package com.pliesveld.flashnote.model.json.response;
  */
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.domain.StudentRole;
+import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.model.json.base.JsonWebRequestSerializable;
 import com.pliesveld.flashnote.model.json.base.ModelBase;
 import org.hibernate.validator.constraints.Email;
@@ -25,13 +27,16 @@ public class ExistingStudentDetails extends ModelBase implements JsonWebRequestS
 {
     @NotNull
     @Size(min = 3,max = 32)
+    @JsonView(Views.Summary.class)
     private String name;
 
     @Email
     @NotNull @Size(min = 5,max = 48)
+    @JsonView(Views.Summary.class)
     private String email;
 
     @NotNull
+    @JsonView(Views.Summary.class)
     private StudentRole role = StudentRole.ROLE_ACCOUNT;
 
     public ExistingStudentDetails() {

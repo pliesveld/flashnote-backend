@@ -1,7 +1,9 @@
 package com.pliesveld.flashnote.domain;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
+import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.schema.Constants;
 import com.pliesveld.flashnote.serializer.DomainObjectSerializer;
 import org.hibernate.annotations.LazyCollection;
@@ -36,12 +38,14 @@ public class Category extends DomainBaseEntity<Integer> implements Serializable
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "CATEGORY_ID")
+    @JsonView(Views.Summary.class)
     public Integer getId() {
         return id;
     }
 
     @NotNull
     @Column(name = "CATEGORY_NAME", length = Constants.MAX_CATEGORY_NAME_LENGTH, nullable = false)
+    @JsonView(Views.Summary.class)
     public String getName()
     {
         return name;
@@ -55,6 +59,7 @@ public class Category extends DomainBaseEntity<Integer> implements Serializable
     @JoinColumn(name = "CATEGORY_PARENT_ID", referencedColumnName = "CATEGORY_ID", nullable = true, foreignKey = @ForeignKey(name = "FK_CATEGORY_PARENT"))
     @LazyToOne(LazyToOneOption.PROXY)
     @JsonSerialize(using = DomainObjectSerializer.class)
+    @JsonView(Views.SummaryWithCollections.class)
     public Category getParentCategory()
     {
         return parentCategory;
@@ -63,6 +68,7 @@ public class Category extends DomainBaseEntity<Integer> implements Serializable
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "parentCategory", fetch = FetchType.EAGER)
     @LazyCollection(LazyCollectionOption.EXTRA)
     @JsonSerialize(contentUsing = DomainObjectSerializer.class)
+    @JsonView(Views.SummaryWithCollections.class)
     public Set<Category> getChildCategories()
     {
         return childCategories;

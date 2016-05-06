@@ -1,5 +1,8 @@
 package com.pliesveld.flashnote.domain;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.pliesveld.flashnote.model.json.Views;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -21,12 +24,14 @@ public class Question extends AbstractStatement implements Serializable
     }
 
     @Column(name = "QUESTION_TITLE")
+    @JsonView(Views.Summary.class)
     public String getTitle() {
         return title;
     }
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true, targetEntity = AbstractAttachment.class)
     @JoinColumn(name = "ATTACHMENT_ID", nullable = true, foreignKey = @ForeignKey(name = "FK_QUESTION_ATTACHMENT_ID"))
+    @JsonView(Views.Summary.class)
     public <T extends AbstractAttachment> T getAttachment() {
         return (T) attachment;
     }

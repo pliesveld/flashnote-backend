@@ -1,9 +1,11 @@
 package com.pliesveld.flashnote.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import com.pliesveld.flashnote.domain.converter.InstantConverter;
 import com.pliesveld.flashnote.domain.converter.NotificationTypeConverter;
+import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.schema.Constants;
 
 import javax.persistence.*;
@@ -19,26 +21,31 @@ public class Notification extends DomainBaseEntity<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "NOTIFICATION_ID")
+    @JsonView(Views.Summary.class)
     private Integer id;
 
     @NotNull
     @ManyToOne(targetEntity = StudentDetails.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "STUDENT_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_NOTIFICATION_STUDENT"))
+    @JsonView(Views.Summary.class)
     private StudentDetails recipient;
 
     @NotNull
     @Size(min = Constants.MIN_NOTIFICATION_MESSAGE_LENGTH, max = Constants.MAX_NOTIFICATION_MESSAGE_LENGTH)
     @Column(name = "MESSAGE", length = Constants.MAX_NOTIFICATION_MESSAGE_LENGTH, nullable = false)
+    @JsonView(Views.Summary.class)
     private String message;
 
     @Column(name = "DATE_CREATED", nullable = false)
     @Convert(converter = InstantConverter.class)
     @JsonProperty(value = "created", access = JsonProperty.Access.READ_ONLY)
+    @JsonView(Views.Summary.class)
     private Instant createdOn;
 
     @NotNull
     @Column(name = "TYPE", nullable = false)
     @Convert(converter = NotificationTypeConverter.class)
+    @JsonView(Views.Summary.class)
     private NotificationType type;
 
     protected Notification() {

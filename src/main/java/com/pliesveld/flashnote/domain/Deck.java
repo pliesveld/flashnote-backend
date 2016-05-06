@@ -1,6 +1,8 @@
 package com.pliesveld.flashnote.domain;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
+import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
 import com.pliesveld.flashnote.schema.Constants;
 import org.hibernate.annotations.LazyToOne;
@@ -25,6 +27,7 @@ public class Deck extends DomainBaseEntity<Integer> implements Serializable
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "DECK_ID")
+    @JsonView(Views.Summary.class)
     private Integer id;
 
     @OneToMany(cascade = {CascadeType.ALL})
@@ -42,17 +45,21 @@ public class Deck extends DomainBaseEntity<Integer> implements Serializable
             uniqueConstraints = {@UniqueConstraint(name="UNIQUE_FLASHCARD",columnNames = {"QUESTION_ID","ANSWER_ID"})}
 
     )
+    @JsonView(Views.SummaryWithCollections.class)
+//    @LazyCollection(LazyCollectionOption.EXTRA)
     private List<FlashCard> flashcards = new ArrayList<>();
 
     @NotNull
     @Size(min = Constants.MIN_DECK_DESCRIPTION_LENGTH, max = Constants.MAX_DECK_DESCRIPTION_LENGTH)
     @Column(name = "DECK_DESCRIPTION", length = Constants.MAX_DECK_DESCRIPTION_LENGTH, nullable = false)
+    @JsonView(Views.Summary.class)
     private String description = "Untitled";
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "CATEGORY_ID", foreignKey = @ForeignKey(name = "FK_DECK_CATEGORY_ID"), nullable = false)
     @LazyToOne(LazyToOneOption.PROXY)
+    @JsonView(Views.Summary.class)
     private Category category;
 
     @NotNull

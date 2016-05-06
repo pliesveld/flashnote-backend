@@ -110,10 +110,12 @@ public class DomainEntities {
        deck.setDescription("Deck title #" + incrementCounter());
        deck.setCategory(categoryBean);
         List<FlashCard> list = new ArrayList<FlashCard>();
-       int max = RandomUtils.nextInt(0,5);
+       int max = RandomUtils.nextInt(1,15);
        for(int i = 0; i < max ; i ++)
        {
-           list.add(this.flashcardBean());
+           FlashCard fc = this.flashcardBean();
+           fc = domainBeanHelperService.makeEntityIfNotFound(fc);
+           list.add(fc);
        }
        deck.setFlashcards(list);
        return deck;
@@ -168,8 +170,11 @@ class DomainBeanHelperService
     EntityManager entityManager;
 
     private <T extends DomainBaseEntity<Integer>> T persist(Class<?> clazz, T domainObj) {
-        if(domainObj.getId() == null || entityManager.find(clazz, domainObj.getId()) == null) {
+        T ret;
+        if(domainObj.getId() == null || (ret = (T) entityManager.find(clazz, domainObj.getId())) == null) {
             entityManager.persist(domainObj);
+        } else { // merge?
+            return ret;
         }
         return domainObj;
     }
@@ -192,6 +197,19 @@ class DomainBeanHelperService
 
     Student makeEntityIfNotFound(Student student) {
         return persist(Student.class, student);
+    }
+
+    FlashCard makeEntityIfNotFound(FlashCard fc) {
+
+        FlashCard ret = null;
+        if(fc.getId() == null || (ret = entityManager.find(FlashCard.class, fc.getId())) == null)
+        {
+            entityManager.persist(fc);
+        } else {
+            return ret;
+        }
+
+        return fc;
     }
 }
 

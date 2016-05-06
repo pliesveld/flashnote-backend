@@ -1,6 +1,8 @@
 package com.pliesveld.flashnote.domain;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.pliesveld.flashnote.domain.base.AbstractAuditableEntity;
+import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
 import com.pliesveld.flashnote.schema.Constants;
 import org.hibernate.annotations.LazyCollection;
@@ -25,17 +27,20 @@ public class QuestionBank extends AbstractAuditableEntity<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "QUESTION_BANK_ID")
+    @JsonView(Views.Summary.class)
     private Integer id;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CATEGORY_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_QUESTION_BANK_CATEGORY_ID"))
     @LazyToOne(LazyToOneOption.PROXY)
+    @JsonView(Views.Summary.class)
     private Category category;
 
     @NotNull
     @Size(min = Constants.MIN_DECK_DESCRIPTION_LENGTH, max = Constants.MAX_DECK_DESCRIPTION_LENGTH)
     @Column(name = "DESCRIPTION", length = Constants.MAX_DECK_DESCRIPTION_LENGTH, nullable = false)
+    @JsonView(Views.Summary.class)
     private String description;
 
     @NotNull
@@ -47,6 +52,7 @@ public class QuestionBank extends AbstractAuditableEntity<Integer> {
                                              foreignKey = @ForeignKey(name = "FK_QUESTION_BANK_COLLECTION_QUESTION_ID"))
     )
     @LazyCollection(LazyCollectionOption.EXTRA)
+    @JsonView(Views.SummaryWithCollections.class)
     private Set<Question> questions = new HashSet<Question>();
 
     @NotNull

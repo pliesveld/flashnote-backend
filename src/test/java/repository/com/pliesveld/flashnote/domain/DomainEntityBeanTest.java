@@ -60,7 +60,7 @@ public class DomainEntityBeanTest {
 
         ctx.register(TestEntityRepositoryConfig.class);
         ctx.register(DomainEntities.class);
-        ctx.register(TestAnnotationAware.class);
+        ctx.register(TestAnnotationTransactionalAware.class);
 
         try {
             ctx.refresh();
@@ -81,8 +81,8 @@ public class DomainEntityBeanTest {
         assertNotNull(testRepositoryConfig.hibernateAwareObjectMapper);
         assertNotNull(testRepositoryConfig.questionRepository);
 
-        TestAnnotationAware testAnnotationAware = ctx.getBean(TestAnnotationAware.class);
-        assertNotNull(testAnnotationAware);
+        TestAnnotationTransactionalAware testAnnotationTransactionalAware = ctx.getBean(TestAnnotationTransactionalAware.class);
+        assertNotNull(testAnnotationTransactionalAware);
 
 
 
@@ -152,7 +152,7 @@ public class DomainEntityBeanTest {
 
 
             final BaseEntity domain =
-                    testAnnotationAware.doInTransaction(
+                    testAnnotationTransactionalAware.doInTransaction(
                     () -> { return ctx.getBean(QuestionBank.class); },
                         EMOP_ENTITY.PERSIST,
                     (entity) -> {
@@ -257,7 +257,7 @@ class TestEntityRepositoryConfig {
 }
 
 @Component
-class TestAnnotationAware
+class TestAnnotationTransactionalAware
 {
     private static final Logger LOG = LogManager.getLogger("org.hibernate.SQL");
 

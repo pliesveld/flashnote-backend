@@ -1,12 +1,11 @@
 package com.pliesveld.flashnote.web.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.domain.StudentDetails;
+import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.model.json.request.NewStudentDetails;
-import com.pliesveld.flashnote.service.AccountRegistrationService;
-import com.pliesveld.flashnote.service.AdminService;
-import com.pliesveld.flashnote.service.AttachmentService;
-import com.pliesveld.flashnote.service.StudentService;
+import com.pliesveld.flashnote.service.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +36,12 @@ public class AdministrationController {
     @Autowired
     private AttachmentService attachmentService;
 
+    @Autowired
+    private DeckService deckService;
+
+    @Autowired
+    private BankService bankService;
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @RequestMapping(value = "/student/create", method = RequestMethod.POST)
     public ResponseEntity<Void> createStudent(@Valid @RequestBody NewStudentDetails studentdto)
@@ -57,7 +62,7 @@ public class AdministrationController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @RequestMapping(value="/student/list", method = RequestMethod.GET)
+    @RequestMapping(value="/students", method = RequestMethod.GET)
     public ResponseEntity<Iterable<StudentDetails>> getAllStudents()
     {
         LOG.info("Retrieving list of all students");
@@ -79,6 +84,24 @@ public class AdministrationController {
     public void deleteStudent(@PathVariable("id") int id)
     {
         adminService.deleteStudent(id);
+    }
+
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @RequestMapping(value="/questionbanks", method = RequestMethod.GET)
+    @JsonView(Views.Internal.class)
+    public ResponseEntity<?> retrieveAllDecks()
+    {
+        return ResponseEntity.ok(deckService.findAllDecks());
+    }
+
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @RequestMapping(value = "/decks", method = RequestMethod.GET)
+    @JsonView(Views.Internal.class)
+    public ResponseEntity<?> retrieveAllQuestionBanks()
+    {
+        return ResponseEntity.ok(bankService.findAllQuestionBanks());
     }
 
 }

@@ -16,7 +16,7 @@
 
         <Property name="LOG_MVC_LEVEL">WARN</Property>
         <Property name="LOG_SECURITY_LEVEL">WARN</Property>
-        <Property name="LOG_APP_LEVEL">DEBUG</Property>
+        <Property name="LOG_APP_LEVEL">WARN</Property>
 
         <Property name="LOG_SPRING_LEVEL">WARN</Property>
         <Property name="LOG_BEANS_LEVEL">WARN</Property>
@@ -61,13 +61,11 @@
 
 
         <logger name="com.pliesveld.flashnote" level="${sys:LOG_APP_LEVEL}" additivity="false">
-            <AppenderRef ref="FileService"/>
             <AppenderRef ref="CONSOLE"/>
         </logger>
 
 
         <logger name="org.hibernate.SQL" level="${sys:LOG_SQL_LEVEL}" additivity="false">
-            <AppenderRef ref="FileHibernate"/>
             <AppenderRef ref="CONSOLE"/>
         </logger>
 
@@ -76,7 +74,6 @@
         </logger>
 
         <logger name="org.springframework.web.servlet.mvc" level="${sys:LOG_MVC_LEVEL}" additivity="false">
-            <AppenderRef ref="FileService"/>
             <AppenderRef ref="CONSOLE"/>
         </logger>
 

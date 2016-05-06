@@ -16,7 +16,7 @@ class EnvironmentTest(unittest.TestCase):
         scheme = os.environ['INTEGRATION_TEST_SCHEME'].lower()
         self.assertTrue(scheme.lower() == 'http' or scheme.lower() == 'https')
 
-    def testEnvironmentScheme(self):
-        auth = os.environ['INTEGRATION_TEST_AUTH'].lower()
-        self.assertTrue(auth == 'no-auth' or auth == 'basic' or auth == 'digest' or auth == 'oauth')
+#    def testEnvironmentScheme(self):
+#        auth = os.environ['INTEGRATION_TEST_AUTH'].lower()
+#        self.assertTrue(auth == 'no-auth' or auth == 'basic' or auth == 'digest' or auth == 'oauth' or auth == 'jwt')
 

@@ -1,7 +1,9 @@
 package com.pliesveld.flashnote.domain.base;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.pliesveld.flashnote.domain.converter.InstantConverter;
+import com.pliesveld.flashnote.model.json.Views;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -39,6 +41,7 @@ public abstract class AbstractAuditableEntity<ID extends Serializable> extends D
     @Convert(converter = InstantConverter.class)
     @CreatedDate
     @JsonProperty(value = "created", access = READ_ONLY)
+    @JsonView(Views.SummaryDetails.class)
     public Instant getCreatedOn() {
         return createdOn;
     }
@@ -47,11 +50,13 @@ public abstract class AbstractAuditableEntity<ID extends Serializable> extends D
     @Convert(converter = InstantConverter.class)
     @LastModifiedDate
     @JsonProperty(value = "modified", access = READ_ONLY)
+    @JsonView(Views.SummaryDetails.class)
     public Instant getModifiedOn() { return modifiedOn; }
 
     @Column(name = "CREATED_BY", updatable = false)
     @CreatedBy
     @JsonProperty(value = "created_by", access = READ_ONLY)
+    @JsonView(Views.SummaryDetails.class)
     public String getCreatedByUser() {
         return createdByUser;
     }
@@ -59,10 +64,10 @@ public abstract class AbstractAuditableEntity<ID extends Serializable> extends D
     @Column(name = "MODIFIED_BY")
     @LastModifiedBy
     @JsonProperty(value = "modified_by", access = READ_ONLY)
+    @JsonView(Views.SummaryDetails.class)
     public String getModifiedByUser() {
         return modifiedByUser;
     }
-
 
     public void setCreatedOn(Instant createdOn) {
         this.createdOn = createdOn;

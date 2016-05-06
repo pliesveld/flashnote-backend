@@ -1,6 +1,8 @@
 package com.pliesveld.flashnote.domain;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
+import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -56,6 +58,7 @@ public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey> implements 
         id.setAnswerId(answerId);
     }
 
+    @JsonView(Views.Summary.class)
     public FlashCardPrimaryKey getId()        { return id; }
 
     public void setId(FlashCardPrimaryKey id) {
@@ -69,8 +72,10 @@ public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey> implements 
         this.answer = answer;
     }
 
+    @JsonView(Views.Summary.class)
     public Question getQuestion()             { return question; }
 
+    @JsonView(Views.Summary.class)
     public Answer getAnswer()                 { return answer; }
 
     @Override

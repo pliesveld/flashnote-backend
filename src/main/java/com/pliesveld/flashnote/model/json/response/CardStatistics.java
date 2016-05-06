@@ -1,6 +1,8 @@
 package com.pliesveld.flashnote.model.json.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.model.json.base.JsonWebResponseSerializable;
 import com.pliesveld.flashnote.model.json.base.ModelBase;
 import org.springframework.stereotype.Component;
@@ -12,11 +14,23 @@ import org.springframework.stereotype.Component;
 @Component
 @JsonInclude(JsonInclude.Include.ALWAYS)
 public class CardStatistics extends ModelBase implements JsonWebResponseSerializable {
+
+    @JsonView(Views.Summary.class)
     private Long deckCount;
+
+    @JsonView(Views.Summary.class)
     private Long flashCardCount;
+
+    @JsonView(Views.Summary.class)
     private Long questionsCount;
+
+    @JsonView(Views.Summary.class)
     private Long answersCount;
+
+    @JsonView(Views.Summary.class)
     private Long questionBankCount;
+
+    @JsonView(Views.Summary.class)
     private Long attachmentsCount;
 
     public CardStatistics() {}

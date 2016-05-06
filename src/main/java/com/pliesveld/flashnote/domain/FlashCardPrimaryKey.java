@@ -1,5 +1,8 @@
 package com.pliesveld.flashnote.domain;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.pliesveld.flashnote.model.json.Views;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
@@ -28,10 +31,12 @@ public class FlashCardPrimaryKey implements Serializable, Comparable<FlashCardPr
         setAnswerId(answerId);
     }
 
+    @JsonView(Views.Summary.class)
     public Integer getQuestionId() {
         return questionId;
     }
 
+    @JsonView(Views.Summary.class)
     public Integer getAnswerId() {
         return answerId;
     }

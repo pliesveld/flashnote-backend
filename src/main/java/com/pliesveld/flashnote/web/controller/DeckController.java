@@ -1,15 +1,15 @@
 package com.pliesveld.flashnote.web.controller;
 
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.pliesveld.flashnote.domain.Category;
 import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.exception.CategoryNotFoundException;
 import com.pliesveld.flashnote.exception.DeckNotFoundException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
+import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.model.json.response.CardStatistics;
-import com.pliesveld.flashnote.security.CurrentUser;
-import com.pliesveld.flashnote.security.StudentPrincipal;
 import com.pliesveld.flashnote.service.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/decks")
@@ -62,15 +61,16 @@ public class DeckController {
     }
 
     @RequestMapping(value="", method = RequestMethod.GET)
-    @ResponseBody @ResponseStatus(code = HttpStatus.OK)
-    public List<Deck> retrieveAllDecks()
+    @ResponseStatus(code = HttpStatus.OK)
+    @JsonView(Views.Summary.class)
+    public Page<Deck> retrieveAllDecks(Pageable pageRequest)
     {
-        return deckService.findAllDecks();
+        return deckService.browseDecks(pageRequest);
     }
 
     @RequestMapping(value="", method = RequestMethod.POST)
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity createDeck(@Valid @RequestBody Deck deck, @CurrentUser StudentPrincipal studentPrincipal)
+    public ResponseEntity createDeck(@Valid @RequestBody Deck deck)
     {
         Category category = deck.getCategory();
         if(category == null || category.getId() == null)
@@ -83,17 +83,6 @@ public class DeckController {
         {
 
             throw new CategoryNotFoundException(id);
-        }
-
-        if(studentPrincipal == null)
-        {
-            throw new IllegalStateException("User has not been authenticated");
-        }
-        int student_id = studentPrincipal.getId();
-        StudentDetails studentDetails = studentService.findStudentDetailsById(student_id);
-
-        if(studentDetails == null) {
-            throw new StudentNotFoundException(student_id);
         }
 
         deck = deckService.createDeck(deck);

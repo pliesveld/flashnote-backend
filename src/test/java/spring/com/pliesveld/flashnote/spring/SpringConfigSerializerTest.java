@@ -6,7 +6,6 @@ import com.pliesveld.flashnote.serializer.HibernateAwareObjectMapper;
 import com.pliesveld.flashnote.spring.serializer.ObjectMapperDebug;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.BeanCreationException;
@@ -31,28 +30,37 @@ public class SpringConfigSerializerTest {
     public void initializeContext() {
 
         System.setProperty("spring.profiles.active", Profiles.INTEGRATION_TEST);
-
         ctx = new AnnotationConfigApplicationContext();
+    }
 
+
+    @Test
+    public void testContextBeans_withRegisteringSpringDataConfig()
+    {
         ctx.register(SpringSerializationTestConfig.class);
         ctx.register(TestEntitySerializerConfig.class);
+        finalizeContext();
 
+        TestEntitySerializerConfig testRepositoryConfig = ctx.getBean(TestEntitySerializerConfig.class);
+        assertNotNull(testRepositoryConfig.entityManager);
+
+        if(testRepositoryConfig.hibernateAwareObjectMapper != null)
+            ObjectMapperDebug.debug(this, (ObjectMapper) testRepositoryConfig.hibernateAwareObjectMapper);
     }
 
     @Test
-    public void testContext()
+    public void testContext_withCustomObjectMapperBeans()
     {
+        ctx.register(SpringSerializationTestConfig.class);
+        ctx.register(TestEntitySerializerConfigBeans.class);
+        finalizeContext();
 
+        TestEntitySerializerConfigBeans testSpringConfig = ctx.getBean(TestEntitySerializerConfigBeans.class);
+        assertNotNull(testSpringConfig.entityManager);
+        assertNotNull(testSpringConfig.objectMapperWithSummary);
     }
 
-    @Test
-    public void testContext_withRegisteringSpringDataConfig()
-    {
-        //ctx.register(SpringDataConfig.class);
-    }
-
-    @After
-    public void finalizeContext()
+    private void finalizeContext()
     {
         try {
             ctx.refresh();
@@ -64,11 +72,6 @@ public class SpringConfigSerializerTest {
             fail(bce.getMessage());
         }
 
-        TestEntitySerializerConfig testRepositoryConfig = ctx.getBean(TestEntitySerializerConfig.class);
-        assertNotNull(testRepositoryConfig.entityManager);
-
-        if(testRepositoryConfig.hibernateAwareObjectMapper != null)
-            ObjectMapperDebug.debug(this, (ObjectMapper) testRepositoryConfig.hibernateAwareObjectMapper);
     }
 
 
@@ -86,5 +89,24 @@ class TestEntitySerializerConfig {
 
     @Autowired
     QuestionRepository questionRepository;
+}
+
+
+@Configuration
+@Import(value = {SpringEntityTestConfig.class})
+class TestEntitySerializerConfigBeans {
+
+    @PersistenceContext
+    EntityManager entityManager;
+
+    @Autowired
+    HibernateAwareObjectMapper hibernateAwareObjectMapper;
+
+    @Autowired
+    QuestionRepository questionRepository;
+
+    @Autowired
+    ObjectMapper objectMapperWithSummary;
+
 }
 

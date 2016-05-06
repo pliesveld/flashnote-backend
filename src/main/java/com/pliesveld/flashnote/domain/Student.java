@@ -1,9 +1,11 @@
 package com.pliesveld.flashnote.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import com.pliesveld.flashnote.domain.converter.InstantConverter;
 import com.pliesveld.flashnote.domain.converter.StudentRoleConverter;
+import com.pliesveld.flashnote.model.json.Views;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
@@ -30,6 +32,7 @@ public class Student extends DomainBaseEntity<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "STUDENT_ID")
+    @JsonView(Views.Summary.class)
     public Integer getId() { return id; }
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "student")
@@ -55,6 +58,7 @@ public class Student extends DomainBaseEntity<Integer> {
     @Column(name = "STUDENT_ROLE", nullable = false)
     @Convert(converter = StudentRoleConverter.class)
     @Basic(fetch = FetchType.EAGER)
+    @JsonView(Views.Summary.class)
     public StudentRole getRole() {
         return role;
     }

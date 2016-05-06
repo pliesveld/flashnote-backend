@@ -1,6 +1,8 @@
 package com.pliesveld.flashnote.domain;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.pliesveld.flashnote.domain.base.AbstractAuditableEntity;
+import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.schema.Constants;
 import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.LazyCollection;
@@ -19,7 +21,6 @@ import java.util.Objects;
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class AbstractStatement extends AbstractAuditableEntity<Integer>
 {
-
     protected Integer id;
     protected String content = "";
     protected Collection<AnnotatedStatement> annotations = new ArrayList<AnnotatedStatement>();
@@ -31,11 +32,14 @@ public abstract class AbstractStatement extends AbstractAuditableEntity<Integer>
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "STATEMENT_ID")
+    @JsonView(Views.Summary.class)
     public Integer getId() { return id; }
 
     @NotNull
     @Size(min = Constants.MIN_STATEMENT_CONTENT_LENGTH, max = Constants.MAX_STATEMENT_CONTENT_LENGTH)
     @Column(name = "CONTENT", length = Constants.MAX_STATEMENT_CONTENT_LENGTH, nullable = false)
+    @Basic(fetch = FetchType.LAZY, optional = false)
+    @JsonView(Views.Summary.class)
     public String getContent() {
         return content;
     }
@@ -50,6 +54,7 @@ public abstract class AbstractStatement extends AbstractAuditableEntity<Integer>
 //        generator = "sequence-gen"
     )
     @LazyCollection(LazyCollectionOption.EXTRA)
+    @JsonView(Views.SummaryWithCollections.class)
     public Collection<AnnotatedStatement> getAnnotations() { return annotations; }
 
     protected void setId(Integer id)

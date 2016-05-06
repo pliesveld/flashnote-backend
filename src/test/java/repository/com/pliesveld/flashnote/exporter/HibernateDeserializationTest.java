@@ -4,13 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pliesveld.flashnote.domain.AbstractDomainEntityUnitTest;
 import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
-import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.serializer.HibernateAwareObjectMapperImpl;
 import com.pliesveld.flashnote.spring.DefaultEntityTestAnnotations;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContextAware;
@@ -19,77 +16,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @DefaultEntityTestAnnotations
 @Transactional
 //@TestExecutionListeners(listeners = LogHibernateTestExecutionListener.class, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
-public class HibernateSerializationTest extends AbstractDomainEntityUnitTest implements ApplicationContextAware {
+public class HibernateDeserializationTest extends AbstractDomainEntityUnitTest implements ApplicationContextAware {
     private static final Logger LOG = LogManager.getLogger();
     private static final Logger LOG_SQL = LogManager.getLogger("org.hibernate.SQL");
-
-    @PersistenceContext
-    EntityManager entityManager;
-
-    @Autowired
-    HibernateAwareObjectMapperImpl hibernateAwareObjectMapper;
-
-    ArrayList<DomainBaseEntity> entityBeans = new ArrayList<>();
-
-    private void doSerializationTest(ObjectWriter writer) {
-        Map<Class<?>, Serializable> idMap = entityBeans.stream().collect(Collectors.toMap(Object::getClass, DomainBaseEntity::getId));
-
-//        Map<Class<?>, String> outMap = entityBeans.stream().collect(Collectors.toMap(Object::getClass, writer::out));
-//        outMap.forEach((clazz, out) -> {
-//            System.out.println(clazz);
-//            System.out.println(out);
-//        });
-
-        enableSQL();
-        idMap.forEach((clazz, id) -> {
-            LOG_SQL.debug("Loading {} {}", clazz.getName(), id);
-            DomainBaseEntity entity = (DomainBaseEntity) entityManager.find(clazz, id, LockModeType.READ);
-
-//            DomainBaseEntity entity = (DomainBaseEntity) entityManager.getReference(clazz, id);
-
-            LOG_SQL.debug("Serializing {} {} using {}", clazz.getName(), id, writer.objectMapper.getSerializationConfig().getActiveView());
-            writer.out(entity, writer.view_clazz);
-        });
-        disableSQL();
-    }
-
-    @Test
-    public void testSerialization_withDefaultMapper() throws Exception {
-        ObjectWriter writer = new ObjectWriter(hibernateAwareObjectMapper, null);
-        doSerializationTest(writer);
-    }
-
-    @Test
-    public void testSerialization_withSummaryView() throws Exception {
-
-        ObjectWriter writer = new ObjectWriter(hibernateAwareObjectMapper, Views.Summary.class);
-        doSerializationTest(writer);
-    }
-
-    @Test
-    public void testSerialization_withSummaryWithCollectionsView() throws Exception {
-
-        ObjectWriter writer = new ObjectWriter(hibernateAwareObjectMapper, Views.SummaryWithCollections.class);
-        doSerializationTest(writer);
-    }
-
-    @Test
-    public void testSerialization_withInternalView() throws Exception {
-        ObjectWriter writer = new ObjectWriter(hibernateAwareObjectMapper, Views.Internal.class);
-        doSerializationTest(writer);
-    }
 
     static public class ObjectWriter {
         private static final Logger LOG = LogManager.getLogger("org.hibernate.SQL");
@@ -105,8 +44,8 @@ public class HibernateSerializationTest extends AbstractDomainEntityUnitTest imp
 
         public <T extends ObjectMapper> ObjectWriter(T objectMapper) {
             this.objectMapper = (T) objectMapper.copy();
-            this.objectMapper.setConfig(this.objectMapper.getSerializationConfig().withView(null));
-            this.objectMapper.setConfig(this.objectMapper.getDeserializationConfig().withView(null));
+            this.objectMapper.setConfig(this.objectMapper.getSerializationConfig().withView(Object.class));
+            this.objectMapper.setConfig(this.objectMapper.getDeserializationConfig().withView(Object.class));
         }
 
         public String out(Object obj) {
@@ -131,15 +70,8 @@ public class HibernateSerializationTest extends AbstractDomainEntityUnitTest imp
         }
     }
 
-    @Before
-    public void setUp() throws Exception {
-        entityBeans = initializeTestClass();
-        entityManager.flush();
-        entityManager.clear();
-    }
-
     private ArrayList<DomainBaseEntity> initializeTestClass() {
-        for(String beanName : ctx.getBeanDefinitionNames()) {
+         for(String beanName : ctx.getBeanDefinitionNames()) {
             LOG.debug(beanName);
         }
 
@@ -172,4 +104,94 @@ public class HibernateSerializationTest extends AbstractDomainEntityUnitTest imp
         }
         return entityBeans;
     }
+
+    @PersistenceContext
+    EntityManager entityManager;
+
+    @Autowired
+    HibernateAwareObjectMapperImpl hibernateAwareObjectMapper;
+
+    Serializable student_id = null;
+    String student_name = "";
+
+//    @Test
+//    public void testFlashCard() throws IOException {
+//        Question question = questionBean();
+//        Answer answer = answerBean();
+//        Serializable flashcard_id;
+//
+//
+//        question = questionRepository.save(question);
+//        answer = answerRepository.save(answer);
+//
+//        entityManager.flush();
+//
+//        FlashCard flashCard = new FlashCard(question,answer);
+//        entityManager.persist(flashCard);
+//        entityManager.flush();
+//
+//        flashcard_id = flashCard.getId();
+//
+//        assertTrue(hibernateAwareObjectMapper.canSerialize(flashCard.getClass()));
+//        String fc_json = hibernateAwareObjectMapper.writeValueAsString(flashCard);
+//
+//        System.out.println(fc_json);
+//
+//
+//        FlashCard fc_deserialized = hibernateAwareObjectMapper.readValue(fc_json,flashCard.getClass());
+//        assertNotNull(fc_deserialized);
+//
+//        assertNotNull(fc_deserialized.getId());
+//        assertNotNull(fc_deserialized.getId().getAnswerId());
+//        assertNotNull(fc_deserialized.getId().getQuestionId());
+//
+//        assertNotNull(fc_deserialized.getQuestion());
+//        assertNotNull(fc_deserialized.getAnswer());
+//
+//        assertNotNull(fc_deserialized.getQuestion().getTitle());
+//        assertNotNull(fc_deserialized.getQuestion().getContent());
+//        assertNotNull(fc_deserialized.getAnswer().getContent());
+//    }
+
+//    @Test
+//    public void testQuestionBank() throws IOException {
+//
+//        disableSQL();
+//        QuestionBank questionBank = questionBankBean();
+//
+//        Category category = categoryBean();
+//        entityManager.persist(category);
+//        entityManager.flush();
+//        questionBank.setCategory(category);
+//
+//        for(int i = 0; i < 5; i++)
+//        {
+//            Question question = questionBean();
+//            entityManager.persist(question);
+//            questionBank.add(question);
+//        }
+//
+//        entityManager.persist(questionBank);
+//        entityManager.flush();
+//
+//
+//        Serializable questionbank_id = questionBank.getId();
+//        entityManager.clear();
+//
+//        enableSQL();
+//        questionBank = entityManager.find(QuestionBank.class, questionbank_id);
+////        Hibernate.initialize(questionBank.getQuestions());
+////        questionBank.getDescription();
+//
+//        assertTrue(hibernateAwareObjectMapper.canSerialize(questionBank.getClass()));
+//        String qb_json = hibernateAwareObjectMapper.writeValueAsString(questionBank);
+//
+//        System.out.println(qb_json);
+//
+//        QuestionBank qb_deserialized = hibernateAwareObjectMapper.readValue(qb_json,questionBank.getClass());
+//        assertNotNull(qb_deserialized);
+//
+//        assertNotNull(qb_deserialized.getId());
+//
+//    }
 }

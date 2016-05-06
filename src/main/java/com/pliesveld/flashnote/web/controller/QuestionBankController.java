@@ -1,6 +1,7 @@
 package com.pliesveld.flashnote.web.controller;
 
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pliesveld.flashnote.domain.*;
@@ -8,7 +9,7 @@ import com.pliesveld.flashnote.exception.CategoryNotFoundException;
 import com.pliesveld.flashnote.exception.QuestionNotFoundException;
 import com.pliesveld.flashnote.exception.StatementNotFoundException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
-import com.pliesveld.flashnote.model.json.request.UpdateQuestionBankRequestJson;
+import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.service.BankService;
 import com.pliesveld.flashnote.service.CardService;
 import com.pliesveld.flashnote.service.CategoryService;
@@ -19,15 +20,12 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.function.Consumer;
 
 @RestController
 @RequestMapping(path = "/questionbanks")
@@ -86,14 +84,14 @@ public class QuestionBankController {
         return ResponseEntity.ok().build();
     }
 
-
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    @ResponseBody
-    public ResponseEntity<?> retrieveAllQuestionBanks()
+    @RequestMapping(value="", method = RequestMethod.GET)
+    @ResponseStatus(code = HttpStatus.OK)
+    @JsonView(Views.Summary.class)
+    public Page<QuestionBank> retrieveAllDecks(Pageable pageRequest)
     {
-        List<QuestionBank> questionBanks = bankService.findAllQuestionBanks();
-        return ResponseEntity.ok(questionBanks);
+        return bankService.browseBanks(pageRequest);
     }
+
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<?> createQuestionBank(@Valid @RequestBody QuestionBank questionBank)
@@ -122,15 +120,16 @@ public class QuestionBankController {
 
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
+    @JsonView(Views.SummaryWithCollections.class)
     public ResponseEntity<?> retrieveQuestionBank(@PathVariable("id") int id) throws JsonProcessingException {
         QuestionBank questionBank = bankService.findQuestionBankById(id);
 
         if(questionBank == null )
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(objectMapper.writeValueAsString(questionBank));
+        return ResponseEntity.ok(questionBank);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
@@ -141,18 +140,79 @@ public class QuestionBankController {
         return ResponseEntity.ok().build();
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<?> updateQuestionBank(@PathVariable("id") int id, @Valid @RequestBody UpdateQuestionBankRequestJson requestJson)
+    public ResponseEntity<?> QuestionBank(@PathVariable("id") int id, @Valid @RequestBody Question question)
     {
-        EnumMap<UpdateQuestionBankRequestJson.UpdateOperation, Consumer<UpdateQuestionBankRequestJson>> action = null;
-        action.get(requestJson.getOperation()).accept(requestJson);
+        QuestionBank questionBank = bankService.findQuestionBankById(id);
+
+        if(questionBank == null )
+            return ResponseEntity.notFound().build();
+
+        Integer question_id = question.getId();
+        if(question_id == null) {
+
+            bankService.updateQuestionBankAddQuestion(questionBank, question);
+            return ResponseEntity.created(
+                    MvcUriComponentsBuilder
+                            .fromController(QuestionBankController.class)
+                            .path("/{id}/{que_id}")
+                            .buildAndExpand(id, question.getId())
+                            .toUri()).build();
+
+        }
+
+        if((question = cardService.findQuestionById(question_id)) != null)
+        {
+            bankService.updateQuestionBankAddQuestion(questionBank, question);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
         return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(value = "/{qb_id}/{que_id}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public ResponseEntity<?> removeQuestion(@PathVariable("qb_id") int qb_id, @PathVariable("que_id") int que_id)
+    {
+        QuestionBank questionBank = bankService.findQuestionBankById(qb_id);
+
+        if(questionBank == null )
+            return ResponseEntity.notFound().build();
+
+        bankService.updateQuestionBankRemoveQuestion(questionBank, que_id);
+        return ResponseEntity.ok().build();
+    }
+
+
+
+    @RequestMapping(value = "/{qb_id}/{que_id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<?> getQuestion(@PathVariable("qb_id") int qb_id, @PathVariable("que_id") int que_id)
+    {
+        Question question = bankService.findQuestion(qb_id, que_id);
+
+        if(question == null )
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(question);
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     public Page<QuestionBank> findBySearchTerm(@RequestParam("query") String searchTerm, Pageable pageRequest) {
         return bankService.findBySearchTerm(searchTerm, pageRequest);
     }
+
+//
+//    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+//    @ResponseBody
+//    public ResponseEntity<?> updateQuestionBank(@PathVariable("id") int id, @Valid @RequestBody UpdateQuestionBankRequestJson requestJson)
+//    {
+//        EnumMap<UpdateQuestionBankRequestJson.UpdateOperation, Consumer<UpdateQuestionBankRequestJson>> action = null;
+//        action.get(requestJson.getOperation()).accept(requestJson);
+//        return ResponseEntity.ok().build();
+//    }
+
 
 }

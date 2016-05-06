@@ -38,12 +38,15 @@ public class DeckServiceImpl implements DeckService {
         return deck;
     }
 
+    @Override
+    public Page<Deck> findBySearchTerm(String searchTerm, Pageable pageRequest) {
+        Specification<Deck> spec = DeckSpecification.descriptionOrFlashcardContainsIgnoreCase(searchTerm);
+        return deckRepository.findAll(spec, pageRequest);
+    }
 
     @Override
-    public void addToDeckFlashCard(Deck deck, FlashCard flashCard) {
-        deck = entityManager.merge(deck);
-        flashCard = entityManager.merge(flashCard);
-        deck.getFlashcards().add(flashCard);
+    public Page<Deck> browseDecks(Pageable pageRequest) {
+        return deckRepository.findAll(pageRequest);
     }
 
     @Override
@@ -61,6 +64,13 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Override
+    public void addToDeckFlashCard(Deck deck, FlashCard flashCard) {
+        deck = entityManager.merge(deck);
+        flashCard = entityManager.merge(flashCard);
+        deck.getFlashcards().add(flashCard);
+    }
+
+    @Override
     public Deck createDeck(Deck deck) {
         return deckRepository.save(deck);
     }
@@ -72,9 +82,4 @@ public class DeckServiceImpl implements DeckService {
         deckRepository.delete(id);
     }
 
-    @Override
-    public Page<Deck> findBySearchTerm(String searchTerm, Pageable pageRequest) {
-        Specification<Deck> spec = DeckSpecification.descriptionOrFlashcardContainsIgnoreCase(searchTerm);
-        return deckRepository.findAll(spec, pageRequest);
-    }
 }

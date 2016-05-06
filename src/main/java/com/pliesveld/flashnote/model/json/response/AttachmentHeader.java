@@ -1,7 +1,9 @@
 package com.pliesveld.flashnote.model.json.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.pliesveld.flashnote.domain.AttachmentType;
+import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.model.json.base.JsonWebResponseSerializable;
 import com.pliesveld.flashnote.model.json.base.ModelBase;
 import org.springframework.stereotype.Component;
@@ -14,8 +16,14 @@ import java.time.Instant;
 @Component
 @JsonInclude(JsonInclude.Include.ALWAYS)
 public class AttachmentHeader extends ModelBase implements JsonWebResponseSerializable {
+
+    @JsonView(Views.Summary.class)
     AttachmentType contentType;
+
+    @JsonView(Views.Summary.class)
     int length;
+
+    @JsonView(Views.Summary.class)
     Instant modified;
 
     public AttachmentHeader() {}

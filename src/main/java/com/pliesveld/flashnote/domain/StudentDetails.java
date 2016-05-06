@@ -1,6 +1,9 @@
 package com.pliesveld.flashnote.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
+import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.schema.Constants;
 
 import javax.persistence.*;
@@ -19,6 +22,7 @@ public class StudentDetails extends DomainBaseEntity<Integer> implements Seriali
     private String name;
 
     @Id
+    @JsonView(Views.Summary.class)
     public Integer getId()
     {
         return id;
@@ -27,11 +31,13 @@ public class StudentDetails extends DomainBaseEntity<Integer> implements Seriali
     @MapsId
     @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @JoinColumn(name = "STUDENT_ID", foreignKey = @ForeignKey(name = "FK_STUDENT_DETAILS"))
+    @JsonIgnore
     public Student getStudent() { return student; }
 
     @NotNull
     @Size(min = Constants.MIN_STUDENT_NAME_LENGTH, max = Constants.MAX_STUDENT_NAME_LENGTH)
     @Column(name = "STUDENT_NAME", length = Constants.MAX_STUDENT_NAME_LENGTH, nullable = false)
+    @JsonView(Views.Summary.class)
     public String getName()
     {
         return name;

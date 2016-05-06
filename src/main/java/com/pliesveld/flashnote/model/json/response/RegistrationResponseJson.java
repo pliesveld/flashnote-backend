@@ -1,6 +1,8 @@
 package com.pliesveld.flashnote.model.json.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.model.json.base.JsonWebResponseSerializable;
 import com.pliesveld.flashnote.model.json.base.ModelBase;
 import org.springframework.stereotype.Component;
@@ -9,7 +11,10 @@ import org.springframework.stereotype.Component;
 @JsonInclude(JsonInclude.Include.ALWAYS)
 public class RegistrationResponseJson extends ModelBase implements JsonWebResponseSerializable {
 
+    @JsonView(Views.Summary.class)
     private String status_code;
+
+    @JsonView(Views.Summary.class)
     private String message;
 
     static final public String EMAIL_TAKEN = "email_taken";
