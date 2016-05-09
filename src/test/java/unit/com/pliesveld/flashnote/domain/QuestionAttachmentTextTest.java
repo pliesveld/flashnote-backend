@@ -1,7 +1,6 @@
 package com.pliesveld.flashnote.domain;
 
-import com.pliesveld.flashnote.service.AttachmentService;
-import com.pliesveld.flashnote.spring.DefaultServiceTestAnnotations;
+import com.pliesveld.flashnote.spring.DefaultEntityTestAnnotations;
 import org.hibernate.Hibernate;
 import org.junit.After;
 import org.junit.Before;
@@ -9,7 +8,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +19,7 @@ import java.io.Serializable;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-//@DefaultEntityTestAnnotations
-@DefaultServiceTestAnnotations
+@DefaultEntityTestAnnotations
 @Transactional
 public class QuestionAttachmentTextTest extends AbstractDomainEntityUnitTest {
 
@@ -32,8 +29,8 @@ public class QuestionAttachmentTextTest extends AbstractDomainEntityUnitTest {
     @PersistenceContext
     EntityManager entityManager;
 
-    @Autowired
-    AttachmentService attachmentService;
+//    @Autowired
+//    AttachmentService attachmentService;
 
     Serializable attachment_id;
     Serializable question_id;
@@ -109,13 +106,13 @@ public class QuestionAttachmentTextTest extends AbstractDomainEntityUnitTest {
         attachmentRepository.delete((Integer) attachment_id);
     }
 
-    @Test
-    public void givenTextAttachment_whenDeletingAttachmentByService_thenCorrect()
-    {
-        attachmentService.removeAttachmentById((Integer) attachment_id);
-        assertQuestionRepositoryCount(1);
-        assertAttachmentRepositoryCount(0);
-    }
+//    @Test
+//    public void givenTextAttachment_whenDeletingAttachmentByService_thenCorrect()
+//    {
+//        attachmentService.removeAttachmentById((Integer) attachment_id);
+//        assertQuestionRepositoryCount(1);
+//        assertAttachmentRepositoryCount(0);
+//    }
 
 
     @Test

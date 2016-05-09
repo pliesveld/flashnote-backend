@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.spring.serializer;
+package com.pliesveld.flashnote.serializer.module;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonGenerator;

@@ -86,6 +86,7 @@ public class StudentGenerator
         if(andDetails) {
             StudentDetails studentDetails = new StudentDetails(random_name);
             student.setStudentDetails(studentDetails);
+            studentDetails.setStudent(student);
         }
 
         student.setEmail(random_email);

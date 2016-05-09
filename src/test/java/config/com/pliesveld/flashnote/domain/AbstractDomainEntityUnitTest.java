@@ -1,7 +1,6 @@
 package com.pliesveld.flashnote.domain;
 
 import com.pliesveld.flashnote.repository.*;
-import com.pliesveld.tests.beans.DomainEntities;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.SessionEventListener;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +19,6 @@ import static org.junit.Assert.assertNotNull;
 
 @Component
 @Configuration
-@Import(DomainEntities.class)
 public class AbstractDomainEntityUnitTest implements ApplicationContextAware
 {
     protected static final Logger LOG = LogManager.getLogger("BaseEntityTests");
@@ -195,13 +192,6 @@ public class AbstractDomainEntityUnitTest implements ApplicationContextAware
     {
         return ctx.getBean(Category.class);
     }
-
-    private static int count = 0;
-
-    public static synchronized int incrementCounter() {
-        count++;
-        return count;
-    }
     public Deck deckBean()
     {
         return ctx.getBean(Deck.class);
@@ -219,21 +209,7 @@ public class AbstractDomainEntityUnitTest implements ApplicationContextAware
         return ctx.getBean(StudentDetails.class);
     }
 
-    @Deprecated
-    public Student studentAndStudentDetailsBean()
-    {
-        return (Student) ctx.getBean("studentAndStudentDetailsBean");
-    }
-
-    @Deprecated
-    public StudentDetails studentDetailsAndStudentBean()
-    {
-        return studentDetailsBean();
-//        return (StudentDetails) ctx.getBean("studentDetailsBean");
-
-    }
-
-    public AccountPasswordResetToken accountPasswordResetTokenBean(Student student)
+    public AccountPasswordResetToken accountPasswordResetTokenBean()
     {
         return ctx.getBean(AccountPasswordResetToken.class);
     }

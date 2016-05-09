@@ -101,9 +101,7 @@ public class DomainEntities {
    @Autowired
    public Deck deckBean(StudentDetails studentDetailsBean, Category categoryBean)
    {
-
        categoryBean = domainBeanHelperService.makeEntityIfNotFound(categoryBean);
-       studentDetailsBean = domainBeanHelperService.makeEntityIfNotFound(studentDetailsBean);
 
        Deck deck = new Deck();
 
@@ -162,8 +160,8 @@ public class DomainEntities {
 }
 
 
-@Transactional
 @Service
+@Transactional
 class DomainBeanHelperService
 {
     @PersistenceContext

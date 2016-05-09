@@ -31,7 +31,7 @@ public class NotificationTest extends AbstractDomainEntityUnitTest {
     @Before
     public void setupEntities()
     {
-        StudentDetails student = this.studentDetailsAndStudentBean();
+        StudentDetails student = this.studentDetailsBean();
         student = studentDetailsRepository.save(student);
 
         recipient_id = student.getId();

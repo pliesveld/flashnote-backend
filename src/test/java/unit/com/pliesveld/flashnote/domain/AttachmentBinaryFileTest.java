@@ -62,7 +62,7 @@ public class AttachmentBinaryFileTest
     public void testStorage() throws IOException, IllegalAccessException {
         AttachmentType expected_type = AttachmentType.IMAGE;
         String resource_dir = ClassLoader.getSystemResource(".").getPath();
-        String expected_file = "puppy.jpg";
+        String expected_file = "/scripts/tests/test-data/image/puppy.jpg";
 
         Resource resource = new ClassPathResource(expected_file);
         Serializable id = null;
@@ -96,7 +96,7 @@ public class AttachmentBinaryFileTest
             assertNotNull(attachment2.getAttachmentType());
             assertNotNull(attachment2.getFileName());
             assertEquals(expected_type,attachment2.getAttachmentType());
-            assertEquals(expected_file,attachment2.getFileName());
+            assertEquals("puppy.jpg",attachment2.getFileName());
             assertEquals(len,attachment2.getFileLength());
             assertNotNull(attachment2.getContents());
 

@@ -30,7 +30,7 @@ public class StudentCascadeTest extends AbstractDomainEntityUnitTest {
     public void setupEntities()
     {
 
-        Student student = this.studentAndStudentDetailsBean();
+        Student student = this.studentBean();
         entityManager.persist(student);
         entityManager.persist(student.getStudentDetails());
 

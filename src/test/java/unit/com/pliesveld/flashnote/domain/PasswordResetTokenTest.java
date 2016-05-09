@@ -17,6 +17,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import java.io.Serializable;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -42,12 +43,15 @@ public class PasswordResetTokenTest extends AbstractDomainEntityUnitTest {
     {
         Student student = this.studentBean();
         entityManager.persist(student);
-        student_id = student.getId();
         entityManager.flush();
-        AccountPasswordResetToken accountPasswordResetToken = this.accountPasswordResetTokenBean(student);
+        student_id = student.getId();
+        assertNotNull(student_id);
+        token = UUID.randomUUID().toString();
+        AccountPasswordResetToken accountPasswordResetToken = new AccountPasswordResetToken(student,token);
+
         entityManager.persist(accountPasswordResetToken);
         token_id = accountPasswordResetToken.getId();
-        token = accountPasswordResetToken.getToken();
+
         entityManager.flush();
         entityManager.clear();
     }
@@ -126,7 +130,7 @@ public class PasswordResetTokenTest extends AbstractDomainEntityUnitTest {
     public void testDuplicateToken()
     {
         Student student = studentRepository.findOne((Integer) student_id);
-        AccountPasswordResetToken second_token = accountPasswordResetTokenBean(student);
+        AccountPasswordResetToken second_token = new AccountPasswordResetToken(student, UUID.randomUUID().toString());
 
         thrown.expect(PersistenceException.class);
         entityManager.persist(second_token);

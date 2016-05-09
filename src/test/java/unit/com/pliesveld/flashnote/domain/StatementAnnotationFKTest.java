@@ -39,7 +39,7 @@ public class StatementAnnotationFKTest extends AbstractDomainEntityUnitTest {
     {
         Question question = this.questionBean();
 
-        StudentDetails studentDetails = this.studentDetailsAndStudentBean();
+        StudentDetails studentDetails = this.studentDetailsBean();
 
         question = questionRepository.save(question);
         question_id = question.getId();

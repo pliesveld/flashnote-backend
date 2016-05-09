@@ -1,6 +1,6 @@
 package com.pliesveld.flashnote.spring;
 
-import com.pliesveld.tests.beans.DomainEntities;
+import com.pliesveld.flashnote.domain.SimpleDomainEntityBeans;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextHierarchy({
     @ContextConfiguration(classes = SpringEntityTestConfig.class, loader = AnnotationConfigContextLoader.class),
-    @ContextConfiguration(classes = DomainEntities.class, loader = AnnotationConfigContextLoader.class)
+    @ContextConfiguration(classes = SimpleDomainEntityBeans.class, loader = AnnotationConfigContextLoader.class)
 })
 @TestPropertySource( locations = "classpath:test-datasource.properties" )
 public @interface DefaultEntityTestAnnotations { }

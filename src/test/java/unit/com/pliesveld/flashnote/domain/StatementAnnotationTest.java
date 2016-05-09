@@ -40,7 +40,7 @@ public class StatementAnnotationTest extends AbstractDomainEntityUnitTest {
     {
         Question question = this.questionBean();
         Answer answer = this.answerBean();
-        StudentDetails studentDetails = this.studentDetailsAndStudentBean();
+        StudentDetails studentDetails = this.studentDetailsBean();
 
         question = questionRepository.save(question);
         answer = answerRepository.save(answer);

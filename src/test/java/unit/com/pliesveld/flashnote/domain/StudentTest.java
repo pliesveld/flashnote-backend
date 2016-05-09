@@ -31,6 +31,7 @@ public class StudentTest extends AbstractDomainEntityUnitTest {
     public void setupEntities()
     {
         Student student = studentBean();
+        student.setStudentDetails(null);
         assertNotNull(student);
         assertNull(student.getStudentDetails());
 

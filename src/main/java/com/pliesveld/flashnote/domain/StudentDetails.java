@@ -29,7 +29,7 @@ public class StudentDetails extends DomainBaseEntity<Integer> implements Seriali
     }
 
     @MapsId
-    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, fetch = FetchType.LAZY)
     @JoinColumn(name = "STUDENT_ID", foreignKey = @ForeignKey(name = "FK_STUDENT_DETAILS"))
     @JsonIgnore
     public Student getStudent() { return student; }
