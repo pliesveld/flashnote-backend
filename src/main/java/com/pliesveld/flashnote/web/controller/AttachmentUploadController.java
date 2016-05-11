@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,7 +52,7 @@ public class AttachmentUploadController {
     @RequestMapping(value="/upload", method = RequestMethod.POST)
     public ResponseEntity<?> handleFileupload(
             @RequestParam("file") MultipartFile file,
-            @RequestParam("question_id") Integer question_id,
+            @RequestParam(name = "question_id", required = false) Integer question_id,
             HttpServletRequest request) throws AttachmentUploadException
     {
         Principal principal = request.getUserPrincipal();
@@ -69,12 +70,14 @@ public class AttachmentUploadController {
         if(attachmentType == null)
             throw new AttachmentUploadException("Unknown content-type: " + fileContentType);
 
-        String fileName = attachmentType.supportsFilenameBySuffix(file.getName()) ? file.getName() :
-                attachmentType.supportsFilenameBySuffix(file.getOriginalFilename()) ?
-                        file.getOriginalFilename() : null;
 
-        if(fileName == null)
+        String fileName = file.getOriginalFilename();
+
+        if(!StringUtils.hasText(fileName) || attachmentType.supportsFilenameBySuffix(fileName))
+        {
             throw new AttachmentUploadException("Invalid file extension");
+        }
+
 
         byte[] contents = null;
 

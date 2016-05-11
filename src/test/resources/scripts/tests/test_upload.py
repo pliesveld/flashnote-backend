@@ -9,7 +9,7 @@ from .settings import URL
 from .settings import loadResource
 
 class GoldieTest(unittest.TestCase):
-    RESOURCE = '/attachments'
+    RESOURCE = '/attachment/upload'
 
     def raise_for_status(self,r):
         "Wrapper around requests.exceptions to print response from server on error"

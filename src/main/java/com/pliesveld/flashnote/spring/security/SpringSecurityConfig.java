@@ -6,9 +6,12 @@ import com.pliesveld.flashnote.security.JwtAuthenticationTokenFilter;
 import com.pliesveld.flashnote.spring.Profiles;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.*;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
@@ -24,6 +27,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.FilterInvocation;
@@ -35,49 +39,12 @@ import java.util.Collection;
 
 import static com.pliesveld.flashnote.logging.Markers.SECURITY_INIT;
 
-/*
- * Profile based security configuration
- * http://stackoverflow.com/questions/24827963/enabling-websecurityconfigurer-via-profile-does-not-work
- */
 
 @Configuration
-@Profile(Profiles.AUTH)
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-@ComponentScan(basePackageClasses = {
-        com.pliesveld.flashnote.security.StudentPrincipal.class,
-        com.pliesveld.flashnote.spring.security.SpringSecurityConfig.class
-})
-@PropertySource("")
 public class SpringSecurityConfig {
     private static final Logger LOG = LogManager.getLogger();
 
-    @Bean
-    public RoleHierarchyImpl roleHierarchy() {
-        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_MODERATOR and ROLE_MODERATOR > ROLE_PREMIUM and ROLE_PREMIUM > ROLE_USER and ROLE_USER > ROLE_ACCOUNT");
 
-        if(LOG.isDebugEnabled(SECURITY_INIT))
-        {
-            for(StudentRole role : StudentRole.values())
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.append("for Role ");
-                sb.append(role.name());
-
-                sb.append(" has authorities ");
-                Collection<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(role.name());
-                authorities.forEach((auth) -> sb.append(auth));
-                sb.append(" has reachable roles ");
-
-                roleHierarchy.getReachableGrantedAuthorities(authorities).forEach((grantedAuthority) -> sb.append(grantedAuthority + " "));
-                LOG.debug(SECURITY_INIT, sb.toString());
-            }
-        }
-
-
-        return roleHierarchy;
-    }
 
     @Configuration
     @Profile(Profiles.AUTH)
@@ -93,8 +60,32 @@ public class SpringSecurityConfig {
         @Inject
         UserDetailsService userDetailsService;
 
-        @Autowired
-        RoleHierarchyImpl roleHierarchy;
+        @Bean
+        public RoleHierarchyImpl roleHierarchy() {
+            RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+            roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_MODERATOR and ROLE_MODERATOR > ROLE_PREMIUM and ROLE_PREMIUM > ROLE_USER and ROLE_USER > ROLE_ACCOUNT");
+
+            if(LOG.isDebugEnabled(SECURITY_INIT))
+            {
+                for(StudentRole role : StudentRole.values())
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("for Role ");
+                    sb.append(role.name());
+
+                    sb.append(" has authorities ");
+                    Collection<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(role.name());
+                    authorities.forEach((auth) -> sb.append(auth));
+                    sb.append(" has reachable roles ");
+
+                    roleHierarchy.getReachableGrantedAuthorities(authorities).forEach((grantedAuthority) -> sb.append(grantedAuthority + " "));
+                    LOG.debug(SECURITY_INIT, sb.toString());
+                }
+            }
+
+
+            return roleHierarchy;
+        }
 
         @Bean
         public PasswordEncoder passwordEncoder()
@@ -116,7 +107,7 @@ public class SpringSecurityConfig {
 
         private SecurityExpressionHandler<FilterInvocation> webExpressionHandler() {
             DefaultWebSecurityExpressionHandler defaultWebSecurityExpressionHandler = new DefaultWebSecurityExpressionHandler();
-            defaultWebSecurityExpressionHandler.setRoleHierarchy(roleHierarchy);
+            defaultWebSecurityExpressionHandler.setRoleHierarchy(this.roleHierarchy());
             return defaultWebSecurityExpressionHandler;
         }
 
@@ -282,6 +273,14 @@ public class SpringSecurityConfig {
         }
     }
 */
+    }
+
+
+    @Bean
+    @ConditionalOnMissingBean(PasswordEncoder.class)
+    PasswordEncoder passwordEncoder()
+    {
+        return NoOpPasswordEncoder.getInstance();
     }
 }
 

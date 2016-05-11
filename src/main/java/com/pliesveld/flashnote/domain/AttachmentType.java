@@ -10,10 +10,11 @@ import static org.springframework.http.MediaType.*;
 
 public enum AttachmentType
 {
-    BINARY      (1,  APPLICATION_OCTET_STREAM_VALUE, APPLICATION_OCTET_STREAM, ".dat", AttachmentTypeDataFormat.BINARY),
-    AUDIO       (10,  "audio/wav",                   APPLICATION_OCTET_STREAM, ".wav", AttachmentTypeDataFormat.BINARY),
-    IMAGE       (50, "image/jpeg",                   IMAGE_JPEG,               ".jpg", AttachmentTypeDataFormat.BINARY),
-    TEXT        (100, TEXT_PLAIN_VALUE,              TEXT_PLAIN,               ".txt", AttachmentTypeDataFormat.TEXT);
+    BINARY          (1,  APPLICATION_OCTET_STREAM_VALUE, APPLICATION_OCTET_STREAM, ".dat", AttachmentTypeDataFormat.BINARY),
+    AUDIO           (10,  "audio/wav",                   APPLICATION_OCTET_STREAM, ".wav", AttachmentTypeDataFormat.BINARY),
+    AUDIO_MP3       (11,  "audio/mp3",                   APPLICATION_OCTET_STREAM, ".mp3", AttachmentTypeDataFormat.BINARY),
+    IMAGE           (50, "image/jpeg",                   IMAGE_JPEG,               ".jpg", AttachmentTypeDataFormat.BINARY),
+    TEXT            (100, TEXT_PLAIN_VALUE,              TEXT_PLAIN,               ".txt", AttachmentTypeDataFormat.TEXT);
 
     private final int id;
     private final String mime;
