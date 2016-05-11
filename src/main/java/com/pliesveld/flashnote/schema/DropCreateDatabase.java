@@ -171,7 +171,7 @@ public class DropCreateDatabase {
                     initializeDB(resource);
                 }
 
-
+                LOG.info("Database schema updated successfully...");
             }
 
         } catch (SQLException se) {

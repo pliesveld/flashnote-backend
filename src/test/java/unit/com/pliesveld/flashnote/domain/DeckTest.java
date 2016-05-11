@@ -202,7 +202,6 @@ public class DeckTest extends StudentDetailsTest
         int q_no = 0;
 
         assertFlashCardRepositoryCount(0);
-//        assertEquals("FlashCard count should be zero",0,((Long)cardService.countFlashCards()).intValue());
 
         Deck deck = new Deck();
         deck.setDescription("This is an example Deck.");

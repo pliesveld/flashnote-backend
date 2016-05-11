@@ -87,7 +87,8 @@ public class PasswordResetTokenTest extends AbstractDomainEntityUnitTest {
     public void testEntityFindStudent()
     {
         Student student = studentRepository.findOne((Integer) student_id);
-        assertNotNull(passwordResetRepository.findByStudent(student));
+        assertNotNull(student);
+        assertNotNull(passwordResetRepository.findByStudent_id((Integer) student_id));
     }
     @Test
     public void testEntityFindStudentDetached()
@@ -96,7 +97,7 @@ public class PasswordResetTokenTest extends AbstractDomainEntityUnitTest {
         assertNotNull(student);
         entityManager.detach(student);
         entityManager.flush();
-        assertNotNull(passwordResetRepository.findByStudent(student));
+        assertNotNull(passwordResetRepository.findByStudent_id((Integer) student_id));
     }
 
 

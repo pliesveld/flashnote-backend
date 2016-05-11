@@ -1,7 +1,7 @@
 package com.pliesveld.flashnote.domain;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.pliesveld.flashnote.domain.base.AbstractAuditableEntity;
+import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
 import com.pliesveld.flashnote.schema.Constants;
@@ -22,7 +22,7 @@ import java.util.Set;
         indexes = { @Index(name = "IDX_QUESTION_BANK_OWNER_ID",
                 columnList = "OWNER_ID") })
 @EntityListeners(value = { LogEntityListener.class })
-public class QuestionBank extends AbstractAuditableEntity<Integer> {
+public class QuestionBank extends DomainBaseEntity<Integer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
