@@ -47,9 +47,9 @@ public class HibernateAwareObjectMapperImpl extends ObjectMapper implements Hibe
         configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
-        configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);
+
         configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-//        configure(SerializationFeature.V)
+//        configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);
 
 //        may cause lazy-loading
 //        enable(SerializationFeature.USE_EQUALITY_FOR_OBJECT_ID);

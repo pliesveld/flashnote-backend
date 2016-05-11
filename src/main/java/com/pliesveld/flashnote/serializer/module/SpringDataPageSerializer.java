@@ -10,7 +10,10 @@ import com.fasterxml.jackson.databind.ser.BeanSerializer;
 import com.fasterxml.jackson.databind.ser.BeanSerializerBuilder;
 import com.fasterxml.jackson.databind.ser.impl.ObjectIdWriter;
 import com.fasterxml.jackson.databind.ser.std.BeanSerializerBase;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 
 import java.io.IOException;
 
@@ -20,6 +23,7 @@ import java.io.IOException;
  */
 public class SpringDataPageSerializer extends BeanSerializer
 {
+    private static final Logger LOG = LogManager.getLogger();
 
     public SpringDataPageSerializer(JavaType type, BeanSerializerBuilder builder, BeanPropertyWriter[] properties, BeanPropertyWriter[] filteredProperties) {
         super(type, builder, properties, filteredProperties);
@@ -44,15 +48,13 @@ public class SpringDataPageSerializer extends BeanSerializer
     @Override
     protected void serializeFields(Object bean, JsonGenerator gen, SerializerProvider provider) throws IOException, JsonGenerationException {
         final BeanPropertyWriter[] props;
-        // ADDED
-        // ADDED
-        // ADDED
-        if (bean instanceof Page) {
+
+        if (bean instanceof Page || bean instanceof Sort.Order) {
+//            LOG.debug(Markers.OBJECT_MAPPER_WRITE, "Skipping {}", () -> bean);
             // for Page DO NOT filter anything so that @JsonView is passthrough at this level
             props = _props;
         } else {
-            // ADDED
-            // ADDED
+
             if (_filteredProps != null && provider.getActiveView() != null) {
                 props = _filteredProps;
             } else {

@@ -39,6 +39,12 @@ public class SpringJacksonConfig {
     @Value("${mapper.marker:false}")
     Boolean marker;
 
+    @Value("${mapper.prettyprint:true}")
+    Boolean prettyprint;
+
+    @Value("${mapper.defaultview:false}")
+    Boolean defaultview;
+
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() { return new PropertySourcesPlaceholderConfigurer();}
 
@@ -50,13 +56,14 @@ public class SpringJacksonConfig {
 
         Jackson2ObjectMapperBuilder b = Jackson2ObjectMapperBuilder.json()
                 .dateFormat(dateTime)
-                .modulesToInstall(this.jacksonHibernateModule(),this.jacksonJavaTimeModule(),this.myPageModule())
-//                .modules(this.jacksonHibernateModule())
+                .modules(this.jacksonHibernateModule(), this.jacksonJavaTimeModule(), this.myPageModule())
+//                .modulesToInstall(this.jacksonHibernateModule(),this.jacksonJavaTimeModule(),this.myPageModule())
+
 //                .serializationInclusion(JsonInclude.Include.NON_NULL)
                 .serializationInclusion(JsonInclude.Include.ALWAYS)
-                .defaultViewInclusion(false)
+                .defaultViewInclusion(defaultview)
                 .failOnEmptyBeans(false)
-                .indentOutput(true);
+                .indentOutput(prettyprint);
 
         return b;
     }
@@ -84,7 +91,7 @@ public class SpringJacksonConfig {
     }
 
     @Bean
-    public MyPageModule myPageModule() {
+    public Module myPageModule() {
         return new MyPageModule();
     }
 

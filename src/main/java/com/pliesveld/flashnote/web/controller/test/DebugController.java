@@ -8,13 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -226,24 +224,24 @@ public class DebugController {
         }
     }
 
-    @PostConstruct
-    public void postConstruct() {
-        LOGGER.debug("Calling POST CONSTRUCT");
-
-        Properties props = System.getProperties();
-
-//        props.forEach((k, v) -> {
-//            LOGGER.debug("key {} = {}", k, v);
-//        });
-
-        for(DebugRequestJson.LOG log : DebugRequestJson.LOG.values()) {
-            DebugController.updateLog(log, DebugRequestJson.LEVEL.WARN);
-        }
-        ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
-
-//        props.forEach((k,v) -> {
-//            LOGGER.debug("key {} = {}", k, v);
-//        });
-
-    }
+//    @PostConstruct
+//    public void postConstruct() {
+//        LOGGER.debug("Calling POST CONSTRUCT");
+//
+//        Properties props = System.getProperties();
+//
+////        props.forEach((k, v) -> {
+////            LOGGER.debug("key {} = {}", k, v);
+////        });
+//
+//        for(DebugRequestJson.LOG log : DebugRequestJson.LOG.values()) {
+//            DebugController.updateLog(log, DebugRequestJson.LEVEL.WARN);
+//        }
+//        ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
+//
+////        props.forEach((k,v) -> {
+////            LOGGER.debug("key {} = {}", k, v);
+////        });
+//
+//    }
 }
