@@ -48,7 +48,8 @@ class Crud(object):
         log.debug("request params : " + str(request_params));
 
         req = requests.Request(**request_params)
-        req.headers['X-AUTH-TOKEN'] = self.token
+        if self.token:
+            req.headers['X-AUTH-TOKEN'] = self.token
         req = req.prepare()
 
         log.debug("headers: " + str(req.headers.__dict__))
@@ -91,6 +92,9 @@ class Crud(object):
             r = s.send(req)
             r_json = r.json()
 
+            if 'token' not in r_json:
+                return None
+
             token = r_json['token']
 
             req = requests.Request(method='GET', url=USER_RESOURCE)
@@ -114,7 +118,7 @@ parser.add_argument("-p", "--password", help="Authentication Credentials", defau
 parser.add_argument("--host", help="Override host", default=argparse.SUPPRESS)
 parser.add_argument("--port", help="Override port", default=argparse.SUPPRESS)
 
-parser.add_argument("--login", action="store_const", const=False, default=True)
+parser.add_argument("--login", action="store_const", const=True, default=False)
 
 parser.add_argument("resource", type=str, action="store")
 
