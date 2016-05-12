@@ -10,13 +10,15 @@ Spring scheduled tasks to purge accounts with expired registration tokens.
 Account registration, and confirmation email with Spring Boot Mail
 Image attachment upload, and dynamic resizing for mobile devices.
 Verification of content-type in audio / image file attachments
-Angular front-end; with bootstrap -- ( a work in progress )
  
 ## Installation
 
 $ git clone
 $ mvn clean generate-sources compile
-Configure the datasource in src/main/resources/dev-datasource.properties
+Configure the datasource in dev-datasource.properties
+
+Configure mail settings in application-local.properties
+
 $ mvn spring-boot:run
 
 Logging can be controlled through the system properties; LOG_APP_LEVEL, LOG_SQL_LEVEL, etc.  See log4j2.xml for details
@@ -41,11 +43,17 @@ To use an H2 embedded database with populated data, use:
 
 $ mvn exec:java -Dstart-class="com.pliesveld.populator.PopulateFlashnoteContainerApplication" -Dspring.config.location=classpath:/dev-datasource.properties,classpath:/override/dev-datasource-override.properties -Dspring.profiles.active=auth,local
 
-## Removing the auth Spring profile will disable Spring Security.
+Removing the auth Spring profile will disable Spring Security.
+
+Setup a test email server
+$ git clone https://github.com/Nilhcem/FakeSMTP && cd FakeSMTP
+$ mvn clean compile package
+$ java -jar target/fakeSMTP-2.1-SNAPSHOT.jar -p 2525 -s
+
 
 The two main user resources are QuestionBanks and Decks.  A QuestionBank contains a set of questions.  A Deck contains a set of question-answer pairs.  A question may be shared with multiple QuestionBank, or Deck entities.  Both of which are associated with a category.  The following examples have an existing category with id = 6.
 
-The following examples use the crud.py utility.  It is a simple wrappper around the requests module.
+The following examples use the crud.py utility.  It is a simple wrappper around the requests module.  
 
 $ python3 crud.py categories 
 
