@@ -8,6 +8,8 @@ import functools
 from .settings import URL
 from .settings import loadResource
 
+## TODO: login
+
 class GoldieTest(unittest.TestCase):
     RESOURCE = '/attachment/upload'
 

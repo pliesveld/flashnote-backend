@@ -27,7 +27,7 @@ s.mount('http://', HTTPAdapter(max_retries=1))
 
 class Crud(object):
 
-    def __init__(self, resource, verbose=False, user=None, password=None, login=False, payload=None, **kwargs):
+    def __init__(self, resource, verbose=False, user=None, password=None, login=False, payload=None, query_params=None, **kwargs):
         log.basicConfig( stream=sys.stdout, level=log.WARN if verbose == False else log.DEBUG)
         log.getLogger().setLevel(log.WARN if verbose == False else log.DEBUG)
 
@@ -40,7 +40,9 @@ class Crud(object):
             self.token = self.login()
 
         request_params = { 'url' : URL + resource,
-                           'method' : 'GET' }
+                           'method' : 'GET',
+                           'params' : query_params
+                         }
 
         if payload:
             request_params.update({ 'method' : 'POST', 'json' : payload})
@@ -122,7 +124,9 @@ parser.add_argument("--login", action="store_const", const=True, default=False)
 
 parser.add_argument("resource", type=str, action="store")
 
-parser.add_argument("--json", dest="payload", type=json.loads, action="store", default=argparse.SUPPRESS)
+parser.add_argument("--params", help="Parameters to append to URL request", dest="query_params", type=json.loads, action="store", default=argparse.SUPPRESS)
+
+parser.add_argument("--json", help="Payload to send with message body.  Changes method to POST", dest="payload", type=json.loads, action="store", default=argparse.SUPPRESS)
 
 parser.add_argument("-v", "--verbose", help="increase output verbosity",
                     action="store_true")

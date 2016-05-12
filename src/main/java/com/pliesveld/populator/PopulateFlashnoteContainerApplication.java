@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote;
+package com.pliesveld.populator;
 
 import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.repository.*;
@@ -60,10 +60,10 @@ public class PopulateFlashnoteContainerApplication {
     @Order(3)
     public CommandLineRunner populateDefaultCategories() {
         return (args) -> {
-            makeCategory("Computer Programming", "Broadly related computer programming category.  Flashnote decks with this category may covers topics such as programming language definitions, data structures, algorithms, operating system principles, and computer science theory");
-            makeCategory("Software Development","The software development category focuses on the application of computer technology in the workplace.   Study common libraries and web development frameworks.  Software development theory includes topics like: object oriented programming, design patterns, user experience, and agile development.");
-            makeCategory("Information Technology","Focus on the configuration and administration of operating systems, network components, and application services.");
-            makeCategory("The Software Interview","Practice the topics commonly asked when applying for a software engineering position.  Can cover the technical explanation of definitions; includes commonly asked questions in algorithms, data structures, languages, modeling, databases, and networking.  May also include the soft interview questions.  Commonly asked questions designed to measure personality traits and team culture fits.");
+            createCategoryIfNotFound("Computer Programming", "Broadly related computer programming category.  Flashnote decks with this category may covers topics such as programming language definitions, data structures, algorithms, operating system principles, and computer science theory");
+            createCategoryIfNotFound("Software Development","The software development category focuses on the application of computer technology in the workplace.   Study common libraries and web development frameworks.  Software development theory includes topics like: object oriented programming, design patterns, user experience, and agile development.");
+            createCategoryIfNotFound("Information Technology","Focus on the configuration and administration of operating systems, network components, and application services.");
+            createCategoryIfNotFound("The Software Interview","Practice the topics commonly asked when applying for a software engineering position.  Can cover the technical explanation of definitions; includes commonly asked questions in algorithms, data structures, languages, modeling, databases, and networking.  May also include the soft interview questions.  Commonly asked questions designed to measure personality traits and team culture fits.");
         };
 
     }
@@ -82,6 +82,22 @@ public class PopulateFlashnoteContainerApplication {
 
 
     @Transactional
+    private Category createCategoryIfNotFound(String name, String description)
+    {
+        Category category = categoryRepository.findOneByNameEquals(name);
+
+        if( category == null )
+        {
+            category = new Category();
+            category.setName(name);
+            category.setDescription(description);
+            categoryRepository.save(category);
+        }
+
+        return category;
+    }
+
+    @Transactional
     private Category makeCategory(String name, String description)
     {
         return makeCategory(name, description, null);
@@ -94,11 +110,7 @@ public class PopulateFlashnoteContainerApplication {
         LOG.info("Populating database with statements.");
         return (args) -> {
 
-
-            Category category = new Category();
-            category.setName("Basic HTTP flashnotes");
-            category.setDescription("Discusses the topic of web servers, browsers and the HTTP specificatinon.");
-            category = createCategoryIfNotExists(category);
+            Category category = createCategoryIfNotFound("Basic HTTP flashnotes","Discusses the topic of web servers, browsers and the HTTP specificatinon.");
 
             Stream<FlashCard> cards = Stream.of(
                 new FlashCard(new Question("What is the difference between a HTTP Redirect and a HTTP Forward?"),new Answer("In an HTTP forward control is processed internally by the server.   A redirect instructs the browser to a different url, potentially on another host.")),
@@ -179,18 +191,4 @@ public class PopulateFlashnoteContainerApplication {
 
         };
     }
-
-    @Transactional
-    private Category createCategoryIfNotExists(Category category)
-    {
-        Category category1 = categoryRepository.findOneByNameEquals(category.getName());
-        if(category1 != null)
-        {
-            Hibernate.initialize(category1);
-            return category1;
-        } else {
-            return categoryRepository.save(category);
-        }
-    }
-
 }
