@@ -9,9 +9,6 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -20,9 +17,6 @@ import static org.junit.Assert.assertTrue;
 @Transactional
 public class StudentDetailsTest extends StudentTest {
     private static final Logger LOG = LogManager.getLogger();
-
-    @PersistenceContext
-    protected EntityManager entityManager;
 
     @Before
     @Override
