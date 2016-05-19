@@ -1,7 +1,7 @@
 package com.pliesveld.flashnote.domain;
 
 
-import com.pliesveld.flashnote.spring.DefaultEntityTestAnnotations;
+import com.pliesveld.flashnote.spring.BlankEntityTestAnnotations;
 import com.pliesveld.tests.listeners.LogHibernateTestExecutionListener;
 import org.hibernate.Hibernate;
 import org.junit.After;
@@ -21,7 +21,7 @@ import static org.junit.Assert.assertNotNull;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@DefaultEntityTestAnnotations
+@BlankEntityTestAnnotations
 @Transactional
 @TestExecutionListeners(listeners = LogHibernateTestExecutionListener.class, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 public class LazyLoadingStudentTest extends AbstractDomainEntityUnitTest {

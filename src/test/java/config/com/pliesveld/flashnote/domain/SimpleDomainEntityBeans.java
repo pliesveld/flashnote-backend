@@ -4,7 +4,6 @@ import com.pliesveld.flashnote.util.generator.QuestionGenerator;
 import com.pliesveld.flashnote.util.generator.StudentGenerator;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.util.StringUtils;
@@ -12,7 +11,6 @@ import org.springframework.util.StringUtils;
 import java.util.UUID;
 
 @Configuration
-@ComponentScan
 public class SimpleDomainEntityBeans {
 
     @Bean

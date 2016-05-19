@@ -1,7 +1,7 @@
 package com.pliesveld.flashnote.domain;
 
 
-import com.pliesveld.flashnote.spring.DefaultEntityTestAnnotations;
+import com.pliesveld.flashnote.spring.BlankEntityTestAnnotations;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -14,7 +14,7 @@ import javax.persistence.PersistenceException;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@DefaultEntityTestAnnotations
+@BlankEntityTestAnnotations
 @Transactional
 public class NotificationFKTest extends NotificationTest {
 

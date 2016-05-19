@@ -1,6 +1,6 @@
 package com.pliesveld.flashnote.domain;
 
-import com.pliesveld.flashnote.spring.DefaultEntityTestAnnotations;
+import com.pliesveld.flashnote.spring.BlankEntityTestAnnotations;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
@@ -16,7 +16,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@DefaultEntityTestAnnotations
+@BlankEntityTestAnnotations
 @Transactional
 public class StudentDetailsTest extends StudentTest {
     private static final Logger LOG = LogManager.getLogger();

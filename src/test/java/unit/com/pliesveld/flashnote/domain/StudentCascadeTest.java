@@ -1,7 +1,7 @@
 package com.pliesveld.flashnote.domain;
 
 
-import com.pliesveld.flashnote.spring.DefaultEntityTestAnnotations;
+import com.pliesveld.flashnote.spring.BlankEntityTestAnnotations;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@DefaultEntityTestAnnotations
+@BlankEntityTestAnnotations
 @Transactional
 public class StudentCascadeTest extends AbstractDomainEntityUnitTest {
 

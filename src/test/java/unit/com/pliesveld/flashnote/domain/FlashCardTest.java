@@ -1,6 +1,6 @@
 package com.pliesveld.flashnote.domain;
 
-import com.pliesveld.flashnote.spring.DefaultEntityTestAnnotations;
+import com.pliesveld.flashnote.spring.BlankEntityTestAnnotations;
 import com.pliesveld.tests.listeners.LogHibernateTestExecutionListener;
 import org.junit.After;
 import org.junit.Before;
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertTrue;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@DefaultEntityTestAnnotations
+@BlankEntityTestAnnotations
 @Transactional
 @TestExecutionListeners(listeners = LogHibernateTestExecutionListener.class, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 public class FlashCardTest extends AbstractDomainEntityUnitTest

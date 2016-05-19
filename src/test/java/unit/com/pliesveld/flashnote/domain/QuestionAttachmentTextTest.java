@@ -1,6 +1,6 @@
 package com.pliesveld.flashnote.domain;
 
-import com.pliesveld.flashnote.spring.DefaultEntityTestAnnotations;
+import com.pliesveld.flashnote.spring.BlankEntityTestAnnotations;
 import org.hibernate.Hibernate;
 import org.junit.After;
 import org.junit.Before;
@@ -19,7 +19,7 @@ import java.io.Serializable;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@DefaultEntityTestAnnotations
+@BlankEntityTestAnnotations
 @Transactional
 public class QuestionAttachmentTextTest extends AbstractDomainEntityUnitTest {
 

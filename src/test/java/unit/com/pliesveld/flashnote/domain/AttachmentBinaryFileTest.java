@@ -1,7 +1,7 @@
 package com.pliesveld.flashnote.domain;
 
 import com.pliesveld.flashnote.model.json.response.AttachmentHeader;
-import com.pliesveld.flashnote.spring.DefaultEntityTestAnnotations;
+import com.pliesveld.flashnote.spring.BlankEntityTestAnnotations;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
@@ -24,7 +24,7 @@ import java.time.Instant;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@DefaultEntityTestAnnotations
+@BlankEntityTestAnnotations
 @Transactional
 public class AttachmentBinaryFileTest
 {
