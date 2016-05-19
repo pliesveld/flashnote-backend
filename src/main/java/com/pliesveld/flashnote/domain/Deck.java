@@ -18,10 +18,10 @@ import java.util.Objects;
 
 
 @Entity
+@EntityListeners(value = { LogEntityListener.class })
 @Table(name = "DECK",
         indexes = { @Index(name = "IDX_DECK_OWNER_ID",
                            columnList = "OWNER_ID") })
-@EntityListeners(value = { LogEntityListener.class })
 public class Deck extends DomainBaseEntity<Integer> implements Serializable
 {
     @Id

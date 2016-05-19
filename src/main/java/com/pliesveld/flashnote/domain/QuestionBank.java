@@ -18,10 +18,10 @@ import java.util.Set;
 
 
 @Entity
+@EntityListeners(value = { LogEntityListener.class })
 @Table(name = "QUESTION_BANK",
         indexes = { @Index(name = "IDX_QUESTION_BANK_OWNER_ID",
                 columnList = "OWNER_ID") })
-@EntityListeners(value = { LogEntityListener.class })
 public class QuestionBank extends DomainBaseEntity<Integer> {
 
     @Id

@@ -2,6 +2,7 @@
 <Configuration configDebug="false" shutdownHook="disable">
     <Properties>
         <Property name="LOG_SQL_LEVEL">WARN</Property>
+        <Property name="LOG_ENTITY_LEVEL">WARN</Property>
         <Property name="LOG_MVC_LEVEL">WARN</Property>
         <Property name="LOG_TRANS_LEVEL">WARN</Property>
         <Property name="LOG_APP_LEVEL">WARN</Property>
@@ -23,6 +24,10 @@
             <AppenderRef ref="CONSOLE_MSG_ONLY"/>
         </logger>
 
+        <logger name="javax.persistence.Entity" level="${sys:LOG_ENTITY_LEVEL}" additivity="false">
+            <AppenderRef ref="CONSOLE_MSG_ONLY"/>
+        </logger>
+
         <logger name="com.pliesveld.flashnote" level="${sys:LOG_APP_LEVEL}" additivity="false">
             <AppenderRef ref="CONSOLE"/>
         </logger>
@@ -40,6 +45,10 @@
         </logger>
 
         <logger name="org.springframework.beans" level="${sys:LOG_BEANS_LEVEL}" additivity="false">
+            <AppenderRef ref="CONSOLE"/>
+        </logger>
+
+        <logger name="org.hibernate.jpa.internal.EntityManagerFactoryRegistry" level="ERROR" additivity="false">
             <AppenderRef ref="CONSOLE"/>
         </logger>
 

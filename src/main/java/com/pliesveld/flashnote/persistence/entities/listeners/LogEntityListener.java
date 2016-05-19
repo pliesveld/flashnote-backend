@@ -8,54 +8,54 @@ import javax.persistence.*;
 import static com.pliesveld.flashnote.logging.Markers.*;
 
 public class LogEntityListener {
-    private static final Logger LOG = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger("javax.persistence.Entity");
 
     @PrePersist
     private void logPrePersist(Object object)
     {
-        if( LOG.isTraceEnabled() && LOG.isTraceEnabled(SQL_PERSIST))
-            LOG.trace(SQL_PERSIST, "Persisting " + object);
+        if( LOG.isDebugEnabled() && LOG.isDebugEnabled(SQL_PERSIST))
+            LOG.debug(SQL_PERSIST, "Persisting " + object);
     }
 
     @PostPersist
     private void logPostPersist(Object object)
     {
-        if( LOG.isTraceEnabled() && LOG.isTraceEnabled(SQL_PERSIST))
-            LOG.trace(SQL_PERSIST, "Persisted " + object);
+        if( LOG.isDebugEnabled() && LOG.isDebugEnabled(SQL_PERSIST))
+            LOG.debug(SQL_PERSIST, "Persisted " + object);
     }
     
     @PostLoad
     private void logLoad(Object object)
     {
-        if( LOG.isTraceEnabled() && LOG.isTraceEnabled(SQL_QUERY))
-            LOG.trace(SQL_QUERY, "Loading " + object);
+        if( LOG.isDebugEnabled() && LOG.isDebugEnabled(SQL_QUERY))
+            LOG.debug(SQL_QUERY, "Loading " + object);
     }
     
     @PreUpdate
     private void logPreUpdate(Object object)
     {
-        if( LOG.isTraceEnabled() && LOG.isTraceEnabled(SQL_UPDATE))
-            LOG.trace(SQL_UPDATE, "Updating " + object);
+        if( LOG.isDebugEnabled() && LOG.isDebugEnabled(SQL_UPDATE))
+            LOG.debug(SQL_UPDATE, "Updating " + object);
     }
     
     @PostUpdate
     private void logPostUpdate(Object object)
     {
-        if( LOG.isTraceEnabled() && LOG.isTraceEnabled(SQL_UPDATE))
-            LOG.trace(SQL_UPDATE, "Updated " + object);
+        if( LOG.isDebugEnabled() && LOG.isDebugEnabled(SQL_UPDATE))
+            LOG.debug(SQL_UPDATE, "Updated " + object);
     }
     
     @PreRemove
     private void logPreRemove(Object object)
     {
-        if( LOG.isTraceEnabled() && LOG.isTraceEnabled(SQL_DELETE))
-            LOG.trace(SQL_DELETE, "Removing " + object);
+        if( LOG.isDebugEnabled() && LOG.isDebugEnabled(SQL_DELETE))
+            LOG.debug(SQL_DELETE, "Removing " + object);
     }
 
     @PostRemove
     private void logPostRemove(Object object)
     {
-        if( LOG.isTraceEnabled() && LOG.isTraceEnabled(SQL_DELETE))
-            LOG.trace(SQL_DELETE, "Removed " + object);
+        if( LOG.isDebugEnabled() && LOG.isDebugEnabled(SQL_DELETE))
+            LOG.debug(SQL_DELETE, "Removed " + object);
     }
 }

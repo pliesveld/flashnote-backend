@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import com.pliesveld.flashnote.model.json.Views;
+import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
 import com.pliesveld.flashnote.schema.Constants;
 import com.pliesveld.flashnote.serializer.DomainObjectSerializer;
 import org.hibernate.annotations.LazyCollection;
@@ -20,6 +21,7 @@ import java.util.Set;
 
 
 @Entity
+@EntityListeners(value = { LogEntityListener.class })
 @Table(name = "CATEGORY",
         uniqueConstraints = @UniqueConstraint(name = "UNIQUE_CATEGORY_NAME",columnNames = {"CATEGORY_NAME"}))
 public class Category extends DomainBaseEntity<Integer> implements Serializable

@@ -2,11 +2,13 @@ package com.pliesveld.flashnote.domain;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.pliesveld.flashnote.model.json.Views;
+import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
+@EntityListeners(value = { LogEntityListener.class })
 @Table(name = "QUESTION")
 @PrimaryKeyJoinColumn(name = "QUESTION_ID", foreignKey = @ForeignKey(name = "FK_QUESTION_ID"))
 public class Question extends AbstractStatement implements Serializable
