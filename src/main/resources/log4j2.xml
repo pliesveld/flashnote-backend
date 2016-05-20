@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration configDebug="false" monitorInterval="3">
+<Configuration configDebug="true" monitorInterval="3">
     <Properties>
         <Property name="logFolder">log</Property>
 
@@ -28,7 +28,12 @@
     <Appenders>
         <Console name="CONSOLE" target="SYSTEM_OUT">
 
-            <!--        <MarkerFilter marker="SECURITY" onMatch="DENY" onMismatch="NEUTRAL"/> -->
+            <Filters>
+                <MarkerFilter marker="SECURITY" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <MarkerFilter marker="DEBUG" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <MarkerFilter marker="SECURITY_AUTH" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <MarkerFilter marker="OBJECT_MAPPER" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
 
             <PatternLayout>
                 <MarkerPatternSelector defaultPattern="[%-5level] %c{1.} %msg%n">
