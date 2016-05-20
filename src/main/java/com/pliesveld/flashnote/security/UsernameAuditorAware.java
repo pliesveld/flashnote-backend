@@ -22,16 +22,21 @@ public class UsernameAuditorAware implements AuditorAware<String> {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication == null || !authentication.isAuthenticated())
         {
+            LOG.trace(Markers.AUDIT, "No authentication object or is not authenticated.", authentication);
             return null;
         }
 
-        LOG.debug(Markers.AUDIT, "Checking credentials for {}", authentication);
+        LOG.trace(Markers.AUDIT, "Checking credentials for {}", authentication);
 
         Object principal = authentication.getPrincipal();
         Object details = authentication.getDetails();
 
+        if(principal != null) {
+            LOG.trace(Markers.AUDIT, "Principal {} : {}",principal.getClass().getName(), principal);
+        }
+
         if(details != null) {
-            LOG.debug(Markers.AUDIT, "Details {} : {}",details.getClass().getName(), details);
+            LOG.trace(Markers.AUDIT, "Details {} : {}",details.getClass().getName(), details);
         }
 
 //        Object credentials = authentication.getCredentials();

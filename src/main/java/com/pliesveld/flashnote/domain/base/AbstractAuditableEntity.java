@@ -10,7 +10,10 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.EntityListeners;
+import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.time.Instant;
 
@@ -85,26 +88,26 @@ public abstract class AbstractAuditableEntity<ID extends Serializable> extends D
         this.modifiedByUser = modifiedByUser;
     }
 
-    @PrePersist
-    protected void onCreate()
-    {
-        modifiedOn = createdOn = Instant.now();
-        if(createdByUser == null)
-        {
-            createdByUser = "SYSTEM";
-        }
-        if(modifiedByUser == null)
-        {
-            modifiedByUser = createdByUser;
-        }
-    }
-
-    @PreUpdate
-    protected void onUpdate()
-    {
-        modifiedOn = Instant.now();
-        if(modifiedByUser == null)
-            modifiedByUser = "SYSTEM";
-    }
+//    @PrePersist
+//    protected void onCreate()
+//    {
+//        modifiedOn = createdOn = Instant.now();
+//        if(createdByUser == null)
+//        {
+//            createdByUser = "SYSTEM";
+//        }
+//        if(modifiedByUser == null)
+//        {
+//            modifiedByUser = createdByUser;
+//        }
+//    }
+//
+//    @PreUpdate
+//    protected void onUpdate()
+//    {
+//        modifiedOn = Instant.now();
+//        if(modifiedByUser == null)
+//            modifiedByUser = "SYSTEM";
+//    }
 
 }
