@@ -2,11 +2,11 @@ package com.pliesveld.populator;
 
 import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.repository.*;
+import com.pliesveld.flashnote.util.generator.QuestionGenerator;
 import com.pliesveld.flashnote.util.generator.StudentGenerator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -44,6 +45,8 @@ public class PopulateFlashnoteContainerApplication {
     QuestionBankRepository questionBankRepository;
     @Autowired
     NotificationRepository notificationRepository;
+    @Autowired
+    PopulateSettings populateSettings;
 
 	public static void main(String[] args) {
 //        System.setProperty("spring.profiles.default", System.getProperty("spring.profiles.default", "local"));
@@ -184,9 +187,32 @@ public class PopulateFlashnoteContainerApplication {
     @Order(8)
     public CommandLineRunner populateStudents() {
         return (args) -> {
-            for(int i = 0;i < 100;i++) {
+            for(int i = 0;i < populateSettings.getCountStudents(); i++) {
                 Student student = StudentGenerator.randomizedStudent(true);
                 studentRepository.save(student);
+            }
+
+        };
+    }
+
+    @Bean
+    @Order(10)
+    @Transactional
+    public CommandLineRunner populateBanks() {
+        return (args) -> {
+
+            Category qb_cat = createCategoryIfNotFound("TEST CATEGORY", "Category of populated question banks.");
+            for(int i = 0;i < populateSettings.getCountBanks(); i++) {
+
+                QuestionBank questionBank = new QuestionBank(qb_cat, "Question Bank #" + i + ".  " + UUID.randomUUID().toString());
+
+                int nQuestions = populateSettings.getCountQuestionPerBank();
+                int cnt = 0;
+                do {
+                    Question question = QuestionGenerator.randomQuestion();
+                    questionBank.add(question);
+                } while(++cnt < nQuestions);
+                questionBankRepository.save(questionBank);
             }
 
         };

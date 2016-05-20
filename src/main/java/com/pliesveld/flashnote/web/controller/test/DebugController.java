@@ -74,23 +74,23 @@ public class DebugController {
         return ResponseEntity.ok(settings);
     }
 
-
-    @RequestMapping(value = "/log2", method = RequestMethod.PUT)
-    public ResponseEntity<?> changeSingleLogLevelWithRequestParamAsEnum(@RequestParam("log") DebugRequestJson.LOG debugLog, @RequestParam("level") DebugRequestJson.LEVEL debugLevel)
-    {
-        updateLog(debugLog, debugLevel);
-
-        Map<String,String> settings = Stream.of (DebugRequestJson.LOG.values()).map(l -> l.toString()).collect(Collectors.toMap(
-            ((s) -> {
-                return s;
-            }), (m) -> {
-                return System.getProperty(m, "");
-            })
-        );
-
-        return ResponseEntity.ok(settings);
-    }
-
+//
+//    @RequestMapping(value = "/log2", method = RequestMethod.PUT)
+//    public ResponseEntity<?> changeSingleLogLevelWithRequestParamAsEnum(@RequestParam("log") DebugRequestJson.LOG debugLog, @RequestParam("level") DebugRequestJson.LEVEL debugLevel)
+//    {
+//        updateLog(debugLog, debugLevel);
+//
+//        Map<String,String> settings = Stream.of (DebugRequestJson.LOG.values()).map(l -> l.toString()).collect(Collectors.toMap(
+//            ((s) -> {
+//                return s;
+//            }), (m) -> {
+//                return System.getProperty(m, "");
+//            })
+//        );
+//
+//        return ResponseEntity.ok(settings);
+//    }
+//
 
     @RequestMapping(value = "/log", method = RequestMethod.POST)
     public ResponseEntity<?> updateLogLevels(@Valid @RequestBody DebugRequestJson debugLog)
@@ -108,7 +108,7 @@ public class DebugController {
         return ResponseEntity.ok(settings);
     }
 
-    @RequestMapping(value = "/log2", method = RequestMethod.POST)
+    @RequestMapping(value = "/logs", method = RequestMethod.POST)
     public ResponseEntity<?> updateLogGroupLevels(@Valid @RequestBody GroupDebugRequestJson debugLogGroup)
     {
 
@@ -117,16 +117,11 @@ public class DebugController {
         int prior_hc = prior.hashCode();
         for( DebugRequestJson debugRequestJson : debugLogGroup.getSettings() )
         {
-            LOGGER.error("checking {} {}", debugRequestJson.getLog(), debugRequestJson.getLevel());
+//            LOGGER.error("checking {} {}", debugRequestJson.getLog(), debugRequestJson.getLevel());
             updateLog(debugRequestJson.getLog(),debugRequestJson.getLevel());
         }
 
         Map<String,String> settings = getCurrentSettings();
-
-        int after_hc = settings.hashCode();
-
-        LOGGER.error("prior hc {} after hc {}", prior_hc, after_hc);
-
 
         updateLogContext();
 
@@ -147,6 +142,7 @@ public class DebugController {
     public static class DebugRequestJson {
         public enum LOG {
             LOG_SQL_LEVEL,
+            LOG_ENTITY_LEVEL,
             LOG_TRANS_LEVEL,
             LOG_TRANS_SYNC_LEVEL,
             LOG_MVC_LEVEL,
@@ -161,7 +157,8 @@ public class DebugController {
             TRACE,
             DEBUG,
             INFO,
-            WARN
+            WARN,
+            ERROR
         }
 
 
