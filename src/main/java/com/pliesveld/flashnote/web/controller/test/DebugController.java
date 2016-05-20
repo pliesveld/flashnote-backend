@@ -4,8 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
+import com.fasterxml.jackson.module.jsonSchema.customProperties.ValidationSchemaFactoryWrapper;
 import com.pliesveld.flashnote.logging.Markers;
-import com.pliesveld.flashnote.serializer.HibernateAwareObjectMapper;
+import com.pliesveld.flashnote.serializer.HibernateAwareObjectMapperImpl;
 import com.pliesveld.flashnote.web.validator.StringEnumeration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,8 +34,12 @@ public class DebugController {
 
     private static final Instant STARTUP_TIMESTAMP = Instant.now();
 
+    ObjectMapper objectMapper;
+
     @Autowired
-    HibernateAwareObjectMapper hibernateAwareObjectMapper;
+    public DebugController(HibernateAwareObjectMapperImpl hibernateAwareObjectMapper) {
+        this.objectMapper = hibernateAwareObjectMapper.copy();
+    }
 
     protected static void updateLog(DebugRequestJson.LOG_TYPE LOG_TAG, DebugRequestJson.LOG_LEVEL LOG_LEVEL)
     {
@@ -69,7 +74,7 @@ public class DebugController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<?> getLogLevels(@RequestParam("class") String clazz_name) throws IOException {
+    public ResponseEntity<?> getLogLevels(@RequestParam("class") String clazz_name, @RequestParam(name = "validate", defaultValue = "false") boolean validate) throws IOException {
         Class<?>  view_clazz = null;
 
         try {
@@ -77,16 +82,18 @@ public class DebugController {
 
             Class<?> clazz = Class.forName(clazz_name);
 
-            final ObjectMapper m = (ObjectMapper) hibernateAwareObjectMapper;
+            JsonSchema jsonSchema;
 
-            JsonSchemaGenerator generator = new JsonSchemaGenerator(m);
-            JsonSchema jsonSchema = generator.generateSchema(clazz);
-            Map<String, Object> result = writeAndMap(m, jsonSchema);
+            if( validate ) {
+                ValidationSchemaFactoryWrapper visitor = new ValidationSchemaFactoryWrapper();
+                objectMapper.acceptJsonFormatVisitor(clazz, visitor);
+                jsonSchema = visitor.finalSchema();
+            } else {
+                JsonSchemaGenerator generator = new JsonSchemaGenerator(objectMapper);
+                jsonSchema = generator.generateSchema(clazz);
+            }
 
-//            SchemaFactoryWrapper visitor = new SchemaFactoryWrapper();
-//            m.acceptJsonFormatVisitor(m.constructType(clazz), visitor);
-//            JsonSchema jsonSchema = visitor.finalSchema();
-
+            Map<String, Object> result = writeAndMap(objectMapper, jsonSchema);
             return ResponseEntity.ok(result);
         } catch (ClassNotFoundException e) {
             return ResponseEntity.notFound().build();
