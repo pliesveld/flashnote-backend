@@ -5,6 +5,8 @@ import com.pliesveld.flashnote.domain.AttachmentType;
 import com.pliesveld.flashnote.exception.AudioFormatNotSupportedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;
@@ -18,6 +20,13 @@ import java.nio.charset.CharsetDecoder;
 @Component
 public class AttachmentValidator implements ConstraintValidator<ValidAttachment, AttachmentBinary> {
     private static final Logger LOG = LogManager.getLogger();
+
+    final ValidationImageSettings validationImageSettings;
+
+    @Autowired
+    public AttachmentValidator(ValidationImageSettings validationImageSettings) {
+        this.validationImageSettings = validationImageSettings;
+    }
 
     @Override
     public void initialize(ValidAttachment constraintAnnotation) {
@@ -59,7 +68,7 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
             }
 
         }
- 
+
         if(!is_valid)
         {
             context.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.message}").addConstraintViolation();
@@ -69,6 +78,46 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
     }
 
 
+    @Component
+    @ConfigurationProperties(prefix = "validation.image")
+    public static class ValidationImageSettings {
+        private int maxHeight;
+        private int maxWidth;
+        private int minAspectRatio;
+        private int maxAspectRatio;
+
+        public int getMaxHeight() {
+            return maxHeight;
+        }
+
+        public void setMaxHeight(int maxHeight) {
+            this.maxHeight = maxHeight;
+        }
+
+        public int getMaxWidth() {
+            return maxWidth;
+        }
+
+        public void setMaxWidth(int maxWidth) {
+            this.maxWidth = maxWidth;
+        }
+
+        public int getMinAspectRatio() {
+            return minAspectRatio;
+        }
+
+        public void setMinAspectRatio(int minAspectRatio) {
+            this.minAspectRatio = minAspectRatio;
+        }
+
+        public int getMaxAspectRatio() {
+            return maxAspectRatio;
+        }
+
+        public void setMaxAspectRatio(int maxAspectRatio) {
+            this.maxAspectRatio = maxAspectRatio;
+        }
+    }
 
     private boolean validateImageAttachment(AttachmentBinary attachment, ConstraintValidatorContext errors) {
         byte[] content = attachment.getContents();
@@ -76,10 +125,28 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
         String mime = attachment.getMimeContentType();
 
         try {
-            ImageMetadataReader.readImageMetadata(fileName, content, mime);
+            ImageMetadata metadata = ImageMetadataReader.readImageMetadata(fileName, content, mime);
+
+            if(metadata == null) {
+                errors.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.image.message}").addConstraintViolation();
+                return false;
+            } else {
+                if(metadata.getAspectRatio() > validationImageSettings.getMaxAspectRatio() || metadata.getAspectRatio() < validationImageSettings.getMinAspectRatio()) {
+                    errors.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.image.aspect.message}").addConstraintViolation();
+                    return false;
+                }
+                if(metadata.getHeight() > validationImageSettings.getMaxHeight()) {
+                    errors.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.image.dimensions.message}").addConstraintViolation();
+                    return false;
+                }
+                if(metadata.getWidth() > validationImageSettings.getMaxWidth()) {
+                    errors.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.image.dimensions.message}").addConstraintViolation();
+                    return false;
+                }
+            }
 
         } catch (IOException e) {
-
+            errors.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.image.message}").addConstraintViolation();
             return false;
         }
         return true;
@@ -88,7 +155,7 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
     private boolean validateDocumentAttachment(AttachmentBinary attachment, ConstraintValidatorContext errors) {
         if(!isValidUTF8(attachment.getContents()))
         {
-            //errors.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.message}").addConstraintViolation();
+            errors.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.document.message}").addConstraintViolation();
             return false;
         }
         return true;
@@ -100,11 +167,12 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
         String mime = attachment.getMimeContentType();
 
         AudioMetadata metadata = null;
-        //errors.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.message}").addConstraintViolation();
+
         try {
             metadata = AudioMetadataReader.readAudioMetadata(fileName,content,mime);
         } catch (AudioFormatNotSupportedException e) {
-            errors.buildConstraintViolationWithTemplate("{validator.ValidAttachment.audio.message}").addConstraintViolation();
+            errors.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.audio.message}").addConstraintViolation();
+
             return false;
         }
 
