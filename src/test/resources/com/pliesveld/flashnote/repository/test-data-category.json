@@ -19,12 +19,8 @@
             "parentCategory" : 99
         }
 
-
     ],
-    "questionBanks" : [{
-        "category" : 99,
-        "description" : "b4250e47-55fb-4983-a71a-1856b78dab62",
-        "questions" : []
-    }]
+    "questionBanks" : [
+    ]
 }
 
