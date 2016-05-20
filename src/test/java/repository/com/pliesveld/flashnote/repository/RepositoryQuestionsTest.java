@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
@@ -19,8 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
@@ -28,6 +28,7 @@ import static org.junit.Assert.assertTrue;
         @ContextConfiguration(classes = { SpringDataTestConfig.class }, loader = AnnotationConfigContextLoader.class),
         @ContextConfiguration(classes = { RepositoryQuestionsTest.class }, loader = AnnotationConfigContextLoader.class)
 })
+@DirtiesContext
 public class RepositoryQuestionsTest extends AbstractTransactionalRepositoryUnitTest {
     private static final Logger LOG = LogManager.getLogger();
 
@@ -43,14 +44,16 @@ public class RepositoryQuestionsTest extends AbstractTransactionalRepositoryUnit
     public void testLoadRepositoryFromJson()
     {
         assertTrue(questionRepository.count() > 0);
-        assertEquals(questionRepository.count(), 3);
+        assertEquals(3, questionRepository.count());
     }
 
     @Test
     @Transactional
+    @DirtiesContext
     public void givenQuestion_whenChangingTitle_thenPersisted()
     {
         Question question = questionRepository.findOne(1);
+        assertNotNull(question);
         debug(question);
         question.setTitle("Change title");
     }

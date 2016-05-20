@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
@@ -22,10 +23,12 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
-@ContextHierarchy({
+@ContextHierarchy(value = {
     @ContextConfiguration(classes = { SpringDataTestConfig.class }, loader = AnnotationConfigContextLoader.class),
     @ContextConfiguration(classes = { RepositoryCategoriesTest.class }, loader = AnnotationConfigContextLoader.class)
 })
+@DirtiesContext
+
 public class RepositoryCategoriesTest extends AbstractRepositoryUnitTest {
     private static final Logger LOG = LogManager.getLogger();
 

@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
@@ -28,6 +29,8 @@ import static org.junit.Assert.*;
         @ContextConfiguration(classes = { SpringDataTestConfig.class }, loader = AnnotationConfigContextLoader.class),
         @ContextConfiguration(classes = { RepositoryStudentsTest.class }, loader = AnnotationConfigContextLoader.class)
 })
+@DirtiesContext
+
 public class RepositoryStudentsTest extends AbstractRepositoryUnitTest {
 
     @Bean(name = "populator")

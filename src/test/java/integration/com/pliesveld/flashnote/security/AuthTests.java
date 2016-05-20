@@ -17,6 +17,7 @@ import com.pliesveld.flashnote.spring.data.SpringDataConfig;
 import com.pliesveld.flashnote.spring.db.PersistenceContext;
 import com.pliesveld.flashnote.spring.mail.SpringMailConfig;
 import com.pliesveld.flashnote.spring.security.SpringSecurityConfig;
+import com.pliesveld.flashnote.spring.serializer.SpringJacksonConfig;
 import com.pliesveld.flashnote.spring.web.SpringWebConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,7 +52,7 @@ import static org.hamcrest.Matchers.notNullValue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles({Profiles.INTEGRATION_TEST, Profiles.AUTH})
-@SpringApplicationConfiguration(classes = {SpringRootConfig.class, SpringCacheConfig.class, SpringSecurityConfig.class, SpringWebConfig.class, SpringDataConfig.class, SpringMailConfig.class ,PersistenceContext.class, AuthTests.class})
+@SpringApplicationConfiguration(classes = {SpringRootConfig.class, SpringCacheConfig.class, SpringSecurityConfig.class, SpringWebConfig.class, SpringDataConfig.class, SpringJacksonConfig.class, SpringMailConfig.class ,PersistenceContext.class, AuthTests.class})
 @WebAppConfiguration
 @IntegrationTest
 @EnableAutoConfiguration
