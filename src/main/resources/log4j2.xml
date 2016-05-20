@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration configDebug="true" monitorInterval="3">
     <Properties>
-        <Property name="logFolder">log</Property>
+        <Property name="logFolder">/tmp/log</Property>
 
-        <Property name="hibernatefilename">log/hibernate.log</Property>
-        <Property name="servicefilename">log/service.log</Property>
-        <Property name="springbootdebug">log/spring-boot.log</Property>
-        <Property name="springdebug">log/spring-debug.log</Property>
-        <Property name="springselect">log/spring-web.log</Property>
+        <Property name="hibernatefilename">hibernate.log</Property>
+        <Property name="servicefilename">service.log</Property>
+        <Property name="springbootdebug">spring-boot.log</Property>
+        <Property name="springdebug">spring-debug.log</Property>
+        <Property name="springweb">spring-web.log</Property>
 
         <Property name="LOG_JDBC_LEVEL">WARN</Property>
         <Property name="LOG_SQL_LEVEL">WARN</Property>
@@ -42,24 +42,24 @@
             </PatternLayout>
         </Console>
 
-        <File name="FileHibernate" fileName="${hibernatefilename}" append="false">
-            <PatternLayout pattern="[%t] %-5level %logger{2.1.} - %msg%n"/>
-        </File>
+        <!--<File name="FileHibernate" fileName="${sys:logFolder}/${hibernatefilename}" append="false">-->
+            <!--<PatternLayout pattern="[%t] %-5level %logger{2.1.} - %msg%n"/>-->
+        <!--</File>-->
 
-        <File name="FileService" fileName="${servicefilename}" append="false">
-            <PatternLayout pattern="[%t] %-5level %logger{2.1.} - %msg%n"/>
-        </File>
+        <!--<File name="FileService" fileName="${sys:logFolder}/${servicefilename}" append="false">-->
+            <!--<PatternLayout pattern="[%t] %-5level %logger{2.1.} - %msg%n"/>-->
+        <!--</File>-->
 
-        <File name="FileSpringDebug" fileName="${springdebug}" append="false">
-            <PatternLayout pattern="%-5level %c %msg%n"/>
-        </File>
+        <!--<File name="FileSpringDebug" fileName="${sys:logFolder}/${springdebug}" append="false">-->
+            <!--<PatternLayout pattern="%-5level %c %msg%n"/>-->
+        <!--</File>-->
 
-        <File name="FileSpringBootDebug" fileName="${springbootdebug}" append="false">
-            <PatternLayout pattern="%-5level %c %msg%n"/>
-        </File>
+        <!--<File name="FileSpringBootDebug" fileName="${sys:logFolder}/${springbootdebug}" append="false">-->
+            <!--<PatternLayout pattern="%-5level %c %msg%n"/>-->
+        <!--</File>-->
 
-        <File name="FileSpringSelect" fileName="${springselect}" append="false">
-            <PatternLayout pattern="%-5level %msg%n"/>
+        <File name="FileSpringWeb" fileName="${sys:logFolder}/${springweb}" append="false">
+            <PatternLayout pattern="%msg%n"/>
         </File>
 
     </Appenders>
@@ -78,6 +78,10 @@
 
         <logger name="javax.persistence.Entity" level="${sys:LOG_ENTITY_LEVEL}" additivity="false">
             <AppenderRef ref="CONSOLE"/>
+        </logger>
+
+        <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="INFO" additivity="false">
+            <AppenderRef ref="FileSpringWeb"/>
         </logger>
 
         <logger name="org.springframework.transaction.interceptor" level="${sys:LOG_TRANS_LEVEL}" additivity="false">
@@ -122,11 +126,6 @@
             </logger>
 
             <logger name="org.springframework.security.web.access.expression.ExpressionBasedFilterInvocationSecurityMetadataSource" level="DEBUG" additivity="false">
-                <AppenderRef ref="FileSpringSelect"/>
-            </logger>
-
-
-            <logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="INFO" additivity="false">
                 <AppenderRef ref="FileSpringSelect"/>
             </logger>
         -->
