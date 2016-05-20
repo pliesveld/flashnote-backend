@@ -1,6 +1,7 @@
 package com.pliesveld.flashnote.web.controller.test;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pliesveld.flashnote.logging.Markers;
 import com.pliesveld.flashnote.web.validator.StringEnumeration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,29 +9,31 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RestController
 @RequestMapping(value="/admin")
 public class DebugController {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
-    protected static void updateLog(DebugRequestJson.LOG LOG_TAG, DebugRequestJson.LEVEL LOG_LEVEL)
+    protected static void updateLog(DebugRequestJson.LOG_TYPE LOG_TAG, DebugRequestJson.LOG_LEVEL LOG_LEVEL)
     {
-        LOGGER.debug("Setting {} to {}", LOG_TAG, LOG_LEVEL);
+        LOG.debug(Markers.DEBUG, "Setting {} to {}", LOG_TAG, LOG_LEVEL);
         System.setProperty(LOG_TAG.toString(), LOG_LEVEL.toString());
         ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
     }
 
     protected static void updateLog(String log_tag, String log_level)
     {
-        LOGGER.debug("Setting {} to {} ; no update", log_tag, log_level);
+        LOG.debug(Markers.DEBUG, "Setting {} to {} ; no update", log_tag, log_level);
         System.setProperty(log_tag, log_level);
     }
 
@@ -39,10 +42,10 @@ public class DebugController {
         ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
     }
 
-    @RequestMapping(value = "/log", method = RequestMethod.GET)
+    @RequestMapping(value = {"/log", "/logs"}, method = RequestMethod.GET)
     public ResponseEntity<?> getLogLevels()
     {
-        Map<String,String> settings = Stream.of (DebugRequestJson.LOG.values()).map(l -> l.toString()).collect(Collectors.toMap(
+        Map<String,String> settings = Stream.of (DebugRequestJson.LOG_TYPE.values()).map(l -> l.toString()).collect(Collectors.toMap(
                 ((s) -> {
                     return s;
                 }), (m) -> {
@@ -55,15 +58,15 @@ public class DebugController {
 
     @RequestMapping(value = "/log", method = RequestMethod.PUT)
     public ResponseEntity<?> changeSingleLogLevelWithRequestParamAsString(
-            @RequestParam("log") @Valid @StringEnumeration(enumClass = DebugRequestJson.LOG.class) String log,
-            @RequestParam("level") @Valid @StringEnumeration(enumClass = DebugRequestJson.LEVEL.class) String level)
+            @RequestParam("log") @Valid @StringEnumeration(enumClass = DebugRequestJson.LOG_TYPE.class) String log,
+            @RequestParam("level") @Valid @StringEnumeration(enumClass = DebugRequestJson.LOG_LEVEL.class) String level)
     {
-        DebugRequestJson.LOG debugLog = DebugRequestJson.LOG.valueOf(log);
-        DebugRequestJson.LEVEL debugLevel = DebugRequestJson.LEVEL.valueOf(level);
+        DebugRequestJson.LOG_TYPE debugLog = DebugRequestJson.LOG_TYPE.valueOf(log);
+        DebugRequestJson.LOG_LEVEL debugLevel = DebugRequestJson.LOG_LEVEL.valueOf(level);
 
         updateLog(debugLog, debugLevel);
 
-        Map<String,String> settings = Stream.of (DebugRequestJson.LOG.values()).map(l -> l.toString()).collect(Collectors.toMap(
+        Map<String,String> settings = Stream.of (DebugRequestJson.LOG_TYPE.values()).map(l -> l.toString()).collect(Collectors.toMap(
             ((s) -> {
                 return s;
             }), (m) -> {
@@ -97,7 +100,7 @@ public class DebugController {
     {
         updateLog(debugLog.getLog(),debugLog.getLevel());
 
-        Map<String,String> settings = Stream.of (DebugRequestJson.LOG.values()).map(l -> l.toString()).collect(Collectors.toMap(
+        Map<String,String> settings = Stream.of (DebugRequestJson.LOG_TYPE.values()).map(l -> l.toString()).collect(Collectors.toMap(
                 ((s) -> {
                     return s;
                 }), (m) -> {
@@ -117,7 +120,7 @@ public class DebugController {
         int prior_hc = prior.hashCode();
         for( DebugRequestJson debugRequestJson : debugLogGroup.getSettings() )
         {
-//            LOGGER.error("checking {} {}", debugRequestJson.getLog(), debugRequestJson.getLevel());
+//            LOG.error("checking {} {}", debugRequestJson.getLog(), debugRequestJson.getLevel());
             updateLog(debugRequestJson.getLog(),debugRequestJson.getLevel());
         }
 
@@ -129,7 +132,7 @@ public class DebugController {
     }
 
     private Map<String,String> getCurrentSettings() {
-        return Stream.of (DebugRequestJson.LOG.values()).map(l -> l.toString()).collect(Collectors.toMap(
+        return Stream.of (DebugRequestJson.LOG_TYPE.values()).map(l -> l.toString()).collect(Collectors.toMap(
                 ((s) -> {
                     return s;
                 }), (m) -> {
@@ -140,7 +143,7 @@ public class DebugController {
 
 
     public static class DebugRequestJson {
-        public enum LOG {
+        public enum LOG_TYPE {
             LOG_SQL_LEVEL,
             LOG_ENTITY_LEVEL,
             LOG_TRANS_LEVEL,
@@ -153,7 +156,7 @@ public class DebugController {
             LOG_BEANS_CACHED_LEVEL
         }
 
-        public enum LEVEL {
+        public enum LOG_LEVEL {
             TRACE,
             DEBUG,
             INFO,
@@ -164,34 +167,34 @@ public class DebugController {
 
         @NotNull
         @JsonProperty
-        LOG log;
+        LOG_TYPE log;
 
         @NotNull
         @JsonProperty
-        LEVEL level;
+        LOG_LEVEL level;
 
         public DebugRequestJson() {
         }
 
-        public DebugRequestJson(LOG log, LEVEL level) {
+        public DebugRequestJson(LOG_TYPE log, LOG_LEVEL level) {
             this.log = log;
             this.level = level;
         }
 
-        public LOG getLog() {
+        public LOG_TYPE getLog() {
             return log;
         }
 
-        public void setLog(LOG log) {
+        public void setLog(LOG_TYPE log) {
             this.log = log;
         }
 
 
-        public LEVEL getLevel() {
+        public LOG_LEVEL getLevel() {
             return level;
         }
 
-        public void setLevel(LEVEL level) {
+        public void setLevel(LOG_LEVEL level) {
             this.level = level;
         }
     }
@@ -221,24 +224,27 @@ public class DebugController {
         }
     }
 
-//    @PostConstruct
-//    public void postConstruct() {
-//        LOGGER.debug("Calling POST CONSTRUCT");
-//
-//        Properties props = System.getProperties();
-//
-////        props.forEach((k, v) -> {
-////            LOGGER.debug("key {} = {}", k, v);
-////        });
-//
-//        for(DebugRequestJson.LOG log : DebugRequestJson.LOG.values()) {
-//            DebugController.updateLog(log, DebugRequestJson.LEVEL.WARN);
-//        }
-//        ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
-//
-////        props.forEach((k,v) -> {
-////            LOGGER.debug("key {} = {}", k, v);
-////        });
-//
-//    }
+    @PostConstruct
+    public void postConstruct() {
+        LOG.debug(Markers.DEBUG, "Calling POST CONSTRUCT");
+
+        Properties props = System.getProperties();
+
+//        props.forEach((k, v) -> {
+//            LOG.debug(Markers.DEBUG,"key {} = {}", k, v);
+//        });
+
+        ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(true)).reconfigure();
+        for(DebugRequestJson.LOG_TYPE log : DebugRequestJson.LOG_TYPE.values()) {
+            //DebugController.updateLog(log, DebugRequestJson.LEVEL.WARN);
+            LOG.debug(Markers.DEBUG, "{} => {}", log, System.getProperty(log.toString()));
+
+        }
+
+
+//        props.forEach((k,v) -> {
+//            LOG.debug(Markers.DEBUG,"key {} = {}", k, v);
+//        });
+
+    }
 }
