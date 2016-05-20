@@ -18,6 +18,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -185,13 +186,17 @@ public class PopulateFlashnoteContainerApplication {
 
     @Bean
     @Order(8)
+    @Transactional
     public CommandLineRunner populateStudents() {
         return (args) -> {
-            for(int i = 0;i < populateSettings.getCountStudents(); i++) {
-                Student student = StudentGenerator.randomizedStudent(true);
-                studentRepository.save(student);
+            try {
+                for(int i = 0;i < populateSettings.getCountStudents(); i++) {
+                    Student student = StudentGenerator.randomizedStudent(true);
+                    studentRepository.save(student);
+                }
+            } catch(ConstraintViolationException cve) {
+                LOG.error("Could not save student: {}", cve);
             }
-
         };
     }
 

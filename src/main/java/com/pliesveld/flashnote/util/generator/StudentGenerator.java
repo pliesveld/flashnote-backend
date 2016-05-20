@@ -8,8 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.ThreadLocalRandom;
-
-
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class StudentGenerator
@@ -74,11 +73,14 @@ public class StudentGenerator
         return randomizedStudent(true);
     }
 
+
+    static private AtomicInteger studentCounter = new AtomicInteger(1000);
+
     static public Student randomizedStudent(boolean andDetails)
     {
         StudentRole random_role = randomValue(StudentRole.values());
         int rand_num = ThreadLocalRandom.current().nextInt(0,1000);
-        String random_name = String.format("%s%d",randomValue(GIRL_NAMES),rand_num);
+        String random_name = String.format("%s%d",randomValue(GIRL_NAMES),studentCounter.getAndIncrement());
         String random_email = random_name.concat("@" + randomValue(DOMAIN_NAMES));
 
         Student student = new Student();
@@ -109,15 +111,13 @@ public class StudentGenerator
 
         StudentRole random_role = randomValue(StudentRole.values());
         int rand_num = ThreadLocalRandom.current().nextInt(0,1000);
-        String random_name = String.format("%s%d",randomValue(GIRL_NAMES),rand_num);
-
+        String random_name = String.format("%s%d",randomValue(GIRL_NAMES),studentCounter.getAndIncrement());
         StudentDetails studentDetails = new StudentDetails(random_name);
         return studentDetails;
     }
 
     public static String randomizedName() {
-        int rand_num = ThreadLocalRandom.current().nextInt(0,1000);
-        String random_name = String.format("%s%d",randomValue(GIRL_NAMES),rand_num);
+        String random_name = String.format("%s%d",randomValue(GIRL_NAMES),studentCounter.getAndIncrement());
         return random_name;
     }
 }
