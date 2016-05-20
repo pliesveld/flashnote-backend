@@ -1,10 +1,15 @@
 package com.pliesveld.flashnote.web.controller.test;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import com.pliesveld.flashnote.logging.Markers;
+import com.pliesveld.flashnote.serializer.HibernateAwareObjectMapper;
 import com.pliesveld.flashnote.web.validator.StringEnumeration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +18,8 @@ import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Properties;
@@ -20,9 +27,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RestController
-@RequestMapping(value="/admin")
+@RequestMapping(value="/debug")
 public class DebugController {
     private static final Logger LOG = LogManager.getLogger();
+
+    private static final Instant STARTUP_TIMESTAMP = Instant.now();
+
+    @Autowired
+    HibernateAwareObjectMapper hibernateAwareObjectMapper;
 
     protected static void updateLog(DebugRequestJson.LOG_TYPE LOG_TAG, DebugRequestJson.LOG_LEVEL LOG_LEVEL)
     {
@@ -42,6 +54,44 @@ public class DebugController {
         ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
     }
 
+    @RequestMapping(value = {"/startup"}, method = RequestMethod.GET)
+    public ResponseEntity<?> startupTimestamp()
+    {
+        return ResponseEntity.ok(STARTUP_TIMESTAMP.getEpochSecond());
+    }
+
+    @SuppressWarnings("unchecked")
+    protected Map<String,Object> writeAndMap(ObjectMapper m, Object value)
+            throws IOException
+    {
+        String str = m.writeValueAsString(value);
+        return (Map<String,Object>) m.readValue(str, Map.class);
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ResponseEntity<?> getLogLevels(@RequestParam("class") String clazz_name) throws IOException {
+        Class<?>  view_clazz = null;
+
+        try {
+//            LOG.debug(Markers.DEBUG, "Checking class: {}", clazz_name);
+
+            Class<?> clazz = Class.forName(clazz_name);
+
+            final ObjectMapper m = (ObjectMapper) hibernateAwareObjectMapper;
+
+            JsonSchemaGenerator generator = new JsonSchemaGenerator(m);
+            JsonSchema jsonSchema = generator.generateSchema(clazz);
+            Map<String, Object> result = writeAndMap(m, jsonSchema);
+
+//            SchemaFactoryWrapper visitor = new SchemaFactoryWrapper();
+//            m.acceptJsonFormatVisitor(m.constructType(clazz), visitor);
+//            JsonSchema jsonSchema = visitor.finalSchema();
+
+            return ResponseEntity.ok(result);
+        } catch (ClassNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
     @RequestMapping(value = {"/log", "/logs"}, method = RequestMethod.GET)
     public ResponseEntity<?> getLogLevels()
     {
@@ -140,7 +190,6 @@ public class DebugController {
         })
         );
     }
-
 
     public static class DebugRequestJson {
         public enum LOG_TYPE {

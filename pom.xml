@@ -29,7 +29,7 @@
         <commons.io.version>2.4</commons.io.version>
         <log4j.version>2.5</log4j.version>
         <junit.version>4.12</junit.version>
-        <jackson.version>2.6.4</jackson.version>
+        <jackson.version>2.6.6</jackson.version>
         <jackson.hibernate5.version>2.7.3</jackson.hibernate5.version>
         <h2.version>1.4.190</h2.version>
         <guava.version>19.0</guava.version>
@@ -149,6 +149,12 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jsonSchema</artifactId>
             <version>${jackson.version}</version>
         </dependency>
 
