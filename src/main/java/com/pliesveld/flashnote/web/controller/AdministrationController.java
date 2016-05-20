@@ -42,7 +42,7 @@ public class AdministrationController {
     @Autowired
     private BankService bankService;
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/student/create", method = RequestMethod.POST)
     public ResponseEntity<Void> createStudent(@Valid @RequestBody NewStudentDetails studentdto)
     {
@@ -61,7 +61,7 @@ public class AdministrationController {
         return new ResponseEntity<>(null,responseHeaders, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value="/students", method = RequestMethod.GET)
     public ResponseEntity<Iterable<StudentDetails>> getAllStudents()
     {
@@ -70,7 +70,7 @@ public class AdministrationController {
         return new ResponseEntity<>(allStudents, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value="/remove/attachment/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void deleteAttachment(@PathVariable("id") int id)
@@ -78,7 +78,7 @@ public class AdministrationController {
         attachmentService.removeAttachmentById(id);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value="/remove/student/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void deleteStudent(@PathVariable("id") int id)
@@ -87,7 +87,7 @@ public class AdministrationController {
     }
 
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value="/questionbanks", method = RequestMethod.GET)
     @JsonView(Views.Internal.class)
     public ResponseEntity<?> retrieveAllDecks()
@@ -96,7 +96,7 @@ public class AdministrationController {
     }
 
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/decks", method = RequestMethod.GET)
     @JsonView(Views.Internal.class)
     public ResponseEntity<?> retrieveAllQuestionBanks()
