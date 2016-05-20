@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static com.pliesveld.flashnote.logging.Markers.SECURITY_AUTH;
+
 @RestController
 @Profile(value = Profiles.AUTH)
 public class AuthenticationRestController {
@@ -52,7 +54,7 @@ public class AuthenticationRestController {
     @RequestMapping(value = "/auth", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequestJson authenticationRequest, HttpServletRequest httpRequest) throws AuthenticationException {
 
-        LOG.debug("Authenticating {} / {}", authenticationRequest.getUsername(),authenticationRequest.getPassword());
+        LOG.debug(SECURITY_AUTH, "Authenticating {} / {}", authenticationRequest.getUsername(),authenticationRequest.getPassword());
 
         UsernamePasswordAuthenticationToken auth_token = new UsernamePasswordAuthenticationToken(
                 authenticationRequest.getUsername(),

@@ -44,5 +44,5 @@ public class Markers {
     public static final Marker SERVLET = MarkerManager.getMarker("SERVLET");
     public static final Marker SERVLET_INIT = MarkerManager.getMarker("SERVLET_INIT").addParents(SERVLET);
 
-
+    public static final Marker DEBUG = MarkerManager.getMarker("DEBUG");
 }
