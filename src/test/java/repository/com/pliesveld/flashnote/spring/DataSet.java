@@ -1,9 +1,6 @@
 package com.pliesveld.flashnote.spring;
 
-import com.pliesveld.flashnote.domain.Category;
-import com.pliesveld.flashnote.domain.Question;
-import com.pliesveld.flashnote.domain.QuestionBank;
-import com.pliesveld.flashnote.domain.Student;
+import com.pliesveld.flashnote.domain.*;
 
 import java.util.Collection;
 
@@ -15,6 +12,7 @@ public class DataSet {
     private Collection<Student> students;
     private Collection<Category> categories;
     private Collection<QuestionBank> questionBanks;
+    private Collection<Deck> decks;
 
     public Collection<Question> getQuestions() {
         return questions;
@@ -47,4 +45,8 @@ public class DataSet {
     public void setQuestionBanks(Collection<QuestionBank> questionBanks) {
         this.questionBanks = questionBanks;
     }
+
+    public Collection<Deck> getDecks() { return decks; }
+
+    public void setDecks(Collection<Deck> decks) { this.decks = decks; }
 }
