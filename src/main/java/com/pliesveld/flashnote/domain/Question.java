@@ -10,10 +10,11 @@ import java.io.Serializable;
 @Entity
 @EntityListeners(value = { LogEntityListener.class })
 @Table(name = "QUESTION")
+@DiscriminatorValue(value = "QUESTION")
 @PrimaryKeyJoinColumn(name = "QUESTION_ID", foreignKey = @ForeignKey(name = "FK_QUESTION_ID"))
 public class Question extends AbstractStatement implements Serializable
 {
-    protected String title;
+
     protected AbstractAttachment attachment;
 
     public Question() {
@@ -25,11 +26,6 @@ public class Question extends AbstractStatement implements Serializable
         setContent(content);
     }
 
-    @Column(name = "QUESTION_TITLE")
-    @JsonView(Views.Summary.class)
-    public String getTitle() {
-        return title;
-    }
 
     @ManyToOne(fetch = FetchType.LAZY, optional = true, targetEntity = AbstractAttachment.class)
     @JoinColumn(name = "ATTACHMENT_ID", nullable = true, foreignKey = @ForeignKey(name = "FK_QUESTION_ATTACHMENT_ID"))
@@ -38,8 +34,19 @@ public class Question extends AbstractStatement implements Serializable
         return (T) attachment;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+
+//    protected String title;
+//    @Column(name = "QUESTION_TITLE")
+//    @JsonView(Views.Summary.class)
+    @Deprecated
+    @Transient
+    public String getTitle() {
+        return null;
+    }
+
+    @Deprecated
+    public void setTitle(String title)
+    {
     }
 
 
@@ -47,10 +54,10 @@ public class Question extends AbstractStatement implements Serializable
         this.attachment = attachment;
     }
 
-    @PrePersist
-    public void prePersist() {
-        if(title == null)
-            title = "Untitled Question";
-    }
+//    @PrePersist
+//    public void prePersist() {
+//        if(getTitle() == null)
+//            setTitle("Untitled Question");
+//    }
 
 }

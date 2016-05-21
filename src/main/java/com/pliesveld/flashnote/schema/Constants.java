@@ -41,5 +41,5 @@ public class Constants {
     public static final int MAX_NOTIFICATION_MESSAGE_LENGTH = 1024;
 
 
-
+    public static final int MD5_HASH_LENGTH = 32;
 }

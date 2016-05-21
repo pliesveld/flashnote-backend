@@ -46,7 +46,7 @@ public class DDLExport
     @Value("${schema.export.file:db-drop.sql}")
     String DROP_EXPORT_FILE;
 
-    @Value("${schema.export.dir:/resource/src/main/resources/sql/}")
+    @Value("${schema.export.dir:/src/main/resources/sql/}")
     String DIR_EXPORT_PATH;
 
     @Value("${schema.export.root:#{systemProperties['user.dir']}}")

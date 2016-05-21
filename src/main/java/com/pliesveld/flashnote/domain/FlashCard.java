@@ -6,8 +6,6 @@ import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -22,22 +20,21 @@ public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey> implements 
     @EmbeddedId
     private FlashCardPrimaryKey id = new FlashCardPrimaryKey();
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH},
+//    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH},
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH},
             targetEntity = com.pliesveld.flashnote.domain.Question.class)
     @JoinColumn(name = "QUESTION_ID",
             nullable = false, insertable = false, updatable = false,
-            foreignKey = @ForeignKey(name = "FK_QUESTION"))
+            foreignKey = @ForeignKey(name = "FK_QUESTION_ID"))
     @MapsId("questionId")
-    @LazyToOne(LazyToOneOption.PROXY)
     private Question question;
 
     @ManyToOne(cascade = {CascadeType.ALL},
             targetEntity = com.pliesveld.flashnote.domain.Answer.class)
     @JoinColumn(name = "ANSWER_ID",
             nullable = false, insertable = false, updatable = false,
-            foreignKey = @ForeignKey(name = "FK_ANSWER"))
+            foreignKey = @ForeignKey(name = "FK_ANSWER_ID"))
     @MapsId("answerId")
-    @LazyToOne(LazyToOneOption.PROXY)
     private Answer answer;
 
 

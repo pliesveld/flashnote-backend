@@ -20,7 +20,7 @@ import org.subethamail.wiser.Wiser;
 
 import java.util.UUID;
 
-import static com.pliesveld.flashnote.mail.WiserAssertions.assertReceivedMessage;
+import static com.pliesveld.flashnote.service.mail.WiserAssertions.assertReceivedMessage;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)

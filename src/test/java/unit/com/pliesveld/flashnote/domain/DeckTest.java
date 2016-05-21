@@ -62,13 +62,14 @@ public class DeckTest extends StudentDetailsTest
     }
 
     @Test
-    public void constructDeckSharedQuestion()
+    public void givenDeck_whenPersistingFlashcards()
     {
         Question question = questionBean();
         Answer answer1 = answerBean();
         Answer answer2 = answerBean();
 
-//        entityManager.persist(question);
+        entityManager.persist(question);
+
 //        entityManager.persist(answer1);
 //        entityManager.persist(answer2);
 
@@ -92,7 +93,6 @@ public class DeckTest extends StudentDetailsTest
         assertAnswerRepositoryCount(2);
         assertFlashCardRepositoryCount(2);
     }
-
 
     @Test
     public void constructDeckMultipleFlashcards()

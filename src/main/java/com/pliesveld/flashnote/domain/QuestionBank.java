@@ -44,11 +44,11 @@ public class QuestionBank extends DomainBaseEntity<Integer> {
     private String description;
 
     @NotNull
-    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.DETACH}, fetch = FetchType.LAZY, targetEntity = Question.class)
     @JoinTable(name = "QUESTION_BANK_COLLECTION", foreignKey = @ForeignKey(name = "FK_QUESTION_BANK_COLLECTION_QUESTION_BANK_ID"),
             joinColumns = @JoinColumn(name = "QUESTION_BANK_ID", foreignKey = @ForeignKey(name = "QUESTION_BANK_WHAT")),
-            inverseJoinColumns = @JoinColumn(name = "QUESTION_ID",
-                                             referencedColumnName = "QUESTION_ID",
+            inverseJoinColumns = @JoinColumn(name = "QUESTION_ID", nullable = false,
+//                                             referencedColumnName = "QUESTION_ID",
                                              foreignKey = @ForeignKey(name = "FK_QUESTION_BANK_COLLECTION_QUESTION_ID"))
     )
     @LazyCollection(LazyCollectionOption.EXTRA)

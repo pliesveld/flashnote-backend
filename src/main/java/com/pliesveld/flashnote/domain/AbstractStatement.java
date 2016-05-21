@@ -8,6 +8,7 @@ import org.hibernate.annotations.CollectionId;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.Type;
+import org.springframework.util.DigestUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -19,10 +20,12 @@ import java.util.Objects;
 @Entity
 @Table(name = "STATEMENT")
 @Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorValue(value = "STATEMENT")
 public abstract class AbstractStatement extends AbstractAuditableEntity<Integer>
 {
     protected Integer id;
-    protected String content = "";
+    protected String content;
+    protected String contentHash;
     protected Collection<AnnotatedStatement> annotations = new ArrayList<AnnotatedStatement>();
 
     public AbstractStatement() {
@@ -30,7 +33,8 @@ public abstract class AbstractStatement extends AbstractAuditableEntity<Integer>
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "statement_gen", sequenceName = "statement_id_seq", initialValue = 9000)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "statement_gen")
     @Column(name = "STATEMENT_ID")
     @JsonView(Views.Summary.class)
     public Integer getId() { return id; }
@@ -42,6 +46,14 @@ public abstract class AbstractStatement extends AbstractAuditableEntity<Integer>
     @JsonView(Views.Summary.class)
     public String getContent() {
         return content;
+    }
+
+    @NotNull
+    @Size(min = Constants.MD5_HASH_LENGTH, max = Constants.MD5_HASH_LENGTH)
+    @Column(name = "CONTENT_HASH", length = Constants.MD5_HASH_LENGTH, nullable = false)
+    @Basic(fetch = FetchType.EAGER, optional = false)
+    public String getContentHash() {
+        return contentHash;
     }
 
     @ElementCollection(fetch = FetchType.LAZY)
@@ -57,15 +69,18 @@ public abstract class AbstractStatement extends AbstractAuditableEntity<Integer>
     @JsonView(Views.SummaryWithCollections.class)
     public Collection<AnnotatedStatement> getAnnotations() { return annotations; }
 
-    protected void setId(Integer id)
+    protected void setId(final Integer id)
     {
         this.id = id;
     }
 
-    public void setContent(String content)
+    public void setContent(final String content)
     {
         this.content = content;
+        this.updateContent();
     }
+
+    private void setContentHash(final String contentHash) { this.contentHash = contentHash; }
 
     protected void setAnnotations(Collection<AnnotatedStatement> annotations) { this.annotations = annotations; }
 
@@ -73,7 +88,7 @@ public abstract class AbstractStatement extends AbstractAuditableEntity<Integer>
 
     @Override
     public int hashCode() {
-        return Objects.hash(content);
+        return Objects.hash(getContentHash());
     }
 
     @Override
@@ -85,8 +100,11 @@ public abstract class AbstractStatement extends AbstractAuditableEntity<Integer>
             return false;
         }
         final AbstractStatement other = (AbstractStatement) obj;
-        return Objects.equals(getContent(), other.getContent());
+        return Objects.equals(getContentHash(), other.getContentHash());
     }
 
+    protected void updateContent() {
+        setContentHash(DigestUtils.md5DigestAsHex(getContent().getBytes()));
+    }
 
 }

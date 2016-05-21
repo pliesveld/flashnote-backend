@@ -1,7 +1,7 @@
 package com.pliesveld.flashnote.domain;
 
 import com.pliesveld.flashnote.spring.BlankEntityTestAnnotations;
-import org.junit.After;
+import org.hibernate.Hibernate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -10,23 +10,17 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @BlankEntityTestAnnotations
 @Transactional
-public class QuestionBankFlashCardDeleteTest extends AbstractDomainEntityUnitTest
+final public class QuestionBankFlashCardDeleteTest extends AbstractTransactionalDomainEntityUnitTest
 {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-
-    @PersistenceContext
-    EntityManager entityManager;
 
     Integer que_id;
     Integer ans_id;
@@ -36,14 +30,19 @@ public class QuestionBankFlashCardDeleteTest extends AbstractDomainEntityUnitTes
 
 
     @Before
-    public void setupEntities()
+    public void givenQuestionBank_givenFlashCard_givenSharedEntityQuestion_givenAnswer()
     {
         FlashCard flashCard = flashcardBean();
         entityManager.persist(flashCard);
+        assertEntityHasState(flashCard, EntityState.PERSISTENT);
+
 
         fc_id = flashCard.getId();
         que_id = fc_id.getQuestionId();
         ans_id = fc_id.getAnswerId();
+
+        assertEntityHasState(flashCard.getQuestion(),EntityState.PERSISTENT);
+        assertEntityHasState(flashCard.getAnswer(),EntityState.PERSISTENT);
 
         Category category = this.categoryBean();
         category = this.categoryRepository.save(category);
@@ -53,6 +52,9 @@ public class QuestionBankFlashCardDeleteTest extends AbstractDomainEntityUnitTes
         bank.add(flashCard.getQuestion());
         bank.setCategory(category);
         bank = this.questionBankRepository.save(bank);
+
+        assertEntityHasState(bank,EntityState.PERSISTENT);
+
         qb_id = bank.getId();
 
         entityManager.flush();
@@ -60,13 +62,25 @@ public class QuestionBankFlashCardDeleteTest extends AbstractDomainEntityUnitTes
     }
 
     @Test
-    public void testEntitySanity()
+    public void whenContext_thenCorrect()
+    {
+        assertNotNull(fc_id);
+        assertNotNull(que_id);
+        assertNotNull(ans_id);
+        assertNotNull(qb_id);
+    }
+
+    @Test
+    public void whenEntityCount_thenCorrect()
     {
         this.assertQuestionRepositoryCount(1);
         this.assertAnswerRepositoryCount(1);
         this.assertQuestionBankRepositoryCount(1);
+    }
 
-
+    @Test
+    public void whenEntityReferenceLoad_thenCorrect()
+    {
         Question que = questionRepository.findOne(que_id);
         assertNotNull(que);
         assertTrue(questionBankRepository.findOne(qb_id).getQuestions().contains(que));
@@ -75,34 +89,27 @@ public class QuestionBankFlashCardDeleteTest extends AbstractDomainEntityUnitTes
         assertTrue(fc.getQuestion().equals(que));
     }
 
-    @After
-    public void flushAfter()
-    {
-        entityManager.flush();
-    }
-
-
     @Test
-    public void testQuestionRemovalFKViolation() {
+    public void whenQuestionRemoveAll_thenFKViolation() {
         thrown.expect(PersistenceException.class);
         questionRepository.deleteAll();
     }
 
     @Test
-    public void testAnswerRemovalFKViolation() {
+    public void whenAnswerRemoveAll_thenFKViolation() {
         thrown.expect(PersistenceException.class);
         answerRepository.deleteAll();
     }
 
     @Test
-    public void testAnswerRemoval()
+    public void givenFlashCardRemoveAll_whenAnswerRemoveAll_thenCorrect()
     {
         flashCardRepository.deleteAll();
         answerRepository.deleteAll();
     }
 
     @Test
-    public void testFlashcardQuestionRemovalFKViolation()
+    public void givenFlashCardRemoveAll_whenQuestionRemoveAll_thenFKViolation()
     {
         thrown.expect(PersistenceException.class);
         flashCardRepository.deleteAll();
@@ -110,28 +117,37 @@ public class QuestionBankFlashCardDeleteTest extends AbstractDomainEntityUnitTes
     }
 
     @Test
-    public void testFlashCardRemoval() {
+    public void whenFlashCardRemoveAll_thenCorrect() {
+        enableSQL();
         flashCardRepository.deleteAll();
     }
 
     @Test
-    public void testCategoryRemovalFKViolation() {
+    public void whenCategoryRemoveAll_thenFKViolation() {
         thrown.expect(PersistenceException.class);
         categoryRepository.deleteAll();
     }
 
     @Test
-    public void testCategory() {
+    public void givenBankRemoveAll_whenCategoryRemoveAll_thenCorrect() {
         questionBankRepository.deleteAll();
         categoryRepository.deleteAll();
     }
 
     @Test
-    public void testRemoveRepoQuestionBank() {
+    public void whenBankRemoveAll_thenCorrect() {
         questionBankRepository.deleteAll();
     }
 
 
+    @Test
+    public void whenFlashCardRemoveByReference_thenCorrect() {
 
+        enableSQL();
 
+        FlashCard fc = flashCardRepository.getOne(fc_id);
+        assertFalse(Hibernate.isInitialized(fc));
+        entityManager.remove(fc);
+
+    }
 }
