@@ -8,11 +8,13 @@ import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.model.json.request.PasswordResetRequestJson;
 import com.pliesveld.flashnote.model.json.request.RegistrationRequestJson;
 import com.pliesveld.flashnote.model.json.response.RegistrationResponseJson;
+import com.pliesveld.flashnote.security.OnRegistrationCompleteEvent;
 import com.pliesveld.flashnote.service.AccountRegistrationService;
 import com.pliesveld.flashnote.service.StudentService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,10 +34,13 @@ public class RegistrationController {
     private static final Logger LOG = LogManager.getLogger();
 
     @Autowired
-    StudentService studentService;
+    private StudentService studentService;
 
     @Autowired
-    AccountRegistrationService registrationService;
+    private AccountRegistrationService registrationService;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     @RequestMapping(path = "/sign-up", method = RequestMethod.OPTIONS)
     @CrossOrigin
@@ -101,6 +106,7 @@ public class RegistrationController {
         Student student = registrationService.processRegistrationConfirmation(token);
         if(student != null)
         {
+            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(student));
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
