@@ -1,6 +1,5 @@
 package com.pliesveld.flashnote.repository;
 
-import com.pliesveld.flashnote.domain.Question;
 import com.pliesveld.flashnote.spring.CustomRepositoryFactoryBeanSettings;
 import com.pliesveld.flashnote.spring.CustomRepositoryPopulatorFactoryBean;
 import com.pliesveld.flashnote.spring.Profiles;
@@ -19,44 +18,40 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
-import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextHierarchy({
         @ContextConfiguration(classes = { SpringDataTestConfig.class }, loader = AnnotationConfigContextLoader.class),
-        @ContextConfiguration(classes = { RepositoryQuestionsTest.class }, loader = AnnotationConfigContextLoader.class)
+        @ContextConfiguration(classes = { RepositoryFlashcardTest.class }, loader = AnnotationConfigContextLoader.class)
 })
 @DirtiesContext
-public class RepositoryQuestionsTest extends AbstractTransactionalRepositoryUnitTest {
+public class RepositoryFlashcardTest extends AbstractTransactionalRepositoryUnitTest {
     private static final Logger LOG = LogManager.getLogger();
 
     @Bean(name = "populator")
     CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean(CustomRepositoryFactoryBeanSettings customRepositoryFactoryBeanSettings)
     {
         CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean = new CustomRepositoryPopulatorFactoryBean(customRepositoryFactoryBeanSettings);
-        customRepositoryPopulatorFactoryBean.setResources(new Resource[]{ new ClassPathResource("test-data-questions.json", this.getClass()) });
+        customRepositoryPopulatorFactoryBean.setResources(new Resource[]{ new ClassPathResource("test-data-flashcards.json", this.getClass()) });
         return customRepositoryPopulatorFactoryBean;
     }
 
     @Test
+    @DirtiesContext
     public void testLoadRepositoryFromJson()
     {
-        assertTrue(questionRepository.count() > 0);
-        assertEquals(3, questionRepository.count());
+        assertEquals(1, questionRepository.count());
+        assertEquals(1, answerRepository.count());
+        assertEquals(1, flashCardRepository.count());
     }
 
     @Test
-    @Transactional
-    @DirtiesContext
-    public void givenQuestion_whenChangingTitle_thenPersisted()
+    public void whenPrintContents()
     {
-        Question question = questionRepository.findOne(1);
-        assertNotNull(question);
-        debug(question);
-        question.setTitle("Change title");
+        flashCardRepository.findAll().forEach(AbstractTransactionalRepositoryUnitTest::debug);
     }
 }
 

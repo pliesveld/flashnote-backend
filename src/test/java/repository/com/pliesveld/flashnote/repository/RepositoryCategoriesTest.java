@@ -1,5 +1,6 @@
 package com.pliesveld.flashnote.repository;
 
+import com.pliesveld.flashnote.spring.CustomRepositoryFactoryBeanSettings;
 import com.pliesveld.flashnote.spring.CustomRepositoryPopulatorFactoryBean;
 import com.pliesveld.flashnote.spring.Profiles;
 import com.pliesveld.flashnote.spring.SpringDataTestConfig;
@@ -33,9 +34,9 @@ public class RepositoryCategoriesTest extends AbstractRepositoryUnitTest {
     private static final Logger LOG = LogManager.getLogger();
 
     @Bean(name = "populator")
-    CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean()
+    CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean(CustomRepositoryFactoryBeanSettings customRepositoryFactoryBeanSettings)
     {
-        CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean = new CustomRepositoryPopulatorFactoryBean();
+        CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean = new CustomRepositoryPopulatorFactoryBean(customRepositoryFactoryBeanSettings);
         customRepositoryPopulatorFactoryBean.setResources(new Resource[]{ new ClassPathResource("test-data-category.json", this.getClass()) });
         return customRepositoryPopulatorFactoryBean;
     }

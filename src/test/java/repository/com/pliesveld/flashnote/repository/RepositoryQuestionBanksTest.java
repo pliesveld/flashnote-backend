@@ -2,10 +2,11 @@ package com.pliesveld.flashnote.repository;
 
 import com.pliesveld.flashnote.domain.QuestionBank;
 import com.pliesveld.flashnote.repository.specifications.QuestionBankSpecification;
+import com.pliesveld.flashnote.spring.CustomRepositoryFactoryBeanSettings;
 import com.pliesveld.flashnote.spring.CustomRepositoryPopulatorFactoryBean;
 import com.pliesveld.flashnote.spring.Profiles;
 import com.pliesveld.flashnote.spring.SpringDataTestConfig;
-import com.pliesveld.tests.AbstractRepositoryUnitTest;
+import com.pliesveld.tests.AbstractTransactionalRepositoryUnitTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.context.annotation.Bean;
@@ -31,37 +32,46 @@ import static org.junit.Assert.assertTrue;
         @ContextConfiguration(classes = { RepositoryQuestionBanksTest.class }, loader = AnnotationConfigContextLoader.class)
 })
 @DirtiesContext
-
-public class RepositoryQuestionBanksTest extends AbstractRepositoryUnitTest {
+public class RepositoryQuestionBanksTest extends AbstractTransactionalRepositoryUnitTest {
 
     @Bean(name = "populator")
-    CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean()
+    CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean(CustomRepositoryFactoryBeanSettings customRepositoryFactoryBeanSettings)
     {
-        CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean = new CustomRepositoryPopulatorFactoryBean();
-        customRepositoryPopulatorFactoryBean.setResources(new Resource[]{ new ClassPathResource("test-data-question-bank.json", this.getClass()) });
+        CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean = new CustomRepositoryPopulatorFactoryBean(customRepositoryFactoryBeanSettings);
+        customRepositoryPopulatorFactoryBean.setResources(new Resource[]{ new ClassPathResource("test-data-question-bank-ref.json", this.getClass()) });
         return customRepositoryPopulatorFactoryBean;
     }
 
     @Test
+    @Transactional
     public void testLoadRepositoryFromJson()
     {
-        assertTrue(questionRepository.count() > 0);
-        assertTrue(categoryRepository.count() > 0);
-        assertTrue(questionBankRepository.count() > 0);
+        long que_count = questionRepository.count();
+        long cat_count = categoryRepository.count();
+        long bank_count = questionBankRepository.count();
+
+        LOG_SQL.info("Question count: {}", que_count);
+        LOG_SQL.info("Category count: {}", cat_count);
+        LOG_SQL.info("QuestionBank count: {}", bank_count);
+
+        assertTrue(que_count > 0);
+        assertTrue(cat_count > 0);
+        assertTrue(bank_count > 0);
 
     }
 
     @Test
+    @Transactional
     public void testFindQuestionBank()
     {
-        LOG_SQL.info("Categories");
-        categoryRepository.findAll().forEach(LOG_SQL::info);
+        LOG_SQL.info("Listing All Categories");
+        categoryRepository.findAll().forEach(AbstractTransactionalRepositoryUnitTest::debug);
 
-        LOG_SQL.info("QuestionBank");
-        questionBankRepository.findAll().forEach(LOG_SQL::info);
+        LOG_SQL.info("Listing All QuestionBanks");
+        questionBankRepository.findAll().forEach(AbstractTransactionalRepositoryUnitTest::debug);
 
-        LOG_SQL.info("Questions");
-        questionRepository.findAll().forEach(LOG_SQL::info);
+        LOG_SQL.info("Listing All Questions");
+        questionRepository.findAll().forEach(AbstractTransactionalRepositoryUnitTest::debug);
     }
 
 
@@ -69,7 +79,7 @@ public class RepositoryQuestionBanksTest extends AbstractRepositoryUnitTest {
     @Transactional
     public void testQuestionBankSpec() {
         enableSQL();
-        Specification<QuestionBank> spec = QuestionBankSpecification.descriptionContainsIgnoreCase("FINDME");
+        Specification<QuestionBank> spec = QuestionBankSpecification.descriptionContainsIgnoreCase("");
         List<QuestionBank> qb = questionBankRepository.findAll(spec);
 
         LOG_SQL.debug("QuestionBanks returned: {}", qb.size());
