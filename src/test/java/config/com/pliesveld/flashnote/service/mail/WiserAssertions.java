@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.mail;
+package com.pliesveld.flashnote.service.mail;
 
 import org.subethamail.wiser.Wiser;
 import org.subethamail.wiser.WiserMessage;
