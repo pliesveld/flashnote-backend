@@ -38,6 +38,9 @@
         <subethamail.version>3.1.7</subethamail.version>
         <org.hamcrest.version>1.3</org.hamcrest.version>
 
+        <!-- redirect surefire tests std out to file -->
+        <test.redirect>false</test.redirect>
+
         <rest-assured.version>2.9.0</rest-assured.version>
         <start-class>com.pliesveld.flashnote.FlashnoteContainerApplication</start-class>
     </properties>
@@ -214,6 +217,15 @@
             <!--<version>${hibernate.version}</version>-->
             <!--<scope>provided</scope>-->
         <!--</dependency>-->
+
+        <!-- static compile-time bytecode enhancement tools -->
+        <dependency>
+            <groupId>org.hibernate.orm.tooling</groupId>
+            <artifactId>hibernate-enhance-maven-plugin</artifactId>
+            <version>${hibernate.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
 
         <!-- Cache -->
         <dependency>
@@ -414,6 +426,27 @@
                 </dependencies>
             </plugin>
             <plugin>
+                <groupId>org.hibernate.orm.tooling</groupId>
+                <artifactId>hibernate-enhance-maven-plugin</artifactId>
+                <version>${hibernate.version}</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.hibernate.orm.tooling</groupId>
+                        <artifactId>hibernate-enhance-maven-plugin</artifactId>
+                        <version>${hibernate.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <plugin>
                 <inherited>true</inherited>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -445,7 +478,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                    <redirectTestOutputToFile>${test.redirect}</redirectTestOutputToFile>
                 </configuration>
             </plugin>
         </plugins>
