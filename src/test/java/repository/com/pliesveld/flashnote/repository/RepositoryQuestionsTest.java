@@ -51,7 +51,6 @@ public class RepositoryQuestionsTest extends AbstractPopulatedRepositoryUnitTest
         Question question = questionRepository.findOne(1);
         assertNotNull(question);
         debug(question);
-        question.setTitle("Change title");
     }
 }
 

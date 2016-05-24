@@ -63,8 +63,7 @@ public class Deck extends DomainBaseEntity<Integer> implements Serializable
     private Category category;
 
     @NotNull
-    @Column(name = "OWNER_ID")
-    @Basic(optional = false)
+    @Column(name = "OWNER_ID", nullable = false)
     int owner;
 
     protected Deck() {
