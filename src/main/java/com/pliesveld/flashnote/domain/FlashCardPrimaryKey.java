@@ -9,11 +9,11 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
- * Created by happs on 1/13/16.
+ * @author Patrick Liesveld
  */
 
 @Embeddable
-public class FlashCardPrimaryKey implements Serializable, Comparable<FlashCardPrimaryKey> {
+public class FlashCardPrimaryKey implements Serializable {
 
     @NotNull
     @Column(name = "QUESTION_ID", nullable = false)
@@ -65,23 +65,6 @@ public class FlashCardPrimaryKey implements Serializable, Comparable<FlashCardPr
         int result = questionId != null ? questionId.hashCode() : 0;
         result = 31 * result + (answerId != null ? answerId.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public int compareTo(FlashCardPrimaryKey o) {
-        if(this.questionId == null || this.answerId == null)
-        {
-            if(o.questionId == null || o.answerId == null)
-                return 0;
-            return -1;
-        }
-        
-        if(o.questionId == null || o.answerId == null)
-            return 1;
-        
-        if(this.questionId.equals(o.questionId))
-            return this.answerId.compareTo(o.answerId);
-        return this.questionId.compareTo(o.questionId);
     }
 
     @Override

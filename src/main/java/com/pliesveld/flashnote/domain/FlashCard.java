@@ -13,7 +13,7 @@ import java.util.Objects;
 @Entity
 @EntityListeners(value = { LogEntityListener.class })
 @Table(name = "FLASHCARD")
-public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey> implements Comparable<FlashCard>
+public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey>
 {
     private static final Logger LOG = LogManager.getLogger();
 
@@ -21,7 +21,7 @@ public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey> implements 
     private FlashCardPrimaryKey id = new FlashCardPrimaryKey();
 
 //    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH},
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH},
+    @ManyToOne(cascade = {CascadeType.MERGE},
             targetEntity = com.pliesveld.flashnote.domain.Question.class)
     @JoinColumn(name = "QUESTION_ID",
             nullable = false, insertable = false, updatable = false,
@@ -29,7 +29,7 @@ public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey> implements 
     @MapsId("questionId")
     private Question question;
 
-    @ManyToOne(cascade = {CascadeType.ALL},
+    @ManyToOne(cascade = {CascadeType.MERGE,CascadeType.REMOVE},
             targetEntity = com.pliesveld.flashnote.domain.Answer.class)
     @JoinColumn(name = "ANSWER_ID",
             nullable = false, insertable = false, updatable = false,
@@ -77,7 +77,7 @@ public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey> implements 
 
     @Override
     public int hashCode() {
-        return Objects.hash(question, answer);
+        return Objects.hash(getId());
     }
 
     @Override
@@ -89,23 +89,9 @@ public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey> implements 
             return false;
         }
         final FlashCard other = (FlashCard) obj;
-        return Objects.equals(getQuestion(), other.getQuestion()) && Objects.equals(getAnswer(), other.getAnswer());
+        return Objects.equals(getId(), other.getId());
+//        return Objects.equals(getQuestion(), other.getQuestion()) && Objects.equals(getAnswer(), other.getAnswer());
     }
 
-    @Override
-    public int compareTo(FlashCard o) {
-        if(this.id == null)
-        {
-            if(o.id == null)
-                return 0;
-            return 1;
-        }
-        
-        if(o.id == null)
-        {
-            return -1;
-        }
-        
-        return this.id.compareTo(o.id);
-    }
+
 }

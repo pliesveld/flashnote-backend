@@ -2,8 +2,10 @@ package com.pliesveld.flashnote.service;
 
 import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.repository.RepositoryCategoriesTest;
+import com.pliesveld.flashnote.spring.Profiles;
 import com.pliesveld.flashnote.spring.SpringDataTestConfig;
 import com.pliesveld.flashnote.spring.SpringServiceTestConfig;
+import com.pliesveld.tests.AbstractTransactionalRepositoryUnitTest;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -11,18 +13,21 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+@ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextHierarchy({
         @ContextConfiguration(classes = { SpringDataTestConfig.class }, loader = AnnotationConfigContextLoader.class),
         @ContextConfiguration(classes = { SpringServiceTestConfig.class }, loader = AnnotationConfigContextLoader.class),
         @ContextConfiguration(classes = { RepositoryCategoriesTest.class }, loader = AnnotationConfigContextLoader.class)
 })
-public class DeckServiceTest extends RepositoryCategoriesTest {
+public class DeckServiceTest extends AbstractTransactionalRepositoryUnitTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -38,8 +43,14 @@ public class DeckServiceTest extends RepositoryCategoriesTest {
     @Before
     public void givenExistingCategory()
     {
-        Category category = categoryRepository.findAll().iterator().next();
+        Category category = findFirstCategory();
         category_id = category.getId();
+    }
+
+    @Transactional
+    private Category findFirstCategory() {
+        Category category = categoryRepository.findAll().iterator().next();
+        return category;
     }
 
     @Test
