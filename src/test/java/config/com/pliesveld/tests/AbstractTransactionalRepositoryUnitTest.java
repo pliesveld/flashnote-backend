@@ -10,7 +10,7 @@ import javax.persistence.PersistenceContext;
 
 @Component
 @TestExecutionListeners(listeners = LogHibernateTestExecutionListener.class, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
-public class AbstractTransactionalRepositoryUnitTest extends AbstractRepositoryUnitTest
+public abstract class AbstractTransactionalRepositoryUnitTest extends AbstractRepositoryUnitTest
 {
     @PersistenceContext
     protected EntityManager entityManager;
@@ -20,7 +20,7 @@ public class AbstractTransactionalRepositoryUnitTest extends AbstractRepositoryU
     {
         if(entityManager != null && entityManager.isJoinedToTransaction())
         {
-            LOG_SQL.debug("Flushing Persistence Context");
+            LOG_SQL.trace("Flushing Persistence Context");
             entityManager.flush();
         }
     }

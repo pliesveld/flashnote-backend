@@ -12,13 +12,14 @@ import com.pliesveld.flashnote.logging.Markers;
 import com.pliesveld.flashnote.spring.CustomJackson2ResouceReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.data.repository.init.Jackson2RepositoryPopulatorFactoryBean;
 import org.springframework.data.repository.init.ResourceReader;
 import org.springframework.data.repository.init.ResourceReaderRepositoryPopulator;
 import org.springframework.util.Assert;
 
-public class CustomRepositoryPopulatorFactoryBean extends Jackson2RepositoryPopulatorFactoryBean {
+public class CustomRepositoryPopulatorFactoryBean extends Jackson2RepositoryPopulatorFactoryBean implements InitializingBean {
     private static final Logger LOG = LogManager.getLogger();
     private Resource[] recources;
 
@@ -72,9 +73,10 @@ public class CustomRepositoryPopulatorFactoryBean extends Jackson2RepositoryPopu
         return populator;
     }
 
-
-
-
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        super.afterPropertiesSet();
+    }
 
 //
 //    @Override

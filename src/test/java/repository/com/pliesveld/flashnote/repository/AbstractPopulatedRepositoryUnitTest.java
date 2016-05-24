@@ -1,28 +1,75 @@
 package com.pliesveld.flashnote.repository;
 
-import com.pliesveld.flashnote.spring.repository.CustomRepositoryPopulatorFactoryBean;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
+import com.pliesveld.flashnote.spring.Profiles;
+import com.pliesveld.flashnote.spring.repository.RepositoryPopulatorConfig;
+import com.pliesveld.flashnote.spring.SpringDataTestConfig;
 import com.pliesveld.tests.AbstractTransactionalRepositoryUnitTest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.junit.Test;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ContextHierarchy;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
-@Configuration
-public class AbstractPopulatedRepositoryUnitTest extends AbstractTransactionalRepositoryUnitTest {
+import java.io.Serializable;
+
+@ActiveProfiles(Profiles.INTEGRATION_TEST)
+@ContextHierarchy(value = {
+        @ContextConfiguration(classes = { SpringDataTestConfig.class }, loader = AnnotationConfigContextLoader.class),
+        @ContextConfiguration(name = "REPOSITORY", classes = { DefaultRepositorySettingsConfig.class }, loader = AnnotationConfigContextLoader.class),
+        @ContextConfiguration(classes = { RepositoryPopulatorConfig.class }, loader = AnnotationConfigContextLoader.class)
+
+})
+public abstract class AbstractPopulatedRepositoryUnitTest extends AbstractTransactionalRepositoryUnitTest {
     private static final Logger LOG = LogManager.getLogger();
 
-    @Bean(name = "populator")
-    protected CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean()
-    {
-        CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean = new CustomRepositoryPopulatorFactoryBean();
-        customRepositoryPopulatorFactoryBean.setResources(this.repositoryProperties());
-        return customRepositoryPopulatorFactoryBean;
+
+    protected <T extends DomainBaseEntity<ID>, ID extends Serializable> void debugRepository(JpaRepository<T,ID> repository) {
+        repository.findAll().forEach(this::debugEntity);
     }
 
-    protected Resource[] repositoryProperties() {
-        return new Resource[]{ new ClassPathResource("test-data-blank.json", this.getClass()) };
+    protected void debugRepositoryCount() {
+        long que_count = questionRepository.count();
+        long ans_count = answerRepository.count();
+        long fc_count = flashCardRepository.count();
+        long cat_count = categoryRepository.count();
+        long deck_count = deckRepository.count();
+        long bank_count = questionBankRepository.count();
+
+        LOG_SQL.info("Question count: {}", que_count);
+        LOG_SQL.info("Answer count: {}", ans_count);
+        LOG_SQL.info("FlashCard count: {}", fc_count);
+        LOG_SQL.info("Category count: {}", cat_count);
+        LOG_SQL.info("Deck count: {}", deck_count);
+        LOG_SQL.info("QuestionBank count: {}", bank_count);
+    }
+
+
+    protected void debugRepository() {
+        LOG_SQL.info("Displaying Repositories:");
+
+        LOG_SQL.info("Categories");
+        categoryRepository.findAll().forEach(this::debugEntity);
+
+        LOG_SQL.info("Questions");
+        questionRepository.findAll().forEach(this::debugEntity);
+
+        LOG_SQL.info("Bank");
+        questionBankRepository.findAll().forEach(this::debugEntity);
+
+        LOG_SQL.info("Answers");
+        answerRepository.findAll().forEach(this::debugEntity);
+
+        LOG_SQL.info("Flashcards");
+        flashCardRepository.findAll().forEach(this::debugEntity);
+
+        LOG_SQL.info("Deck");
+        deckRepository.findAll().forEach(this::debugEntity);
+
     }
 
 }

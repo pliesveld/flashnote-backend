@@ -14,24 +14,24 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @Component
-public class AbstractRepositoryUnitTest
+public abstract class AbstractRepositoryUnitTest
 {
     protected static final Logger LOG_SQL = LogManager.getLogger("org.hibernate.SQL");
 
-    private final static String LOG_SQL_LEVEL = "LOG_SQL_LEVEL";
-    private final static String LOG_ENTITY_LEVEL = "LOG_ENTITY_LEVEL";
+    private final static String LOG_SQL_TAG = "LOG_SQL_TAG";
+    private final static String LOG_ENTITY_TAG = "LOG_ENTITY_TAG";
 
     protected static void disableSQL()
     {
-        System.setProperty(LOG_SQL_LEVEL, "ERROR");
-        System.setProperty(LOG_ENTITY_LEVEL, "ERROR");
+        System.setProperty(LOG_SQL_TAG, "ERROR");
+        System.setProperty(LOG_ENTITY_TAG, "ERROR");
         ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
     }
 
     protected static void enableSQL()
     {
-        System.setProperty(LOG_SQL_LEVEL, "DEBUG");
-        System.setProperty(LOG_ENTITY_LEVEL, "DEBUG");
+        System.setProperty(LOG_SQL_TAG, "DEBUG");
+        System.setProperty(LOG_ENTITY_TAG, "DEBUG");
         ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
     }
 

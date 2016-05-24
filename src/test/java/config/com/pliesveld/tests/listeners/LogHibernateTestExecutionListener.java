@@ -38,17 +38,26 @@ import org.springframework.test.context.support.AbstractTestExecutionListener;
 
 public class LogHibernateTestExecutionListener extends AbstractTestExecutionListener {
     private static final Logger LOG = LogManager.getLogger("org.hibernate.SQL");
-    private final String LOG_TAG = "LOG_SQL_LEVEL";
+    private static final String LOG_SQL_TAG = "LOG_SQL_LEVEL";
 
-    public void beforeTestClass(TestContext testContext) throws Exception {
-        System.setProperty(LOG_TAG, "ERROR");
+    protected static void disableSQL()
+    {
+        System.setProperty(LOG_SQL_TAG, "WARN");
         ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
     }
 
-    public void beforeTestMethod(TestContext testContext) throws Exception {
-        System.setProperty(LOG_TAG, "DEBUG");
-        ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
+    protected static void enableSQL()
+    {
+//        System.setProperty(LOG_SQL_TAG, "DEBUG");
+//        ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
+    }
 
+    public void beforeTestClass(TestContext testContext) throws Exception {
+        disableSQL();
+    }
+
+    public void beforeTestMethod(TestContext testContext) throws Exception {
+        enableSQL();
         LOG.debug("Executing {}#{}",testContext.getTestClass().getName(),testContext.getTestMethod().getName());
     }
 
@@ -78,7 +87,7 @@ public class LogHibernateTestExecutionListener extends AbstractTestExecutionList
                     last = cause;
             }
 
-            LOG.debug(last.toString());
+//            LOG.debug(last.toString());
             if(thrown.getClass() != AssertionError.class)
                 thrown.setStackTrace(new StackTraceElement[]{});
 
@@ -89,8 +98,7 @@ public class LogHibernateTestExecutionListener extends AbstractTestExecutionList
             );
 
         }
-        System.setProperty(LOG_TAG, "ERROR");
-        ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
+        disableSQL();
     }
 
 }

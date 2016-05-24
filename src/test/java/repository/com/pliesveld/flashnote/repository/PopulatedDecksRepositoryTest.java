@@ -1,9 +1,10 @@
 package com.pliesveld.flashnote.repository;
 
 import com.pliesveld.flashnote.spring.Profiles;
-import com.pliesveld.flashnote.spring.SpringDataTestConfig;
+import com.pliesveld.flashnote.spring.repository.RepositorySettings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -21,36 +22,19 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextHierarchy({
-        @ContextConfiguration(classes = { SpringDataTestConfig.class }, loader = AnnotationConfigContextLoader.class),
-        @ContextConfiguration(classes = { RepositoryDeckTest.class }, loader = AnnotationConfigContextLoader.class)
+        @ContextConfiguration(name = "REPOSITORY", classes = { PopulatedDecksRepositoryTest.class }, loader = AnnotationConfigContextLoader.class)
 })
 @DirtiesContext
-@Configuration
-public class RepositoryDeckTest extends AbstractPopulatedRepositoryUnitTest {
+public class PopulatedDecksRepositoryTest extends AbstractPopulatedRepositoryUnitTest {
 
-    @Override
-    protected Resource[] repositoryProperties() {
-        return new Resource[]{ new ClassPathResource("test-data-deck.json", this.getClass()) };
+    @Bean
+    public RepositorySettings repositorySettings() {
+        RepositorySettings repositorySettings = new RepositorySettings(new Resource[] {new ClassPathResource("test-data-deck.json", this.getClass()) });
+        return repositorySettings;
     }
 
     @Test
-    @Transactional
-    public void whenContextLoad_thenCorrect()
-    {
-    }
-
-    @Test
-    @Transactional
-    public void givenContextLoad_whenLoadingBySpecifiedId_thenCorrect()
-    {
-        assertNotNull(questionRepository.findOne(10000));
-        assertNotNull(answerRepository.findOne(20000));
-    }
-
-    @Test
-    @Transactional
-    public void testLoadRepositoryFromJson()
-    {
+    public void whenContextLoad_thenCorrect() {
         long que_count = questionRepository.count();
         long ans_count = answerRepository.count();
         long cat_count = categoryRepository.count();
@@ -67,23 +51,14 @@ public class RepositoryDeckTest extends AbstractPopulatedRepositoryUnitTest {
         assertTrue(ans_count > 0);
         assertTrue(cat_count > 0);
         assertTrue(deck_count > 0);
+
     }
 
     @Test
     @Transactional
     public void testFindDecks()
     {
-        LOG_SQL.info("Categories");
-        categoryRepository.findAll().forEach(this::debugEntity);
-
-        LOG_SQL.info("Deck");
-        deckRepository.findAll().forEach(this::debugEntity);
-
-        LOG_SQL.info("Questions");
-        questionRepository.findAll().forEach(this::debugEntity);
-
-        LOG_SQL.info("Answers");
-        answerRepository.findAll().forEach(this::debugEntity);
+        debugRepository();
     }
 
 

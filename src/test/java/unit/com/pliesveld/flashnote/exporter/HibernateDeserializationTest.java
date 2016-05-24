@@ -8,6 +8,7 @@ import com.pliesveld.flashnote.serializer.HibernateAwareObjectMapperImpl;
 import com.pliesveld.flashnote.spring.DefaultEntityTestAnnotations;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContextAware;
@@ -113,6 +114,12 @@ public class HibernateDeserializationTest extends AbstractDomainEntityUnitTest i
 
     Serializable student_id = null;
     String student_name = "";
+
+    @Test
+    public void whenContextLoad_thenCorrect()
+    {
+
+    }
 
 //    @Test
 //    public void testFlashCard() throws IOException {

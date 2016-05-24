@@ -3,10 +3,10 @@ package com.pliesveld.flashnote.repository;
 import com.pliesveld.flashnote.domain.QuestionBank;
 import com.pliesveld.flashnote.repository.specifications.QuestionBankSpecification;
 import com.pliesveld.flashnote.spring.Profiles;
-import com.pliesveld.flashnote.spring.SpringDataTestConfig;
-import com.pliesveld.tests.AbstractTransactionalRepositoryUnitTest;
+import com.pliesveld.flashnote.spring.repository.RepositorySettings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -26,23 +26,20 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextHierarchy({
-        @ContextConfiguration(classes = { SpringDataTestConfig.class }, loader = AnnotationConfigContextLoader.class),
-        @ContextConfiguration(classes = { RepositoryQuestionBanksTest.class }, loader = AnnotationConfigContextLoader.class)
+        @ContextConfiguration(name = "REPOSITORY", classes = { PopulatedQuestionBanksRepositoryTest.class }, loader = AnnotationConfigContextLoader.class)
 })
 @DirtiesContext
-@Configuration
-public class RepositoryQuestionBanksTest extends AbstractPopulatedRepositoryUnitTest {
+public class PopulatedQuestionBanksRepositoryTest extends AbstractPopulatedRepositoryUnitTest {
 
-    @Override
-    protected Resource[] repositoryProperties() {
-        return new Resource[]{ new ClassPathResource("test-data-question-bank.json", this.getClass()) };
+
+    @Bean
+    public RepositorySettings repositorySettings() {
+        RepositorySettings repositorySettings = new RepositorySettings(new Resource[] {new ClassPathResource("test-data-question-bank-ref.json", this.getClass()) });
+        return repositorySettings;
     }
 
     @Test
-    @Transactional
-    @DirtiesContext
-
-    public void testLoadRepositoryFromJson()
+    public void whenContextLoad_thenCorrect()
     {
         long que_count = questionRepository.count();
         long cat_count = categoryRepository.count();
@@ -55,23 +52,6 @@ public class RepositoryQuestionBanksTest extends AbstractPopulatedRepositoryUnit
         assertTrue(que_count > 0);
         assertTrue(cat_count > 0);
         assertTrue(bank_count > 0);
-
-    }
-
-    @Test
-    @Transactional
-    @DirtiesContext
-
-    public void testFindQuestionBank()
-    {
-        LOG_SQL.info("Listing All Categories");
-        categoryRepository.findAll().forEach(AbstractTransactionalRepositoryUnitTest::debug);
-
-        LOG_SQL.info("Listing All QuestionBanks");
-        questionBankRepository.findAll().forEach(AbstractTransactionalRepositoryUnitTest::debug);
-
-        LOG_SQL.info("Listing All Questions");
-        questionRepository.findAll().forEach(AbstractTransactionalRepositoryUnitTest::debug);
     }
 
 

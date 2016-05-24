@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @DefaultServiceTestAnnotations
-public class CardServiceTest extends AbstractRepositoryUnitTest {
+public class CardServiceTest extends AbstractTransactionalServiceUnitTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();

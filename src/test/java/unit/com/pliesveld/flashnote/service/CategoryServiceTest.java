@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,14 +24,11 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @DefaultServiceTestAnnotations
 @Transactional
-public class CategoryServiceTest {
+public class CategoryServiceTest extends AbstractTransactionalServiceUnitTest{
     private static final Logger LOG = LogManager.getLogger();
 
     @Autowired
     CategoryService categoryService;
-
-    @Autowired
-    CategoryRepository categoryRepository;
 
     @Test
     public void whenCategoryCreate_thenCorrect()
