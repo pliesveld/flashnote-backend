@@ -20,7 +20,12 @@
             <PatternLayout pattern="%msg%n"/>
         </Console>
         <Console name="CONSOLE_MINE" target="SYSTEM_OUT">
-            <PatternLayout pattern="%-5level %c{1.} %msg%n"/>
+            <PatternLayout alwaysWriteExceptions="false">
+                <MarkerPatternSelector defaultPattern="%highlight{%-5level}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=black, DEBUG=green bold, TRACE=blue} %-20C{1.} %msg%n">
+                    <PatternMatch key="DEBUG_IMPORTANT" pattern="%highlight{%n%-5level}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=black, DEBUG=green bold, TRACE=blue} %-12C{1.}%-8method %highlight{%msg%n%n}{FATAL=yellow, ERROR=yellow, WARN=yellow, INFO=yellow, DEBUG=yellow, TRACE=yellow}"/>
+                    <PatternMatch key="DEBUG_DETAIL" pattern="%highlight{%n%-5level}{FATAL=red blink, ERROR=red, WARN=green bold, INFO=black, DEBUG=green bold, TRACE=blue} %-12C{1.}%-8method %highlight{%msg%n}{FATAL=green, ERROR=green, WARN=green, INFO=green, DEBUG=green, TRACE=green}"/>
+                </MarkerPatternSelector>
+            </PatternLayout>
         </Console>
     </Appenders>
 
