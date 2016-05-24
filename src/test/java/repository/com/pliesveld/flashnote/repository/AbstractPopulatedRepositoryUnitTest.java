@@ -1,22 +1,17 @@
 package com.pliesveld.flashnote.repository;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import com.pliesveld.flashnote.spring.Profiles;
 import com.pliesveld.flashnote.spring.repository.RepositoryPopulatorConfig;
 import com.pliesveld.flashnote.spring.SpringDataTestConfig;
 import com.pliesveld.tests.AbstractTransactionalRepositoryUnitTest;
-import org.apache.http.util.Asserts;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.Test;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 
