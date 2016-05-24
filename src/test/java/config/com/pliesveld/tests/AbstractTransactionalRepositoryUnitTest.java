@@ -16,7 +16,7 @@ public class AbstractTransactionalRepositoryUnitTest extends AbstractRepositoryU
     protected EntityManager entityManager;
 
     @After
-    public void flushAfterTest()
+    public void flushAfter()
     {
         if(entityManager != null && entityManager.isJoinedToTransaction())
         {

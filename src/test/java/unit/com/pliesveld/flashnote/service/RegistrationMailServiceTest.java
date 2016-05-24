@@ -55,7 +55,7 @@ public class RegistrationMailServiceTest {
 	}
 	
 	@Test
-	public void registrationSendsEmail() throws Exception
+	public void whenMailTemplateSend_thenCorrect() throws Exception
 	{		
 		String recipient = UUID.randomUUID().toString() + "@example.com";
 		String confirmURL = "REGISTRATION TOKEN";

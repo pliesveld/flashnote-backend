@@ -8,6 +8,8 @@ import com.pliesveld.flashnote.repository.StudentDetailsRepository;
 import com.pliesveld.flashnote.repository.StudentRepository;
 import com.pliesveld.flashnote.spring.Profiles;
 import com.pliesveld.flashnote.spring.SpringMailServiceTestConfig;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,7 +29,7 @@ import static org.junit.Assert.assertNotNull;
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextConfiguration(classes = {SpringMailServiceTestConfig.class}, loader = AnnotationConfigContextLoader.class)
 public class AccountRegistrationTokenServiceTest {
-    private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger();
+    private static final Logger LOG = LogManager.getLogger();
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -40,8 +42,10 @@ public class AccountRegistrationTokenServiceTest {
 
     @Autowired
     StudentDetailsRepository studentDetailsRepository;
+
     @Autowired
     StudentRepository studentRepository;
+
     @Autowired
     RegistrationRepository registrationRepository;
 
@@ -55,7 +59,7 @@ public class AccountRegistrationTokenServiceTest {
     }
 
     @Test
-    public void accoutCreation()
+    public void whenAccountCreate_thenCorrect()
     {
         assertEquals(0, accountRegistrationService.countAccountRegistration());
         assertEquals(0, accountRegistrationService.countStudent());
@@ -67,18 +71,7 @@ public class AccountRegistrationTokenServiceTest {
     }
 
     @Test
-    public void accoutCreationDuplicate()
-    {
-        assertEquals(0, accountRegistrationService.countAccountRegistration());
-        assertEquals(0, accountRegistrationService.countStudent());
-        assertEquals(0, accountRegistrationService.countStudentDetails());
-        assertNotNull(accountRegistrationService.createStudent("Student2", "student2@example.com", "password"));
-        thrown.expect(StudentCreateException.class);
-        accountRegistrationService.createStudent("Student2", "student2@example.com", "password");
-    }
-
-    @Test
-    public void accountStudentEmailExistsRegistrationCreation()
+    public void whenAccountDuplicateCreate_thenException()
     {
         String name = "TESTUSER";
         String email = "unit-test@example.com";
@@ -95,7 +88,7 @@ public class AccountRegistrationTokenServiceTest {
 
 
     @Test
-    public void accountCreationAndRemoval()
+    public void givenAccountRegistration_whenRemove_thenCorrect()
     {
         Student student = accountRegistrationService.createStudent("Student1", "student@example.com", "password");
         assertNotNull(student);

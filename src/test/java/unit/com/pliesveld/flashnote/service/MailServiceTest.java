@@ -119,7 +119,7 @@ public class MailServiceTest extends AbstractRepositoryUnitTest {
 	}
 	
 	@Test
-	public void registrationServiceCreateFindExpired() throws Exception {
+	public void givenAccountExpired_whenPurge_thenCorrect() throws Exception {
 		Student student = new Student();
 		student.setEmail("newuser@example.com");
 		student.setPassword("new password");
@@ -165,7 +165,7 @@ public class MailServiceTest extends AbstractRepositoryUnitTest {
 	}
 		
 	@Test
-	public void registrationServiceCreateMultiple() {
+	public void givenAccountsMultiple_whenPurgeUnregisteredOnly_thenCorrect() {
 		AccountRegistrationToken registration1 = this.registrationExpiredBean(); // new account to be purged
 		AccountRegistrationToken registration2 = this.registrationExpiredBean(); // user account with expired registration, should not be purged
 		//AccountRegistrationToken registration3 = this.registrationBean(); // user account without matching registration
@@ -275,7 +275,7 @@ public class MailServiceTest extends AbstractRepositoryUnitTest {
 	}
 
 	@Test
-	public void registrationServiceVerify() {
+	public void givenNewAccount_whenRegistrationProcessed_thenCorrect() {
 		AccountRegistrationToken registration = this.registrationBean();
 		String token = registration.getToken();
 		

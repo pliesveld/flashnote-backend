@@ -33,7 +33,7 @@ public class CategoryServiceTest {
     CategoryRepository categoryRepository;
 
     @Test
-    public void categoryCreation()
+    public void whenCategoryCreate_thenCorrect()
     {
         Category category = new Category();
         category.setName("ROOT");
@@ -45,7 +45,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    public void categorySearch()
+    public void givenCategory_whenFindByName_thenCorrect()
     {
         Category category = new Category();
         category.setName("ROOT");
@@ -60,7 +60,7 @@ public class CategoryServiceTest {
     }
 
     @Test(expected = CategorySearchException.class)
-    public void invalidQueryTerms()
+    public void givenCategory_whenFindByInvalidName_thenException()
     {
         Category category = new Category();
         category.setName("ROOT");
@@ -75,7 +75,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    public void categoryCreationCascade()
+    public void givenCategory_whenCreateChildCategoryCascade_thenCorrect()
     {
         Category category = new Category();
         category.setName("ROOT");
@@ -91,7 +91,7 @@ public class CategoryServiceTest {
     }
 
     @Test
-    public void childCategories()
+    public void whenCreateChildCategoryMultiple_thenCorrect()
     {
         List<String> roots = Arrays.asList("ROOT1", "ROOT2","ROOT3","ROOT4");
 
