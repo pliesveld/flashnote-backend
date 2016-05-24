@@ -7,9 +7,14 @@ import com.pliesveld.flashnote.repository.RegistrationRepository;
 import com.pliesveld.flashnote.repository.StudentRepository;
 import com.pliesveld.flashnote.schema.Constants;
 import com.pliesveld.flashnote.spring.Profiles;
+import com.pliesveld.flashnote.spring.SpringDataTestConfig;
 import com.pliesveld.flashnote.spring.SpringMailServiceTestConfig;
+import com.pliesveld.flashnote.spring.SpringServiceTestConfig;
+import com.pliesveld.tests.AbstractRepositoryUnitTest;
+import com.pliesveld.tests.AbstractTransactionalRepositoryUnitTest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,14 +40,28 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
-@ContextConfiguration(classes = {SpringMailServiceTestConfig.class}, loader = AnnotationConfigContextLoader.class)
+@ContextHierarchy({
+        @ContextConfiguration(classes = { SpringDataTestConfig.class }, loader = AnnotationConfigContextLoader.class),
+        @ContextConfiguration(classes = { SpringServiceTestConfig.class }, loader = AnnotationConfigContextLoader.class),
+        @ContextConfiguration(classes = { SpringMailServiceTestConfig.class }, loader = AnnotationConfigContextLoader.class)
+})
 @Transactional
-public class MailServiceTest {
+public class MailServiceTest extends AbstractRepositoryUnitTest {
     private static final Logger LOG = LogManager.getLogger();
 
-	@PersistenceContext
-	EntityManager entityManager;
-	
+    @PersistenceContext
+    protected EntityManager entityManager;
+
+    @After
+    public void flushAfter()
+    {
+        if(entityManager != null && entityManager.isJoinedToTransaction())
+        {
+            LOG_SQL.debug("Flushing Persistence Context");
+            entityManager.flush();
+        }
+    }
+
 	@Autowired
 	StudentRepository studentRepository;
 	
