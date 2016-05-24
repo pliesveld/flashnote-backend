@@ -71,10 +71,12 @@ public class BinaryFileTest
     @Test
     public void testStorage() throws IOException, IllegalAccessException {
         AttachmentType expected_type = AttachmentType.IMAGE;
-        String resource_dir = ClassLoader.getSystemResource(".").getPath();
-        String expected_file = "puppy.jpg";
 
-        Resource resource = new ClassPathResource(expected_file);
+        String expected_file = "puppy.jpg";
+        String output_file = "puppy.jpg";
+
+        Resource resource = new ClassPathResource(expected_file, this.getClass());
+        Resource resource_out = new ClassPathResource(output_file, this.getClass());
         int id;
 
         LOG.info("Storing binary file attachment");
@@ -110,10 +112,9 @@ public class BinaryFileTest
             assertEquals(expected_file,attachment2.getFileName());
             assertNotNull(attachment2.getContents());
 
-            String fileout = Paths.get(resource_dir,"puppy_out.jpg").toString();
-            saveBytesToFile(fileout,attachment2.getContents());
+            saveBytesToFile(resource_out.getFilename(),attachment2.getContents());
 
-            verifyFiles(resource.getFile(),new File(fileout));
+            verifyFiles(resource.getFile(),resource_out.getFile());
             // TODO: verify files match
 
             creationTime = attachment2.getModifiedOn();

@@ -7,6 +7,7 @@ import com.pliesveld.flashnote.spring.data.SpringDataConfig;
 import com.pliesveld.flashnote.spring.db.PersistenceContext;
 import com.pliesveld.flashnote.spring.mail.SpringMailConfig;
 import com.pliesveld.flashnote.spring.security.SpringSecurityConfig;
+import com.pliesveld.flashnote.spring.serializer.SpringJacksonConfig;
 import com.pliesveld.flashnote.spring.web.SpringWebConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,7 +43,7 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles({Profiles.INTEGRATION_TEST, Profiles.AUTH, Profiles.LOCAL})
-@SpringApplicationConfiguration(classes = {SpringRootConfig.class, SpringMailConfig.class, SpringSecurityConfig.class, SpringWebConfig.class, SpringDataConfig.class, PersistenceContext.class, PythonUnitTests.class})
+@SpringApplicationConfiguration(classes = {SpringRootConfig.class, SpringJacksonConfig.class, SpringMailConfig.class, SpringSecurityConfig.class, SpringWebConfig.class, SpringDataConfig.class, PersistenceContext.class, PythonUnitTests.class})
 @ComponentScan(basePackageClasses = SetupDataLoader.class)
 @WebAppConfiguration
 @IntegrationTest
@@ -101,7 +102,7 @@ public class PythonUnitTests {
 
 		//ProcessBuilder pb = new ProcessBuilder("python3","-m","unittest","tests.test_env");
         //ProcessBuilder pb = new ProcessBuilder("python3","-m","unittest","tests.test_upload");
-        ProcessBuilder pb = new ProcessBuilder("python3","-m","unittest","tests.test_auth_jwt");
+        ProcessBuilder pb = new ProcessBuilder("python3","-m","unittest", "tests.test_auth_jwt");
         Map<String,String> env = pb.environment();
 
         System.out.println("port=" + port);
