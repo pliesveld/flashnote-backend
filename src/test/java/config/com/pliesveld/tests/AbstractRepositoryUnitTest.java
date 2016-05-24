@@ -1,11 +1,15 @@
 package com.pliesveld.tests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import com.pliesveld.flashnote.repository.*;
+import com.pliesveld.flashnote.serializer.HibernateAwareObjectMapper;
 import com.pliesveld.flashnote.serializer.HibernateAwareObjectMapperImpl;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.LazyInitializationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,21 +21,22 @@ import static org.junit.Assert.assertNotNull;
 public abstract class AbstractRepositoryUnitTest
 {
     protected static final Logger LOG_SQL = LogManager.getLogger("org.hibernate.SQL");
+    protected static final Logger LOG_DOMAIN = LogManager.getLogger("com.pliesveld.flashnote.domain");
 
-    private final static String LOG_SQL_TAG = "LOG_SQL_TAG";
-    private final static String LOG_ENTITY_TAG = "LOG_ENTITY_TAG";
+    private final static String LOG_SQL_LEVEL = "LOG_SQL_LEVEL";
+    private final static String LOG_ENTITY_LEVEL = "LOG_ENTITY_LEVEL";
 
     protected static void disableSQL()
     {
-        System.setProperty(LOG_SQL_TAG, "ERROR");
-        System.setProperty(LOG_ENTITY_TAG, "ERROR");
+        System.setProperty(LOG_SQL_LEVEL, "ERROR");
+        System.setProperty(LOG_ENTITY_LEVEL, "ERROR");
         ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
     }
 
     protected static void enableSQL()
     {
-        System.setProperty(LOG_SQL_TAG, "DEBUG");
-        System.setProperty(LOG_ENTITY_TAG, "DEBUG");
+        System.setProperty(LOG_SQL_LEVEL, "DEBUG");
+        System.setProperty(LOG_ENTITY_LEVEL, "DEBUG");
         ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
     }
 
@@ -184,15 +189,17 @@ public abstract class AbstractRepositoryUnitTest
     protected static void debug(Object obj) {
         //  Will cause problems if used on hibernate proxy objects, and on circular references.
         //  Use with care.
-        LOG_SQL.debug(ReflectionToStringBuilder.toString(obj));
+        LOG_DOMAIN.info(ReflectionToStringBuilder.toString(obj));
     }
 
     protected void debugEntity(Object obj) {
         try {
-            LOG_SQL.debug(hibernateAwareObjectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj));
+            LOG_DOMAIN.debug(hibernateAwareObjectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj));
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            LOG_SQL.error("Could not process {}: {}", obj, e.getMessage());
+//            e.printStackTrace();
+            LOG_DOMAIN.warn("Could not process {}: {}", obj, e.getMessage());
+        } catch(LazyInitializationException lie) {
+            LOG_DOMAIN.warn("failed to serialize: ", lie.getMessage());
         }
     }
 

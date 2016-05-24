@@ -30,12 +30,13 @@ public class Student extends DomainBaseEntity<Integer> {
     private Instant lastPasswordResetDate;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "STUDENT_ID")
     @JsonView(Views.Summary.class)
     public Integer getId() { return id; }
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "student")
+    @PrimaryKeyJoinColumn
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     public StudentDetails getStudentDetails() { return studentDetails; }
 
     @NotNull

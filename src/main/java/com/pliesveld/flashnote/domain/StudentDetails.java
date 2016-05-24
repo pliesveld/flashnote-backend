@@ -22,15 +22,17 @@ public class StudentDetails extends DomainBaseEntity<Integer> implements Seriali
     private String name;
 
     @Id
+    @Column(name = "STUDENT_DETAILS_ID")
     @JsonView(Views.Summary.class)
     public Integer getId()
     {
         return id;
     }
 
+    @NotNull
     @MapsId
-    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, fetch = FetchType.LAZY)
-    @JoinColumn(name = "STUDENT_ID", foreignKey = @ForeignKey(name = "FK_STUDENT_DETAILS"))
+    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, fetch = FetchType.LAZY, optional = false, mappedBy = "studentDetails")
+    @JoinColumn(name = "STUDENT_DETAILS_ID", foreignKey = @ForeignKey(name = "FK_STUDENT_DETAILS"))
     @JsonIgnore
     public Student getStudent() { return student; }
 
@@ -43,6 +45,32 @@ public class StudentDetails extends DomainBaseEntity<Integer> implements Seriali
         return name;
     }
 
+
+    protected StudentDetails() {
+        super();
+    }
+
+    public StudentDetails(@NotNull Student student, String name) {
+        this();
+        setStudent(student);
+        this.name = name;
+    }
+
+    @Deprecated
+    public StudentDetails(String name) {
+        this();
+        this.name = name;
+    }
+
+    public void setStudent(@NotNull Student student) {
+
+        this.student = student;
+        this.id = student.getId();
+        if(student.getStudentDetails() != this)
+            student.setStudentDetails(this);
+
+    }
+
     protected void setName(String name)
     {
         this.name = name;
@@ -51,24 +79,6 @@ public class StudentDetails extends DomainBaseEntity<Integer> implements Seriali
     protected void setId(Integer id)
     {
         this.id = id;
-    }
-
-    public void setStudent(Student student) {
-
-        this.student = student;
-        this.id = student.getId();
-        if(student.getStudentDetails() == null || !student.getStudentDetails().equals(this))
-            student.setStudentDetails(this);
-
-    }
-
-    protected StudentDetails() {
-        super();
-    }
-
-    public StudentDetails(String name) {
-        this();
-        this.name = name;
     }
 
 

@@ -48,8 +48,8 @@ public class LogHibernateTestExecutionListener extends AbstractTestExecutionList
 
     protected static void enableSQL()
     {
-//        System.setProperty(LOG_SQL_TAG, "DEBUG");
-//        ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
+        System.setProperty(LOG_SQL_TAG, "DEBUG");
+        ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
     }
 
     public void beforeTestClass(TestContext testContext) throws Exception {

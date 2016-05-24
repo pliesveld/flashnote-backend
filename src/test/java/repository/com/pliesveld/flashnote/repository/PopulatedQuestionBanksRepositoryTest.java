@@ -60,7 +60,6 @@ public class PopulatedQuestionBanksRepositoryTest extends AbstractPopulatedRepos
     @DirtiesContext
 
     public void testQuestionBankSpec() {
-        enableSQL();
         Specification<QuestionBank> spec = QuestionBankSpecification.descriptionContainsIgnoreCase("");
         List<QuestionBank> qb = questionBankRepository.findAll(spec);
 

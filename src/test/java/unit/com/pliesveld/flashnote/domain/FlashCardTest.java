@@ -71,13 +71,6 @@ public class FlashCardTest extends AbstractDomainEntityUnitTest
         assertFlashCardRepositoryCount(1);
     }
 
-    @After
-    public void flushAfter()
-    {
-        LOG.debug("flushAfter");
-        entityManager.flush();
-    }
-
     @Test
     public void testFlashCardRemoval()
     {

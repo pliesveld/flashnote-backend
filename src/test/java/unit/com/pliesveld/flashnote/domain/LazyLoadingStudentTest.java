@@ -18,6 +18,7 @@ import java.io.Serializable;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -32,35 +33,22 @@ public class LazyLoadingStudentTest extends AbstractDomainEntityUnitTest {
     Serializable student_id = null;
 
     @Before
-    public void setupEntities()
+    public void givenStudentAndDetails()
     {
         student_id = null;
 
-        Student student = studentBean();
         StudentDetails studentDetails = studentDetailsBean();
-        entityManager.persist(student);
-
-        student_id = student.getId();
-        assertNotNull(student_id);
-
-//        studentDetails.setId((Integer) student_id);
-        studentDetails.setStudent(student);
         entityManager.persist(studentDetails);
 
         entityManager.flush();
         entityManager.clear();
+        student_id = studentDetails.getId();
     }
 
     @Test
-    public void testEntityContext()
+    public void whenContextLoad_thenCorrect()
     {
         assertNotNull(student_id);
-    }
-
-    @Test
-    public void testEntitySanity()
-    {
-
         assertNotNull(entityManager.find(Student.class, student_id));
         assertNotNull(entityManager.find(StudentDetails.class, student_id));
     }
@@ -70,8 +58,9 @@ public class LazyLoadingStudentTest extends AbstractDomainEntityUnitTest {
     {
         entityManager.flush();
     }
+
     @Test
-    public void givenStudentDetails_whenLoading_thenStudentNotLoaded()
+    public void givenStudentDetails_whenProxy_thenStudentNotLoaded()
     {
         StudentDetails studentDetails = studentDetailsRepository.getOne((Integer) student_id);
         assertFalse(Hibernate.isInitialized(studentDetails));
@@ -81,7 +70,7 @@ public class LazyLoadingStudentTest extends AbstractDomainEntityUnitTest {
     }
 
     @Test
-    public void givenStudent_whenLoading_thenStudentDetailsNotLoaded()
+    public void givenStudent_whenProxy_thenStudentDetailsNotLoaded()
     {
         Student student = studentRepository.getOne((Integer) student_id);
         assertFalse(Hibernate.isInitialized(student));
@@ -89,6 +78,47 @@ public class LazyLoadingStudentTest extends AbstractDomainEntityUnitTest {
         assertFalse(entityManager.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(student));
         assertFalse(entityManager.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(student, "studentDetails"));
     }
+
+    @Test
+    public void givenLoadStudentDetails_whenAttributeReference_thenStudentNotLoaded()
+    {
+        StudentDetails studentDetails = studentDetailsRepository.findOne((Integer) student_id);
+        assertTrue(Hibernate.isInitialized(studentDetails));
+        assertTrue(entityManager.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(studentDetails));
+        assertFalse(entityManager.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(studentDetails, "student"));
+    }
+
+    @Test
+    public void givenLoadStudent_whenAttributeReference_thenStudentDetailsNotLoaded()
+    {
+        Student student = studentRepository.findOne((Integer) student_id);
+        assertTrue(Hibernate.isInitialized(student));
+        assertTrue(entityManager.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(student));
+        assertFalse(entityManager.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(student, "studentDetails"));
+    }
+
+    @Test
+    public void givenLoadStudentDetails_whenStudentProxy_thenStudentNotLoaded()
+    {
+        StudentDetails studentDetails = studentDetailsRepository.findOne((Integer) student_id);
+        assertTrue(Hibernate.isInitialized(studentDetails));
+
+        Student student = studentRepository.getOne((Integer) student_id);
+        assertFalse(Hibernate.isInitialized(student));
+    }
+
+    @Test
+    public void givenLoadStudent_whenStudentDetailsProxy_thenStudentDetailsNotLoaded()
+    {
+        Student student = studentRepository.findOne((Integer) student_id);
+        assertTrue(Hibernate.isInitialized(student));
+
+        StudentDetails studentDetails = studentDetailsRepository.getOne((Integer) student_id);
+        assertFalse(Hibernate.isInitialized(studentDetails));
+    }
+
+
+
 
 
 }

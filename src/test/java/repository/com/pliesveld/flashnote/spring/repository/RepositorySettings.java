@@ -30,7 +30,7 @@ public class RepositorySettings {
 
     public RepositorySettings(Resource[] resources) {
         this.resources = resources.clone();
-        LOG.info("Setting resources: {}", resources);
+        LOG.trace("Setting resources: {}", resources);
     }
 
     public static RepositorySettings load(String s, Class<? extends PopulatedStudentsRepositoryTest> clazz) {

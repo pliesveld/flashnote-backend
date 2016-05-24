@@ -6,14 +6,17 @@ import com.pliesveld.flashnote.spring.Profiles;
 import com.pliesveld.flashnote.spring.repository.RepositoryPopulatorConfig;
 import com.pliesveld.flashnote.spring.SpringDataTestConfig;
 import com.pliesveld.tests.AbstractTransactionalRepositoryUnitTest;
+import org.apache.http.util.Asserts;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 
@@ -28,8 +31,9 @@ public abstract class AbstractPopulatedRepositoryUnitTest extends AbstractTransa
     private static final Logger LOG = LogManager.getLogger();
 
 
-    protected <T extends DomainBaseEntity<ID>, ID extends Serializable> void debugRepository(JpaRepository<T,ID> repository) {
-        repository.findAll().forEach(this::debugEntity);
+    protected <T extends DomainBaseEntity<ID>, ID extends Serializable> void debugRepository(CrudRepository<T,ID> repository) {
+//        Asserts.check(entityManager.isJoinedToTransaction(), "Transaction Required");
+            repository.findAll().forEach(this::debugEntity);
     }
 
     protected void debugRepositoryCount() {

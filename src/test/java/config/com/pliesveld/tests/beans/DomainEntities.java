@@ -132,6 +132,7 @@ public class DomainEntities {
         for(int i = 0; i < max ; i ++)
         {
             Question question = this.questionBean();
+            question = domainBeanHelperService.makeEntityIfNotFound(question);
             questionBank.add(question);
         }
         return questionBank;

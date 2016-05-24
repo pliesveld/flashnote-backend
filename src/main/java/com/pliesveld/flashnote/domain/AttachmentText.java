@@ -1,5 +1,7 @@
 package com.pliesveld.flashnote.domain;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.schema.Constants;
 import org.apache.commons.lang3.StringUtils;
 
@@ -22,6 +24,7 @@ public class AttachmentText extends AbstractAttachment {
     @Size(max = Constants.MAX_ATTACHMENT_TEXT_FILE_LENGTH)
     @Column(name = "FILE_TEXT", length = Constants.MAX_ATTACHMENT_TEXT_FILE_LENGTH, nullable = false)
     @Basic(fetch = FetchType.LAZY, optional = false)
+    @JsonView(Views.SummaryDetails.class)
     public String getContents() {
         return contents;
     }

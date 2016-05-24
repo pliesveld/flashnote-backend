@@ -16,7 +16,7 @@ import javax.persistence.EntityManager;
 @Configuration
 public class AbstractDomainEntityUnitTest extends AbstractRepositoryUnitTest implements ApplicationContextAware
 {
-    protected static final Logger LOG = LogManager.getLogger("BaseEntityTests");
+    private static final Logger LOG = LogManager.getLogger();
 
     protected ApplicationContext ctx;
 

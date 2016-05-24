@@ -1,5 +1,7 @@
 package com.pliesveld.flashnote.domain;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.schema.Constants;
 
 import javax.persistence.*;
@@ -18,6 +20,7 @@ public class AttachmentBinary extends AbstractAttachment implements Serializable
     @Size(max = Constants.MAX_ATTACHMENT_BINARY_FILE_LENGTH)
     @Column(name = "FILE_DATA", length = Constants.MAX_ATTACHMENT_BINARY_FILE_LENGTH, nullable = false)
     @Basic(fetch = FetchType.LAZY, optional = false)
+    @JsonView(Views.SummaryDetails.class)
     public byte[] getContents() {
         return contents;
     }

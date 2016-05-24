@@ -16,6 +16,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.assertTrue;
 
@@ -37,6 +38,11 @@ public class PopulatedCategoriesRepositoryTest extends AbstractPopulatedReposito
     @Test
     public void whenContextLoad_thenCorrect() {
         assertTrue(categoryRepository.count() > 0);
+    }
+
+    @Test
+    public void whenCategoryFind_thenCorrect() {
+        debugRepository(categoryRepository);
     }
 
 }

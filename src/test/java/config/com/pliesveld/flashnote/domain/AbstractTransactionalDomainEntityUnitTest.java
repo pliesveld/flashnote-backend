@@ -1,5 +1,7 @@
 package com.pliesveld.flashnote.domain;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.transaction.AfterTransaction;
@@ -16,6 +18,8 @@ import static org.junit.Assert.assertEquals;
 @Component
 public class AbstractTransactionalDomainEntityUnitTest extends AbstractDomainEntityUnitTest
 {
+    private static final Logger LOG = LogManager.getLogger();
+
     @PersistenceContext
     protected EntityManager entityManager;
 
@@ -23,20 +27,19 @@ public class AbstractTransactionalDomainEntityUnitTest extends AbstractDomainEnt
     final public void givenFlushAfterUnitTest()
     {
         if(entityManager != null && entityManager.isJoinedToTransaction()) {
-            LOG.error("Flushing Persistence Context");
+            LOG.trace("Flushing Persistence Context");
             entityManager.flush();
         }
-        disableSQL();
     }
 
     @BeforeTransaction
     public void beforeTransaction() {
-        LOG.error("Before Transaction");
+        LOG.trace("Before Transaction");
     }
 
     @AfterTransaction
     public void afterTransaction() {
-        LOG.error("After Transaction");
+        LOG.trace("After Transaction");
     }
 
     void logSessionFlush(EntityManager entityManager)

@@ -66,7 +66,6 @@ public class PopulatedDecksRepositoryTest extends AbstractPopulatedRepositoryUni
 //    @Transactional
 //    @DirtiesContext
 //    public void testDeckSpecTest() {
-//        enableSQL();
 //        Specification<Deck> spec = DeckSpecification.descriptionOrFlashcardContainsIgnoreCase("FINDME");
 //        List<Deck> decks = deckRepository.findAll(spec);
 //

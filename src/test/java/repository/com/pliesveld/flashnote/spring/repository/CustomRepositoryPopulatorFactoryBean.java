@@ -13,8 +13,10 @@ import com.pliesveld.flashnote.spring.CustomJackson2ResouceReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.io.Resource;
 import org.springframework.data.repository.init.Jackson2RepositoryPopulatorFactoryBean;
+import org.springframework.data.repository.init.RepositoriesPopulatedEvent;
 import org.springframework.data.repository.init.ResourceReader;
 import org.springframework.data.repository.init.ResourceReaderRepositoryPopulator;
 import org.springframework.util.Assert;
@@ -53,7 +55,7 @@ public class CustomRepositoryPopulatorFactoryBean extends Jackson2RepositoryPopu
         @Override
         public ObjectIdInfo findObjectIdInfo(final Annotated ann) {
             if (DomainBaseEntity.class.isAssignableFrom(ann.getRawType())) {
-                LOG.debug(Markers.OBJECT_MAPPER_INIT, "Checking raw type: {}", ann.getRawType());
+//                LOG.debug(Markers.OBJECT_MAPPER_INIT, "Checking raw type: {}", ann.getRawType());
 
                 return new ObjectIdInfo(
                         PropertyName.construct("@id", null),
