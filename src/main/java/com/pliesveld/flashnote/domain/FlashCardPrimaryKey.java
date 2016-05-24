@@ -8,9 +8,7 @@ import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
-/**
- * @author Patrick Liesveld
- */
+
 
 @Embeddable
 public class FlashCardPrimaryKey implements Serializable {

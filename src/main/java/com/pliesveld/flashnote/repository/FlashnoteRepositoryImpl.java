@@ -7,9 +7,7 @@ import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import javax.persistence.EntityManager;
 import java.io.Serializable;
 
-/**
- * @author Patrick Liesveld
- */
+
 public class FlashnoteRepositoryImpl<T, ID extends Serializable>
     extends SimpleJpaRepository<T,ID>
     implements FlashnoteRepository<T,ID>

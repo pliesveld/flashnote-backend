@@ -14,9 +14,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * @author Patrick Liesveld
- */
+
 public class CustomJackson2ResouceReader extends Jackson2ResourceReader {
     private static final Logger LOG = LogManager.getLogger();
 

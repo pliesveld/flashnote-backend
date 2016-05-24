@@ -1,8 +1,6 @@
 package com.pliesveld.flashnote.spring.servlet;
 
-/**
- * @author Patrick Liesveld
- */
+
 
 import com.pliesveld.flashnote.spring.SpringRootConfig;
 import com.pliesveld.flashnote.spring.security.SpringSecurityConfig;

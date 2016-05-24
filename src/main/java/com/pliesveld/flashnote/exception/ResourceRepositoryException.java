@@ -2,9 +2,7 @@ package com.pliesveld.flashnote.exception;
 
 import org.springframework.http.HttpStatus;
 
-/**
- * @author Patrick Liesveld
- */
+
 public abstract class ResourceRepositoryException extends RuntimeException {
 
     abstract public String getRepositoryMessage();

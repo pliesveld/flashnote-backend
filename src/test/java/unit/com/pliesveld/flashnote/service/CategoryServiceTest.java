@@ -18,9 +18,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-/**
- * @author Patrick Liesveld
- */
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @DefaultServiceTestAnnotations

@@ -4,9 +4,7 @@ import com.pliesveld.flashnote.domain.Category;
 import com.pliesveld.flashnote.domain.Category_;
 import org.springframework.data.jpa.domain.Specification;
 
-/**
- * @author Patrick Liesveld
- */
+
 final public class CategorySpecification {
     private CategorySpecification() {}
 

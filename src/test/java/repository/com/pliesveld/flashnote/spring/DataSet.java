@@ -5,9 +5,7 @@ import com.pliesveld.flashnote.domain.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-/**
- * @author Patrick Liesveld
- */
+
 public class DataSet {
     private Collection<Question> questions = new ArrayList<>();
     private Collection<Student> students = new ArrayList<>();

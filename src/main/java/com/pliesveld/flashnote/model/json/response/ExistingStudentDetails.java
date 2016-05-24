@@ -1,8 +1,6 @@
 package com.pliesveld.flashnote.model.json.response;
 
-/**
- * @author Patrick Liesveld
- */
+
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;

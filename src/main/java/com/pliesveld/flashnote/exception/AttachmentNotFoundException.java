@@ -2,9 +2,7 @@ package com.pliesveld.flashnote.exception;
 
 import java.io.Serializable;
 
-/**
- * @author Patrick Liesveld
- */
+
 public class AttachmentNotFoundException extends ResourceNotFoundException {
     public AttachmentNotFoundException(Serializable id) {
         super(id);
