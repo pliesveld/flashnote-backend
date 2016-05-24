@@ -33,7 +33,8 @@ public abstract class AbstractPopulatedRepositoryUnitTest extends AbstractTransa
 
     protected <T extends DomainBaseEntity<ID>, ID extends Serializable> void debugRepository(CrudRepository<T,ID> repository) {
 //        Asserts.check(entityManager.isJoinedToTransaction(), "Transaction Required");
-            repository.findAll().forEach(this::debugEntity);
+        LOG_SQL.info("Repository Count = {}", repository.count());
+        repository.findAll().forEach(this::debugEntity);
     }
 
     protected void debugRepositoryCount() {
