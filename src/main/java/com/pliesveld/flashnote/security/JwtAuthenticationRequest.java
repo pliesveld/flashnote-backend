@@ -3,7 +3,7 @@ package com.pliesveld.flashnote.security;
 import java.io.Serializable;
 
 /**
- * Created by stephan on 20.03.16.
+ * @author Patrick Liesveld
  */
 public class  JwtAuthenticationRequest implements Serializable {
 

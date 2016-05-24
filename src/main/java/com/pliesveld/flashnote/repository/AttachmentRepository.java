@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 /**
- * Created by happs on 3/6/16.
+ * @author Patrick Liesveld
  */
 public interface AttachmentRepository extends AbstractAttachmentRepository<AbstractAttachment>, CrudRepository<AbstractAttachment, Integer> {
 

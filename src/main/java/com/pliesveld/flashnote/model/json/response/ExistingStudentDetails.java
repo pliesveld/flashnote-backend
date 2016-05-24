@@ -1,7 +1,7 @@
 package com.pliesveld.flashnote.model.json.response;
 
 /**
- * Created by happs on 3/6/16.
+ * @author Patrick Liesveld
  */
 
 import com.fasterxml.jackson.annotation.JsonInclude;

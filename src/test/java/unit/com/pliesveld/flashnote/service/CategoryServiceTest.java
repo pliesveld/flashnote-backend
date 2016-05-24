@@ -19,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * Created by happs on 1/15/16.
+ * @author Patrick Liesveld
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)

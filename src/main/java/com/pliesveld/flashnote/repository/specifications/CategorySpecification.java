@@ -5,7 +5,7 @@ import com.pliesveld.flashnote.domain.Category_;
 import org.springframework.data.jpa.domain.Specification;
 
 /**
- * Created by happs on 5/1/16.
+ * @author Patrick Liesveld
  */
 final public class CategorySpecification {
     private CategorySpecification() {}

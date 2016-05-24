@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import java.io.Serializable;
 
 /**
- * Created by happs on 1/20/16.
+ * @author Patrick Liesveld
  */
 public class ResourceNotFoundException extends ResourceRetrieveException {
 

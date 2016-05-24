@@ -1,7 +1,7 @@
 package com.pliesveld.flashnote.domain;
 
 /**
- * Created by happs on 3/6/16.
+ * @author Patrick Liesveld
  */
 public enum AttachmentTypeDataFormat {
     BINARY,

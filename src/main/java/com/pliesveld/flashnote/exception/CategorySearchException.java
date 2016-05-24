@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import java.io.Serializable;
 
 /**
- * Created by happs on 2/22/16.
+ * @author Patrick Liesveld
  */
 public class CategorySearchException extends ResourceRetrieveException {
 

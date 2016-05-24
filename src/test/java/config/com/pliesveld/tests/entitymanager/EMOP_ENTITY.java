@@ -6,7 +6,7 @@ import org.hibernate.Hibernate;
 import javax.persistence.EntityManager;
 
 /**
-* Created by happs on 4/30/16.
+* @author Patrick Liesveld
 */
 public enum EMOP_ENTITY implements EMOP {
     FLUSH {

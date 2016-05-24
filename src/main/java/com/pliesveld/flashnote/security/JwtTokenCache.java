@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 /**
-* Created by patrick on 5/4/16.
+* @author Patrick Liesveld
 */
 @Component
 public class JwtTokenCache {

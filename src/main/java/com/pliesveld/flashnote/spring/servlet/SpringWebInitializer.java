@@ -1,7 +1,7 @@
 package com.pliesveld.flashnote.spring.servlet;
 
 /**
- * Created by happs on 1/18/16.
+ * @author Patrick Liesveld
  */
 
 import com.pliesveld.flashnote.spring.SpringRootConfig;

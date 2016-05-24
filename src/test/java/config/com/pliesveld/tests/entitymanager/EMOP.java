@@ -5,7 +5,7 @@ import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import javax.persistence.EntityManager;
 
 /**
-* Created by happs on 4/30/16.
+* @author Patrick Liesveld
 */
 public interface EMOP
 {

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Created by happs on 5/1/16.
+ * @author Patrick Liesveld
  */
 public class DataSet {
     private Collection<Question> questions = new ArrayList<>();

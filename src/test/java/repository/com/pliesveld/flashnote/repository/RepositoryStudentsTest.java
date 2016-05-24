@@ -18,7 +18,7 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import static org.junit.Assert.*;
 
 /**
- * Created by happs on 3/2/16.
+ * @author Patrick Liesveld
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)

@@ -4,7 +4,7 @@ import com.pliesveld.flashnote.domain.Student;
 import org.springframework.context.ApplicationEvent;
 
 /**
- * Created by patrick on 5/20/16.
+ * @author Patrick Liesveld
  */
 public class OnRegistrationCompleteEvent extends ApplicationEvent {
     private final Student student;

@@ -3,7 +3,7 @@ package com.pliesveld.flashnote.exception;
 import java.io.Serializable;
 
 /**
- * Created by happs on 1/20/16.
+ * @author Patrick Liesveld
  */
 public class DeckNotFoundException extends ResourceNotFoundException {
     public DeckNotFoundException(Serializable id) {

@@ -8,7 +8,7 @@ import javax.persistence.EntityManager;
 import java.io.Serializable;
 
 /**
- * Created by happs on 3/2/16.
+ * @author Patrick Liesveld
  */
 public class FlashnoteRepositoryImpl<T, ID extends Serializable>
     extends SimpleJpaRepository<T,ID>
