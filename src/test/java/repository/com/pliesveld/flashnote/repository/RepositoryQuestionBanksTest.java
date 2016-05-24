@@ -2,14 +2,12 @@ package com.pliesveld.flashnote.repository;
 
 import com.pliesveld.flashnote.domain.QuestionBank;
 import com.pliesveld.flashnote.repository.specifications.QuestionBankSpecification;
-import com.pliesveld.flashnote.spring.CustomRepositoryFactoryBeanSettings;
-import com.pliesveld.flashnote.spring.CustomRepositoryPopulatorFactoryBean;
 import com.pliesveld.flashnote.spring.Profiles;
 import com.pliesveld.flashnote.spring.SpringDataTestConfig;
 import com.pliesveld.tests.AbstractTransactionalRepositoryUnitTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.jpa.domain.Specification;
@@ -32,18 +30,18 @@ import static org.junit.Assert.assertTrue;
         @ContextConfiguration(classes = { RepositoryQuestionBanksTest.class }, loader = AnnotationConfigContextLoader.class)
 })
 @DirtiesContext
-public class RepositoryQuestionBanksTest extends AbstractTransactionalRepositoryUnitTest {
+@Configuration
+public class RepositoryQuestionBanksTest extends AbstractPopulatedRepositoryUnitTest {
 
-    @Bean(name = "populator")
-    CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean(CustomRepositoryFactoryBeanSettings customRepositoryFactoryBeanSettings)
-    {
-        CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean = new CustomRepositoryPopulatorFactoryBean(customRepositoryFactoryBeanSettings);
-        customRepositoryPopulatorFactoryBean.setResources(new Resource[]{ new ClassPathResource("test-data-question-bank-ref.json", this.getClass()) });
-        return customRepositoryPopulatorFactoryBean;
+    @Override
+    protected Resource[] repositoryProperties() {
+        return new Resource[]{ new ClassPathResource("test-data-question-bank.json", this.getClass()) };
     }
 
     @Test
     @Transactional
+    @DirtiesContext
+
     public void testLoadRepositoryFromJson()
     {
         long que_count = questionRepository.count();
@@ -62,6 +60,8 @@ public class RepositoryQuestionBanksTest extends AbstractTransactionalRepository
 
     @Test
     @Transactional
+    @DirtiesContext
+
     public void testFindQuestionBank()
     {
         LOG_SQL.info("Listing All Categories");
@@ -77,6 +77,8 @@ public class RepositoryQuestionBanksTest extends AbstractTransactionalRepository
 
     @Test
     @Transactional
+    @DirtiesContext
+
     public void testQuestionBankSpec() {
         enableSQL();
         Specification<QuestionBank> spec = QuestionBankSpecification.descriptionContainsIgnoreCase("");

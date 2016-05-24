@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.spring;
+package com.pliesveld.flashnote.spring.repository;
 
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -9,18 +9,26 @@ import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.introspect.ObjectIdInfo;
 import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import com.pliesveld.flashnote.logging.Markers;
+import com.pliesveld.flashnote.spring.CustomJackson2ResouceReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.core.io.Resource;
 import org.springframework.data.repository.init.Jackson2RepositoryPopulatorFactoryBean;
 import org.springframework.data.repository.init.ResourceReader;
-import org.springframework.stereotype.Service;
+import org.springframework.data.repository.init.ResourceReaderRepositoryPopulator;
 import org.springframework.util.Assert;
 
-@Service
 public class CustomRepositoryPopulatorFactoryBean extends Jackson2RepositoryPopulatorFactoryBean {
     private static final Logger LOG = LogManager.getLogger();
+    private Resource[] recources;
 
     protected ObjectMapper objectMapper = new ObjectMapper();
+
+    @Override
+    public void setResources(Resource[] resources) {
+        this.recources = resources.clone();
+        super.setResources(resources);
+    }
 
     public CustomRepositoryPopulatorFactoryBean() {
         this.objectMapper = new ObjectMapper();
@@ -40,7 +48,6 @@ public class CustomRepositoryPopulatorFactoryBean extends Jackson2RepositoryPopu
         super.setMapper(mapper);
     }
 
-
     static class MyJacksonAnnotationIntrospector extends JacksonAnnotationIntrospector {
         @Override
         public ObjectIdInfo findObjectIdInfo(final Annotated ann) {
@@ -55,7 +62,31 @@ public class CustomRepositoryPopulatorFactoryBean extends Jackson2RepositoryPopu
             }
             return super.findObjectIdInfo(ann);
         }
-
     }
 
+
+    @Override
+    protected ResourceReaderRepositoryPopulator createInstance() {
+        ResourceReaderRepositoryPopulator populator = super.createInstance();
+        populator.setResources(recources);
+        return populator;
+    }
+
+
+
+
+
+//
+//    @Override
+//    public void onApplicationEvent(ContextRefreshedEvent event) {
+//        super.onApplicationEvent(event);
+//    }
+//
+
+
+//    @EventListener
+//    public void repositoryEvent(RepositoriesPopulatedEvent event)
+//    {
+//        LOG.error("got event");
+//    }
 }

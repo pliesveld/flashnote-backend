@@ -1,0 +1,46 @@
+{
+    "_class" : "com.pliesveld.flashnote.spring.DataSet",
+    "categories" : [
+        {
+            "@id" : 500,
+            "name" : "Java Testing Frameworks",
+            "description" : "The contents of this category was populated from test-data-question-bank-ref.json"
+
+        }
+    ],
+    "questions" : [
+        {
+            "@id" : 10000,
+            "content" : "What is the purpose of the @Test annotation?"
+        },
+        {
+            "@id" : 10001,
+            "content" : "What is the purpose of the @Before annotation?"
+        },
+        {
+            "@id" : 10002,
+            "content" : "What is the purpose of the @After annotation?"
+        },
+        {
+            "@id" : 10003,
+            "content" : "What is the purpose of the @BeforeClass annotation?"
+        },
+        {
+            "@id" : 10004,
+            "content" : "What is the purpose of the @AfterClass annotation?"
+        }
+    ],
+
+
+    "questionBanks" : [
+        {
+            "category" : 500,
+            "description" : "Basic jUnit interview questions.",
+            "questions" : [10000,10001,10002,10003,10004]
+        }
+
+
+
+
+    ]
+}

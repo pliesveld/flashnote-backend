@@ -6,18 +6,33 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import({SpringSerializationTestConfig.class, SpringEntityTestConfig.class})
-
+@Import({com.pliesveld.flashnote.spring.SpringSerializationTestConfig.class, com.pliesveld.flashnote.spring.SpringEntityTestConfig.class})
 public class SpringDataTestConfig {
     private static final Logger LOG = LogManager.getLogger();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//    CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean
 
 //    @Bean
 //    @Autowired
 //    public Jackson2RepositoryPopulatorFactoryBean repositoryPopulator(HibernateAwareObjectMapperImpl hibernateAwareObjectMapper) {
 //
-//        Resource sourceData_cat = new ClassPathResource("test-data-category.json", SpringDataPopulatedRepository.class);
-////        Resource sourceData_quebank = new ClassPathResource("test-data-question-bank.json", SpringDataPopulatedRepository.class);
-////        Resource sourceData_que = new ClassPathResource("test-data-questions.json", SpringDataPopulatedRepository.class);
+//        Resource sourceData_cat = new ClassPathResource("test-data-category.json", DbUnitTestExecutionListener.class);
+////        Resource sourceData_quebank = new ClassPathResource("test-data-question-bank.json", DbUnitTestExecutionListener.class);
+////        Resource sourceData_que = new ClassPathResource("test-data-questions.json", DbUnitTestExecutionListener.class);
 //
 //
 //        CustomRepositoryPopulatorFactoryBean factory = new CustomRepositoryPopulatorFactoryBean();

@@ -1,6 +1,8 @@
 package com.pliesveld.tests;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.pliesveld.flashnote.repository.*;
+import com.pliesveld.flashnote.serializer.HibernateAwareObjectMapperImpl;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,6 +34,9 @@ public class AbstractRepositoryUnitTest
         System.setProperty(LOG_ENTITY_LEVEL, "DEBUG");
         ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
     }
+
+    @Autowired(required = false)
+    protected HibernateAwareObjectMapperImpl hibernateAwareObjectMapper;
 
     @Autowired(required = false)
     protected AnswerRepository answerRepository;
@@ -181,4 +186,15 @@ public class AbstractRepositoryUnitTest
         //  Use with care.
         LOG_SQL.debug(ReflectionToStringBuilder.toString(obj));
     }
+
+    protected void debugEntity(Object obj) {
+        try {
+            LOG_SQL.debug(hibernateAwareObjectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            LOG_SQL.error("Could not process {}: {}", obj, e.getMessage());
+        }
+    }
+
+
 }

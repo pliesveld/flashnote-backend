@@ -1,14 +1,11 @@
 package com.pliesveld.flashnote.repository;
 
 import com.pliesveld.flashnote.domain.Student;
-import com.pliesveld.flashnote.spring.CustomRepositoryFactoryBeanSettings;
-import com.pliesveld.flashnote.spring.CustomRepositoryPopulatorFactoryBean;
 import com.pliesveld.flashnote.spring.Profiles;
 import com.pliesveld.flashnote.spring.SpringDataTestConfig;
-import com.pliesveld.tests.AbstractRepositoryUnitTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.annotation.DirtiesContext;
@@ -31,16 +28,14 @@ import static org.junit.Assert.*;
         @ContextConfiguration(classes = { RepositoryStudentsTest.class }, loader = AnnotationConfigContextLoader.class)
 })
 @DirtiesContext
+@Configuration
+public class RepositoryStudentsTest extends AbstractPopulatedRepositoryUnitTest {
 
-public class RepositoryStudentsTest extends AbstractRepositoryUnitTest {
-
-    @Bean(name = "populator")
-    CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean(CustomRepositoryFactoryBeanSettings customRepositoryFactoryBeanSettings)
-    {
-        CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean = new CustomRepositoryPopulatorFactoryBean(customRepositoryFactoryBeanSettings);
-        customRepositoryPopulatorFactoryBean.setResources(new Resource[]{ new ClassPathResource("test-data-students.json", this.getClass()) });
-        return customRepositoryPopulatorFactoryBean;
+    @Override
+    protected Resource[] repositoryProperties() {
+        return new Resource[]{ new ClassPathResource("test-data-students.json", this.getClass()) };
     }
+
 
     @Test
     public void testLoadRepositoryFromJson()

@@ -1,0 +1,30 @@
+{
+    "_class" : "com.pliesveld.flashnote.spring.DataSet",
+
+    "categories" : [
+        {
+            "@id" : 500,
+            "name" : "Test category for decks",
+            "description" : "The contents of this category was populated from test-data-deck.json"
+
+        }
+    ],
+
+    "decks" : [
+        {
+            "@id" : 90000,
+            "category" : 500,
+            "description" : "Simple deck of java interview questions2",
+            "flashcards" : [{
+                "question" : {
+                    "content" : "When designing an abstract class, why should you avoid calling abstract methods inside its constructor?"
+                },
+                "answer" : {
+                    "content" : "A super-class's constructor is executed before a sub-class.  If a super-class were to call an abstract method, the sub-class implementing it would not have been constructed during invocation."
+                }
+            }]
+        }
+    ]
+
+}
+

@@ -21,6 +21,14 @@ public class DataSetExtractor implements DataExtractor {
             data.add(o);
         }
 
+        for (Object o : set.getAnswers()) {
+            data.add(o);
+        }
+
+        for(Object o : set.getFlashcards()) {
+            data.add(o);
+        }
+
         for (Object o : set.getQuestionBanks()) {
             data.add(o);
         }

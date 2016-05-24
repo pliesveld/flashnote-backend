@@ -1,7 +1,5 @@
 package com.pliesveld.flashnote.repository;
 
-import com.pliesveld.flashnote.spring.CustomRepositoryFactoryBeanSettings;
-import com.pliesveld.flashnote.spring.CustomRepositoryPopulatorFactoryBean;
 import com.pliesveld.flashnote.spring.Profiles;
 import com.pliesveld.flashnote.spring.SpringDataTestConfig;
 import com.pliesveld.tests.AbstractTransactionalRepositoryUnitTest;
@@ -9,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.annotation.DirtiesContext;
@@ -28,15 +26,13 @@ import static org.junit.Assert.assertEquals;
         @ContextConfiguration(classes = { RepositoryFlashcardTest.class }, loader = AnnotationConfigContextLoader.class)
 })
 @DirtiesContext
-public class RepositoryFlashcardTest extends AbstractTransactionalRepositoryUnitTest {
+@Configuration
+public class RepositoryFlashcardTest extends AbstractPopulatedRepositoryUnitTest {
     private static final Logger LOG = LogManager.getLogger();
 
-    @Bean(name = "populator")
-    CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean(CustomRepositoryFactoryBeanSettings customRepositoryFactoryBeanSettings)
-    {
-        CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean = new CustomRepositoryPopulatorFactoryBean(customRepositoryFactoryBeanSettings);
-        customRepositoryPopulatorFactoryBean.setResources(new Resource[]{ new ClassPathResource("test-data-flashcards.json", this.getClass()) });
-        return customRepositoryPopulatorFactoryBean;
+    @Override
+    protected Resource[] repositoryProperties() {
+        return new Resource[]{ new ClassPathResource("test-data-flashcards.json", this.getClass()) };
     }
 
     @Test

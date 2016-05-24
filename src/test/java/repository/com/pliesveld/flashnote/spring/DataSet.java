@@ -2,17 +2,20 @@ package com.pliesveld.flashnote.spring;
 
 import com.pliesveld.flashnote.domain.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
  * Created by happs on 5/1/16.
  */
 public class DataSet {
-    private Collection<Question> questions;
-    private Collection<Student> students;
-    private Collection<Category> categories;
-    private Collection<QuestionBank> questionBanks;
-    private Collection<Deck> decks;
+    private Collection<Question> questions = new ArrayList<>();
+    private Collection<Student> students = new ArrayList<>();
+    private Collection<Category> categories = new ArrayList<>();
+    private Collection<QuestionBank> questionBanks = new ArrayList<>();
+    private Collection<Answer> answers = new ArrayList<>();
+    private Collection<FlashCard> flashcards = new ArrayList<>();
+    private Collection<Deck> decks = new ArrayList<>();
 
     public Collection<Question> getQuestions() {
         return questions;
@@ -49,4 +52,12 @@ public class DataSet {
     public Collection<Deck> getDecks() { return decks; }
 
     public void setDecks(Collection<Deck> decks) { this.decks = decks; }
+
+    public Collection<FlashCard> getFlashcards() { return flashcards; }
+
+    public void setFlashcards(Collection<FlashCard> flashcards) { this.flashcards = flashcards; }
+
+    public Collection<Answer> getAnswers() { return answers; }
+
+    public void setAnswers(Collection<Answer> answers) { this.answers = answers; }
 }

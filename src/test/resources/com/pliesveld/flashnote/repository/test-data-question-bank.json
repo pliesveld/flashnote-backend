@@ -7,7 +7,7 @@
     ],
     "categories" : [
         {
-            "@id" : 1001,
+            "@id" : 500,
             "name" : "Test category for question banks",
             "description" : "The contents of this category was populated from test-data-question-bank.json"
 
@@ -16,7 +16,7 @@
     "questionBanks" : [
         {
             "id" : null,
-                "category" : 1001,
+                "category" : 500,
                 "description" : "a4250e47-55fb FINDME -4983-a76a-1856b78dab62",
                 "questions" : [
                     {
@@ -35,7 +35,7 @@
         },
         {
             "id" : null,
-            "category" : 1001,
+            "category" : 500,
             "description" : "NO SEARCH TERM IN DESCRIPTION",
             "questions" : [
                 {
@@ -46,22 +46,6 @@
                     "content" : "When would a FINDME veloper use a god?",
                     "title" : "Untitled Question"
                 }, {
-                    "content" : "When would a computer scientist use a variety?",
-                    "title" : "Untitled Question"
-                }
-            ]
-
-        },
-        {
-            "id" : null,
-            "category" : 1001,
-            "description" : "NO SEARCH TERM AT ALL",
-            "questions" : [
-                {
-                    "content" : "Where would you venture a shopping?",
-                    "title" : "Untitled Question"
-                },
-                {
                     "content" : "When would a computer scientist use a variety?",
                     "title" : "Untitled Question"
                 }

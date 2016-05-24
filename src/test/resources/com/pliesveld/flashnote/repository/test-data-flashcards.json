@@ -1,0 +1,36 @@
+{
+    "_class" : "com.pliesveld.flashnote.spring.DataSet",
+
+    "questions" : [
+        {
+
+            "@id" : 10000,
+            "content" : "What is a singleton class?",
+            "created" : "2016-05-01T19:49:50.301Z",
+            "modified" : "2016-05-01T19:49:50.301Z",
+            "created_by" : "SYSTEM",
+            "modified_by" : "SYSTEM"
+        }
+    ],
+
+    "answers" : [
+        {
+            "@id" : 20000,
+            "content" : "A class who only has one object instance at runtime.",
+            "created" : "2016-05-01T19:49:50.301Z",
+            "modified" : "2016-05-01T19:49:50.301Z",
+            "created_by" : "SYSTEM",
+            "modified_by" : "SYSTEM"
+        }
+    ],
+
+    "flashcards" : [
+        {
+            "question" : 10000,
+            "answer"   : 20000
+        }
+    ],
+    "decks" : [
+    ]
+}
+

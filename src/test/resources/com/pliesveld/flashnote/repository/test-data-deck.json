@@ -1,0 +1,44 @@
+{
+    "_class" : "com.pliesveld.flashnote.spring.DataSet",
+
+    "categories" : [
+        {
+            "@id" : 500,
+            "name" : "Test category for two decks",
+            "description" : "The contents of this category was populated from test-data-deck-two.json"
+
+        }
+    ],
+
+    "decks" : [
+        {
+            "@id" : 90000,
+            "category" : 500,
+            "description" : "Simple deck with one flashcard",
+            "flashcards" : [{
+                "question" : {
+                    "content" : "Why we should not make Entity Class final?"
+                },
+                "answer" : {
+                    "content" : "Hibernate uses wrapper proxy classes when fetching data from the database, or dirty checking persistent collections.  It does this by inheriting the Entity class, and by declaring an entity class final, hibernate-proxies will not be able to be instantiated. "
+                }
+            }]
+        },
+
+        {
+            "@id" : 90001,
+            "category" : 500,
+            "description" : "Simple deck with another flashcard, same category",
+            "flashcards" : [{
+                "question" : {
+                    "content" : "What is Hibernate Proxy and how it helps in lazy loading?"
+                },
+                "answer" : {
+                    "content" : "Hibernate uses a proxy object to support lazy-loading of mapped entities and persistent collections.  Instead of pulling all attributes when an entity is loaded, it waits until a getter method is called from the application code before loading the linked object.  Persistent collections are also proxy-loaded.  When you initialize a collection, it doesn't mean that the contents themselves are fully initialized."
+                }
+            }]
+        }
+    ]
+
+}
+
