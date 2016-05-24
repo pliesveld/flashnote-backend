@@ -7,16 +7,16 @@
     ],
     "categories" : [
         {
-            "@id" : 99,
+            "@id" : 500,
             "name" : "TEST CATEGORY",
             "description" : "T H I S I S A C A T E G O R Y",
-            "childCategories" : [ 88 ]
+            "childCategories" : [ 600 ]
         },
         {
-            "@id" : 88,
+            "@id" : 600,
             "name" : "TEST SUBCATEGORY",
             "description" : "T H I S I S A S E C O N D C A T E G O R Y",
-            "parentCategory" : 99
+            "parentCategory" : 500
         }
 
     ],
