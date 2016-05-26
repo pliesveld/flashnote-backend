@@ -34,7 +34,7 @@ import static org.junit.Assert.assertNotNull;
 public class BankServiceTest extends AbstractTransactionalServiceUnitTest {
 
     @Autowired
-    BankService bankService;
+    private BankService bankService;
 
     private Integer category_id;
 
