@@ -34,11 +34,11 @@ public class AnnotatedStatement {
     @Column(name = "DATE_CREATED", nullable = false)
     @Convert(converter = InstantConverter.class)
     @JsonProperty("created")
-    @JsonView(Views.SummaryWithCollections.class)
+    @JsonView(Views.Summary.class)
     public Instant getCreatedOn() { return createdOn; }
 
     @NotNull
-    @ManyToOne(targetEntity = StudentDetails.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = StudentDetails.class, fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "STUDENT_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_ANNOTATION_STUDENT"))
     @JsonProperty("created_by")
     @JsonView(Views.Summary.class)
