@@ -30,7 +30,7 @@ public class LogEntityListener {
     private void logLoad(Object object)
     {
         if( LOG.isDebugEnabled() && LOG.isDebugEnabled(SQL_QUERY))
-            LOG.debug(SQL_QUERY, "Loading " + object);
+            LOG.debug(SQL_QUERY, "Load " + object);
     }
     
     @PreUpdate

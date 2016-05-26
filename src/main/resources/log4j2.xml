@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration configDebug="true" monitorInterval="3">
+<Configuration xmlns:xi="http://www.w3.org/2001/XInclude" 
+    configDebug="false" monitorInterval="1" status="ERROR" name="CONFIG_DEV">
+
     <Properties>
         <Property name="logFolder">/tmp/log</Property>
 
@@ -24,39 +26,53 @@
         <Property name="LOG_BEANS_LEVEL">WARN</Property>
         <Property name="LOG_BEANS_CACHED_LEVEL">WARN</Property>
 
+
+        <!-- ignore the following classes in repoting exceptions -->
+        <Property name="filters">org.junit,org.apache.maven,sun.reflect,java.lang.reflect</Property>
+
+        <Property name="leveltag">%highlight{%-5level}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=cyan bold, DEBUG=green bold, TRACE=blue}</Property>
+
+        <Property name="loggertag">%.20c</Property>
+        <Property name="loggertag_debug">%.20c#%green{%.20method}</Property>
+        <Property name="exceptiontag_filtered">%xEx{filters(${filters})}</Property>
+
     </Properties>
     <Appenders>
         <Console name="CONSOLE" target="SYSTEM_OUT">
 
-            <Filters>
-                <MarkerFilter marker="SECURITY" onMatch="DENY" onMismatch="NEUTRAL"/>
-                <MarkerFilter marker="DEBUG" onMatch="DENY" onMismatch="NEUTRAL"/>
-                <MarkerFilter marker="SECURITY_AUTH" onMatch="DENY" onMismatch="NEUTRAL"/>
-                <MarkerFilter marker="OBJECT_MAPPER" onMatch="DENY" onMismatch="NEUTRAL"/>
-            </Filters>
+            <xi:include href="log4j2-xinclude-console-filters.xml" />
 
-            <PatternLayout>
-                <MarkerPatternSelector defaultPattern="[%-5level] %c{1.} %msg%n">
-                    <PatternMatch key="SECURITY_AUTH" pattern="[%-5level] %c{1.} ====== %C{1.}.%M:%L %msg ======%n"/>
-                </MarkerPatternSelector>
-            </PatternLayout>
+            <xi:include href="log4j2-xinclude-pattern-default.xml">
+                <xi:fallback>
+                    <PatternLayout pattern="${leveltag} %c %message%rEx{4}%n" />
+                </xi:fallback>
+            </xi:include>
         </Console>
 
-        <!--<File name="FileHibernate" fileName="${sys:logFolder}/${hibernatefilename}" append="false">-->
-            <!--<PatternLayout pattern="[%t] %-5level %logger{2.1.} - %msg%n"/>-->
-        <!--</File>-->
+        <Console name="CONSOLE_SQL" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="%m%n"/>
+        </Console>
 
-        <!--<File name="FileService" fileName="${sys:logFolder}/${servicefilename}" append="false">-->
-            <!--<PatternLayout pattern="[%t] %-5level %logger{2.1.} - %msg%n"/>-->
-        <!--</File>-->
+        <Console name="CONSOLE_SPRING" target="SYSTEM_OUT">
+            <filters>
+                <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            </filters>
+            <PatternLayout pattern="${leveltag} %replace{%cyan{%C}}{org.springframework}{} %message%n"/>
+        </Console>
 
-        <!--<File name="FileSpringDebug" fileName="${sys:logFolder}/${springdebug}" append="false">-->
-            <!--<PatternLayout pattern="%-5level %c %msg%n"/>-->
-        <!--</File>-->
+        <Rewrite name="SPRING_TRANSACTION">
+            <AppenderRef ref="CONSOLE_SPRING"/>
+            <LoggerNameLevelRewritePolicy logger="org.springframework.transaction.interceptor">
+                <KeyValuePair key="TRACE" value="DEBUG"/>
+            </LoggerNameLevelRewritePolicy>
+        </Rewrite>
 
-        <!--<File name="FileSpringBootDebug" fileName="${sys:logFolder}/${springbootdebug}" append="false">-->
-            <!--<PatternLayout pattern="%-5level %c %msg%n"/>-->
-        <!--</File>-->
+       <Rewrite name="SPRING_MVC">
+            <AppenderRef ref="CONSOLE_SPRING"/>
+            <LoggerNameLevelRewritePolicy logger="org.springframework.web.servlet.mvc">
+                <KeyValuePair key="TRACE" value="DEBUG"/>
+            </LoggerNameLevelRewritePolicy>
+        </Rewrite>
 
         <File name="FileSpringWeb" fileName="${sys:logFolder}/${springweb}" append="false">
             <PatternLayout pattern="%msg%n"/>
@@ -66,14 +82,12 @@
 
     <Loggers>
 
-
         <logger name="com.pliesveld.flashnote" level="${sys:LOG_APP_LEVEL}" additivity="false">
             <AppenderRef ref="CONSOLE"/>
         </logger>
 
-
         <logger name="org.hibernate.SQL" level="${sys:LOG_SQL_LEVEL}" additivity="false">
-            <AppenderRef ref="CONSOLE"/>
+            <AppenderRef ref="CONSOLE_SQL"/>
         </logger>
 
         <logger name="javax.persistence.Entity" level="${sys:LOG_ENTITY_LEVEL}" additivity="false">
@@ -84,40 +98,40 @@
             <AppenderRef ref="FileSpringWeb"/>
         </logger>
 
+        <logger name="org.springframework.transaction.support.TransactionSynchronizationManager" level="${sys:LOG_TRANS_SYNC_LEVEL}" additivity="false">
+            <AppenderRef ref="CONSOLE_SPRING"/>
+        </logger>
+
         <logger name="org.springframework.transaction.interceptor" level="${sys:LOG_TRANS_LEVEL}" additivity="false">
-            <AppenderRef ref="CONSOLE"/>
+            <AppenderRef ref="SPRING_TRANSACTION"/>
         </logger>
 
         <logger name="org.springframework.web.servlet.mvc" level="${sys:LOG_MVC_LEVEL}" additivity="false">
-            <AppenderRef ref="CONSOLE"/>
+            <AppenderRef ref="SPRING_MVC"/>
         </logger>
 
         <logger name="org.springframework.web.servlet.handler" level="${sys:LOG_MVC_LEVEL}" additivity="false">
-            <AppenderRef ref="CONSOLE"/>
+            <AppenderRef ref="SPRING_MVC"/>
         </logger>
 
         <logger name="org.springframework.security" level="${sys:LOG_SECURITY_LEVEL}" additivity="false">
-            <AppenderRef ref="CONSOLE"/>
+            <AppenderRef ref="CONSOLE_SPRING"/>
         </logger>
 
         <logger name="org.springframework.jdbc.core" level="${sys:LOG_JDBC_LEVEL}" additivity="false">
             <AppenderRef ref="CONSOLE"/>
         </logger>
 
-        <logger name="org.springframework.transaction.support.TransactionSynchronizationManager" level="${sys:LOG_TRANS_SYNC_LEVEL}" additivity="false">
-            <AppenderRef ref="CONSOLE"/>
-        </logger>
-
         <logger name="org.springframework" level="${sys:LOG_SPRING_LEVEL}" additivity="false">
-            <AppenderRef ref="CONSOLE"/>
+            <AppenderRef ref="CONSOLE_SPRING"/>
         </logger>
 
         <logger name="org.springframework.beans" level="${sys:LOG_BEANS_LEVEL}" additivity="false">
-            <AppenderRef ref="CONSOLE"/>
+            <AppenderRef ref="CONSOLE_SPRING"/>
         </logger>
 
         <logger name="org.springframework.beans.CachedIntrospectionResults" level="${sys:LOG_BEANS_CACHED_LEVEL}" additivity="false">
-            <AppenderRef ref="CONSOLE"/>
+            <AppenderRef ref="CONSOLE_SPRING"/>
         </logger>
 
         <!--
