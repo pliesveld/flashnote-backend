@@ -79,7 +79,7 @@ public class StudentDetailsControllerTest {
     @Test
     public void getAllStudentsEmpty() throws Exception {
         when(adminService.findAllStudentDetails()).thenReturn(new ArrayList<StudentDetails>());
-        mockMvc.perform(get("/admin/student/list"))
+        mockMvc.perform(get("/admin/students"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("[]"));
     }
