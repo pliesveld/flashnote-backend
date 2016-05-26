@@ -25,7 +25,7 @@ public class AuthService implements UserDetailsService {
     private StudentRepository studentRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
 
         final Student student = studentRepository.findOneByEmail(username);
 
@@ -36,7 +36,7 @@ public class AuthService implements UserDetailsService {
 
         student.getEmail();
         student.getPassword();
-        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(student.getRole().toString());
+        final List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(student.getRole().toString());
 
 //        if(LOG.isDebugEnabled(SECURITY_AUTH))
 //        {
@@ -46,7 +46,7 @@ public class AuthService implements UserDetailsService {
 //            LOG.debug(SECURITY_AUTH, sb.toString());
 //        }
 
-        StudentPrincipal principal = new StudentPrincipal(student,authorities);
+        final StudentPrincipal principal = new StudentPrincipal(student,authorities);
         return principal;
     }
 }

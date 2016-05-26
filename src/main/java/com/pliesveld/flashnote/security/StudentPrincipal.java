@@ -16,7 +16,7 @@ final public class StudentPrincipal extends User implements UserDetails {
     private int id;
     private Instant lastPasswordResetDate;
 
-    public StudentPrincipal(final Student student, Collection<GrantedAuthority> authorities) {
+    public StudentPrincipal(final Student student, final Collection<GrantedAuthority> authorities) {
         super(student.getEmail(),student.getPassword(),authorities);
         lastPasswordResetDate = student.getLastPasswordResetDate();
         id = student.getId();

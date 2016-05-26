@@ -16,15 +16,15 @@ import java.util.List;
 public interface CategoryService {
     boolean doesCategoryIdExist(int id);
 
-    Category getCategoryById(Integer id)                                throws CategoryNotFoundException;
+    Category getCategoryById(final int id)                                throws CategoryNotFoundException;
     List<Category> rootCategories();
-    List<Category> childCategories(int categoryId)                      throws CategoryNotFoundException;
-    List<Category> categoriesHavingName(String categoryTerm)            throws CategorySearchException;
-    List<Category> categoriesHavingDescription(String categoryTerm)     throws CategorySearchException;
+    List<Category> childCategories(final int categoryId)                      throws CategoryNotFoundException;
+    List<Category> categoriesHavingName(final String categoryTerm)            throws CategorySearchException;
+    List<Category> categoriesHavingDescription(final String categoryTerm)     throws CategorySearchException;
 
-    Page<Category> findBySearchTerm(String searchTerm, Pageable pageRequest);
+    Page<Category> findBySearchTerm(final String searchTerm, final Pageable pageRequest);
     List<Category> allCategories();
 
     @Transactional
-    Category createCategory(@Valid Category category);
+    Category createCategory(@Valid final Category category);
 }

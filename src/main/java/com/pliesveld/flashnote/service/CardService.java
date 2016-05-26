@@ -15,11 +15,11 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface CardService {
 
-    Question findQuestionById(int id);
+    Question findQuestionById(final int id);
     
-    Answer findAnswerById(int id);
+    Answer findAnswerById(final int id);
     
-    AbstractStatement findStatementById(int id);
+    AbstractStatement findStatementById(final int id);
 
     Long countQuestions();
     
@@ -31,20 +31,20 @@ public interface CardService {
     
     Long countQuestionBanks();
 
-    List<FlashCard> findFlashCardsByContainingQuestionId(int questionId) throws QuestionNotFoundException;
+    List<FlashCard> findFlashCardsByContainingQuestionId(final int questionId) throws QuestionNotFoundException;
 
     @Transactional
-    FlashCard createFlashCard(Question question, Answer answer) throws FlashCardCreateException;
+    FlashCard createFlashCard(final Question question, final Answer answer) throws FlashCardCreateException;
 
     @Transactional
-    FlashCard createFlashCardReferecingQuestion(int questionId, Answer answer) throws QuestionNotFoundException, FlashCardCreateException;
+    FlashCard createFlashCardReferecingQuestion(final int questionId, final Answer answer) throws QuestionNotFoundException, FlashCardCreateException;
 
     @Transactional
-    Question createQuestion(Question question);
+    Question createQuestion(final Question question);
 
     @Transactional
-    Answer createAnswer(Answer answer);
+    Answer createAnswer(final Answer answer);
 
     @Transactional
-    void update(Question question);
+    void update(final Question question);
 }

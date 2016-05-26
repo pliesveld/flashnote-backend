@@ -17,12 +17,12 @@ import java.util.stream.Collectors;
 public class NotificationServiceImpl implements NotificationService {
 
     @Autowired
-    NotificationRepository notificationRepository;
+    private NotificationRepository notificationRepository;
 
     @Autowired
-    StudentDetailsRepository studentDetailsRepository;
+    private StudentDetailsRepository studentDetailsRepository;
 
-    private StudentDetails verifyStudent(int id) throws StudentNotFoundException {
+    private StudentDetails verifyStudent(final int id) throws StudentNotFoundException {
         StudentDetails studentDetails = studentDetailsRepository.findOne(id);
         if(studentDetails == null) {
             throw new StudentNotFoundException(id);
@@ -52,7 +52,7 @@ public class NotificationServiceImpl implements NotificationService {
 
 
     @Override
-    public List<Notification> retrieveStudentMessagesSince(int student_id, Instant last_login) throws StudentNotFoundException {
+    public List<Notification> retrieveStudentMessagesSince(int student_id, final Instant last_login) throws StudentNotFoundException {
         StudentDetails studentDetails = verifyStudent(student_id);
         return notificationRepository.findByRecipientAndCreatedOnLessThanOrderByCreatedOnAsc(studentDetails, last_login).collect(Collectors.toList());
     }

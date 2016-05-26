@@ -22,22 +22,22 @@ public interface StudentService {
     StudentDetails findByName(@NotNull String name);
 
     @Transactional
-    StudentDetails delete(int id)                        throws StudentNotFoundException;
+    StudentDetails delete(final int id)                        throws StudentNotFoundException;
 
-    StudentDetails findStudentDetailsById(int id)        throws StudentNotFoundException;
+    StudentDetails findStudentDetailsById(final int id)        throws StudentNotFoundException;
 
-    Student findStudentById(int id)                      throws StudentNotFoundException;
+    Student findStudentById(final int id)                      throws StudentNotFoundException;
 
     @NotNull
     Long                count();
 
     @NotNull
-    Page<StudentDetails> findAll(Pageable page);
+    Page<StudentDetails> findAll(final Pageable page);
 
     @NotNull
-    List<Deck>          findDecksByOwner(int id);
+    List<Deck>          findDecksByOwner(final int id);
 
     @NotNull
-    List<AbstractStatement> findStatementsBy(StudentDetails studentDetails);
+    List<AbstractStatement> findStatementsBy(final StudentDetails studentDetails);
 
 }

@@ -22,26 +22,26 @@ public interface AccountRegistrationService {
 	void taskPurgeExpiredAccounts();
 
     @Transactional
-    AccountRegistrationToken deleteAccountRegistration(int id);
+    AccountRegistrationToken deleteAccountRegistration(final int id);
 
     @Transactional
-    Student createStudent(String name, String email, String password) throws StudentCreateException;
+    Student createStudent(final String name, final String email, final String password) throws StudentCreateException;
 
     @Transactional
-    AccountRegistrationToken createAccountRegistration(@Valid Student student) throws ResourceRepositoryException;
+    AccountRegistrationToken createAccountRegistration(@Valid final Student student) throws ResourceRepositoryException;
 
     @Transactional
-    AccountPasswordResetToken findOrCreatePasswordResetToken(@Valid Student student);
+    AccountPasswordResetToken findOrCreatePasswordResetToken(@Valid final Student student);
 
     @Transactional
-    Student processRegistrationConfirmation(String token);
+    Student processRegistrationConfirmation(final String token);
 
     @Transactional
-    Student processPasswordResetConfirmation(String token);
+    Student processPasswordResetConfirmation(final String token);
 
-    void emailVerificationConfirmationURLtoAccountHolder(Student student, String confirmURL);
+    void emailVerificationConfirmationURLtoAccountHolder(final Student student, final String confirmURL);
 
-    void emailTemporaryPasswordToAccountHolder(String email, String temp_password);
+    void emailTemporaryPasswordToAccountHolder(final String email, final String temp_password);
 
-    void emailPasswordResetToAccountHolder(String email, String confirmURL);
+    void emailPasswordResetToAccountHolder(final String email, final String confirmURL);
 }

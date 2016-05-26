@@ -31,7 +31,7 @@ public class MailProviderImpl implements MailProvider {
     private SimpleMailMessage templateMessageTemporaryPassword;
 
     @Override
-    public boolean emailAccountRegistrationConfirmationLink(String email, String confirmURL) {
+    public boolean emailAccountRegistrationConfirmationLink(final String email, final String confirmURL) {
         SimpleMailMessage msg = new SimpleMailMessage(this.templateMessageVerificationConfirmation);
         msg.setTo(email);
         msg.setText(msg.getText() + confirmURL);
@@ -48,7 +48,7 @@ public class MailProviderImpl implements MailProvider {
     }
 
     @Override
-    public boolean emailAccountPasswordResetConfirmationLink(String email, String confirmURL) {
+    public boolean emailAccountPasswordResetConfirmationLink(final String email, final String confirmURL) {
         SimpleMailMessage msg = new SimpleMailMessage(this.templateMessagePasswordResetConfirmation);
         msg.setTo(email);
         msg.setText(msg.getText() + confirmURL);
@@ -65,7 +65,7 @@ public class MailProviderImpl implements MailProvider {
 
 
     @Override
-    public boolean emailAccountTemporaryPassword(String email, String temp_password) {
+    public boolean emailAccountTemporaryPassword(final String email, final String temp_password) {
         SimpleMailMessage msg = new SimpleMailMessage(this.templateMessageTemporaryPassword);
         msg.setTo(email);
         msg.setText(msg.getText() + temp_password);

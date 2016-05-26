@@ -24,13 +24,13 @@ import java.util.List;
 public class BankServiceImpl implements BankService {
 
     @Autowired
-    QuestionBankRepository questionBankRepository;
+    private QuestionBankRepository questionBankRepository;
 
     @Autowired
-    QuestionRepository questionRepository;
+    private QuestionRepository questionRepository;
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     @Override
     public List<QuestionBank> findAllQuestionBanks() {
@@ -40,7 +40,7 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public QuestionBank findQuestionBankById(int id) {
+    public QuestionBank findQuestionBankById(final int id) {
         QuestionBank questionBank = questionBankRepository.findOne(id);
         if (questionBank == null) {
             throw new QuestionBankNotFoundException(id);
@@ -53,19 +53,19 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public Question findQuestion(int qb_id, final int que_id) {
-        QuestionBank questionBank = questionBankRepository.findOne(qb_id);
+    public Question findQuestion(final int bankId, final int questionId) {
+        QuestionBank questionBank = questionBankRepository.findOne(bankId);
         if (questionBank == null)
             return null;
 
-        if (questionBank.getQuestions().stream().map(q -> q.getId()).filter(q -> q == que_id).findFirst().isPresent()) {
-            return questionRepository.findOne(que_id);
+        if (questionBank.getQuestions().stream().map(q -> q.getId()).filter(q -> q == questionId).findFirst().isPresent()) {
+            return questionRepository.findOne(questionId);
         }
         return null;
     }
 
     @Override
-    public Page<QuestionBank> findBySearchTerm(String searchTerm, Pageable pageRequest) {
+    public Page<QuestionBank> findBySearchTerm(final String searchTerm, final Pageable pageRequest) {
         Specification<QuestionBank> searchSpec = QuestionBankSpecification.descriptionContainsIgnoreCase(searchTerm);
         return questionBankRepository.findAll(searchSpec, pageRequest);
     }
@@ -81,22 +81,27 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public void updateQuestionBankAddQuestion(@NotNull QuestionBank questionBank, @NotNull Question question) {
+    public void updateQuestionBankAddQuestion(final int questionBankId, @NotNull Question question) {
+        QuestionBank questionBank = questionBankRepository.getOne(questionBankId);
+        if(questionBank == null)
+        {
+            throw new QuestionBankNotFoundException(questionBankId);
+        }
 
-        questionBank = questionBankRepository.findOne(questionBank.getId());
-        if (questionBank == null)
-            throw new QuestionBankNotFoundException(questionBank.getId());
+        if(question.getId() == null) {
+            question = questionRepository.saveAndFlush(question);
+        }
 
-        question = questionRepository.saveAndFlush(question);
         questionBank.add(question);
+
     }
 
     @Override
-    public void updateQuestionBankRemoveQuestion(@NotNull QuestionBank questionBank, int que_id) {
-        if (questionBank.getQuestions().removeIf(q -> q.getId() == que_id))
+    public void updateQuestionBankRemoveQuestion(@NotNull final QuestionBank questionBank, final int questionId) {
+        if (questionBank.getQuestions().removeIf(q -> q.getId() == questionId))
             questionBankRepository.save(questionBank);
         else {
-            throw new QuestionNotFoundException(que_id);
+            throw new QuestionNotFoundException(questionId);
         }
     }
 

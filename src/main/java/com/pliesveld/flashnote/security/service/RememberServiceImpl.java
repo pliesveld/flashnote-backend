@@ -21,14 +21,14 @@ public class RememberServiceImpl implements RememberService {
     RememberTokenRepository rememberTokenRepository;
 
     @Override
-    public void createNewToken(PersistentRememberMeToken token) {
+    public void createNewToken(final PersistentRememberMeToken token) {
         AccountRememberMeToken meToken = new AccountRememberMeToken(token);
         meToken = rememberTokenRepository.save(meToken);
         LOG.debug("Create RememberToken: {}", meToken.toString());
     }
 
     @Override
-    public void updateToken(String series, String tokenValue, Date lastUsed) {
+    public void updateToken(final String series, final String tokenValue, final Date lastUsed) {
         LOG.debug("Updating series: {} to token: {}", series, tokenValue);
 
         AccountRememberMeToken meToken = rememberTokenRepository.findOne(series);
@@ -43,7 +43,7 @@ public class RememberServiceImpl implements RememberService {
 
     @Override
     @Transactional(readOnly = true)
-    public PersistentRememberMeToken getTokenForSeries(String seriesId) {
+    public PersistentRememberMeToken getTokenForSeries(final String seriesId) {
         AccountRememberMeToken token = rememberTokenRepository.findOne(seriesId);
 
         if(token == null)
@@ -57,7 +57,7 @@ public class RememberServiceImpl implements RememberService {
     }
 
     @Override
-    public void removeUserTokens(String username) {
+    public void removeUserTokens(final String username) {
         LOG.debug("Removing token for: {}", username);
         rememberTokenRepository.deleteTokensForUser(username);
     }

@@ -22,7 +22,7 @@ public class CategoryServiceImpl implements CategoryService {
     private static final Logger LOG = LogManager.getLogger();
 
     @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
 
     private void verifyCategoryTerm(String categoryTerm) throws CategorySearchException
     {
@@ -31,7 +31,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category getCategoryById(Integer id) throws CategoryNotFoundException {
+    public Category getCategoryById(int id) throws CategoryNotFoundException {
         Category category = categoryRepository.findOne(id);
         if(category == null)
         {

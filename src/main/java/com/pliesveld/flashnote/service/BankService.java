@@ -19,24 +19,24 @@ public interface BankService {
     @NotNull
     List<QuestionBank> findAllQuestionBanks();
 
-    Question findQuestion(int qb_id, int que_id);
+    Question findQuestion(final int bankId, final int questionId);
 
-    Page<QuestionBank> browseBanks(Pageable pageRequest);
+    Page<QuestionBank> browseBanks(final Pageable pageRequest);
 
-    QuestionBank findQuestionBankById(int id)   throws QuestionBankNotFoundException;
+    QuestionBank findQuestionBankById(final int id)   throws QuestionBankNotFoundException;
 
-    Page<QuestionBank> findBySearchTerm(String searchTerm, Pageable pageRequest);
-
-    @Transactional
-    QuestionBank createQuestionBank(QuestionBank questionBank);
+    Page<QuestionBank> findBySearchTerm(final String searchTerm, final Pageable pageRequest);
 
     @Transactional
-    void deleteQuestionBank(int id)             throws QuestionBankNotFoundException;
+    QuestionBank createQuestionBank(final QuestionBank questionBank);
 
     @Transactional
-    void updateQuestionBankAddQuestion(@NotNull QuestionBank questionBank, @NotNull Question question);
+    void deleteQuestionBank(final int id)             throws QuestionBankNotFoundException;
 
     @Transactional
-    void updateQuestionBankRemoveQuestion(@NotNull QuestionBank questionBank, int que_id) throws QuestionNotFoundException;
+    void updateQuestionBankAddQuestion(final int questionBankId, @NotNull Question question);
+
+    @Transactional
+    void updateQuestionBankRemoveQuestion(@NotNull final QuestionBank questionBank, final int questionId) throws QuestionNotFoundException;
 
 }

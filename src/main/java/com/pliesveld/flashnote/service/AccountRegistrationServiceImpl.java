@@ -33,25 +33,25 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
 
 
     @Autowired
-    MailProvider mailProvider;
+    private MailProvider mailProvider;
 
 	@Autowired
-	RegistrationRepository registrationRepository;
+    private RegistrationRepository registrationRepository;
 
     @Autowired
-    PasswordResetRepository passwordResetRepository;
+    private PasswordResetRepository passwordResetRepository;
 	
 	@Autowired
-	StudentRepository studentRepository;
+    private StudentRepository studentRepository;
 
     @Autowired
-    StudentDetailsRepository studentDetailsRepository;
+    private StudentDetailsRepository studentDetailsRepository;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Override
-    public AccountRegistrationToken createAccountRegistration(@Valid Student student) throws ResourceRepositoryException {
+    public AccountRegistrationToken createAccountRegistration(@Valid final Student student) throws ResourceRepositoryException {
         Integer student_id = student.getId();
 
         if(!studentRepository.exists(student.getId()))
@@ -59,16 +59,16 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
             throw new StudentNotFoundException(student_id);
         }
 
-        String token = UUID.randomUUID().toString().substring(0,8).toUpperCase();
+        final String token = UUID.randomUUID().toString().substring(0,8).toUpperCase();
 
-        AccountRegistrationToken registration = new AccountRegistrationToken(student,token);
+        final AccountRegistrationToken registration = new AccountRegistrationToken(student,token);
         registrationRepository.save(registration);
         return registration;
     }
 
     @Override
-    public AccountPasswordResetToken findOrCreatePasswordResetToken(@Valid Student student) {
-        Integer student_id = student.getId();
+    public AccountPasswordResetToken findOrCreatePasswordResetToken(@Valid final Student student) {
+        final Integer student_id = student.getId();
 
         if(!studentRepository.exists(student_id))
         {
@@ -77,7 +77,7 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
 
         AccountPasswordResetToken resetToken = passwordResetRepository.findOne(student.getId());
 
-        String token = UUID.randomUUID().toString().substring(0,8).toUpperCase();
+        final String token = UUID.randomUUID().toString().substring(0,8).toUpperCase();
 
         if(resetToken == null)
         {
@@ -92,8 +92,8 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
     }
 
     @Override
-    public AccountRegistrationToken deleteAccountRegistration(int id) {
-        AccountRegistrationToken registration = registrationRepository.findOne(id);
+    public AccountRegistrationToken deleteAccountRegistration(final int id) {
+        final AccountRegistrationToken registration = registrationRepository.findOne(id);
         if(registration != null)
         {
             registrationRepository.delete(registration);
@@ -102,14 +102,12 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
     }
 
     @Override
-    public Student createStudent(String name, String email, String password) throws StudentCreateException {
+    public Student createStudent(final String name, final String email, final String password) throws StudentCreateException {
 
-        Student other = studentRepository.findOneByEmail(email);
+        final Student other = studentRepository.findOneByEmail(email);
 
         if(other != null)
             throw new StudentCreateException(email);
-
-        StudentDetails studentDetails = new StudentDetails(name);
 
         Student student = new Student();
         student.setEmail(email);
@@ -117,12 +115,10 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
         student.setPassword(passwordEncoder.encode(password));
         student.setRole(StudentRole.ROLE_ACCOUNT);
 
-        student.setStudentDetails(studentDetails);
-        studentDetails.setStudent(student);
+        final StudentDetails studentDetails = new StudentDetails(student, name);
 
         try {
             student = studentRepository.save(student);
-            studentDetails = studentDetailsRepository.save(studentDetails);
         } catch(DataAccessException cdae) {
             throw new StudentCreateException("Could not create account");
         }

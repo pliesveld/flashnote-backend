@@ -13,22 +13,22 @@ import java.util.List;
 @Validated
 @Transactional(readOnly = true)
 public interface DeckService {
-    Deck findDeckById(int id) throws DeckNotFoundException;
+    Deck findDeckById(final int id) throws DeckNotFoundException;
 
     List<Deck> findAllDecks();
 
-    Page<Deck> findBySearchTerm(String searchTerm, Pageable pageRequest);
+    Page<Deck> findBySearchTerm(final String searchTerm, final Pageable pageRequest);
 
-    Page<Deck> browseDecks(Pageable pageRequest);
-
-    @Transactional
-    void addToDeckFlashCard(Deck deck, FlashCard flashCard);
+    Page<Deck> browseDecks(final Pageable pageRequest);
 
     @Transactional
-    Deck createDeck(Deck deck);
+    void addToDeckFlashCard(final Deck deck, final FlashCard flashCard);
 
     @Transactional
-    void deleteDeck(int id);
+    Deck createDeck(final Deck deck);
+
+    @Transactional
+    void deleteDeck(final int id);
 
 
 }

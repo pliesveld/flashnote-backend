@@ -26,59 +26,59 @@ public class AttachmentServiceImpl implements AttachmentService {
     private static final Logger LOG = LogManager.getLogger();
 
     @Autowired
-    AttachmentRepository attachmentRepository;
+    private AttachmentRepository attachmentRepository;
 
     @Autowired
-    AttachmentBinaryRepository attachmentBinaryRepository;
+    private AttachmentBinaryRepository attachmentBinaryRepository;
 
     @Autowired
-    AttachmentTextRepository attachmentTextRepository;
+    private AttachmentTextRepository attachmentTextRepository;
 
     @Autowired
-    QuestionRepository questionRepository;
+    private QuestionRepository questionRepository;
 
     @Autowired
-    StudentService studentService;
+    private StudentService studentService;
 
-    private StudentDetails verifyStudentDetails(int id) throws StudentNotFoundException
+    private StudentDetails verifyStudentDetails(final int id) throws StudentNotFoundException
     {
-        StudentDetails studentDetails = studentService.findStudentDetailsById(id);
+        final StudentDetails studentDetails = studentService.findStudentDetailsById(id);
         if(studentDetails == null)
             throw new StudentNotFoundException(id);
 
         return studentDetails;
     }
 
-    private Student verifyStudent(int id) throws StudentNotFoundException
+    private Student verifyStudent(final int id) throws StudentNotFoundException
     {
-        Student student = studentService.findStudentById(id);
+        final Student student = studentService.findStudentById(id);
         if(student == null)
             throw new StudentNotFoundException(id);
 
         return student;
     }
 
-    private AbstractAttachment verifyAttachment(int id) throws AttachmentNotFoundException
+    private AbstractAttachment verifyAttachment(final int id) throws AttachmentNotFoundException
     {
-        AbstractAttachment attachment = attachmentRepository.findOneById(id);
+        final AbstractAttachment attachment = attachmentRepository.findOneById(id);
         if( attachment == null )
             throw new AttachmentNotFoundException(id);
 
         return attachment;
     }
 
-    private AttachmentBinary verifyAttachmentBinary(int id) throws AttachmentNotFoundException
+    private AttachmentBinary verifyAttachmentBinary(final int id) throws AttachmentNotFoundException
     {
-        AttachmentBinary attachmentBin = attachmentBinaryRepository.findOne(id);
+        final AttachmentBinary attachmentBin = attachmentBinaryRepository.findOne(id);
 
         if(attachmentBin == null)
             throw new AttachmentNotFoundException(id);
         return attachmentBin;
     }
 
-    private AttachmentText verifyAttachmentText(int id) throws AttachmentNotFoundException
+    private AttachmentText verifyAttachmentText(final int id) throws AttachmentNotFoundException
     {
-        AttachmentText attachmentText = attachmentTextRepository.findOne(id);
+        final AttachmentText attachmentText = attachmentTextRepository.findOne(id);
 
         if(attachmentText == null)
             throw new AttachmentNotFoundException(id);
@@ -92,19 +92,19 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
-    public List<AttachmentBinary> findBinaryAttachmentByStudentEmail(String email) throws StudentNotFoundException {
+    public List<AttachmentBinary> findBinaryAttachmentByStudentEmail(final String email) throws StudentNotFoundException {
         return attachmentBinaryRepository.findAllByAuthor(email).collect(Collectors.toList());
     }
 
     @Override
-    public List<AttachmentText> findTextAttachmentByStudentEmail(String email) throws StudentNotFoundException {
+    public List<AttachmentText> findTextAttachmentByStudentEmail(final String email) throws StudentNotFoundException {
         return attachmentTextRepository.findAllByAuthor(email).collect(Collectors.toList());
     }
 
     @Override
-    public List<AttachmentBinary> findBinaryAttachmentByStudent(int id) throws StudentNotFoundException {
-        Student student = verifyStudent(id);
-        String email;
+    public List<AttachmentBinary> findBinaryAttachmentByStudent(final int id) throws StudentNotFoundException {
+        final Student student = verifyStudent(id);
+        final String email;
         if(!StringUtils.hasText((email = student.getEmail())))
         {
             throw new StudentNotFoundException("No email for student id " + id);
@@ -113,9 +113,9 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
-    public List<AttachmentText> findTextAttachmentByStudent(int id) throws StudentNotFoundException {
-        Student student = verifyStudent(id);
-        String email;
+    public List<AttachmentText> findTextAttachmentByStudent(final int id) throws StudentNotFoundException {
+        final Student student = verifyStudent(id);
+        final String email;
         if(!StringUtils.hasText((email = student.getEmail())))
         {
             throw new StudentNotFoundException("No email for student id " + id);
@@ -124,25 +124,25 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
-    public AbstractAttachment findAttachmentById(int id) throws AttachmentNotFoundException {
-        AbstractAttachment attachment = verifyAttachment(id);
+    public AbstractAttachment findAttachmentById(final int id) throws AttachmentNotFoundException {
+        final AbstractAttachment attachment = verifyAttachment(id);
         return attachment;
     }
 
     @Override
-    public AttachmentBinary findAttachmentBinaryById(int id) throws AttachmentNotFoundException {
-        AttachmentBinary attachment = verifyAttachmentBinary(id);
+    public AttachmentBinary findAttachmentBinaryById(final int id) throws AttachmentNotFoundException {
+        final AttachmentBinary attachment = verifyAttachmentBinary(id);
         return attachment;
     }
 
     @Override
-    public AttachmentText findAttachmentTextById(int id) throws AttachmentNotFoundException {
-        AttachmentText attachment = verifyAttachmentText(id);
+    public AttachmentText findAttachmentTextById(final int id) throws AttachmentNotFoundException {
+        final AttachmentText attachment = verifyAttachmentText(id);
         return attachment;
     }
 
     @Override
-    public void removeAttachmentById(int id) throws AttachmentNotFoundException {
+    public void removeAttachmentById(final int id) throws AttachmentNotFoundException {
         if(attachmentRepository.exists(id))
         {
             questionRepository.findByAttachmentId(id).forEach((stmt) -> stmt.setAttachment(null));
@@ -163,16 +163,16 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
-    public List<AbstractAttachment> findAttachmentByStudent(int id) throws StudentNotFoundException {
+    public List<AbstractAttachment> findAttachmentByStudent(final int id) throws StudentNotFoundException {
 
-        StudentDetails studentDetails = verifyStudentDetails(id);
-        String email = studentDetails.getStudent().getEmail();
+        final StudentDetails studentDetails = verifyStudentDetails(id);
+        final String email = studentDetails.getStudent().getEmail();
 
         return attachmentRepository.findAllByAuthor(email).collect(Collectors.toList());
     }
 
     @Override
-    public AttachmentBinary storeAttachment(@ValidAttachment AttachmentBinary attachment) throws AttachmentUploadException {
+    public AttachmentBinary storeAttachment(@ValidAttachment final AttachmentBinary attachment) throws AttachmentUploadException {
 
         LOG.debug(SERVICE_ATTACHMENT,"Storing attachment {} {} {}", attachment.getAttachmentType(),
                 attachment.getFileName(),attachment.getMimeContentType());
@@ -181,7 +181,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
-    public AttachmentText storeAttachment(@ValidAttachment AttachmentText attachment) throws AttachmentUploadException {
+    public AttachmentText storeAttachment(@ValidAttachment final AttachmentText attachment) throws AttachmentUploadException {
         LOG.debug(SERVICE_ATTACHMENT,"Storing attachment {} {} {}", attachment.getAttachmentType(),
                 attachment.getFileName(),attachment.getMimeContentType());
 
@@ -189,7 +189,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
-    public AttachmentHeader findAttachmentHeaderById(int id) throws AttachmentNotFoundException {
+    public AttachmentHeader findAttachmentHeaderById(final int id) throws AttachmentNotFoundException {
         return attachmentRepository.findAttachmentHeaderById(id);
     }
 

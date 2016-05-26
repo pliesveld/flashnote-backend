@@ -25,51 +25,49 @@ public class StudentServiceImpl implements StudentService {
     private static final Logger LOG = LogManager.getLogger();
 
     @Resource
-    StudentRepository studentRepository;
+    private StudentRepository studentRepository;
 
     @Resource
-    StudentDetailsRepository studentDetailsRepository;
+    private StudentDetailsRepository studentDetailsRepository;
 
     @Resource
-    DeckRepository deckRepository;
+    private DeckRepository deckRepository;
 
     @Resource
-    StatementRepository statementRepository;
-
-
+    private StatementRepository statementRepository;
 
     @Override
-    public List<Deck> findDecksByOwner(int id) {
+    public List<Deck> findDecksByOwner(final int id) {
         return deckRepository.findByOwner(id);
     }
 
     @Override
-    public StudentDetails findStudentDetailsById(int id) {
+    public StudentDetails findStudentDetailsById(final int id) {
         return studentDetailsRepository.findOne(id);
     }
 
     @Override
-    public Student findStudentById(int id) {
+    public Student findStudentById(final int id) {
         return studentRepository.findOne(id);
     }
 
     @Override
-    public Page<StudentDetails> findAll(Pageable page) {
+    public Page<StudentDetails> findAll(final Pageable page) {
         return studentDetailsRepository.findAll(page);
     }
 
     @Override
-    public Student findByEmail(String email) {
+    public Student findByEmail(final String email) {
         return studentRepository.findOneByEmail(email);
     }
 
     @Override
-    public StudentDetails findByName(String name) {
+    public StudentDetails findByName(final String name) {
         return studentDetailsRepository.findByName(name);
     }
 
     @Override
-    public StudentDetails delete(int id) throws StudentNotFoundException {
+    public StudentDetails delete(final int id) throws StudentNotFoundException {
 
         // delete RegistrationToken
         // delete PasswordResetToken
@@ -89,7 +87,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<AbstractStatement> findStatementsBy(StudentDetails studentDetails) throws StudentNotFoundException {
+    public List<AbstractStatement> findStatementsBy(final StudentDetails studentDetails) throws StudentNotFoundException {
         Student student = studentDetails.getStudent();
 
         if(student == null)
@@ -97,8 +95,8 @@ public class StudentServiceImpl implements StudentService {
             throw new StudentNotFoundException(studentDetails.getId());
         }
 
-        String email = studentDetails.getStudent().getEmail();
-        List<AbstractStatement> list = statementRepository.findAllByAuthor(email).collect(Collectors.toList());
+        final String email = studentDetails.getStudent().getEmail();
+        final List<AbstractStatement> list = statementRepository.findAllByAuthor(email).collect(Collectors.toList());
         return list;
     }
 }

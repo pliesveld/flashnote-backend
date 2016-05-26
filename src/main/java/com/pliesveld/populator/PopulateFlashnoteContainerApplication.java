@@ -149,12 +149,15 @@ public class PopulateFlashnoteContainerApplication {
             }
 
             QuestionBank questionBank = new QuestionBank(category, "Commonly asked web developer questions.");
+            questionBank.setCategory(category);
+            questionBank = questionBankRepository.save(questionBank);
             questionBank.add(new Question("What is a RESTful web service?"));
             questionBank.add(new Question("What methods are supported by the HTTP specification?"));
             questionBank.add(new Question("What is a Cross-Origin-Request?"));
             questionBank.add(new Question("Give an example of a stateless request."));
-            questionBank.setCategory(category);
             questionBankRepository.save(questionBank);
+
+/*
 
             questionBank = new QuestionBank(category, "Object Oriented Programming");
             questionBank.add(new Question("What is encapsulation?"));
@@ -166,7 +169,7 @@ public class PopulateFlashnoteContainerApplication {
             questionBank.add(question);
             questionBank.setCategory(category);
             questionBankRepository.save(questionBank);
-
+*/
         };
     }
 
@@ -199,7 +202,7 @@ public class PopulateFlashnoteContainerApplication {
             }
         };
     }
-
+/*
     @Bean
     @Order(10)
     @Transactional
@@ -222,4 +225,5 @@ public class PopulateFlashnoteContainerApplication {
 
         };
     }
+*/
 }

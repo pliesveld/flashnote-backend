@@ -19,35 +19,35 @@ import java.util.List;
 public interface AttachmentService {
     Long countAttachments();
 
-    AbstractAttachment findAttachmentById(int id)                        throws AttachmentNotFoundException;
-    AttachmentBinary findAttachmentBinaryById(int id)                             throws AttachmentNotFoundException;
-    AttachmentText findAttachmentTextById(int id)                                 throws AttachmentNotFoundException;
+    AbstractAttachment findAttachmentById(final int id)                                 throws AttachmentNotFoundException;
+    AttachmentBinary findAttachmentBinaryById(final int id)                             throws AttachmentNotFoundException;
+    AttachmentText findAttachmentTextById(final int id)                                 throws AttachmentNotFoundException;
 
     @Transactional @NotNull
-    AttachmentBinary storeAttachment(@ValidAttachment AttachmentBinary attachment) throws AttachmentUploadException;
+    AttachmentBinary storeAttachment(@ValidAttachment final AttachmentBinary attachment) throws AttachmentUploadException;
 
     @Transactional @NotNull
-    AttachmentText storeAttachment(@ValidAttachment AttachmentText attachment)    throws AttachmentUploadException;
+    AttachmentText storeAttachment(@ValidAttachment final AttachmentText attachment)    throws AttachmentUploadException;
 
     @Transactional
-    void                        removeAttachmentById(int id)                      throws AttachmentNotFoundException;
+    void                        removeAttachmentById(final int id)                      throws AttachmentNotFoundException;
 
     @NotNull
-    List<AbstractAttachment>    findAttachmentByStudent(int id)                   throws StudentNotFoundException;
+    List<AbstractAttachment>    findAttachmentByStudent(final int id)                   throws StudentNotFoundException;
 
     @NotNull
-    List<AttachmentBinary> findBinaryAttachmentByStudentEmail(String email)       throws StudentNotFoundException;
+    List<AttachmentBinary> findBinaryAttachmentByStudentEmail(final String email)       throws StudentNotFoundException;
 
     @NotNull
-    List<AttachmentText> findTextAttachmentByStudentEmail(String email)           throws StudentNotFoundException;
+    List<AttachmentText> findTextAttachmentByStudentEmail(final String email)           throws StudentNotFoundException;
 
     @NotNull
-    List<AttachmentBinary>      findBinaryAttachmentByStudent(int id)             throws StudentNotFoundException;
+    List<AttachmentBinary>      findBinaryAttachmentByStudent(final int id)             throws StudentNotFoundException;
 
     @NotNull
-    List<AttachmentText>        findTextAttachmentByStudent(int id)               throws StudentNotFoundException;
+    List<AttachmentText>        findTextAttachmentByStudent(final int id)               throws StudentNotFoundException;
 
     @NotNull
-    AttachmentHeader findAttachmentHeaderById(int id)                             throws AttachmentNotFoundException;
+    AttachmentHeader findAttachmentHeaderById(final int id)                             throws AttachmentNotFoundException;
 
 }

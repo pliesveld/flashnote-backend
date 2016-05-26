@@ -20,29 +20,29 @@ public class AdminServiceImpl implements AdminService {
     private static final Logger LOG = LogManager.getLogger();
 
     @Autowired
-    StudentRepository studentRepository;
+    private StudentRepository studentRepository;
 
     @Autowired
-    StudentDetailsRepository studentDetailsRepository;
+    private StudentDetailsRepository studentDetailsRepository;
 
     @Autowired
-    RememberTokenRepository rememberTokenRepository;
+    private RememberTokenRepository rememberTokenRepository;
 
     @Autowired
-    RegistrationRepository registrationRepository;
+    private RegistrationRepository registrationRepository;
 
     @Autowired
-    PasswordResetRepository passwordResetRepository;
+    private PasswordResetRepository passwordResetRepository;
 
 
     @Override
-    public void deleteStudent(int id) throws StudentNotFoundException {
+    public void deleteStudent(final int id) throws StudentNotFoundException {
         if(!studentRepository.exists(id))
         {
             throw new StudentNotFoundException(id);
         }
 
-        String username = studentRepository.findOne(id).getEmail();
+        final String username = studentRepository.findOne(id).getEmail();
 
         rememberTokenRepository.deleteTokensForUser(username);
 
@@ -52,7 +52,7 @@ public class AdminServiceImpl implements AdminService {
         studentRepository.delete(id);
     }
 
-    private <ID extends Serializable, R extends CrudRepository<?,ID>> void checkRepositoryAndDelete(R repository, ID id) {
+    private <ID extends Serializable, R extends CrudRepository<?,ID>> void checkRepositoryAndDelete(final R repository, final ID id) {
         if(repository.exists(id))
         {
             repository.delete(id);
@@ -62,7 +62,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public StudentDetails update(StudentDetails studentDetails) throws StudentNotFoundException {
+    public StudentDetails update(final StudentDetails studentDetails) throws StudentNotFoundException {
         return studentDetailsRepository.save(studentDetails);
     }
 
@@ -72,7 +72,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Student createStudent(String name, String email, String password) {
+    public Student createStudent(final String name, final String email, final String password) {
 
 
         Student student = new Student();

@@ -21,13 +21,13 @@ import java.util.List;
 public class DeckServiceImpl implements DeckService {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     @Autowired
-    DeckRepository deckRepository;
+    private DeckRepository deckRepository;
 
     @Override
-    public Deck findDeckById(int id) throws DeckNotFoundException {
+    public Deck findDeckById(final int id) throws DeckNotFoundException {
         Deck deck = deckRepository.findOne(id);
         if(deck == null)
             throw new DeckNotFoundException(id);
@@ -39,13 +39,13 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Override
-    public Page<Deck> findBySearchTerm(String searchTerm, Pageable pageRequest) {
-        Specification<Deck> spec = DeckSpecification.descriptionOrFlashcardContainsIgnoreCase(searchTerm);
+    public Page<Deck> findBySearchTerm(final String searchTerm, final Pageable pageRequest) {
+        final Specification<Deck> spec = DeckSpecification.descriptionOrFlashcardContainsIgnoreCase(searchTerm);
         return deckRepository.findAll(spec, pageRequest);
     }
 
     @Override
-    public Page<Deck> browseDecks(Pageable pageRequest) {
+    public Page<Deck> browseDecks(final Pageable pageRequest) {
         return deckRepository.findAll(pageRequest);
     }
 
@@ -71,12 +71,12 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Override
-    public Deck createDeck(Deck deck) {
+    public Deck createDeck(final Deck deck) {
         return deckRepository.save(deck);
     }
 
     @Override
-    public void deleteDeck(int id) {
+    public void deleteDeck(final int id) {
         if(!deckRepository.exists(id))
             throw new DeckNotFoundException(id);
         deckRepository.delete(id);

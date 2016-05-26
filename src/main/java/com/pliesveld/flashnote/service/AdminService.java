@@ -19,14 +19,14 @@ import java.util.List;
 public interface AdminService {
 
     @Transactional
-    void deleteStudent(int id)                        throws StudentNotFoundException;
+    void deleteStudent(final int id)                        throws StudentNotFoundException;
 
     @Transactional
-    StudentDetails update(StudentDetails studentDetails) throws StudentNotFoundException;
+    StudentDetails update(final StudentDetails studentDetails) throws StudentNotFoundException;
 
     @NotNull
     List<StudentDetails> findAllStudentDetails();
 
     @Transactional
-    Student createStudent(String name, String email, String password);
+    Student createStudent(final String name, final String email, final String password);
 }

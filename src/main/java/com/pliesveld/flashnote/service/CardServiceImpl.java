@@ -16,40 +16,40 @@ public class CardServiceImpl implements CardService {
     private static final Logger LOG = LogManager.getLogger();
 
     @Autowired
-    StatementRepository statementRepository;
+    private StatementRepository statementRepository;
 
     @Autowired
-    QuestionRepository questionRepository;
+    private QuestionRepository questionRepository;
 
     @Autowired
-    QuestionBankRepository questionBankRepository;
+    private QuestionBankRepository questionBankRepository;
 
     @Autowired
-    AnswerRepository answerRepository;
+    private AnswerRepository answerRepository;
 
     @Autowired
-    FlashCardRepository flashCardRepository;
+    private FlashCardRepository flashCardRepository;
 
     @Autowired
-    DeckRepository deckRepository;
+    private DeckRepository deckRepository;
 
     @Override
-    public Question findQuestionById(int id) {
+    public Question findQuestionById(final int id) {
         return questionRepository.findOne(id);
     }
 
     @Override
-    public Answer findAnswerById(int id) {
+    public Answer findAnswerById(final int id) {
         return answerRepository.findOne(id);
     }
 
     @Override
-    public AbstractStatement findStatementById(int id) {
+    public AbstractStatement findStatementById(final int id) {
         return statementRepository.findOneById(id);
     }
 
     @Override
-    public List<FlashCard> findFlashCardsByContainingQuestionId(int questionId) throws QuestionNotFoundException {
+    public List<FlashCard> findFlashCardsByContainingQuestionId(final int questionId) throws QuestionNotFoundException {
         if(!questionRepository.exists(questionId))
             throw new QuestionNotFoundException(questionId);
 
@@ -82,31 +82,31 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public Question createQuestion(Question question) {
+    public Question createQuestion(final Question question) {
         return questionRepository.save(question);
     }
 
     @Override
-    public Answer createAnswer(Answer answer) {
+    public Answer createAnswer(final Answer answer) {
         return answerRepository.save(answer);
     }
 
     @Override
-    public void update(Question question) {
+    public void update(final Question question) {
         questionRepository.save(question);
 
     }
 
     @Override
-    public FlashCard createFlashCard(Question question, Answer answer) {
+    public FlashCard createFlashCard(final Question question, final Answer answer) {
                    
-        FlashCard fc = new FlashCard(question,answer);
+        final FlashCard fc = new FlashCard(question,answer);
         flashCardRepository.save(fc);
         return fc;
     }
 
     @Override
-    public FlashCard createFlashCardReferecingQuestion(int questionId, Answer answer) throws QuestionNotFoundException {
+    public FlashCard createFlashCardReferecingQuestion(final int questionId, Answer answer) throws QuestionNotFoundException {
         if(!questionRepository.exists(questionId))
             throw new QuestionNotFoundException(questionId);
 
@@ -114,12 +114,12 @@ public class CardServiceImpl implements CardService {
         {
             answer = answerRepository.save(answer);
         } else {
-            FlashCard fc = flashCardRepository.findOne(new FlashCardPrimaryKey(questionId, answer.getId()));
+            final FlashCard fc = flashCardRepository.findOne(new FlashCardPrimaryKey(questionId, answer.getId()));
             if(fc != null)
                 throw new FlashCardCreateException(fc.getId());
         }
 
-        Question question = questionRepository.findOne(questionId);
+        final Question question = questionRepository.findOne(questionId);
         return createFlashCard(question,answer);
     }
 

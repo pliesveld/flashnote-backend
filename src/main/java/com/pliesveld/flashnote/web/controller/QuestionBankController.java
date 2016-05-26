@@ -152,7 +152,7 @@ public class QuestionBankController {
         Integer question_id = question.getId();
         if(question_id == null) {
 
-            bankService.updateQuestionBankAddQuestion(questionBank, question);
+            bankService.updateQuestionBankAddQuestion(questionBank.getId(), question);
             return ResponseEntity.created(
                     MvcUriComponentsBuilder
                             .fromController(QuestionBankController.class)
@@ -164,7 +164,7 @@ public class QuestionBankController {
 
         if((question = cardService.findQuestionById(question_id)) != null)
         {
-            bankService.updateQuestionBankAddQuestion(questionBank, question);
+            bankService.updateQuestionBankAddQuestion(questionBank.getId(), question);
         } else {
             return ResponseEntity.notFound().build();
         }
