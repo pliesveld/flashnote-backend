@@ -14,14 +14,16 @@ public class Markers {
     public static final Marker CACHE = MarkerManager.getMarker("CACHE");
     public static final Marker SQL_MARKER = MarkerManager.getMarker("SQL");
 
-    public static final Marker SQL_INIT = MarkerManager.getMarker("SQL_INIT").addParents(SQL_MARKER);
+    public static final Marker INIT = MarkerManager.getMarker("INIT");
+
+    public static final Marker SQL_INIT = MarkerManager.getMarker("SQL_INIT").addParents(SQL_MARKER, INIT);
     public static final Marker SQL_PERSIST = MarkerManager.getMarker("SQL_PERSIST").addParents(SQL_MARKER);
     public static final Marker SQL_UPDATE = MarkerManager.getMarker("SQL_UPDATE").addParents(SQL_MARKER);
     public static final Marker SQL_QUERY = MarkerManager.getMarker("SQL_QUERY").addParents(SQL_MARKER);
     public static final Marker SQL_DELETE = MarkerManager.getMarker("SQL_DELETE").addParents(SQL_MARKER);;
 
     public static final Marker SECURITY = MarkerManager.getMarker("SECURITY");
-    public static final Marker SECURITY_INIT = MarkerManager.getMarker("SECURITY_INIT").addParents(SECURITY);
+    public static final Marker SECURITY_INIT = MarkerManager.getMarker("SECURITY_INIT").addParents(SECURITY, INIT);
     public static final Marker SECURITY_AUTH = MarkerManager.getMarker("SECURITY_AUTH").addParents(SECURITY);
     public static final Marker SECURITY_AUTH_TOKEN = MarkerManager.getMarker("SECURITY_AUTH_TOKEN").addParents(SECURITY_AUTH);
     public static final Marker SECURITY_CACHE = MarkerManager.getMarker("SECURITY_CACHE").addParents(SECURITY_AUTH_TOKEN, CACHE);
@@ -32,7 +34,7 @@ public class Markers {
     public static final Marker AUDIT = MarkerManager.getMarker("AUDIT");
 
     public static final Marker OBJECT_MAPPER = MarkerManager.getMarker("OBJECT_MAPPER");
-    public static final Marker OBJECT_MAPPER_INIT = MarkerManager.getMarker("OBJECT_MAPPER_INIT").addParents(OBJECT_MAPPER);
+    public static final Marker OBJECT_MAPPER_INIT = MarkerManager.getMarker("OBJECT_MAPPER_INIT").addParents(OBJECT_MAPPER, INIT);
     public static final Marker OBJECT_MAPPER_ERROR = MarkerManager.getMarker("OBJECT_MAPPER_ERROR").addParents(OBJECT_MAPPER);
 
     public static final Marker OBJECT_MAPPER_WRITE = MarkerManager.getMarker("OBJECT_MAPPER_WRITE").addParents(OBJECT_MAPPER);
@@ -42,9 +44,10 @@ public class Markers {
     public static final Marker REST_EXCEPTION_INTERNAL = MarkerManager.getMarker("REST_EXCEPTION_INTERNAL").addParents(REST_EXCEPTION);
 
     public static final Marker SERVLET = MarkerManager.getMarker("SERVLET");
-    public static final Marker SERVLET_INIT = MarkerManager.getMarker("SERVLET_INIT").addParents(SERVLET);
+    public static final Marker SERVLET_INIT = MarkerManager.getMarker("SERVLET_INIT").addParents(SERVLET,INIT);
 
     public static final Marker DEBUG = MarkerManager.getMarker("DEBUG");
+    public static final Marker DEBUG_INIT = MarkerManager.getMarker("DEBUG_HEADER").addParents(DEBUG, INIT);
     public static final Marker DEBUG_HEADER = MarkerManager.getMarker("DEBUG_HEADER").addParents(DEBUG);
     public static final Marker DEBUG_IMPORTANT = MarkerManager.getMarker("DEBUG_IMPORTANT").addParents(DEBUG);
     public static final Marker DEBUG_DETAIL = MarkerManager.getMarker("DEBUG_DETAIL").addParents(DEBUG);
