@@ -103,7 +103,7 @@ public class DomainEntities {
    {
        categoryBean = domainBeanHelperService.makeEntityIfNotFound(categoryBean);
 
-       Deck deck = new Deck();
+       Deck deck = new Deck(UUID.randomUUID().toString());
 
        deck.setDescription("Deck title #" + incrementCounter());
        deck.setCategory(categoryBean);

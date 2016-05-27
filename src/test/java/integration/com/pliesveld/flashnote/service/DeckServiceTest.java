@@ -1,11 +1,14 @@
 package com.pliesveld.flashnote.service;
 
 import com.pliesveld.flashnote.domain.*;
+import com.pliesveld.flashnote.exception.FlashCardCreateException;
 import com.pliesveld.flashnote.repository.PopulatedCategoriesRepositoryTest;
 import com.pliesveld.flashnote.repository.PopulatedDecksRepositoryTest;
-import com.pliesveld.flashnote.repository.PopulatedQuestionBanksRepositoryTest;
+
+import com.pliesveld.flashnote.repository.specifications.AnswerSpecification;
+import com.pliesveld.flashnote.repository.specifications.DeckSpecification;
+import com.pliesveld.flashnote.repository.specifications.QuestionSpecification;
 import com.pliesveld.flashnote.spring.Profiles;
-import com.pliesveld.flashnote.spring.SpringServiceTestConfig;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,6 +16,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,12 +25,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.assertTrue;
+import java.util.List;
+import java.util.UUID;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextHierarchy({
-        @ContextConfiguration(name = "REPOSITORY", classes = { PopulatedCategoriesRepositoryTest.class }, loader = AnnotationConfigContextLoader.class)
+        @ContextConfiguration(name = "REPOSITORY", classes = { PopulatedDecksRepositoryTest.class }, loader = AnnotationConfigContextLoader.class)
 })
 public class DeckServiceTest extends AbstractTransactionalServiceUnitTest {
 
@@ -34,82 +41,175 @@ public class DeckServiceTest extends AbstractTransactionalServiceUnitTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Autowired
-    CardService cardService;
+    private DeckService deckService;
 
-    @Autowired
-    DeckService deckService;
-
-    private Integer category_id;
-
+    private static Integer category_id;
 
     @Test
     public void whenContextLoad_thenCorrect()
     {
         assertTrue(categoryRepository.count() > 0);
-
+        assertTrue(deckRepository.count() > 0);
     }
-
 
     @Before
     public void givenExistingCategory()
     {
-        Category category = findFirstCategory();
-        category_id = category.getId();
-    }
-
-    @Transactional
-    private Category findFirstCategory() {
-        Category category = categoryRepository.findAll().iterator().next();
-        return category;
+        if( category_id == null )
+        {
+            Category category = categoryRepository.findOneByNameEquals("TEST DECK CATEGORY");
+            category_id = category.getId();
+        }
     }
 
     @Test
-    @DirtiesContext
     public void whenCreateDeck_thenCorrect() {
 
-        Deck deck = new Deck();
+        Deck deck = new Deck(UUID.randomUUID().toString());
         Category category = new Category();
         category.setId(category_id);
         deck.setCategory(category);
-
         deck = deckService.createDeck(deck);
-
-        assertDeckRepositoryCount(1);
+        assertNotNull(deck);
+        assertNotNull(deck.getId());
     }
 
     @Test
-    @DirtiesContext
-    public void whenCreateTwoDeck_thenCorrect() {
-
-        Deck deck = new Deck();
-        Category category = new Category();
-        category.setId(category_id);
-        deck.setCategory(category);
-
-        deckService.createDeck(deck);
-
-        deck = new Deck();
-        category.setId(category_id);
-        deck.setCategory(category);
-
-        deckService.createDeck(deck);
-
-        assertDeckRepositoryCount(2);
-    }
-
-    @Test
-    @DirtiesContext
     public void whenCreatingDeckWithFlashCard_thenCorrect() {
 
-        Deck deck = new Deck();
+        Deck deck = new Deck(UUID.randomUUID().toString());
+        Category category = new Category();
+        category.setId(category_id);
+        deck.setCategory(category);
+        deck = deckService.createDeck(deck);
+        FlashCard flashCard = new FlashCard(new Question("Que?"), new Answer(("Ans.")));
+        deckService.addToDeckFlashCard(deck, flashCard);
+    }
+
+
+    @Test
+    public void whenCreatingDeckWithFlashCardCascade_thenCorrect() {
+
+        Deck deck = new Deck(UUID.randomUUID().toString());
         Category category = new Category();
         category.setId(category_id);
         deck.setCategory(category);
 
+        FlashCard flashCard = new FlashCard(new Question("Que?"), new Answer(("Ans.")));
+        deck.getFlashcards().add(flashCard);
+
         deck = deckService.createDeck(deck);
 
-        FlashCard flashCard = new FlashCard(new Question("Que?"), new Answer(("Ans.")));
+        assertNotNull(deck);
+        assertNotNull(deck.getId());
+    }
+
+
+    @Test
+    public void givenQuestion_whenCreatingDeckWithFlashCardByReferencingQuestion_thenCorrect() {
+        Deck deck = new Deck(UUID.randomUUID().toString());
+        Category category = new Category();
+        category.setId(category_id);
+        deck.setCategory(category);
+        deck = deckService.createDeck(deck);
+        final Specification<Question> spec = QuestionSpecification.contentContainsIgnoreCase("EXISTINGQUESTION");
+        final Question question = questionRepository.findOne(spec);
+        assertNotNull(question);
+        FlashCard flashCard = new FlashCard(question, new Answer(("Ans.")));
         deckService.addToDeckFlashCard(deck, flashCard);
+    }
+
+
+    @Test
+    public void givenAnswer_whenCreatingDeckWithFlashCardByReferenceAnswer_thenCorrect() {
+        Deck deck = new Deck(UUID.randomUUID().toString());
+        Category category = new Category();
+        category.setId(category_id);
+        deck.setCategory(category);
+        deck = deckService.createDeck(deck);
+        final Specification<Answer> answerSpec = AnswerSpecification.contentContainsIgnoreCase("EXISTINGANSWER");
+        final Answer answer = answerRepository.findOne(answerSpec);
+        assertNotNull(answer);
+        FlashCard flashCard = new FlashCard(new Question("Que?"), answer);
+        deckService.addToDeckFlashCard(deck, flashCard);
+    }
+
+    @Test
+    public void givenQuestion_whenCreatingDeckWithFlashCardByReference_thenCorrect() {
+
+        Deck deck = new Deck(UUID.randomUUID().toString());
+        Category category = new Category();
+        category.setId(category_id);
+        deck.setCategory(category);
+        deck = deckService.createDeck(deck);
+        final Specification<Question> questionSpec = QuestionSpecification.contentContainsIgnoreCase("EXISTINGQUESTION");
+        final Question question = questionRepository.findOne(questionSpec);
+        assertNotNull(question);
+        final Specification<Answer> answerSpec = AnswerSpecification.contentContainsIgnoreCase("EXISTINGANSWER");
+        final Answer answer = answerRepository.findOne(answerSpec);
+        assertNotNull(answer);
+        FlashCard flashCard = new FlashCard(question, answer);
+        deckService.addToDeckFlashCard(deck, flashCard);
+    }
+
+
+    @Test
+    public void givenExistingDeck_whenFind_thenCorrect() {
+
+        final Specification<Deck> deckSpec = DeckSpecification.descriptionOrFlashcardContainsIgnoreCase("EXISTINGDECK");
+
+        Deck deck = deckRepository.findOne(deckSpec);
+        assertNotNull(deck);
+        assertNotNull(deck.getId());
+
+        final int deckId = deck.getId();
+
+        deck = deckService.findDeckById(deckId);
+
+
+        final Specification<Question> questionSpec = QuestionSpecification.contentContainsIgnoreCase("EXISTINGQUESTION");
+        final Question question = questionRepository.findOne(questionSpec);
+        assertNotNull(question);
+        assertNotNull(question.getId());
+
+        final Specification<Answer> answerSpec = AnswerSpecification.contentContainsIgnoreCase("EXISTINGANSWER");
+        final Answer answer = answerRepository.findOne(answerSpec);
+        assertNotNull(answer);
+        assertNotNull(answer.getId());
+
+        List<FlashCard> flashcards = deck.getFlashcards();
+
+        assertNotNull(flashcards);
+
+        assertTrue(flashcards.stream().map(FlashCard::getId).map(FlashCardPrimaryKey::getQuestionId).anyMatch(id -> id.equals(question.getId())));
+        assertTrue(flashcards.stream().map(FlashCard::getId).map(FlashCardPrimaryKey::getAnswerId).anyMatch(id -> id.equals(answer.getId())));
+    }
+
+
+    @Test(expected = FlashCardCreateException.class)
+    public void givenExistingDeck_whenAddingExistingFlashCard_thenCorrect() {
+
+        final Specification<Deck> deckSpec = DeckSpecification.descriptionOrFlashcardContainsIgnoreCase("EXISTINGDECK");
+
+        Deck deck = deckRepository.findOne(deckSpec);
+        assertNotNull(deck);
+        assertNotNull(deck.getId());
+
+        final int deckId = deck.getId();
+
+        final Specification<Question> questionSpec = QuestionSpecification.contentContainsIgnoreCase("EXISTINGQUESTION");
+        final Question question = questionRepository.findOne(questionSpec);
+        assertNotNull(question);
+        assertNotNull(question.getId());
+
+        final Specification<Answer> answerSpec = AnswerSpecification.contentContainsIgnoreCase("EXISTINGANSWER");
+        final Answer answer = answerRepository.findOne(answerSpec);
+        assertNotNull(answer);
+        assertNotNull(answer.getId());
+
+        FlashCard flashCard = new FlashCard(question, answer);
+        deckService.addToDeckFlashCard(deckId,flashCard);
+
     }
 
 

@@ -53,7 +53,7 @@ public class Deck extends DomainBaseEntity<Integer> implements Serializable
     @Size(min = Constants.MIN_DECK_DESCRIPTION_LENGTH, max = Constants.MAX_DECK_DESCRIPTION_LENGTH)
     @Column(name = "DECK_DESCRIPTION", length = Constants.MAX_DECK_DESCRIPTION_LENGTH, nullable = false)
     @JsonView(Views.Summary.class)
-    private String description = "Untitled";
+    private String description;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -70,16 +70,17 @@ public class Deck extends DomainBaseEntity<Integer> implements Serializable
         super();
     }
 
-    public Deck(FlashCard... cards) {
+    public Deck(final String description) {
+        this.description = description;
+    }
+
+    public Deck(final String description, FlashCard... cards) {
+        this(description);
+
         for(FlashCard fc : cards)
         {
             flashcards.add(fc);
         }
-    }
-
-    public Deck(String description, FlashCard... flashcards) {
-        this(flashcards);
-        this.description = description;
     }
 
     public String getDescription() {

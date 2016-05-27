@@ -5,8 +5,26 @@
         {
             "@id" : 500,
             "name" : "Test category for two decks",
-            "description" : "The contents of this category was populated from test-data-deck-two.json"
+            "description" : "The contents of this category was populated from test-data-deck.json"
 
+        },
+        {
+            "@id" : 501,
+            "name" : "TEST DECK CATEGORY",
+            "description" : "The contents of this category was populated from test-data-deck.json"
+
+        }
+    ],
+    "questions" : [
+        {
+            "@id" : 10000,
+            "content" : "EXISTINGQUESTION"
+        }
+    ],
+    "answers" : [
+        {
+            "@id" : 20000,
+            "content" : "EXISTINGANSWER"
         }
     ],
 
@@ -36,6 +54,16 @@
                 "answer" : {
                     "content" : "Hibernate uses a proxy object to support lazy-loading of mapped entities and persistent collections.  Instead of pulling all attributes when an entity is loaded, it waits until a getter method is called from the application code before loading the linked object.  Persistent collections are also proxy-loaded.  When you initialize a collection, it doesn't mean that the contents themselves are fully initialized."
                 }
+            }]
+        },
+        {
+            "id" : 90002,
+            "@id" : 90002,
+            "category" : 500,
+            "description" : "EXISTINGDECK",
+            "flashcards" : [{
+                "question" : 10000,
+                "answer" :   20000
             }]
         }
     ]

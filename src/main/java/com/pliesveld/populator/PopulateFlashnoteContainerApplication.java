@@ -137,7 +137,7 @@ public class PopulateFlashnoteContainerApplication {
 
             populateMessagesFor(studentDetails);
 
-            Deck deck = new Deck();
+            Deck deck = new Deck(UUID.randomUUID().toString());
             deck.setFlashcards(flashCards);
             deck.setCategory(category);
 

@@ -21,14 +21,17 @@ public interface DeckService {
 
     Page<Deck> browseDecks(final Pageable pageRequest);
 
+    @Deprecated
     @Transactional
     void addToDeckFlashCard(final Deck deck, final FlashCard flashCard);
+
+    @Transactional
+    void addToDeckFlashCard(final int deckId, final FlashCard flashCard) throws DeckNotFoundException;
 
     @Transactional
     Deck createDeck(final Deck deck);
 
     @Transactional
     void deleteDeck(final int id);
-
 
 }
