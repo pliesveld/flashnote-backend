@@ -19,7 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @Configuration
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
-@Import({SpringDataConfig.class, SpringAuditConfig.class, PersistenceContext.class})
+//@Import({SpringDataConfig.class, SpringAuditConfig.class, PersistenceContext.class})
 @ComponentScan(basePackageClasses = FlashNoteService.class,
         excludeFilters = { @ComponentScan.Filter(Controller.class)})
 public class SpringServiceTestConfig

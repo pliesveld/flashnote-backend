@@ -38,7 +38,8 @@ public class Category extends DomainBaseEntity<Integer> implements Serializable
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "category_gen", sequenceName = "category_id_seq", initialValue = 500)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_gen")
     @Column(name = "CATEGORY_ID")
     @JsonView(Views.Summary.class)
     public Integer getId() {
@@ -120,6 +121,8 @@ public class Category extends DomainBaseEntity<Integer> implements Serializable
     public void setParentCategory(Category parentCategory)
     {
         this.parentCategory = parentCategory;
+        if(this.parentCategory != null)
+            this.parentCategory.getChildCategories().add(this);
     }
 
     protected void setChildCategories(Set<Category> childCategories)

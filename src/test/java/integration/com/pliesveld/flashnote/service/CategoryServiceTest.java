@@ -23,7 +23,7 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @DefaultServiceTestAnnotations
-@Transactional
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class CategoryServiceTest extends AbstractTransactionalServiceUnitTest{
     private static final Logger LOG = LogManager.getLogger();
 
@@ -37,7 +37,9 @@ public class CategoryServiceTest extends AbstractTransactionalServiceUnitTest{
         category.setName("ROOT");
         category.setDescription("This is a category with a ROOT description");
 
-        categoryRepository.save(category);
+        category = categoryService.createCategory(category);
+        assertNotNull(category);
+        assertNotNull(category.getId());
         assertEquals(1,categoryRepository.count());
         assertNotNull(category.getId());
     }
@@ -49,7 +51,7 @@ public class CategoryServiceTest extends AbstractTransactionalServiceUnitTest{
         category.setName("ROOT");
         category.setDescription("This is a category with a ROOT description");
 
-        categoryRepository.save(category);
+        categoryService.createCategory(category);
         assertEquals(1,categoryRepository.count());
 
         List<Category> categoryList = categoryService.categoriesHavingName ("ROOT");
@@ -64,7 +66,7 @@ public class CategoryServiceTest extends AbstractTransactionalServiceUnitTest{
         category.setName("ROOT");
         category.setDescription("This is a category with a ROOT description");
 
-        categoryRepository.save(category);
+        categoryService.createCategory(category);
         assertEquals(1,categoryRepository.count());
 
         List<Category> categoryList = categoryService.categoriesHavingName (" ROOT ");
@@ -84,7 +86,7 @@ public class CategoryServiceTest extends AbstractTransactionalServiceUnitTest{
         category_child.setDescription("This is a category with a CHILD description");
 
         category_child.setParentCategory(category);
-        categoryRepository.save(category_child);
+        categoryService.createCategory(category_child);
         assertEquals(2, categoryRepository.count());
     }
 
@@ -105,20 +107,16 @@ public class CategoryServiceTest extends AbstractTransactionalServiceUnitTest{
         Category category_root = new Category();
         category_root.setName("ROOT THAT HAS CHILDREN");
         category_root.setDescription("This is a category with a ROOT description");
-        categoryRepository.save(category_root);
 
         Category category_child = new Category();
         category_child.setName("CHILD");
         category_child.setDescription("This is a category with a CHILD description");
         category_child.setParentCategory(category_root);
-        categoryRepository.save(category_child);
-
+        categoryService.createCategory(category_child);
 
         assertEquals(6, categoryRepository.count());
-//        assertEquals(5,categoryRepository.findByParentCategoryIsNull().size());
         assertNotNull(category_root.getId());
         assertEquals(1,categoryRepository.findByParentCategory_id(category_root.getId()).size());
-
     }
 
 

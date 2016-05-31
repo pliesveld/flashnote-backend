@@ -1,0 +1,49 @@
+{
+    "_class" : "com.pliesveld.flashnote.spring.DataSet",
+
+    "categories" : [
+        {
+            "@id" : 500,
+            "name" : "TEST CATEGORY SHARED",
+            "description" : "The contents of this category was populated from test-data-deck-ref.json"
+
+        }
+    ],
+
+    "questions" : [
+        {
+            "@id" : 10000,
+            "content" : "What is the difference between TCP and UDP?"
+        }
+    ],
+    "answers" : [
+        {
+            "@id" : 20000,
+            "content" : "Transmission Control Protocol is a byte-stream oriented connection between two machines over the network.  It offers a reliable way to transmit data over a lossy network.  Data sent from one machine is guaranteed to be received in the same order it was sent.  UDP is a datagram protocol, and delivery is not guaranteed.  TCP has a session state in the kernel that must be setup in a three-way handshake.  It maintains the last acknowledged sequence number, and the last sent frame, window size, and timeouts.  UDP is fire and forget.  "
+        }
+    ],
+
+    "questionBanks" : [
+        {
+            "category" : 500,
+            "description" : "Basic jUnit interview questions.",
+            "questions" : [10000]
+        }
+    ],
+    "decks" : [
+        {
+            "id" : 90000,
+            "@id" : 90000,
+            "category" : 500,
+            "description" : "TCP/IP questions",
+            "flashcards" : [
+                {
+                    "question" : 10000,
+                    "answer"   : 20000
+                }
+            ]
+        }
+    ]
+
+}
+

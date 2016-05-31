@@ -54,21 +54,27 @@ public abstract class AbstractPopulatedRepositoryUnitTest extends AbstractTransa
 
         LOG_SQL.info("Categories");
         categoryRepository.findAll().forEach(this::debugEntity);
+        entityManager.clear();
 
         LOG_SQL.info("Questions");
         questionRepository.findAll().forEach(this::debugEntity);
+        entityManager.clear();
 
         LOG_SQL.info("Bank");
         questionBankRepository.findAll().forEach(this::debugEntity);
+        entityManager.clear();
 
         LOG_SQL.info("Answers");
         answerRepository.findAll().forEach(this::debugEntity);
+        entityManager.clear();
 
         LOG_SQL.info("Flashcards");
         flashCardRepository.findAll().forEach(this::debugEntity);
+        entityManager.clear();
 
         LOG_SQL.info("Deck");
         deckRepository.findAll().forEach(this::debugEntity);
+        entityManager.clear();
 
     }
 

@@ -13,6 +13,7 @@ import javax.persistence.PersistenceContext;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -79,7 +80,7 @@ public class DeckTest extends StudentDetailsTest
         entityManager.persist(fc1);
         entityManager.persist(fc2);
 
-        Deck deck = new Deck();
+        Deck deck = new Deck(UUID.randomUUID().toString());
         deck.getFlashcards().add(fc1);
         deck.getFlashcards().add(fc2);
         deck.setCategory(category);

@@ -227,7 +227,6 @@ final public class QuestionBankTest extends AbstractTransactionalDomainEntityUni
 
         assertFalse(persistenceUtil.isLoaded(questionBank, "questions"));
 
-        enableSQL();
 //        Hibernate.initialize(questionCollectionProxy);
 //        disableSQL();
 //

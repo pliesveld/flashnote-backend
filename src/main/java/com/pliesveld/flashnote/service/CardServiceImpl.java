@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 @Service(value = "cardService")
 public class CardServiceImpl implements CardService {
     private static final Logger LOG = LogManager.getLogger();
@@ -95,6 +98,16 @@ public class CardServiceImpl implements CardService {
     public void update(final Question question) {
         questionRepository.save(question);
 
+    }
+
+    @Override
+    public void deleteAnswer(final int answerId) {
+        answerRepository.delete(answerId);
+    }
+
+    @Override
+    public void deleteQuestion(final int questionId) {
+        questionRepository.delete(questionId);
     }
 
     @Override

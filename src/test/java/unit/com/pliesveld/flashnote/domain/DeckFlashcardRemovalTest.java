@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
+import java.util.UUID;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -69,7 +70,7 @@ public class DeckFlashcardRemovalTest extends StudentDetailsTest
             entityManager.persist(ans);
             
             FlashCard fc = new FlashCard(que,ans);
-            Deck deck = new Deck();
+            Deck deck = new Deck(UUID.randomUUID().toString());
             deck.getFlashcards().add(fc);
             deck.setCategory(category);
 

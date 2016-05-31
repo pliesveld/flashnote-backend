@@ -9,7 +9,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 @Component
-@TestExecutionListeners(listeners = LogHibernateTestExecutionListener.class, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 public abstract class AbstractTransactionalRepositoryUnitTest extends AbstractRepositoryUnitTest
 {
     @PersistenceContext

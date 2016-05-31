@@ -118,7 +118,6 @@ final public class QuestionBankFlashCardDeleteTest extends AbstractTransactional
 
     @Test
     public void whenFlashCardRemoveAll_thenCorrect() {
-        enableSQL();
         flashCardRepository.deleteAll();
     }
 
@@ -142,8 +141,6 @@ final public class QuestionBankFlashCardDeleteTest extends AbstractTransactional
 
     @Test
     public void whenFlashCardRemoveByReference_thenCorrect() {
-
-        enableSQL();
 
         FlashCard fc = flashCardRepository.getOne(fc_id);
         assertFalse(Hibernate.isInitialized(fc));

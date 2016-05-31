@@ -1,0 +1,49 @@
+{
+    "_class" : "com.pliesveld.flashnote.spring.DataSet",
+
+    "categories" : [
+        {
+            "@id" : 500,
+            "name" : "TEST CATEGORY SHARED",
+            "description" : "The contents of this category was populated from test-data-shared-ref.json"
+
+        }
+    ],
+
+    "questions" : [
+        {
+            "@id" : 10000,
+            "content" : "SHARED_QUESTION"
+        }
+    ],
+    "answers" : [
+        {
+            "@id" : 20000,
+            "content" : "ANSWER"
+        }
+    ],
+
+    "questionBanks" : [
+        {
+            "category" : 500,
+            "description" : "BANK",
+            "questions" : [10000]
+        }
+    ],
+    "decks" : [
+        {
+            "id" : 90000,
+            "@id" : 90000,
+            "category" : 500,
+            "description" : "DECK",
+            "flashcards" : [
+                {
+                    "question" : 10000,
+                    "answer"   : 20000
+                }
+            ]
+        }
+    ]
+
+}
+

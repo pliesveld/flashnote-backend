@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -31,6 +32,7 @@ import static org.junit.Assert.assertNotNull;
 @ContextHierarchy({
         @ContextConfiguration(name = "REPOSITORY", classes = { PopulatedCategoriesRepositoryTest.class }, loader = AnnotationConfigContextLoader.class)
 })
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public class BankServiceTest extends AbstractTransactionalServiceUnitTest {
 
     @Autowired

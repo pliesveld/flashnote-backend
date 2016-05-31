@@ -70,7 +70,6 @@ public class QuestionAttachmentTextTest extends AbstractDomainEntityUnitTest {
     @Test
     public void givenTextAttachment_whenLoadingQuestionById()
     {
-        enableSQL();
         Question question = questionRepository.findOneById((Integer) question_id);
         assertNotNull(question);
         assertTrue(Hibernate.isInitialized(question));

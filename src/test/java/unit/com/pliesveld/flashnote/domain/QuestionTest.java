@@ -47,7 +47,6 @@ final public class QuestionTest extends com.pliesveld.flashnote.domain.AbstractT
     public void givenClearedContext_whenProxy_thenCorrect()
     {
         entityManager.clear();
-        enableSQL();
         Question question = questionRepository.getOne(que_id);
         Question question2 = questionRepository.getOne(que_id);
         assertNotNull(question);
@@ -57,7 +56,6 @@ final public class QuestionTest extends com.pliesveld.flashnote.domain.AbstractT
     public void givenClearedContext_whenProxyGetId_thenCorrect()
     {
         entityManager.clear();
-        enableSQL();
         Question question = questionRepository.getOne(que_id);
         assertNotNull(question);
         question.getId();
@@ -67,7 +65,6 @@ final public class QuestionTest extends com.pliesveld.flashnote.domain.AbstractT
     public void givenClearedContext_whenLoad_thenCorrect()
     {
         entityManager.clear();
-        enableSQL();
         Question question = questionRepository.findOne(que_id);
         assertNotNull(question);
         entityManager.detach(question);

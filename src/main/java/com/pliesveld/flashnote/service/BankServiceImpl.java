@@ -20,6 +20,9 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 @Service("bankService")
 public class BankServiceImpl implements BankService {
 
@@ -108,8 +111,12 @@ public class BankServiceImpl implements BankService {
     @Override
     public void deleteQuestionBank(int id) {
         if (!questionBankRepository.exists(id))
-            throw new QuestionNotFoundException(id);
+            throw new QuestionBankNotFoundException(id);
         questionBankRepository.delete(id);
     }
 
+    @Override
+    public List<QuestionBank> findByContainsQuestion(final int questionId) {
+            return questionBankRepository.findByQuestionsContaining(questionId);
+    }
 }

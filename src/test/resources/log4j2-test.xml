@@ -9,6 +9,7 @@
         <Property name="LOG_AUDIT_LEVEL">WARN</Property>
         <Property name="LOG_BEANS_LEVEL">WARN</Property>
         <Property name="LOG_BEANS_CACHED_LEVEL">WARN</Property>
+        <Property name="LOG_TEST_LEVEL">WARN</Property>
 
     </Properties>
 
@@ -46,6 +47,10 @@
             <AppenderRef ref="CONSOLE"/>
         </logger>
 
+        <logger name="org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener" level="${sys:LOG_TEST_LEVEL}" additivity="false">
+            <AppenderRef ref="CONSOLE"/>
+        </logger>
+
         <logger name="org.springframework.data.auditing" level="${sys:LOG_AUDIT_LEVEL}" additivity="false">
             <AppenderRef ref="CONSOLE"/>
         </logger>
@@ -54,11 +59,11 @@
             <AppenderRef ref="CONSOLE"/>
         </logger>
 
-        <logger name="org.springframework.beans" level="${sys:LOG_BEANS_LEVEL}" additivity="false">
+        <logger name="org.springframework.beans.CachedIntrospectionResults" level="${sys:LOG_BEANS_CACHED_LEVEL}" additivity="false">
             <AppenderRef ref="CONSOLE"/>
         </logger>
 
-        <logger name="org.springframework.beans.CachedIntrospectionResults" level="${sys:LOG_BEANS_CACHED_LEVEL}" additivity="false">
+        <logger name="org.springframework.beans" level="${sys:LOG_BEANS_LEVEL}" additivity="false">
             <AppenderRef ref="CONSOLE"/>
         </logger>
 

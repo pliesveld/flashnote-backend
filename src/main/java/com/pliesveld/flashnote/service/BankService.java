@@ -12,6 +12,9 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 @Validated
 @Transactional(readOnly = true)
 public interface BankService {
@@ -26,6 +29,8 @@ public interface BankService {
     QuestionBank findQuestionBankById(final int id)   throws QuestionBankNotFoundException;
 
     Page<QuestionBank> findBySearchTerm(final String searchTerm, final Pageable pageRequest);
+
+    List<QuestionBank> findByContainsQuestion(final int questionId);
 
     @Transactional
     QuestionBank createQuestionBank(final QuestionBank questionBank);

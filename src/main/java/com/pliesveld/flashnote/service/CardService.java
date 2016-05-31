@@ -47,4 +47,10 @@ public interface CardService {
 
     @Transactional
     void update(final Question question);
+
+    @Transactional
+    void deleteAnswer(final int answerId);
+
+    @Transactional
+    void deleteQuestion(int questionId);
 }

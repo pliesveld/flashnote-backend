@@ -16,6 +16,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -35,6 +36,7 @@ import static org.junit.Assert.*;
 @ContextHierarchy({
         @ContextConfiguration(name = "REPOSITORY", classes = { PopulatedDecksRepositoryTest.class }, loader = AnnotationConfigContextLoader.class)
 })
+@DirtiesContext
 public class DeckServiceTest extends AbstractTransactionalServiceUnitTest {
 
     @Rule
@@ -134,7 +136,7 @@ public class DeckServiceTest extends AbstractTransactionalServiceUnitTest {
         deckService.addToDeckFlashCard(deck, flashCard);
     }
 
-    @Test
+    @Test(expected = DataIntegrityViolationException.class)
     public void givenQuestion_whenCreatingDeckWithFlashCardByReference_thenCorrect() {
 
         Deck deck = new Deck(UUID.randomUUID().toString());

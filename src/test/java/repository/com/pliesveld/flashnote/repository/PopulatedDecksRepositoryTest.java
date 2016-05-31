@@ -33,8 +33,12 @@ public class PopulatedDecksRepositoryTest extends AbstractPopulatedRepositoryUni
         return repositorySettings;
     }
 
-//    @Test
+    @Test
     public void whenContextLoad_thenCorrect() {
+
+    }
+
+    public void testRepositoryCount() {
         long que_count = questionRepository.count();
         long ans_count = answerRepository.count();
         long cat_count = categoryRepository.count();
@@ -54,7 +58,6 @@ public class PopulatedDecksRepositoryTest extends AbstractPopulatedRepositoryUni
 
     }
 
-//    @Test
     @Transactional
     public void testFindDecks()
     {
