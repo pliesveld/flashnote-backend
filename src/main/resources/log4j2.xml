@@ -40,9 +40,13 @@
     <Appenders>
         <Console name="CONSOLE" target="SYSTEM_OUT">
 
-            <xi:include href="log4j2-xinclude-console-filters.xml" />
+            <xi:include href="logging/log4j2-xinclude-console-filters.xml">
+                <xi:fallback>
+                </xi:fallback>
+            </xi:include>
 
-            <xi:include href="log4j2-xinclude-pattern-default.xml">
+
+            <xi:include href="logging/log4j2-xinclude-pattern-default.xml">
                 <xi:fallback>
                     <PatternLayout pattern="${leveltag} %c %message%rEx{4}%n" />
                 </xi:fallback>

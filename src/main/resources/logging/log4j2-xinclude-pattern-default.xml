@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PatternLayout alwaysWriteExceptions="false">
+
+    <MarkerPatternSelector defaultPattern="${leveltag} %.20c %message%rEx{4}%n">
+
+        <PatternMatch key="INIT" pattern="${leveltag} %yellow{%message}%xEx{filters(${filters})}%n"/>
+
+        <PatternMatch key="DEBUG" pattern="${leveltag} ${loggertag_debug} %yellow{%message}%xEx{filters(${filters})}%n"/>
+
+        <PatternMatch key="SQL" pattern="%message%n"/>
+
+    </MarkerPatternSelector>
+
+</PatternLayout>
+

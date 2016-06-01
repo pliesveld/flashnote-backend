@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Filters>
+    <MarkerFilter marker="SECURITY" onMatch="DENY" onMismatch="NEUTRAL"/>
+    <MarkerFilter marker="OBJECT_MAPPER" onMatch="DENY" onMismatch="NEUTRAL"/>
+</Filters>
+
