@@ -4,9 +4,12 @@ import com.pliesveld.flashnote.domain.Question;
 import com.pliesveld.flashnote.domain.QuestionBank;
 import com.pliesveld.flashnote.exception.QuestionBankNotFoundException;
 import com.pliesveld.flashnote.exception.QuestionNotFoundException;
+import com.pliesveld.flashnote.repository.FlashCardRepository;
 import com.pliesveld.flashnote.repository.QuestionBankRepository;
 import com.pliesveld.flashnote.repository.QuestionRepository;
 import com.pliesveld.flashnote.repository.specifications.QuestionBankSpecification;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,15 +22,18 @@ import javax.persistence.PersistenceContext;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import java.util.stream.Collectors;
 
 @Service("bankService")
 public class BankServiceImpl implements BankService {
 
+    private static final Logger LOG = LogManager.getLogger();
+
     @Autowired
     private QuestionBankRepository questionBankRepository;
+
+    @Autowired
+    private FlashCardRepository flashCardRepository;
 
     @Autowired
     private QuestionRepository questionRepository;
@@ -62,7 +68,9 @@ public class BankServiceImpl implements BankService {
             return null;
 
         if (questionBank.getQuestions().stream().map(q -> q.getId()).filter(q -> q == questionId).findFirst().isPresent()) {
-            return questionRepository.findOne(questionId);
+            Question question = questionRepository.findOne(questionId);
+            Hibernate.initialize(question.getAnnotations());
+            return question;
         }
         return null;
     }
@@ -108,15 +116,47 @@ public class BankServiceImpl implements BankService {
         }
     }
 
+    /**
+     * Removes QuestionBank specified by identifier.  Removes Question entities that are not referenced by other
+     * QuestionBanks or FlashCards.
+     *
+     * @param id of questionBank to remove
+     */
     @Override
-    public void deleteQuestionBank(int id) {
+    public void deleteBank(final int id) {
         if (!questionBankRepository.exists(id))
             throw new QuestionBankNotFoundException(id);
-        questionBankRepository.delete(id);
+        final QuestionBank questionBank = questionBankRepository.findOne(id);
+        final List<Question> questionIds = questionBank.getQuestions().stream().collect(Collectors.toList());
+        final List<Integer> orphanQuestions = new ArrayList<>();
+        for(Question question : questionIds) {
+            final Integer questionId = question.getId();
+
+            if( questionBankRepository.findByQuestionsContaining(question).stream().filter(qb -> qb.getId() != id).count() > 0)
+            {
+                continue;
+            }
+
+            if( flashCardRepository.findAllByQuestion_id(questionId).size() > 0)
+            {
+                continue;
+            }
+
+            orphanQuestions.add(questionId);
+
+        }
+        questionBankRepository.delete(questionBank);
+        orphanQuestions.forEach(questionRepository::delete);
     }
 
     @Override
+    @Deprecated
     public List<QuestionBank> findByContainsQuestion(final int questionId) {
-            return questionBankRepository.findByQuestionsContaining(questionId);
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<QuestionBank> findBanksContainingQuestion(final Question question) {
+            return questionBankRepository.findByQuestionsContaining(question);
     }
 }

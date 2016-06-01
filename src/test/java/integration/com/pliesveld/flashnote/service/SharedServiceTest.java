@@ -1,31 +1,32 @@
 package com.pliesveld.flashnote.service;
 
 import com.pliesveld.flashnote.domain.*;
+import com.pliesveld.flashnote.exception.FlashCardCreateException;
 import com.pliesveld.flashnote.spring.Profiles;
-
 import com.pliesveld.flashnote.spring.repository.RepositorySettings;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
-import javax.persistence.*;
-
 import java.util.List;
+import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -54,9 +55,6 @@ public class SharedServiceTest extends AbstractTransactionalServiceUnitTest {
     @Autowired
     private BankService bankService;
 
-    @PersistenceContext
-    EntityManager entityManager;
-
     @Test
     public void whenContextLoad_thenCorrect()
     {
@@ -77,55 +75,22 @@ public class SharedServiceTest extends AbstractTransactionalServiceUnitTest {
         assertNotNull(deckRepository.findOne(2));
     }
 
-    @Test
-    public void whenFindQuestionByJPQL() {
-        TypedQuery<Question> query = entityManager.createQuery("select q from Question q where q.id = :id", Question.class);
-        query.setParameter("id", 9000);
-        Question question = query.getSingleResult();
+    @Test(expected = FlashCardCreateException.class)
+    @DirtiesContext
+    public void whenAddExistingFlashcardToDeck_thenCorrect() {
+        Question question = questionRepository.findOne(9000);
+        Answer answer = answerRepository.findOne(9001);
         assertNotNull(question);
-        debugEntity(question);
-    }
-
-    @Test
-    public void whenFindAnswerByJPQL() {
-        TypedQuery<Answer> query = entityManager.createQuery("select a from Answer a where a.id = :id", Answer.class);
-        query.setParameter("id", 9001);
-        Answer answer = query.getSingleResult();
         assertNotNull(answer);
-    }
+        FlashCard flashcard = new FlashCard(question,answer);
+        deckService.updateDeckAddFlashCard(2, flashcard);
 
 
-    public List<FlashCardPrimaryKey> findFlashCardPrimaryKeyByAnswerIdByJPQL() {
-        TypedQuery<FlashCardPrimaryKey> query = entityManager.createQuery("select f.id from FlashCard f where f.id.answerId = :id", FlashCardPrimaryKey.class);
-        query.setParameter("id", 9001);
-        List<FlashCardPrimaryKey> flashCardPrimaryKeyList = query.getResultList();
-        return flashCardPrimaryKeyList;
-    }
-
-    @Test
-    public void whenBankByQuestionId() {
-        TypedQuery<Long> query = entityManager.createQuery("select count(*) from QuestionBank qb inner join qb.questions qc where qc.id = :questionId", Long.class);
-        query.setParameter("questionId", 9000);
-        long result = query.getSingleResult();
-        assertEquals(1, result);
-    }
-
-    @Test
-    public void whenDeckByQuestionId() {
-
-        TypedQuery<Long> query = entityManager.createQuery("select count(*) from Deck d inner join d.flashcards fc where fc.id.questionId = :questionId", Long.class);
-        query.setParameter("questionId", 9000);
-        long result = query.getSingleResult();
-        assertEquals(1, result);
-    }   
-
-    @Test
-    public void whenDeckByAnswerId() {
-
-        TypedQuery<Long> query = entityManager.createQuery("select count(*) from Deck d inner join d.flashcards fc where fc.id.answerId = :answerId", Long.class);
-        query.setParameter("answerId", 9001);
-        long result = query.getSingleResult();
-        assertEquals(1, result);
+        assertQuestionBankRepositoryCount(1);
+        assertDeckRepositoryCount(1);
+        assertQuestionRepositoryCount(1);
+        assertAnswerRepositoryCount(1);
+        assertFlashCardRepositoryCount(1);
     }
 
     @Test
@@ -140,19 +105,108 @@ public class SharedServiceTest extends AbstractTransactionalServiceUnitTest {
         cardService.deleteAnswer(9001);
     }
 
-
     @Test
     @DirtiesContext
     public void whenDeleteDeck_thenCorrect() {
         deckService.deleteDeck(2);
+        assertDeckRepositoryCount(0);
+        assertFlashCardRepositoryCount(0);
+        assertAnswerRepositoryCount(0);
+        assertQuestionBankRepositoryCount(1);
+        assertQuestionRepositoryCount(1);
     }
 
     @Test
     @DirtiesContext
     public void whenDeleteBank_thenCorrect() {
-        bankService.deleteQuestionBank(1);
+        bankService.deleteBank(1);
+
+        assertQuestionBankRepositoryCount(0);
+        assertDeckRepositoryCount(1);
+        assertFlashCardRepositoryCount(1);
+        assertQuestionRepositoryCount(1);
+        assertAnswerRepositoryCount(1);
     }
 
+    @Test
+    @DirtiesContext
+    public void whenDeleteBankThenDeck_thenCorrect() {
+        bankService.deleteBank(1);
+        deckService.deleteDeck(2);
+
+        assertQuestionBankRepositoryCount(0);
+        assertDeckRepositoryCount(0);
+        assertFlashCardRepositoryCount(0);
+        assertQuestionRepositoryCount(0);
+        assertAnswerRepositoryCount(0);
+    }
+
+    @Test
+    @DirtiesContext
+    public void whenDeleteDeckThenBank_thenCorrect() {
+        deckService.deleteDeck(2);
+        bankService.deleteBank(1);
+
+        assertQuestionBankRepositoryCount(0);
+        assertDeckRepositoryCount(0);
+        assertFlashCardRepositoryCount(0);
+        assertQuestionRepositoryCount(0);
+        assertAnswerRepositoryCount(0);
+    }
+
+    @Test
+    public void whenFindQuestionByBank_thenCorrect() {
+        Question question = bankService.findQuestion(1, 9000);
+        assertNotNull(question);
+        assertNotNull(question.getId());
+        assertNotNull(question.getContent());
+        assertNotNull(question.getAnnotations());
+        assertEquals(0, question.getAnnotations().size());
+    }
+
+    @Test
+    public void whenFindQuestionByDeck_thenCorrect() {
+        Deck deck = deckService.findDeckById(2);
+        assertNotNull(deck);
+        assertNotNull(deck.getId());
+        assertNotNull(deck.getCategory());
+        assertNotNull(deck.getDescription());
+        assertNotNull(deck.getFlashcards());
+        assertEquals(1, deck.getFlashcards().size());
+    }
+
+    @Test
+    public void whenAllBank_thenCorrect() {
+        List<QuestionBank> bankList = bankService.findAllQuestionBanks();
+        assertNotNull(bankList);
+        assertEquals(1, bankList.size());
+        for(QuestionBank questionBank : bankList )
+        {
+            assertNotNull(questionBank);
+            assertNotNull(questionBank.getDescription());
+            assertNotNull(questionBank.getId());
+            assertNotNull(questionBank.getCategory());
+        }
+    }
+
+    @Test
+    public void whenPagedBank_thenCorrect() {
+        Pageable page = new PageRequest(0,1);
+        Page<QuestionBank> bankPage = bankService.browseBanks(page);
+        assertNotNull(bankPage);
+
+        List<QuestionBank> bankList = bankPage.getContent();
+        for(QuestionBank questionBank : bankList )
+        {
+            assertNotNull(questionBank);
+            assertNotNull(questionBank.getDescription());
+            assertNotNull(questionBank.getId());
+            assertNotNull(questionBank.getCategory());
+            Set<Question> questionSet = questionBank.getQuestions();
+            assertNotNull(questionSet);
+            assertEquals(1, questionSet.size());
+        }
+    }
 
 }
 

@@ -136,7 +136,7 @@ public class QuestionBankController {
     @ResponseBody
     public ResponseEntity<?> deleteQuestionBank(@PathVariable("id") int id)
     {
-        bankService.deleteQuestionBank(id);
+        bankService.deleteBank(id);
         return ResponseEntity.ok().build();
     }
 

@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface FlashCardRepository extends JpaRepository<FlashCard,FlashCardPrimaryKey> {
 
-    List<FlashCard> findAllByQuestion(int id);
-    List<FlashCard> findAllByAnswer(int id);
+    List<FlashCard> findAllByQuestion_id(int id);
+    List<FlashCard> findAllByAnswer_id(int id);
 }

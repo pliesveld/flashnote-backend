@@ -26,7 +26,7 @@ public interface DeckService {
     void addToDeckFlashCard(final Deck deck, final FlashCard flashCard);
 
     @Transactional
-    void addToDeckFlashCard(final int deckId, final FlashCard flashCard) throws DeckNotFoundException;
+    void updateDeckAddFlashCard(final int deckId, final FlashCard flashCard) throws DeckNotFoundException;
 
     @Transactional
     Deck createDeck(final Deck deck);

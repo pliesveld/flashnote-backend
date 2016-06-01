@@ -1,5 +1,6 @@
 package com.pliesveld.flashnote.repository;
 
+import com.pliesveld.flashnote.domain.Question;
 import com.pliesveld.flashnote.domain.QuestionBank;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -11,5 +12,5 @@ import java.util.List;
 public interface QuestionBankRepository extends JpaRepository<QuestionBank,Integer>, JpaSpecificationExecutor<QuestionBank> {
     List<QuestionBank> findByOwner(int id);
 
-    List<QuestionBank> findByQuestionsContaining(final int questionId);
+    List<QuestionBank> findByQuestionsContaining(final Question question);
 }

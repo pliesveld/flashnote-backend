@@ -6,6 +6,9 @@ import com.pliesveld.flashnote.domain.FlashCardPrimaryKey;
 import com.pliesveld.flashnote.exception.DeckNotFoundException;
 import com.pliesveld.flashnote.exception.FlashCardCreateException;
 import com.pliesveld.flashnote.repository.DeckRepository;
+import com.pliesveld.flashnote.repository.FlashCardRepository;
+import com.pliesveld.flashnote.repository.QuestionBankRepository;
+import com.pliesveld.flashnote.repository.QuestionRepository;
 import com.pliesveld.flashnote.repository.specifications.DeckSpecification;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +23,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("deckService")
 public class DeckServiceImpl implements DeckService {
@@ -30,6 +34,15 @@ public class DeckServiceImpl implements DeckService {
 
     @Autowired
     private DeckRepository deckRepository;
+
+    @Autowired
+    private QuestionBankRepository questionBankRepository;
+
+    @Autowired
+    private QuestionRepository questionRepository;
+
+    @Autowired
+    private FlashCardRepository flashcardRepository;
 
     @Override
     public Deck findDeckById(final int id) throws DeckNotFoundException {
@@ -76,7 +89,7 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Override
-    public void addToDeckFlashCard(final int deckId, final FlashCard flashCard) {
+    public void updateDeckAddFlashCard(final int deckId, final FlashCard flashCard) {
         final Deck deck = findDeckById(deckId);
         if(deck == null)
             throw new DeckNotFoundException(deckId);
@@ -103,11 +116,40 @@ public class DeckServiceImpl implements DeckService {
         return deckRepository.save(deck);
     }
 
+    /**
+     * Deletes deck specified by id.
+     * Iterates flashcards to find any orphaned Question entities and removes them if no other QuestionBank
+     * or Deck contains a reference to the Question.
+     * @param id
+     */
     @Override
     public void deleteDeck(final int id) {
+
         if(!deckRepository.exists(id))
             throw new DeckNotFoundException(id);
-        deckRepository.delete(id);
+
+        final Deck deck = deckRepository.findOne(id);
+        final List<FlashCard> flashCards = deck.getFlashcards().stream().collect(Collectors.toList());
+        final List<Integer> orphanQuestions = new ArrayList<>();
+
+        for(FlashCard flashcard : flashCards) {
+            final FlashCardPrimaryKey flashcardId = flashcard.getId();
+
+            if( flashcardRepository.findAllByQuestion_id(flashcardId.getQuestionId()).stream().filter( fc -> ! flashCards.contains(fc)).count() > 0)
+            {
+                continue;
+            }
+
+            if( questionBankRepository.findByQuestionsContaining(flashcard.getQuestion()).size() > 0)
+            {
+                continue;
+            }
+
+            orphanQuestions.add(flashcard.getId().getQuestionId());
+        }
+
+        deckRepository.delete(deck);
+        orphanQuestions.forEach(questionRepository::delete);
     }
 
 }

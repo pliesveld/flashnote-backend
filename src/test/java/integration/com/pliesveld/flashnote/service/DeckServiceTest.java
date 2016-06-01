@@ -2,9 +2,7 @@ package com.pliesveld.flashnote.service;
 
 import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.exception.FlashCardCreateException;
-import com.pliesveld.flashnote.repository.PopulatedCategoriesRepositoryTest;
 import com.pliesveld.flashnote.repository.PopulatedDecksRepositoryTest;
-
 import com.pliesveld.flashnote.repository.specifications.AnswerSpecification;
 import com.pliesveld.flashnote.repository.specifications.DeckSpecification;
 import com.pliesveld.flashnote.repository.specifications.QuestionSpecification;
@@ -15,7 +13,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.annotation.DirtiesContext;
@@ -24,12 +21,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
@@ -210,7 +207,7 @@ public class DeckServiceTest extends AbstractTransactionalServiceUnitTest {
         assertNotNull(answer.getId());
 
         FlashCard flashCard = new FlashCard(question, answer);
-        deckService.addToDeckFlashCard(deckId,flashCard);
+        deckService.updateDeckAddFlashCard(deckId, flashCard);
 
     }
 

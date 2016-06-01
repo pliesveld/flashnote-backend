@@ -12,9 +12,6 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 @Validated
 @Transactional(readOnly = true)
 public interface BankService {
@@ -36,7 +33,7 @@ public interface BankService {
     QuestionBank createQuestionBank(final QuestionBank questionBank);
 
     @Transactional
-    void deleteQuestionBank(final int id)             throws QuestionBankNotFoundException;
+    void deleteBank(final int id)             throws QuestionBankNotFoundException;
 
     @Transactional
     void updateQuestionBankAddQuestion(final int questionBankId, @NotNull Question question);
@@ -44,4 +41,5 @@ public interface BankService {
     @Transactional
     void updateQuestionBankRemoveQuestion(@NotNull final QuestionBank questionBank, final int questionId) throws QuestionNotFoundException;
 
+    List<QuestionBank> findBanksContainingQuestion(Question question);
 }
