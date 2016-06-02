@@ -1,0 +1,73 @@
+{
+    "_class" : "com.pliesveld.flashnote.spring.DataSet",
+
+    "categories" : [
+        {
+            "@id" : 500,
+            "name" : "TEST CATEGORY SHARED",
+            "description" : "The contents of this category was populated from test-data-shared-ref.json"
+
+        }
+    ],
+
+    "questions" : [
+        {
+            "@id" : 10000,
+            "content" : "SHARED_QUESTION"
+        },
+        {
+            "@id" : 10001,
+            "content" : "BANK_ONLY_QUESTION"
+        },
+        {
+            "@id" : 10002,
+            "content" : "DECK_ONLY_QUESTION"
+        }
+    ],
+    "answers" : [
+        {
+            "@id" : 20000,
+            "content" : "ANSWER"
+        },        {
+            "@id" : 20001,
+            "content" : "DECK_ONLY_ANSWER"
+        }
+    ],
+
+    "questionBanks" : [
+        {
+            "category" : 500,
+            "description" : "BANK",
+            "questions" : [10000, 10001]
+        }
+    ],
+    "decks" : [
+        {
+            "id" : 90000,
+            "@id" : 90000,
+            "category" : 500,
+            "description" : "DECK",
+            "flashcards" : [
+                {
+                    "question" : 10000,
+                    "answer"   : 20000
+                }
+            ]
+        },
+        {
+            "id" : 90001,
+            "@id" : 90001,
+            "category" : 500,
+            "description" : "DECK2",
+            "flashcards" : [
+                {
+                    "question" : 10002,
+                    "answer"   : 20001
+                }
+            ]
+        }
+
+    ]
+
+}
+

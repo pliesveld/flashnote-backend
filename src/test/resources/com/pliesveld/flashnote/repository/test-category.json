@@ -1,0 +1,7 @@
+{
+    "_class" : "com.pliesveld.flashnote.domain.Category",
+
+    "id" : "500",
+    "name" : "UNIT TEST CATEGORY",
+    "description" : "The contents of this category was populated from test-category.json"
+}

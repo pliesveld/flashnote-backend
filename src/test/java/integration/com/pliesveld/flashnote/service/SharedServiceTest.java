@@ -39,7 +39,7 @@ public class SharedServiceTest extends AbstractTransactionalServiceUnitTest {
 
     @Bean
     public RepositorySettings repositorySettings() {
-        RepositorySettings repositorySettings = new RepositorySettings(new Resource[] {new ClassPathResource("test-data-shared-question-ref.json", this.getClass()) });
+        RepositorySettings repositorySettings = new RepositorySettings(new Resource[] {new ClassPathResource("test-data-shared-question.json", this.getClass()) });
         return repositorySettings;
     }
 
@@ -58,10 +58,10 @@ public class SharedServiceTest extends AbstractTransactionalServiceUnitTest {
     @Test
     public void whenContextLoad_thenCorrect()
     {
-        assertEquals(1, deckRepository.count());
-        assertEquals(1, flashCardRepository.count());
+        assertEquals(2, deckRepository.count());
+        assertEquals(2, flashCardRepository.count());
         assertEquals(1, questionBankRepository.count());
-        assertEquals(1, questionRepository.count());
+        assertEquals(3, questionRepository.count());
         assertEquals(1, answerRepository.count());
     }
 
