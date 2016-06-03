@@ -15,7 +15,7 @@ import java.time.Instant;
 public class AnnotatedStatement {
 
     private Instant createdOn;
-    private StudentDetails createdBy;
+    private Student createdBy;
     private String message;
 
     protected AnnotatedStatement()
@@ -23,7 +23,7 @@ public class AnnotatedStatement {
         super();
     }
 
-    public AnnotatedStatement(StudentDetails createdBy, String message) {
+    public AnnotatedStatement(Student createdBy, String message) {
         this();
         this.createdOn = Instant.now();
         this.createdBy = createdBy;
@@ -38,11 +38,11 @@ public class AnnotatedStatement {
     public Instant getCreatedOn() { return createdOn; }
 
     @NotNull
-    @ManyToOne(targetEntity = StudentDetails.class, fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(targetEntity = Student.class, fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "STUDENT_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_ANNOTATION_STUDENT"))
     @JsonProperty("created_by")
     @JsonView(Views.Summary.class)
-    public StudentDetails getCreatedBy() { return createdBy; }
+    public Student getCreatedBy() { return createdBy; }
 
     @NotNull
     @Size(min = Constants.MIN_NOTIFICATION_MESSAGE_LENGTH, max = Constants.MAX_NOTIFICATION_MESSAGE_LENGTH)
@@ -52,7 +52,7 @@ public class AnnotatedStatement {
 
     protected void setCreatedOn(Instant createdOn) { this.createdOn = createdOn; }
 
-    protected void setCreatedBy(StudentDetails createdBy) {this.createdBy = createdBy; }
+    protected void setCreatedBy(Student createdBy) {this.createdBy = createdBy; }
 
     protected void setMessage(String message) { this.message = message; }
 }

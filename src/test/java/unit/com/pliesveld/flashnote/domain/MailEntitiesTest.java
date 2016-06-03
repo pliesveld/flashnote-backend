@@ -45,7 +45,8 @@ public class MailEntitiesTest {
 	public void studentCreate() {
 		Student student = new Student();
 		student.setEmail("newuser@example.com");
-		student.setPassword("new password");
+		student.setName("newuser");
+		student.setName("newuser");		student.setPassword("new password");
 		studentRepository.save(student);
         entityManager.flush();
 		
@@ -60,6 +61,7 @@ public class MailEntitiesTest {
 	public void registrationCreate() {
 		Student student = new Student();
 		student.setEmail("newuser@example.com");
+		student.setName("newuser");
 		student.setPassword("new password");
 		student = studentRepository.save(student);
         entityManager.flush();
@@ -76,6 +78,7 @@ public class MailEntitiesTest {
 	public void registrationCreateCascade() {
 		Student student = new Student();
 		student.setEmail("newuser@example.com");
+		student.setName("newuser");
 		student.setPassword("new password");
 		entityManager.persist(student);
 		
@@ -93,6 +96,7 @@ public class MailEntitiesTest {
 	public void registrationCreateCascadeSetters() {
 		Student student = new Student();
 		student.setEmail("newuser@example.com");
+		student.setName("newuser");
 		student.setPassword("new password");
 		entityManager.persist(student);
 		
@@ -113,6 +117,7 @@ public class MailEntitiesTest {
 	public void registrationCreateFindByToken() {
 		Student student = new Student();
 		student.setEmail("newuser@example.com");
+		student.setName("newuser");
 		student.setPassword("new password");
 		student = studentRepository.save(student);
         entityManager.flush();
@@ -132,6 +137,7 @@ public class MailEntitiesTest {
 	public void registrationCreateFindExpired() throws Exception {
 		Student student = new Student();
 		student.setEmail("newuser@example.com");
+		student.setName("newuser");
 		student.setPassword("new password");
 		student = studentRepository.save(student);
         entityManager.flush();

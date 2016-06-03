@@ -6,7 +6,6 @@ import com.pliesveld.flashnote.spring.repository.RepositorySettings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -34,7 +33,7 @@ public class PopulatedStudentsRepositoryTest extends AbstractPopulatedRepository
     @Test
     public void whenContextLoad_thenCorrect() {
         assertTrue(studentRepository.count() > 0);
-        assertTrue(studentDetailsRepository.count() > 0);
+        assertTrue(studentRepository.count() > 0);
     }
 
     @Test

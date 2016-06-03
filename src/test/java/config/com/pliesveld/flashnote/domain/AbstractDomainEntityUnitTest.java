@@ -57,11 +57,6 @@ public class AbstractDomainEntityUnitTest extends AbstractRepositoryUnitTest imp
     {
         return ctx.getBean(Student.class);
     }
-    public StudentDetails studentDetailsBean()
-    {
-        return ctx.getBean(StudentDetails.class);
-    }
-
     public AccountPasswordResetToken accountPasswordResetTokenBean()
     {
         return ctx.getBean(AccountPasswordResetToken.class);

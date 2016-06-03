@@ -30,19 +30,7 @@ public class DomainEntities {
     @Bean
     @Scope("prototype")
     public Student studentBean() {
-        return StudentGenerator.randomizedStudent(false);
-    }
-
-    @Bean
-    @Scope("prototype")
-    @Autowired
-    public StudentDetails studentDetailsBean(Student student)
-    {
-        StudentDetails details = new StudentDetails(StudentGenerator.randomizedName());
-        details.setStudent(student);
-        student.setStudentDetails(details);
-        domainBeanHelperService.makeEntityIfNotFound(student);
-        return details;
+        return StudentGenerator.randomizedStudent();
     }
 
     @Bean
@@ -99,17 +87,17 @@ public class DomainEntities {
    @Bean
    @Scope("prototype")
    @Autowired
-   public Deck deckBean(StudentDetails studentDetailsBean, Category categoryBean)
+   public Deck deckBean(Student studentBean, Category categoryBean)
    {
        categoryBean = domainBeanHelperService.makeEntityIfNotFound(categoryBean);
 
-       Deck deck = new Deck(UUID.randomUUID().toString());
-
+       Deck deck = new Deck(categoryBean, UUID.randomUUID().toString());
        deck.setDescription("Deck title #" + incrementCounter());
        deck.setCategory(categoryBean);
-        List<FlashCard> list = new ArrayList<FlashCard>();
+
+       List<FlashCard> list = new ArrayList<FlashCard>();
        int max = RandomUtils.nextInt(1,15);
-       for(int i = 0; i < max ; i ++)
+       for(int i = 0; i < max ; i++)
        {
            FlashCard fc = this.flashcardBean();
            fc = domainBeanHelperService.makeEntityIfNotFound(fc);
@@ -182,8 +170,8 @@ class DomainBeanHelperService
         return persist(Category.class, category);
     }
 
-    StudentDetails makeEntityIfNotFound(StudentDetails studentDetails) {
-        return persist(StudentDetails.class, studentDetails);
+    Student makeEntityIfNotFound(Student student) {
+        return persist(Student.class, student);
     }
 
     Question makeEntityIfNotFound(Question question) {
@@ -192,10 +180,6 @@ class DomainBeanHelperService
 
     Answer makeEntityIfNotFound(Answer answer) {
         return persist(Answer.class, answer);
-    }
-
-    Student makeEntityIfNotFound(Student student) {
-        return persist(Student.class, student);
     }
 
     FlashCard makeEntityIfNotFound(FlashCard fc) {

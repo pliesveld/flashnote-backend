@@ -1,11 +1,10 @@
 package com.pliesveld.flashnote.model.json.response;
 
 
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.pliesveld.flashnote.domain.AccountRole;
 import com.pliesveld.flashnote.domain.Student;
-import com.pliesveld.flashnote.domain.StudentRole;
 import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.model.json.base.JsonWebRequestSerializable;
 import com.pliesveld.flashnote.model.json.base.ModelBase;
@@ -21,7 +20,7 @@ import javax.validation.constraints.Size;
  */
 @Component
 @JsonInclude(JsonInclude.Include.ALWAYS)
-public class ExistingStudentDetails extends ModelBase implements JsonWebRequestSerializable
+public class StudentResponseJson extends ModelBase implements JsonWebRequestSerializable
 {
     @NotNull
     @Size(min = 3,max = 32)
@@ -35,26 +34,23 @@ public class ExistingStudentDetails extends ModelBase implements JsonWebRequestS
 
     @NotNull
     @JsonView(Views.Summary.class)
-    private StudentRole role = StudentRole.ROLE_ACCOUNT;
+    private AccountRole role = AccountRole.ROLE_ACCOUNT;
 
-    public ExistingStudentDetails() {
+    public StudentResponseJson() {
     }
 
     /**
      * Converts a student entity to a new instance of this response transfer object
      */
-    public static ExistingStudentDetails convert(Student student) {
+    public static StudentResponseJson convert(final Student student) {
         if (student == null)
             throw new NullPointerException("student argument was null");
 
-        ExistingStudentDetails studentDetails = new ExistingStudentDetails();
-        studentDetails.setEmail(student.getEmail());
-        studentDetails.setRole(student.getRole());
-
-        if (student.getStudentDetails() != null)
-            studentDetails.setName(student.getStudentDetails().getName());
-
-        return studentDetails;
+        final StudentResponseJson responseJson = new StudentResponseJson();
+        responseJson.setEmail(student.getEmail());
+        responseJson.setRole(student.getRole());
+        responseJson.setName(student.getName());
+        return responseJson;
     }
 
     public String getName()
@@ -75,5 +71,5 @@ public class ExistingStudentDetails extends ModelBase implements JsonWebRequestS
         this.email = email;
     }
 
-    public void setRole(StudentRole role) { this.role = role; }
+    public void setRole(AccountRole role) { this.role = role; }
 }

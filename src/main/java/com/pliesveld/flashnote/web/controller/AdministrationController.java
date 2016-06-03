@@ -2,9 +2,8 @@ package com.pliesveld.flashnote.web.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.pliesveld.flashnote.domain.Student;
-import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.model.json.Views;
-import com.pliesveld.flashnote.model.json.request.NewStudentDetails;
+import com.pliesveld.flashnote.model.json.request.NewStudentRequestJson;
 import com.pliesveld.flashnote.service.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,17 +43,17 @@ public class AdministrationController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/student/create", method = RequestMethod.POST)
-    public ResponseEntity<Void> createStudent(@Valid @RequestBody NewStudentDetails studentdto)
+    public ResponseEntity<Void> createStudent(@Valid @RequestBody NewStudentRequestJson studentdto)
     {
-        Student studentDetails = registrationService.createStudent(studentdto.getName(),studentdto.getEmail(),studentdto.getPassword());
+        Student student = registrationService.createStudent(studentdto.getName(),studentdto.getEmail(),studentdto.getPassword());
 
-        LOG.info("User created account: " + studentDetails);
+        LOG.info("User created account: " + student);
 
         HttpHeaders responseHeaders = new HttpHeaders();
         URI newStudentUri = MvcUriComponentsBuilder
                 .fromController(StudentController.class)
                 .path("/{id}")
-                .buildAndExpand(studentDetails.getId())
+                .buildAndExpand(student.getId())
                 .toUri();
 
         responseHeaders.setLocation(newStudentUri);
@@ -63,10 +62,10 @@ public class AdministrationController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value="/students", method = RequestMethod.GET)
-    public ResponseEntity<Iterable<StudentDetails>> getAllStudents()
+    public ResponseEntity<Iterable<Student>> getAllStudents()
     {
         LOG.info("Retrieving list of all students");
-        Iterable<StudentDetails> allStudents = adminService.findAllStudentDetails();
+        Iterable<Student> allStudents = adminService.findAllStudent();
         return new ResponseEntity<>(allStudents, HttpStatus.OK);
     }
 

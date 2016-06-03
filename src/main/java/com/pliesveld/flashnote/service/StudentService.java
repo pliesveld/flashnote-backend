@@ -3,7 +3,6 @@ package com.pliesveld.flashnote.service;
 import com.pliesveld.flashnote.domain.AbstractStatement;
 import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.domain.Student;
-import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,25 +18,23 @@ import java.util.List;
 public interface StudentService {
 
     Student findByEmail(@NotNull String email);
-    StudentDetails findByName(@NotNull String name);
+    Student findByName(@NotNull String name);
 
     @Transactional
-    StudentDetails delete(final int id)                        throws StudentNotFoundException;
+    Student delete(final int id)                        throws StudentNotFoundException;
 
-    StudentDetails findStudentDetailsById(final int id)        throws StudentNotFoundException;
-
-    Student findStudentById(final int id)                      throws StudentNotFoundException;
+    Student findStudentById(final int id)        throws StudentNotFoundException;
 
     @NotNull
     Long                count();
 
     @NotNull
-    Page<StudentDetails> findAll(final Pageable page);
+    Page<Student> findAll(final Pageable page);
 
     @NotNull
     List<Deck>          findDecksByOwner(final int id);
 
     @NotNull
-    List<AbstractStatement> findStatementsBy(final StudentDetails studentDetails);
+    List<AbstractStatement> findStatementsBy(final Student student);
 
 }

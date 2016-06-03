@@ -68,7 +68,9 @@ public class WiserAssertions {
     }
 
     private static Supplier<AssertionError> assertionError(String errorMessage, String... args) {
-        return () -> new AssertionError(MessageFormat.format(errorMessage, args));
+        return () -> {
+            return new AssertionError(MessageFormat.format(errorMessage, args));
+        };
     }
 
     public static <T> T unchecked(ThrowingSupplier<T> supplier) {

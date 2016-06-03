@@ -31,8 +31,8 @@ public class NotificationTest extends AbstractDomainEntityUnitTest {
     @Before
     public void setupEntities()
     {
-        StudentDetails student = this.studentDetailsBean();
-        student = studentDetailsRepository.save(student);
+        Student student = this.studentBean();
+        student = studentRepository.save(student);
 
         recipient_id = student.getId();
 
@@ -50,9 +50,9 @@ public class NotificationTest extends AbstractDomainEntityUnitTest {
     }
 
     @Test
-    public void testEntitySanity()
+    public void whenContextLoad_thenCorrect()
     {
-        assertNotNull(entityManager.find(StudentDetails.class, recipient_id));
+        assertNotNull(entityManager.find(Student.class, recipient_id));
         assertNotNull(entityManager.find(Notification.class, message_id));
         assertNotificationRepositoryCount(1);
     }

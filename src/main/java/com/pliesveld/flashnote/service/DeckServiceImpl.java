@@ -89,19 +89,25 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Override
-    public void updateDeckAddFlashCard(final int deckId, final FlashCard flashCard) {
+    public void updateDeckAddFlashCard(final int deckId, FlashCard flashCard) {
         final Deck deck = findDeckById(deckId);
         if(deck == null)
             throw new DeckNotFoundException(deckId);
 
-        LOG.debug("Adding fc: {}", flashCard.getId());
-        LOG.debug("Checking Deck:");
-        deck.getFlashcards().forEach(fc -> LOG.debug("Has {}", fc.getId()));
-
+        if(LOG.isDebugEnabled()) {
+            LOG.debug("Adding fc: {}", flashCard.getId());
+            LOG.debug("Checking Deck:");
+            deck.getFlashcards().forEach(fc -> LOG.debug("Has {}", fc.getId()));
+        }
 
         if(flashCard.getId() != null) {
             final Integer questionId = flashCard.getId().getQuestionId();
             final Integer answerId = flashCard.getId().getAnswerId();
+
+            if(questionId != null) {
+                flashCard = entityManager.merge(flashCard);
+            }
+
             final FlashCardPrimaryKey flashcardId = flashCard.getId();
             if(deck.getFlashcards().stream().map(FlashCard::getId).anyMatch(fc -> fc.equals(flashcardId))) {
                 throw new FlashCardCreateException(flashCard.getId());

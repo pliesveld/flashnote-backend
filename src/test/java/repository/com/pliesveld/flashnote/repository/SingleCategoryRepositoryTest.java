@@ -39,11 +39,11 @@ public class SingleCategoryRepositoryTest extends AbstractPopulatedRepositoryUni
     @Test
     public void whenContextLoad_thenCorrect() {
         assertTrue(categoryRepository.count() > 0);
-        assertNotNull(categoryRepository.findOne(5000));
     }
 
     @Test
     public void whenCategoryFind_thenCorrect() {
+        assertNotNull(categoryRepository.findOne(500));
         debugRepository(categoryRepository);
     }
 

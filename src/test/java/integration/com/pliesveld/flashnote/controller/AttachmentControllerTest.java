@@ -1,12 +1,16 @@
 package com.pliesveld.flashnote.controller;
 
+import com.pliesveld.flashnote.attachment.BinaryFileTest;
 import com.pliesveld.flashnote.domain.AttachmentBinary;
+import com.pliesveld.flashnote.domain.Question;
 import com.pliesveld.flashnote.service.AttachmentService;
+import com.pliesveld.flashnote.service.CardService;
 import com.pliesveld.flashnote.spring.Profiles;
 import com.pliesveld.flashnote.spring.SpringEntityTestConfig;
 import com.pliesveld.flashnote.spring.data.SpringDataConfig;
 import com.pliesveld.flashnote.spring.db.PersistenceContext;
 import com.pliesveld.flashnote.web.controller.AttachmentController;
+import com.pliesveld.flashnote.web.controller.AttachmentUploadController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
@@ -42,47 +46,46 @@ public class AttachmentControllerTest {
     @Mock
     private AttachmentService attachmentService;
 
+    @Mock
+    private CardService cardService;
+
     @InjectMocks
     AttachmentController attachmentController;
+
+    @InjectMocks
+    AttachmentUploadController uploadController;
 
     private MockMvc mockMvc;
 
     @Before
     public void setUp() throws Exception {
-        //       MockHttpServletRequest request = new MockHttpServletRequest();
+//        MockHttpServletRequest request = new MockHttpServletRequest();
 //        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(attachmentController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(attachmentController, uploadController).build();
     }
 
     @Test
     public void uploadAttachment() throws Exception {
 
-        MockMultipartFile firstFile = new MockMultipartFile("data", "filename.txt", "text/plain", "some xml".getBytes());
-        MockMultipartFile secondFile = new MockMultipartFile("data", "other-file-name.data", "text/plain", "some other type".getBytes());
-        MockMultipartFile jsonFile = new MockMultipartFile("json", "", "application/json", "{\"json\": \"someValue\"}".getBytes());
-
-        InputStream is = new ClassPathResource("puppy.jpg").getInputStream();
+        InputStream is = new ClassPathResource("puppy.jpg", BinaryFileTest.class).getInputStream();
 
         MockMultipartFile binaryFile = new MockMultipartFile("file","puppy.jpg","image/jpeg",is);
 
         AttachmentBinary attachmentBinary = new AttachmentBinary();
         attachmentBinary.setId(4);
 
+        Question question = new Question();
+
         Mockito.when(attachmentService.storeAttachment(Mockito.any(AttachmentBinary.class))).thenReturn(attachmentBinary);
+        Mockito.when(cardService.findQuestionById(Mockito.anyInt())).thenReturn(question);
 
-        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/attachments")
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload("/attachment/upload")
                 .file(binaryFile))
-                // .file(jsonFile)
-                //.andDo(print())
+//                .andDo(print())
                 .andExpect(status().is(HttpStatus.OK.value()))
-
                 ;
-
-
-
-
     }
 
 }

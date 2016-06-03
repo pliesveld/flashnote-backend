@@ -10,6 +10,6 @@ public class StudentNotFoundException extends ResourceNotFoundException {
 
     @Override
     public String getRepositoryMessage() {
-        return "StudentDetails not found: " + getRepositoryId();
+        return "Student id not found: " + getRepositoryId();
     }
 }

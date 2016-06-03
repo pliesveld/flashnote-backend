@@ -46,7 +46,7 @@ public class FlashCardFKTest extends FlashCardTest
 
     @Test
     @Override
-    public void testEntitySanity()
+    public void whenContextLoad_thenCorrect()
     {
         assertNotNull(flashcard_id);
 

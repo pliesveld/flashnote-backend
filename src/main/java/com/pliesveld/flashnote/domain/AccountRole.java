@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public enum StudentRole
+public enum AccountRole
 {
     ROLE_ACCOUNT   (1,           "Student applicant",    "Limited access to services.  Cannot create new resources."),
     ROLE_USER          (10,      "A simple student",     "Provides basic access for creating and reviewing flashnotes."),
@@ -18,9 +18,9 @@ public enum StudentRole
     final private String title;
     final private String description;
 
-    private final static Map<Integer,StudentRole> intToEnum = new HashMap<>();
+    private final static Map<Integer,AccountRole> intToEnum = new HashMap<>();
 
-    StudentRole(int id, String title, String description) {
+    AccountRole(int id, String title, String description) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -39,18 +39,18 @@ public enum StudentRole
     }
 
     static {
-        for(StudentRole type : values())
+        for(AccountRole type : values())
         {
             intToEnum.put(type.getId(),type);
         }
     }
 
-    public static StudentRole fromInteger(Integer id)
+    public static AccountRole fromInteger(Integer id)
     {
         return intToEnum.get(id);
     }
 
-    public static Collection<StudentRole> allRoles()
+    public static Collection<AccountRole> allRoles()
     {
         return intToEnum.values();
     }

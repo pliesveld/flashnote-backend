@@ -14,6 +14,7 @@ import com.pliesveld.tests.entitymanager.EMOP_ASSERT;
 import com.pliesveld.tests.entitymanager.EMOP_ENTITY;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ public class DomainEntityBeanTest {
         ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
     }
 
+    @Ignore("dirties context")
     @Test
     public void initializeContext() {
         System.setProperty("spring.profiles.active", Profiles.INTEGRATION_TEST);

@@ -13,7 +13,7 @@ public class UpdateQuestionBankRequestJson extends ModelBase implements JsonWebR
     public enum UpdateOperation {
         ADD_QUESTION,
         REMOVE_QUESTION
-    };
+    }
 
     @NotNull
     UpdateOperation operation;

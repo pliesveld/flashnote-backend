@@ -5,16 +5,11 @@ import com.pliesveld.flashnote.domain.Question;
 import com.pliesveld.flashnote.domain.QuestionBank;
 import com.pliesveld.flashnote.repository.PopulatedCategoriesRepositoryTest;
 import com.pliesveld.flashnote.spring.Profiles;
-import com.pliesveld.flashnote.spring.SpringDataTestConfig;
-import com.pliesveld.flashnote.spring.SpringServiceTestConfig;
 import com.pliesveld.flashnote.util.generator.QuestionGenerator;
-import com.pliesveld.tests.AbstractTransactionalRepositoryUnitTest;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -32,7 +27,7 @@ import static org.junit.Assert.assertNotNull;
 @ContextHierarchy({
         @ContextConfiguration(name = "REPOSITORY", classes = { PopulatedCategoriesRepositoryTest.class }, loader = AnnotationConfigContextLoader.class)
 })
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
+@DirtiesContext
 public class BankServiceTest extends AbstractTransactionalServiceUnitTest {
 
     @Autowired

@@ -111,8 +111,7 @@ public class CardServiceImpl implements CardService {
     public FlashCard createFlashCard(final Question question, final Answer answer) {
                    
         final FlashCard fc = new FlashCard(question,answer);
-        flashCardRepository.save(fc);
-        return fc;
+        return flashCardRepository.save(fc);
     }
 
     @Override

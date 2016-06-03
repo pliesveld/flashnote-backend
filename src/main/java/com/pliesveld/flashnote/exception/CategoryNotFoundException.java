@@ -10,6 +10,6 @@ public class CategoryNotFoundException extends ResourceNotFoundException {
 
     @Override
     public String getRepositoryMessage() {
-        return "StudentDetails not found: " + getRepositoryId();
+        return "Category not found: " + getRepositoryId();
     }
 }

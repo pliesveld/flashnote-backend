@@ -53,13 +53,13 @@ public class QuestionBankController {
         ObjectMapperDebug.debug(this, objectMapper);
     }
     
-    private StudentDetails verifyStudent(int id) throws StudentNotFoundException
+    private Student verifyStudent(int id) throws StudentNotFoundException
     {
-        StudentDetails studentDetails = studentService.findStudentDetailsById(id);
-        if(studentDetails == null)
+        Student student = studentService.findStudentById(id);
+        if(student == null)
             throw new StudentNotFoundException(id);
 
-        return studentDetails;
+        return student;
     }
     
     private Question verifyQuestion(int id) throws QuestionNotFoundException

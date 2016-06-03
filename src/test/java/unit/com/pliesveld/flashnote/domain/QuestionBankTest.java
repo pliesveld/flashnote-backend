@@ -209,7 +209,6 @@ final public class QuestionBankTest extends AbstractTransactionalDomainEntityUni
         questionBank = entityManager.getReference(QuestionBank.class, qb_id);
         assertNotNull(questionBank);
 
-//        PersistenceUtil persistenceUtil = Persistence.getPersistenceUtil();
         PersistenceUnitUtil persistenceUtil = entityManager.getEntityManagerFactory().getPersistenceUnitUtil();
 
         assertFalse("QuestionBank proxy should be proxy", Hibernate.isInitialized(questionBank));
@@ -220,7 +219,6 @@ final public class QuestionBankTest extends AbstractTransactionalDomainEntityUni
         Collection<Question> questionCollectionProxy = questionBank.getQuestions();
         assertFalse(Hibernate.isInitialized(questionCollectionProxy));
 
-
         assertEquals(3, questionCollectionProxy.size());
 
         assertFalse("Getting size of proxy collection should not initialize the collection", Hibernate.isInitialized(questionCollectionProxy));
@@ -228,12 +226,6 @@ final public class QuestionBankTest extends AbstractTransactionalDomainEntityUni
         assertFalse(persistenceUtil.isLoaded(questionBank, "questions"));
 
 //        Hibernate.initialize(questionCollectionProxy);
-//        disableSQL();
-//
-//        assertTrue(Hibernate.isInitialized(questionCollectionProxy));
-//
-//        assertTrue(persistenceUtil.isLoaded(questionBank, "questions"));
-
 
         /*
             Iterate through collection, reading only the id field.  Ensure that the content attribute of the
@@ -243,13 +235,12 @@ final public class QuestionBankTest extends AbstractTransactionalDomainEntityUni
         questionCollectionProxy.forEach(
                 (q) ->
                 {
-                    //q.getId();
-                    LOG.error("content loaded? {}", persistenceUtil.isLoaded(q, "content"));
-                }
+                    q.getId();
+//                    LOG.error("content loaded? {}", persistenceUtil.isLoaded(q, "content"));
+                });
 
-        );
+        assertTrue(Hibernate.isInitialized(questionCollectionProxy));
+        assertTrue(persistenceUtil.isLoaded(questionBank, "questions"));
     }
-
-
 
 }

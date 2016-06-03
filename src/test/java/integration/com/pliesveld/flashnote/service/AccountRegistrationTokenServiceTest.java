@@ -4,7 +4,6 @@ import com.pliesveld.flashnote.domain.AccountRegistrationToken;
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.exception.StudentCreateException;
 import com.pliesveld.flashnote.repository.RegistrationRepository;
-import com.pliesveld.flashnote.repository.StudentDetailsRepository;
 import com.pliesveld.flashnote.repository.StudentRepository;
 import com.pliesveld.flashnote.spring.Profiles;
 import com.pliesveld.flashnote.spring.SpringMailServiceTestConfig;
@@ -16,6 +15,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -28,6 +28,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextConfiguration(classes = {SpringMailServiceTestConfig.class}, loader = AnnotationConfigContextLoader.class)
+@DirtiesContext
 public class AccountRegistrationTokenServiceTest {
     private static final Logger LOG = LogManager.getLogger();
 
@@ -41,9 +42,6 @@ public class AccountRegistrationTokenServiceTest {
     StudentService studentService;
 
     @Autowired
-    StudentDetailsRepository studentDetailsRepository;
-
-    @Autowired
     StudentRepository studentRepository;
 
     @Autowired
@@ -54,7 +52,6 @@ public class AccountRegistrationTokenServiceTest {
     public void removeAccountInfo()
     {
         registrationRepository.deleteAll();
-        studentDetailsRepository.deleteAll();
         studentRepository.deleteAll();
     }
 
@@ -63,11 +60,11 @@ public class AccountRegistrationTokenServiceTest {
     {
         assertEquals(0, accountRegistrationService.countAccountRegistration());
         assertEquals(0, accountRegistrationService.countStudent());
-        assertEquals(0, accountRegistrationService.countStudentDetails());
+        assertEquals(0, accountRegistrationService.countStudent());
         assertNotNull(accountRegistrationService.createStudent("Student1", "student@example.com", "password"));
         assertEquals(0, accountRegistrationService.countAccountRegistration());
         assertEquals(1, accountRegistrationService.countStudent());
-        assertEquals(1, accountRegistrationService.countStudentDetails());
+        assertEquals(1, accountRegistrationService.countStudent());
     }
 
     @Test
@@ -97,12 +94,12 @@ public class AccountRegistrationTokenServiceTest {
 
         assertEquals(1, accountRegistrationService.countAccountRegistration());
         assertEquals(1, accountRegistrationService.countStudent());
-        assertEquals(1, accountRegistrationService.countStudentDetails());
+        assertEquals(1, accountRegistrationService.countStudent());
 
         assertNotNull(accountRegistrationService.deleteAccountRegistration(student.getId()));
         assertNotNull(studentService.delete(student.getId()));
         assertEquals(0, accountRegistrationService.countAccountRegistration());
         assertEquals(0, accountRegistrationService.countStudent());
-        assertEquals(0, accountRegistrationService.countStudentDetails());
+        assertEquals(0, accountRegistrationService.countStudent());
     }
 }

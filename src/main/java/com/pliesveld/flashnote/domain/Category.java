@@ -37,6 +37,19 @@ public class Category extends DomainBaseEntity<Integer> implements Serializable
         super();
     }
 
+    public Category(final String name, final String description) {
+        this();
+        this.name = name;
+        this.description = description;
+    }
+
+    public Category(final String name, final String description, @NotNull final Category parentCategory) {
+        this(name,description);
+        parentCategory.addChildCategory(this);
+
+    }
+
+
     @Id
     @SequenceGenerator(name = "category_gen", sequenceName = "category_id_seq", initialValue = 500)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_gen")

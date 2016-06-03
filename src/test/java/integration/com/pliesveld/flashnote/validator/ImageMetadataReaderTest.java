@@ -83,20 +83,16 @@ public class ImageMetadataReaderTest {
             try {
                 byte[] contents = openToByteArray(file);
                 ImageMetadata imd = ImageMetadataReader.readImageMetaData(file.getPath(), contents);
-                LOG.info("image {} -> {}", file, imd);
+                LOG.info("image {} -> {}", file.getName(), imd);
                 found++;
             } catch(IOException ex) {
-                LOG.error("reader could not open {}",file.getName());
+                LOG.warn("Image reader could not open {}", file.getName());
             }
         }
 
         logImageSupport();
-
         Assert.assertNotEquals(0, found);
-
     }
-
-
 
     byte[] openToByteArray(File file) throws IOException {
         try {
@@ -109,11 +105,10 @@ public class ImageMetadataReaderTest {
 
     void logImageSupport()
     {
-        LOG.debug("Image reader supported formats " + ImageIO.getReaderFormatNames());
+        LOG.debug("Image reader supported formats {}", ImageIO.getReaderFormatNames());
         LOG.debug("Image reader supported file extensions {}",ImageIO.getReaderFileSuffixes());
         LOG.debug("Image reader supported MIME types {}",ImageIO.getReaderMIMETypes());
     }
-
 
     private void printMetadata(ImageReader reader) throws IOException {
 
@@ -134,7 +129,6 @@ public class ImageMetadataReaderTest {
             displayMetadata(metaNode);
         }
     }
-
 
     private void displayMetadata(Node node) {
         if(node == null)
@@ -161,8 +155,6 @@ public class ImageMetadataReaderTest {
         String value = node.getNodeValue();
 
         boolean has_value = StringUtils.hasText(value) && !"null".equalsIgnoreCase(value);
-
         //LOG.debug("Node {}", has_value ? (name + " " + has_value) : name);
     }
-
 }

@@ -43,7 +43,7 @@ public class CategoryTest extends AbstractDomainEntityUnitTest
     }
 
     @Test
-    public void testEntitySanity()
+    public void whenContextLoad_thenCorrect()
     {
         assertNotNull(category_id);
         Category category = entityManager.find(Category.class,category_id);

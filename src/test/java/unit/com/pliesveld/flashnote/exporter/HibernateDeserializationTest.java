@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 @RunWith(SpringJUnit4ClassRunner.class)
 @DefaultEntityTestAnnotations
 @Transactional
+@DirtiesContext
 //@TestExecutionListeners(listeners = LogHibernateTestExecutionListener.class, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 public class HibernateDeserializationTest extends AbstractDomainEntityUnitTest implements ApplicationContextAware {
     private static final Logger LOG = LogManager.getLogger();

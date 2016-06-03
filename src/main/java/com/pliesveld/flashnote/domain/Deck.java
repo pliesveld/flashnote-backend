@@ -5,6 +5,8 @@ import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.persistence.entities.listeners.LogEntityListener;
 import com.pliesveld.flashnote.schema.Constants;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
@@ -46,7 +48,7 @@ public class Deck extends DomainBaseEntity<Integer> implements Serializable
 
     )
     @JsonView(Views.SummaryWithCollections.class)
-//    @LazyCollection(LazyCollectionOption.EXTRA)
+    @LazyCollection(LazyCollectionOption.EXTRA)
     private List<FlashCard> flashcards = new ArrayList<>();
 
     @NotNull
@@ -70,12 +72,29 @@ public class Deck extends DomainBaseEntity<Integer> implements Serializable
         super();
     }
 
+    @Deprecated
     public Deck(final String description) {
         this.description = description;
     }
 
+    @Deprecated
     public Deck(final String description, FlashCard... cards) {
         this(description);
+
+        for(FlashCard fc : cards)
+        {
+            flashcards.add(fc);
+        }
+    }
+
+    public Deck(final Category category, final String description) {
+        this();
+        this.category = category;
+        this.description = description;
+    }
+
+    public Deck(final Category category, final String description, FlashCard... cards) {
+        this(category, description);
 
         for(FlashCard fc : cards)
         {

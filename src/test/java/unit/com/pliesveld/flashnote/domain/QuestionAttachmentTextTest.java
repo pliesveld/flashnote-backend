@@ -55,7 +55,7 @@ public class QuestionAttachmentTextTest extends AbstractDomainEntityUnitTest {
     }
 
     @Test
-    public void testEntitySanity()
+    public void whenContextLoad_thenCorrect()
     {
         assertNotNull(question_id);
         assertNotNull(attachment_id);

@@ -47,9 +47,8 @@ public class ConstructController {
         Question question = cardService.findQuestionById(question_id);
         Answer answer = cardService.findAnswerById(answer_id);
 
-        FlashCard fc = cardService.createFlashCard(question,answer);
-
-        deckService.addToDeckFlashCard(deck,fc);
+        FlashCard fc = new FlashCard(question,answer);
+        deckService.updateDeckAddFlashCard(id, fc);
 
         HttpHeaders responseHeaders = new HttpHeaders();
         URI newStudentUri = MvcUriComponentsBuilder

@@ -20,12 +20,12 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @BlankEntityTestAnnotations
 @Transactional
-public class DeckTest extends StudentDetailsTest
+public class DeckTest extends StudentTest
 {
     @PersistenceContext
     EntityManager entityManager;
 
-    private StudentDetails author;
+    private Student student;
     private Category category;
 
     @Before
@@ -35,35 +35,32 @@ public class DeckTest extends StudentDetailsTest
         super.setupEntities();
         assertNotNull(student_id);
 
-        author = entityManager.getReference(StudentDetails.class, student_id);
-        assertTrue(entityManager.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(author));
+        student = entityManager.getReference(Student.class, student_id);
+        assertTrue(entityManager.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(student));
 
         category = categoryBean();
         entityManager.persist(category);
-
+        entityManager.flush();
     }
 
-
-
     @Test
-    public void testEntitySanity()
+    public void whenContextLoad_thenCorrect()
     {
-        assertStudentDetailsRepositoryCount(1);
+        assertStudentRepositoryCount(1);
         assertStudentRepositoryCount(1);
         assertNotNull(student_id);
         assertNotNull(entityManager.find(Student.class,student_id));
-        assertNotNull(entityManager.find(StudentDetails.class,student_id));
+        assertNotNull(entityManager.find(Student.class,student_id));
     }
 
     @After
-    @Override
     public void flushAfter()
     {
         entityManager.flush();
     }
 
     @Test
-    public void givenDeck_whenPersistingFlashcards()
+    public void givenDeck_whenAddFlashcardWithSharedQuesiton_thenCorrect()
     {
         Question question = questionBean();
         Answer answer1 = answerBean();
@@ -96,7 +93,7 @@ public class DeckTest extends StudentDetailsTest
     }
 
     @Test
-    public void constructDeckMultipleFlashcards()
+    public void givenDeck_whenSavingMultipleFlashcards_thenCorrect()
     {
         int i = 1;
         int a_no = 0;
@@ -142,7 +139,7 @@ public class DeckTest extends StudentDetailsTest
 
 
     @Test
-    public void modifyDeck()
+    public void givenDeck_whenRemovingFlashcard_thenCorrect()
     {
         int i = 1;
         int a_no = 0;
@@ -196,7 +193,7 @@ public class DeckTest extends StudentDetailsTest
 
 
     @Test
-    public void createDeckPersistLoad()
+    public void givenDeck_whenLoad_thenCorrect()
     {
         int i = 1;
         int a_no = 0;

@@ -1,13 +1,15 @@
 package com.pliesveld.flashnote.service;
 
-import com.pliesveld.flashnote.domain.*;
+import com.pliesveld.flashnote.domain.AccountPasswordResetToken;
+import com.pliesveld.flashnote.domain.AccountRegistrationToken;
+import com.pliesveld.flashnote.domain.AccountRole;
+import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.exception.ResourceLimitException;
 import com.pliesveld.flashnote.exception.ResourceRepositoryException;
 import com.pliesveld.flashnote.exception.StudentCreateException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.repository.PasswordResetRepository;
 import com.pliesveld.flashnote.repository.RegistrationRepository;
-import com.pliesveld.flashnote.repository.StudentDetailsRepository;
 import com.pliesveld.flashnote.repository.StudentRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,9 +45,6 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
 	
 	@Autowired
     private StudentRepository studentRepository;
-
-    @Autowired
-    private StudentDetailsRepository studentDetailsRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -109,16 +108,14 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
         if(other != null)
             throw new StudentCreateException(email);
 
-        Student student = new Student();
+        final Student student = new Student();
         student.setEmail(email);
-
         student.setPassword(passwordEncoder.encode(password));
-        student.setRole(StudentRole.ROLE_ACCOUNT);
-
-        final StudentDetails studentDetails = new StudentDetails(student, name);
+        student.setRole(AccountRole.ROLE_ACCOUNT);
+        student.setName(name);
 
         try {
-            student = studentRepository.save(student);
+            studentRepository.save(student);
         } catch(DataAccessException cdae) {
             throw new StudentCreateException("Could not create account");
         }
@@ -135,10 +132,10 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
 		if(registration == null || (student = registration.getStudent()) == null)
 			return null;
 
-		if(student.getRole() == StudentRole.ROLE_ACCOUNT)
+		if(student.getRole() == AccountRole.ROLE_ACCOUNT)
 		{
 			LOG.info("User registrated: {}",student.getEmail());
-			student.setRole(StudentRole.ROLE_USER);
+			student.setRole(AccountRole.ROLE_USER);
 			registrationRepository.delete(registration);
 			return studentRepository.save(student);
 		} else {
@@ -193,7 +190,7 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
 		
 		List<Student> list_student =
 		list_expired.stream().map(AccountRegistrationToken::getStudent)
-			.filter((student) -> student.getRole() == StudentRole.ROLE_ACCOUNT)
+			.filter((student) -> student.getRole() == AccountRole.ROLE_ACCOUNT)
 			.collect(Collectors.toList());
 
 		taskLogger.info("Purging {} registration tokens",list_expired.size());
@@ -220,11 +217,6 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
     @Override
     public long countStudent() {
         return studentRepository.count();
-    }
-
-    @Override
-    public long countStudentDetails() {
-        return studentDetailsRepository.count();
     }
 
     @Override

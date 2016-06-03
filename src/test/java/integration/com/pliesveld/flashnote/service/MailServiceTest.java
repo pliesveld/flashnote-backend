@@ -1,8 +1,8 @@
 package com.pliesveld.flashnote.service;
 
 import com.pliesveld.flashnote.domain.AccountRegistrationToken;
+import com.pliesveld.flashnote.domain.AccountRole;
 import com.pliesveld.flashnote.domain.Student;
-import com.pliesveld.flashnote.domain.StudentRole;
 import com.pliesveld.flashnote.repository.RegistrationRepository;
 import com.pliesveld.flashnote.repository.StudentRepository;
 import com.pliesveld.flashnote.schema.Constants;
@@ -11,7 +11,6 @@ import com.pliesveld.flashnote.spring.SpringDataTestConfig;
 import com.pliesveld.flashnote.spring.SpringMailServiceTestConfig;
 import com.pliesveld.flashnote.spring.SpringServiceTestConfig;
 import com.pliesveld.tests.AbstractRepositoryUnitTest;
-import com.pliesveld.tests.AbstractTransactionalRepositoryUnitTest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.After;
@@ -86,9 +85,11 @@ public class MailServiceTest extends AbstractRepositoryUnitTest {
 	Student studentBean()
 	{
 		Student student = new Student();
-		student.setEmail(UUID.randomUUID().toString() + "@example.com");
+        final String name = UUID.randomUUID().toString().substring(8);
+        student.setName(name);
+		student.setEmail(name + "@example.com");
 		student.setPassword(UUID.randomUUID().toString());
-		student.setRole(StudentRole.ROLE_ACCOUNT);
+		student.setRole(AccountRole.ROLE_ACCOUNT);
 		entityManager.persist(student);
 		
 		return student;
@@ -124,7 +125,9 @@ public class MailServiceTest extends AbstractRepositoryUnitTest {
 	public void givenAccountExpired_whenPurge_thenCorrect() throws Exception {
 		Student student = new Student();
 		student.setEmail("newuser@example.com");
+		student.setName("newuser");
 		student.setPassword("new password");
+        student.setName("newuser");
 		student = studentRepository.save(student);
         entityManager.flush();
 		
@@ -188,8 +191,8 @@ public class MailServiceTest extends AbstractRepositoryUnitTest {
 		Serializable student3_id = student3.getId();
 		Serializable student4_id = student4.getId();
 
-		student2.setRole(StudentRole.ROLE_USER);
-		student3.setRole(StudentRole.ROLE_USER);
+		student2.setRole(AccountRole.ROLE_USER);
+		student3.setRole(AccountRole.ROLE_USER);
 	
 		entityManager.flush();
 		entityManager.clear();
@@ -216,33 +219,33 @@ public class MailServiceTest extends AbstractRepositoryUnitTest {
 		assertEquals(1L, registrationRepository.findAllAsStream()
 				.map((r) -> r.getStudent())
 				.map((s) -> s.getRole())
-				.filter((role) -> role == StudentRole.ROLE_USER)
+				.filter((role) -> role == AccountRole.ROLE_USER)
 				.count());
 		
 		assertEquals(2L, studentRepository.findAllAsStream()
 				.map((s) -> s.getRole())
-				.filter((role) -> role == StudentRole.ROLE_USER)
+				.filter((role) -> role == AccountRole.ROLE_USER)
 				.count());
 
 		
 		assertEquals(2L, registrationRepository.findAllAsStream()
 				.map((r) -> r.getStudent())
 				.map((s) -> s.getRole())
-				.filter((role) -> role == StudentRole.ROLE_ACCOUNT)
+				.filter((role) -> role == AccountRole.ROLE_ACCOUNT)
 				.count());
 		
 
 		assertEquals(1L, registrationRepository.findAllByExpirationLessThan(Instant.now())
 				.map(AccountRegistrationToken::getStudent)
 				.map(Student::getRole)
-				.filter((role) -> role == StudentRole.ROLE_ACCOUNT)
+				.filter((role) -> role == AccountRole.ROLE_ACCOUNT)
 				.count());
 				
 			
 		assertEquals(1L, registrationRepository.findAllByExpirationLessThan(Instant.now())
 				.map((r) -> r.getStudent())
 				.map((s) -> s.getRole())
-				.filter((role) -> role == StudentRole.ROLE_USER)
+				.filter((role) -> role == AccountRole.ROLE_USER)
 				.count());
 
 
@@ -253,21 +256,21 @@ public class MailServiceTest extends AbstractRepositoryUnitTest {
 
 	
 		assertEquals(0L, registrationRepository.findAllByExpirationLessThan(Instant.now())
-				.filter((account) -> account.getStudent().getRole() == StudentRole.ROLE_ACCOUNT).count());
+				.filter((account) -> account.getStudent().getRole() == AccountRole.ROLE_ACCOUNT).count());
 		
 		assertEquals(0L, registrationRepository.findAllByExpirationLessThan(Instant.now())
 				.map(AccountRegistrationToken::getStudent)
 				.map(Student::getRole)
-				.filter((role) -> role == StudentRole.ROLE_USER).count());
+				.filter((role) -> role == AccountRole.ROLE_USER).count());
 
 
 		assertEquals(2L, studentRepository.findAllAsStream()
 				.map(Student::getRole)
-				.filter((role) -> role == StudentRole.ROLE_USER).count());
+				.filter((role) -> role == AccountRole.ROLE_USER).count());
 		
 		assertEquals(1L, studentRepository.findAllAsStream()
 				.map(Student::getRole)
-				.filter((role) -> role == StudentRole.ROLE_ACCOUNT).count());
+				.filter((role) -> role == AccountRole.ROLE_ACCOUNT).count());
 
 		
 
@@ -286,7 +289,7 @@ public class MailServiceTest extends AbstractRepositoryUnitTest {
 		
 		assertEquals(1L, studentRepository.findAllAsStream()
 				.map(Student::getRole)
-				.filter((role) -> role == StudentRole.ROLE_ACCOUNT).count());
+				.filter((role) -> role == AccountRole.ROLE_ACCOUNT).count());
 		
 		Student student = accountService.processRegistrationConfirmation(token);
 		assertNotNull(student);
@@ -297,7 +300,7 @@ public class MailServiceTest extends AbstractRepositoryUnitTest {
 		
 		assertEquals(1L, studentRepository.findAllAsStream()
 				.map(Student::getRole)
-				.filter((role) -> role == StudentRole.ROLE_USER).count());
+				.filter((role) -> role == AccountRole.ROLE_USER).count());
 
 	}
 }

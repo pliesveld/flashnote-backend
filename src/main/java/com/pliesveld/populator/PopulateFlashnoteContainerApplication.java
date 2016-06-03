@@ -2,7 +2,6 @@ package com.pliesveld.populator;
 
 import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.repository.*;
-import com.pliesveld.flashnote.util.generator.QuestionGenerator;
 import com.pliesveld.flashnote.util.generator.StudentGenerator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -40,8 +39,6 @@ public class PopulateFlashnoteContainerApplication {
     CategoryRepository categoryRepository;
     @Autowired
     StudentRepository studentRepository;
-    @Autowired
-    StudentDetailsRepository studentDetailsRepository;
     @Autowired
     QuestionBankRepository questionBankRepository;
     @Autowired
@@ -128,7 +125,7 @@ public class PopulateFlashnoteContainerApplication {
                 LOG.warn(pe.getStackTrace());
             }
 
-            StudentDetails studentDetails = studentDetailsRepository.findByName("basic");
+            Student studentDetails = studentRepository.findByName("basic");
 
             if(studentDetails == null) {
                 LOG.warn("Could not find student@example.com");
@@ -137,9 +134,8 @@ public class PopulateFlashnoteContainerApplication {
 
             populateMessagesFor(studentDetails);
 
-            Deck deck = new Deck(UUID.randomUUID().toString());
+            Deck deck = new Deck(category, UUID.randomUUID().toString());
             deck.setFlashcards(flashCards);
-            deck.setCategory(category);
 
             try {
                 deckRepository.save(deck);
@@ -174,7 +170,7 @@ public class PopulateFlashnoteContainerApplication {
     }
 
     @Transactional
-    private void populateMessagesFor(StudentDetails studentDetails) {
+    private void populateMessagesFor(Student studentDetails) {
         List<Notification> list = new ArrayList<>(15);
 
         for(int i = 0; i < 15; i++) {
@@ -194,7 +190,7 @@ public class PopulateFlashnoteContainerApplication {
         return (args) -> {
             try {
                 for(int i = 0;i < populateSettings.getCountStudents(); i++) {
-                    Student student = StudentGenerator.randomizedStudent(true);
+                    Student student = StudentGenerator.randomizedStudent();
                     studentRepository.save(student);
                 }
             } catch(ConstraintViolationException cve) {

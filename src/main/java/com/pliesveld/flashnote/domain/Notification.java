@@ -25,10 +25,10 @@ public class Notification extends DomainBaseEntity<Integer> {
     private Integer id;
 
     @NotNull
-    @ManyToOne(targetEntity = StudentDetails.class, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity = Student.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "STUDENT_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_NOTIFICATION_STUDENT"))
     @JsonView(Views.Summary.class)
-    private StudentDetails recipient;
+    private Student recipient;
 
     @NotNull
     @Size(min = Constants.MIN_NOTIFICATION_MESSAGE_LENGTH, max = Constants.MAX_NOTIFICATION_MESSAGE_LENGTH)
@@ -52,14 +52,14 @@ public class Notification extends DomainBaseEntity<Integer> {
         super();
     }
 
-    public Notification(NotificationType type, StudentDetails recipient, String message) {
+    public Notification(NotificationType type, Student recipient, String message) {
         this();
         this.recipient = recipient;
         this.message = message;
         this.type = type;
     }
 
-    public Notification(StudentDetails recipient, String message) {
+    public Notification(Student recipient, String message) {
         this();
         this.recipient = recipient;
         this.message = message;
@@ -70,7 +70,7 @@ public class Notification extends DomainBaseEntity<Integer> {
         return id;
     }
 
-    public StudentDetails getRecipient() {
+    public Student getRecipient() {
         return recipient;
     }
 

@@ -9,8 +9,10 @@ import java.util.stream.Stream;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student,Integer> {
-    Student findOneByEmail(String email);
+    Student findOneByEmail(final String email);
 
     @Query("select s from Student s")
     Stream<Student> findAllAsStream();
+
+    Student findByName(final String name);
 }

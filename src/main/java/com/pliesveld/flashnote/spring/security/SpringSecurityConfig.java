@@ -1,6 +1,6 @@
 package com.pliesveld.flashnote.spring.security;
 
-import com.pliesveld.flashnote.domain.StudentRole;
+import com.pliesveld.flashnote.domain.AccountRole;
 import com.pliesveld.flashnote.security.JwtAuthenticationEntryPoint;
 import com.pliesveld.flashnote.security.JwtAuthenticationTokenFilter;
 import com.pliesveld.flashnote.spring.Profiles;
@@ -67,7 +67,7 @@ public class SpringSecurityConfig {
 
             if(LOG.isDebugEnabled(SECURITY_INIT))
             {
-                for(StudentRole role : StudentRole.values())
+                for(AccountRole role : AccountRole.values())
                 {
                     StringBuilder sb = new StringBuilder();
                     sb.append("for Role ");

@@ -1,10 +1,12 @@
 package com.pliesveld.flashnote.service;
 
+import com.pliesveld.flashnote.domain.AccountRole;
 import com.pliesveld.flashnote.domain.Student;
-import com.pliesveld.flashnote.domain.StudentDetails;
-import com.pliesveld.flashnote.domain.StudentRole;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
-import com.pliesveld.flashnote.repository.*;
+import com.pliesveld.flashnote.repository.PasswordResetRepository;
+import com.pliesveld.flashnote.repository.RegistrationRepository;
+import com.pliesveld.flashnote.repository.RememberTokenRepository;
+import com.pliesveld.flashnote.repository.StudentRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +23,6 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     private StudentRepository studentRepository;
-
-    @Autowired
-    private StudentDetailsRepository studentDetailsRepository;
 
     @Autowired
     private RememberTokenRepository rememberTokenRepository;
@@ -48,7 +47,7 @@ public class AdminServiceImpl implements AdminService {
 
         checkRepositoryAndDelete(registrationRepository,id);
         checkRepositoryAndDelete(passwordResetRepository,id);
-        checkRepositoryAndDelete(studentDetailsRepository,id);
+        checkRepositoryAndDelete(studentRepository,id);
         studentRepository.delete(id);
     }
 
@@ -62,29 +61,25 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public StudentDetails update(final StudentDetails studentDetails) throws StudentNotFoundException {
-        return studentDetailsRepository.save(studentDetails);
+    public Student update(final Student student) throws StudentNotFoundException {
+        return studentRepository.save(student);
     }
 
     @Override
-    public List<StudentDetails> findAllStudentDetails() {
-        return studentDetailsRepository.findAllAsStream().collect(Collectors.toList());
+    public List<Student> findAllStudent() {
+        return studentRepository.findAllAsStream().collect(Collectors.toList());
     }
 
     @Override
     public Student createStudent(final String name, final String email, final String password) {
 
 
-        Student student = new Student();
+        final Student student = new Student();
         student.setEmail(email);
         student.setPassword(password);
-
-        StudentDetails studentDetails = new StudentDetails(name);
-
-        student.setStudentDetails(studentDetails);
+        student.setName(name);
+        student.setRole(AccountRole.ROLE_USER);
         studentRepository.save(student);
-        studentDetailsRepository.save(studentDetails);
-        student.setRole(StudentRole.ROLE_USER);
         return student;
     }
 }

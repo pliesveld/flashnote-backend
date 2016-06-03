@@ -23,7 +23,6 @@ public class AttachmentText extends AbstractAttachment {
     @NotNull
     @Size(max = Constants.MAX_ATTACHMENT_TEXT_FILE_LENGTH)
     @Column(name = "FILE_TEXT", length = Constants.MAX_ATTACHMENT_TEXT_FILE_LENGTH, nullable = false)
-    @Basic(fetch = FetchType.LAZY, optional = false)
     @JsonView(Views.SummaryDetails.class)
     public String getContents() {
         return contents;

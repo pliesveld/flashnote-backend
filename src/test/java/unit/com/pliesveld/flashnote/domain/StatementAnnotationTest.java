@@ -40,22 +40,22 @@ public class StatementAnnotationTest extends AbstractDomainEntityUnitTest {
     {
         Question question = this.questionBean();
         Answer answer = this.answerBean();
-        StudentDetails studentDetails = this.studentDetailsBean();
+        Student student = this.studentBean();
 
         question = questionRepository.save(question);
         answer = answerRepository.save(answer);
-        studentDetails = studentDetailsRepository.save(studentDetails);
+        student = studentRepository.save(student);
 
         question_id = question.getId();
         answer_id = answer.getId();
-        student_id = studentDetails.getId();
+        student_id = student.getId();
 
         {
-            AnnotatedStatement annotatedStatement = new AnnotatedStatement(studentDetails,MESSAGE);
+            AnnotatedStatement annotatedStatement = new AnnotatedStatement(student,MESSAGE);
             question.addAnnotation(annotatedStatement);
         }
         {
-            AnnotatedStatement annotatedStatement = new AnnotatedStatement(studentDetails,MESSAGE);
+            AnnotatedStatement annotatedStatement = new AnnotatedStatement(student,MESSAGE);
             answer.addAnnotation(annotatedStatement);
         }
 
@@ -72,11 +72,11 @@ public class StatementAnnotationTest extends AbstractDomainEntityUnitTest {
     }
 
     @Test
-    public void testEntitySanity()
+    public void whenContextLoad_thenCorrect()
     {
         assertNotNull(entityManager.find(Question.class, question_id));
         assertNotNull(entityManager.find(Answer.class, answer_id));
-        assertNotNull(entityManager.find(StudentDetails.class,student_id));
+        assertNotNull(entityManager.find(Student.class,student_id));
 
         this.assertQuestionRepositoryCount(1);
         this.assertAnswerRepositoryCount(1);

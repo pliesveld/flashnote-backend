@@ -3,9 +3,10 @@ package com.pliesveld.flashnote.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
+import com.pliesveld.flashnote.domain.converter.AccountRoleConverter;
 import com.pliesveld.flashnote.domain.converter.InstantConverter;
-import com.pliesveld.flashnote.domain.converter.StudentRoleConverter;
 import com.pliesveld.flashnote.model.json.Views;
+import com.pliesveld.flashnote.schema.Constants;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
@@ -18,38 +19,46 @@ import static com.pliesveld.flashnote.schema.Constants.*;
 
 @Entity
 @Table(name = "STUDENT_ACCOUNT",
-        uniqueConstraints = @UniqueConstraint(name = "UNIQUE_STUDENT_EMAIL", columnNames = "STUDENT_EMAIL"))
+    uniqueConstraints = {
+        @UniqueConstraint(name = "UNIQUE_ACCOUNT_EMAIL", columnNames = "STUDENT_EMAIL"),
+        @UniqueConstraint(name = "UNIQUE_ACCOUNT_NAME", columnNames = "STUDENT_NAME")
+        })
 public class Student extends DomainBaseEntity<Integer> {
 
     private Integer id;
-    private StudentDetails studentDetails;
+    private String name;
     private String email;
     private String password;
-    private StudentRole role;
+    private AccountRole role;
     private boolean temporaryPassword;
     private Instant lastPasswordResetDate;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "STUDENT_ID")
     @JsonView(Views.Summary.class)
     public Integer getId() { return id; }
 
-    @PrimaryKeyJoinColumn
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    public StudentDetails getStudentDetails() { return studentDetails; }
+    @NotNull
+    @Size(min = Constants.MIN_ACCOUNT_NAME_LENGTH, max = Constants.MAX_ACCOUNT_NAME_LENGTH)
+    @Column(name = "STUDENT_NAME", length = Constants.MAX_ACCOUNT_NAME_LENGTH, nullable = false)
+    @JsonView(Views.Summary.class)
+    public String getName()
+    {
+        return name;
+    }
 
     @NotNull
-    @Size(min = MIN_STUDENT_EMAIL_LENGTH,max = MAX_STUDENT_EMAIL_LENGTH)
+    @Size(min = MIN_ACCOUNT_EMAIL_LENGTH,max = MAX_ACCOUNT_EMAIL_LENGTH)
     @Email
-    @Column(name = "STUDENT_EMAIL", length = MAX_STUDENT_EMAIL_LENGTH, nullable = false)
+    @Column(name = "STUDENT_EMAIL", length = MAX_ACCOUNT_EMAIL_LENGTH, nullable = false)
     public String getEmail() {
         return email;
     }
 
     @NotNull
-    @Size(min = MIN_STUDENT_PASSWORD_LENGTH, max = MAX_STUDENT_PASSWORD_LENGTH)
-    @Column(name = "STUDENT_PASSWORD", length = MAX_STUDENT_PASSWORD_LENGTH, nullable = false)
+    @Size(min = MIN_ACCOUNT_PASSWORD_LENGTH, max = MAX_ACCOUNT_PASSWORD_LENGTH)
+    @Column(name = "STUDENT_PASSWORD", length = MAX_ACCOUNT_PASSWORD_LENGTH, nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public String getPassword() {
         return password;
@@ -57,10 +66,10 @@ public class Student extends DomainBaseEntity<Integer> {
 
     @NotNull
     @Column(name = "STUDENT_ROLE", nullable = false)
-    @Convert(converter = StudentRoleConverter.class)
+    @Convert(converter = AccountRoleConverter.class)
     @Basic(fetch = FetchType.EAGER)
     @JsonView(Views.Summary.class)
-    public StudentRole getRole() {
+    public AccountRole getRole() {
         return role;
     }
 
@@ -84,18 +93,16 @@ public class Student extends DomainBaseEntity<Integer> {
     @PrePersist
     public void prePersist() {
         if(role == null)
-            role = StudentRole.ROLE_ACCOUNT;
+            role = AccountRole.ROLE_ACCOUNT;
         temporaryPassword = false;
         lastPasswordResetDate = Instant.now();
     }
 
     public void setId(Integer id) { this.id = id; }
 
-    public void setStudentDetails(StudentDetails studentDetails)
+    public void setName(String name)
     {
-        this.studentDetails = studentDetails;
-        if(studentDetails != null && (studentDetails.getStudent() == null || !studentDetails.getStudent().equals(this)))
-            studentDetails.setStudent(this);
+        this.name = name;
     }
 
     public void setEmail(String email) {
@@ -106,7 +113,7 @@ public class Student extends DomainBaseEntity<Integer> {
         this.password = password;
     }
 
-    public void setRole(StudentRole role) {
+    public void setRole(AccountRole role) {
         this.role = role;
     }
 

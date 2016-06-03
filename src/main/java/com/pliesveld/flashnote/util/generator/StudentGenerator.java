@@ -1,9 +1,8 @@
 package com.pliesveld.flashnote.util.generator;
 
 
+import com.pliesveld.flashnote.domain.AccountRole;
 import com.pliesveld.flashnote.domain.Student;
-import com.pliesveld.flashnote.domain.StudentDetails;
-import com.pliesveld.flashnote.domain.StudentRole;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -70,51 +69,22 @@ public class StudentGenerator
 
     static public Student randomizedStudent()
     {
-        return randomizedStudent(true);
-    }
-
-
-    static private AtomicInteger studentCounter = new AtomicInteger(1000);
-
-    static public Student randomizedStudent(boolean andDetails)
-    {
-        StudentRole random_role = randomValue(StudentRole.values());
+        AccountRole random_role = randomValue(AccountRole.values());
         int rand_num = ThreadLocalRandom.current().nextInt(0,1000);
         String random_name = String.format("%s%d",randomValue(GIRL_NAMES),studentCounter.getAndIncrement());
         String random_email = random_name.concat("@" + randomValue(DOMAIN_NAMES));
 
         Student student = new Student();
-
-        if(andDetails) {
-            StudentDetails studentDetails = new StudentDetails(random_name);
-            student.setStudentDetails(studentDetails);
-            studentDetails.setStudent(student);
-        }
-
         student.setEmail(random_email);
         student.setPassword("password");
-        student.setRole(StudentRole.ROLE_USER);
+        student.setRole(AccountRole.ROLE_USER);
+        student.setName(random_name);
+
         return student;
     }
 
-    static public StudentDetails randomizedStudentDetails()
-    {
-        return randomizedStudentDetails(true);
-    }
 
-    static public StudentDetails randomizedStudentDetails(boolean andStudent)
-    {
-        if(andStudent)
-        {
-            return randomizedStudent().getStudentDetails();
-        }
-
-        StudentRole random_role = randomValue(StudentRole.values());
-        int rand_num = ThreadLocalRandom.current().nextInt(0,1000);
-        String random_name = String.format("%s%d",randomValue(GIRL_NAMES),studentCounter.getAndIncrement());
-        StudentDetails studentDetails = new StudentDetails(random_name);
-        return studentDetails;
-    }
+    static private AtomicInteger studentCounter = new AtomicInteger(1000);
 
     public static String randomizedName() {
         String random_name = String.format("%s%d",randomValue(GIRL_NAMES),studentCounter.getAndIncrement());

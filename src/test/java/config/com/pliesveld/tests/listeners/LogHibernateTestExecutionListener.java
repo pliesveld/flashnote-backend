@@ -69,35 +69,35 @@ public class LogHibernateTestExecutionListener extends AbstractTestExecutionList
          * if an exception is thrown in the test method, unwind the exception hierarchy, and find the root
          * exception.  During the unwinding clear the stack trace elements.
          */
-        if(thrown != null)
-        {
-            Throwable cause = thrown;
-            Throwable last = null;
-
-
-            while(cause != null)
-            {
-                last = cause;
-
-                if(cause.getClass() != AssertionError.class)
-                    cause.setStackTrace(new StackTraceElement[]{});
-
-                cause = cause.getCause();
-                if(cause != null)
-                    last = cause;
-            }
-
-//            LOG.debug(last.toString());
-            if(thrown.getClass() != AssertionError.class)
-                thrown.setStackTrace(new StackTraceElement[]{});
-
-            testContext.updateState(
-                testContext.getTestInstance(),
-                testContext.getTestMethod(),
-                last
-            );
-
-        }
+//        if(thrown != null)
+//        {
+//            Throwable cause = thrown;
+//            Throwable last = null;
+//
+//
+//            while(cause != null)
+//            {
+//                last = cause;
+//
+//                if(cause.getClass() != AssertionError.class)
+//                    cause.setStackTrace(new StackTraceElement[]{});
+//
+//                cause = cause.getCause();
+//                if(cause != null)
+//                    last = cause;
+//            }
+//
+////            LOG.debug(last.toString());
+//            if(thrown.getClass() != AssertionError.class)
+//                thrown.setStackTrace(new StackTraceElement[]{});
+//
+//            testContext.updateState(
+//                testContext.getTestInstance(),
+//                testContext.getTestMethod(),
+//                last
+//            );
+//
+//        }
         disableSQL();
     }
 

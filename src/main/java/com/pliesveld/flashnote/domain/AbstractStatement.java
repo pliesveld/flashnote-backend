@@ -42,7 +42,6 @@ public abstract class AbstractStatement extends AbstractAuditableEntity<Integer>
     @NotNull
     @Size(min = Constants.MIN_STATEMENT_CONTENT_LENGTH, max = Constants.MAX_STATEMENT_CONTENT_LENGTH)
     @Column(name = "CONTENT", length = Constants.MAX_STATEMENT_CONTENT_LENGTH, nullable = false)
-    @Basic(fetch = FetchType.LAZY, optional = false)
     @JsonView(Views.Summary.class)
     public String getContent() {
         return content;
@@ -51,19 +50,19 @@ public abstract class AbstractStatement extends AbstractAuditableEntity<Integer>
     @NotNull
     @Size(min = Constants.MD5_HASH_LENGTH, max = Constants.MD5_HASH_LENGTH)
     @Column(name = "CONTENT_HASH", length = Constants.MD5_HASH_LENGTH, nullable = false)
-    @Basic(fetch = FetchType.EAGER, optional = false)
     public String getContentHash() {
         return contentHash;
     }
 
+    @Size(min = 0, max = Constants.MAX_STATEMENT_ANNOTATIONS_SIZE)
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "ANNOTATION", joinColumns = { @JoinColumn(name = "STATEMENT_ID",foreignKey = @ForeignKey(name = "FK_ANNOTATION_STATEMENT"))})
-//    @GenericGenerator(name="sequence-gen", strategy="sequence")
+    @SequenceGenerator(name = "annotation_gen", sequenceName = "annotation_id_seq", initialValue = 15000)
+//    @GenericGenerator(name="annotation_gen", strategy="annontation_id_seq")
     @CollectionId(
             columns   = @Column(name = "ANNOTATION_ID"),
             type      = @Type(type = "integer"),
-            generator = Constants.SEQUENCE_GENERATOR
-//        generator = "sequence-gen"
+            generator = "annotation_gen"
     )
     @LazyCollection(LazyCollectionOption.EXTRA)
     @JsonView(Views.SummaryWithCollections.class)
@@ -106,5 +105,4 @@ public abstract class AbstractStatement extends AbstractAuditableEntity<Integer>
     protected void updateContent() {
         setContentHash(DigestUtils.md5DigestAsHex(getContent().getBytes()));
     }
-
 }

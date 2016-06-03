@@ -77,7 +77,7 @@ public class RegistrationControllerTest {
 
         RegistrationRequestJson jsonRequest = new RegistrationRequestJson();
 
-        jsonRequest.setName(student.getStudentDetails().getName());
+        jsonRequest.setName(student.getName());
         jsonRequest.setEmail(student.getEmail());
         jsonRequest.setPassword(student.getPassword());
 

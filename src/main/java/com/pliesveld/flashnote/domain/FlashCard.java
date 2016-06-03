@@ -21,7 +21,7 @@ public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey>
     private FlashCardPrimaryKey id = new FlashCardPrimaryKey();
 
 //    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH},
-    @ManyToOne(cascade = {CascadeType.MERGE},
+    @ManyToOne(cascade = { CascadeType.MERGE },
             targetEntity = com.pliesveld.flashnote.domain.Question.class)
     @JoinColumn(name = "QUESTION_ID",
             nullable = false, insertable = false, updatable = false,

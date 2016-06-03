@@ -1,19 +1,14 @@
 {
     "_class" : "com.pliesveld.flashnote.spring.DataSet",
 
-    "questions" : [],
     "students" : [
         {
             "email" : "student@example.com",
             "password" : "password",
             "role" : "ROLE_ACCOUNT",
-            "studentDetails" : {
-                "name" : "newuser"
-            }
+            "name" : "newuser"
         }
-    ],
-    "categories" : [],
-    "questionBanks" : [],
-    "decks" : []
+    ]
+
 }
 

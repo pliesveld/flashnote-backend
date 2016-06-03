@@ -1,9 +1,8 @@
 package com.pliesveld.flashnote.spring.data;
 
+import com.pliesveld.flashnote.domain.AccountRole;
 import com.pliesveld.flashnote.domain.Category;
 import com.pliesveld.flashnote.domain.Student;
-import com.pliesveld.flashnote.domain.StudentDetails;
-import com.pliesveld.flashnote.domain.StudentRole;
 import com.pliesveld.flashnote.repository.CategoryRepository;
 import com.pliesveld.flashnote.repository.StudentRepository;
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.pliesveld.flashnote.domain.StudentRole.*;
+import static com.pliesveld.flashnote.domain.AccountRole.*;
 
 
 
@@ -54,7 +53,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     }
 
     @Transactional
-    private Student createStudentIfNotFound(String email, StudentRole role, String name) {
+    private Student createStudentIfNotFound(String email, AccountRole role, String name) {
         Student student = studentRepository.findOneByEmail(email);
         if( student == null )
         {
@@ -62,9 +61,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             student.setEmail(email);
             student.setRole(role);
             student.setPassword(passwordEncoder.encode(DEFAULT_PASSWORD));
-
-            StudentDetails studentDetails = new StudentDetails(name);
-            studentDetails.setStudent(student);
+            student.setName(name);
             studentRepository.save(student);
         }
 

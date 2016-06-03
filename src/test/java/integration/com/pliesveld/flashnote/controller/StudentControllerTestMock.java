@@ -2,8 +2,7 @@ package com.pliesveld.flashnote.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pliesveld.flashnote.domain.Student;
-import com.pliesveld.flashnote.domain.StudentDetails;
-import com.pliesveld.flashnote.model.json.request.NewStudentDetails;
+import com.pliesveld.flashnote.model.json.request.NewStudentRequestJson;
 import com.pliesveld.flashnote.service.AccountRegistrationService;
 import com.pliesveld.flashnote.service.AdminService;
 import com.pliesveld.flashnote.service.StudentService;
@@ -81,26 +80,26 @@ public class StudentControllerTestMock {
         ReflectionTestUtils.setField(administrationController, "studentService", studentService);
 
         /*
-            When the mocked method findAllStudentDetails() is invoked, the an empty ArrayList<StudentDetails> is returned.
+            When the mocked method findAllStudent() is invoked, the an empty ArrayList<Student> is returned.
          */
-        when(adminService.findAllStudentDetails()).thenReturn(new ArrayList<StudentDetails>());
+        when(adminService.findAllStudent()).thenReturn(new ArrayList<Student>());
 
         /*
             Invoke the Controller methods that depend on the mocked objects.
          */
-        ResponseEntity<Iterable<StudentDetails>> allStudentsEntry = administrationController.getAllStudents();
+        ResponseEntity<Iterable<Student>> allStudentsEntry = administrationController.getAllStudents();
 
         /*
-            Checks that the underlying mocked dependency invoked the method findAllStudentDetails once.
+            Checks that the underlying mocked dependency invoked the method findAllStudent once.
          */
-        verify(adminService,times(1)).findAllStudentDetails();
+        verify(adminService,times(1)).findAllStudent();
 
         /*
             Asserts that the HTTP status coded returned by the Controller was OK.
             Asserts that the response returned Iteration of student elements was zero.
          */
         assertEquals(HttpStatus.OK,allStudentsEntry.getStatusCode());
-        List<StudentDetails> target = new ArrayList<>();
+        List<Student> target = new ArrayList<>();
         allStudentsEntry.getBody().forEach(target::add);
         assertEquals(0,target.size());
     }
@@ -114,8 +113,8 @@ public class StudentControllerTestMock {
 
         ObjectMapper mapper = new ObjectMapper();
         Student student = StudentGenerator.randomizedStudent();
-        NewStudentDetails newStudent = new NewStudentDetails();
-        newStudent.setName(student.getStudentDetails().getName());
+        NewStudentRequestJson newStudent = new NewStudentRequestJson();
+        newStudent.setName(student.getName());
         newStudent.setEmail(student.getEmail());
         newStudent.setPassword(student.getPassword());
 

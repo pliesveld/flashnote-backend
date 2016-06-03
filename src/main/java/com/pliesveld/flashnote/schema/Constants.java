@@ -7,19 +7,20 @@ public class Constants {
     public static final String ID_GENERATOR = "identity";
     public static final String SEQUENCE_GENERATOR = "sequence";
 
-    public static final int MIN_STUDENT_NAME_LENGTH = 3;
-    public static final int MAX_STUDENT_NAME_LENGTH = 32;
+    public static final int MIN_ACCOUNT_NAME_LENGTH = 3;
+    public static final int MAX_ACCOUNT_NAME_LENGTH = 32;
 
-    public static final int MIN_STUDENT_EMAIL_LENGTH = 5;
-    public static final int MAX_STUDENT_EMAIL_LENGTH = 48;
+    public static final int MIN_ACCOUNT_EMAIL_LENGTH = 5;
+    public static final int MAX_ACCOUNT_EMAIL_LENGTH = 48;
 
-    public static final int MIN_STUDENT_PASSWORD_LENGTH = 1;
-    public static final int MAX_STUDENT_PASSWORD_LENGTH = 60;
+    public static final int MIN_ACCOUNT_PASSWORD_LENGTH = 1;
+    public static final int MAX_ACCOUNT_PASSWORD_LENGTH = 60;
 
-    public static final int MAX_STATEMENT_CONTENT_LENGTH = 65600;
+    public static final int MAX_STATEMENT_CONTENT_LENGTH = 8192;
     public static final int MIN_STATEMENT_CONTENT_LENGTH = 12;
+    public static final int MAX_STATEMENT_ANNOTATIONS_SIZE = 7;
 
-    public static final int MAX_ATTACHMENT_TEXT_FILE_LENGTH = 65600;
+    public static final int MAX_ATTACHMENT_TEXT_FILE_LENGTH = 65536;
     public static final int MAX_ATTACHMENT_BINARY_FILE_LENGTH = 3145728;
     public static final int MIN_ATTACHMENT_FILENAME_LENGTH = 4;
     public static final int MAX_ATTACHMENT_FILENAME_LENGTH = 48;
@@ -42,4 +43,5 @@ public class Constants {
 
 
     public static final int MD5_HASH_LENGTH = 32;
+
 }

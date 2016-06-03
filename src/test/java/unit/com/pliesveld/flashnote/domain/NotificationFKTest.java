@@ -31,7 +31,7 @@ public class NotificationFKTest extends NotificationTest {
 
     @Test
     @Override
-    public void testEntitySanity()
+    public void whenContextLoad_thenCorrect()
     {
 
         assertNotNull(entityManager.find(Notification.class, message_id));
@@ -41,17 +41,17 @@ public class NotificationFKTest extends NotificationTest {
     @Test
     public void testStudentRemovalFKViolation()
     {
-        StudentDetails studentDetails = entityManager.find(StudentDetails.class, recipient_id);
+        Student student = entityManager.find(Student.class, recipient_id);
         thrown.expect(PersistenceException.class);
-        entityManager.remove(studentDetails);
+        entityManager.remove(student);
     }
 
 
     @Test
     public void testStudentRemoval()
     {
-        StudentDetails studentDetails = entityManager.find(StudentDetails.class, recipient_id);
+        Student student = entityManager.find(Student.class, recipient_id);
         notificationRepository.deleteAll();
-        entityManager.remove(studentDetails);
+        entityManager.remove(student);
     }
 }

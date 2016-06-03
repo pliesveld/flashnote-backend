@@ -1,10 +1,9 @@
 package com.pliesveld.flashnote.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pliesveld.flashnote.domain.AccountRole;
 import com.pliesveld.flashnote.domain.Student;
-import com.pliesveld.flashnote.domain.StudentDetails;
-import com.pliesveld.flashnote.domain.StudentRole;
-import com.pliesveld.flashnote.model.json.request.NewStudentDetails;
+import com.pliesveld.flashnote.model.json.request.NewStudentRequestJson;
 import com.pliesveld.flashnote.service.AccountRegistrationService;
 import com.pliesveld.flashnote.service.AdminService;
 import com.pliesveld.flashnote.spring.Profiles;
@@ -50,7 +49,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextConfiguration(classes = { MockServletContext.class, SpringEntityTestConfig.class }, loader = AnnotationConfigContextLoader.class)
 @WebAppConfiguration
-public class StudentDetailsControllerTest {
+public class StudentControllerTest {
     private static final Logger LOG = LogManager.getLogger();
 
     @Mock
@@ -78,7 +77,7 @@ public class StudentDetailsControllerTest {
 
     @Test
     public void getAllStudentsEmpty() throws Exception {
-        when(adminService.findAllStudentDetails()).thenReturn(new ArrayList<StudentDetails>());
+        when(adminService.findAllStudent()).thenReturn(new ArrayList<Student>());
         mockMvc.perform(get("/admin/students"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("[]"));
@@ -88,13 +87,13 @@ public class StudentDetailsControllerTest {
     public void createStudent() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         Student student = StudentGenerator.randomizedStudent();
-        student.setRole(StudentRole.ROLE_USER);
+        student.setRole(AccountRole.ROLE_USER);
         student.setId(4);
-        NewStudentDetails newStudent = new NewStudentDetails();
-        newStudent.setName(student.getStudentDetails().getName());
+        NewStudentRequestJson newStudent = new NewStudentRequestJson();
+        newStudent.setName(student.getName());
         newStudent.setEmail(student.getEmail());
         newStudent.setPassword(student.getPassword());
-        newStudent.setRole(StudentRole.ROLE_USER);
+        newStudent.setRole(AccountRole.ROLE_USER);
 
 
         final String JSON_DATA = mapper.writeValueAsString(newStudent);

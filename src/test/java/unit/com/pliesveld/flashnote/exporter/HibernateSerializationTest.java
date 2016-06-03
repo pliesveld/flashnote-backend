@@ -6,14 +6,12 @@ import com.pliesveld.flashnote.domain.AbstractDomainEntityUnitTest;
 import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.serializer.HibernateAwareObjectMapperImpl;
-import com.pliesveld.flashnote.spring.DefaultEntityTestAnnotations;
 import com.pliesveld.flashnote.spring.Profiles;
 import com.pliesveld.flashnote.spring.SpringEntityTestConfig;
 import com.pliesveld.tests.beans.DomainEntities;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.SessionEventListener;
-import org.hibernate.engine.spi.SessionEventListenerManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
@@ -51,6 +50,7 @@ import static org.junit.Assert.assertNotNull;
 @TestPropertySource( locations = "classpath:test-datasource.properties" )
 @Transactional
 //@TestExecutionListeners(listeners = LogHibernateTestExecutionListener.class, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
+@DirtiesContext
 @Configuration
 public class HibernateSerializationTest extends AbstractDomainEntityUnitTest implements ApplicationContextAware {
     private static final Logger LOG = LogManager.getLogger();
@@ -67,14 +67,14 @@ public class HibernateSerializationTest extends AbstractDomainEntityUnitTest imp
 
     ArrayList<DomainBaseEntity> entityBeans = new ArrayList<>();
 
-
     @Before
     public void setUp() throws Exception {
         assertNotNull(sessionCounter);
         entityManager.unwrap(org.hibernate.Session.class).addEventListeners(sessionCounter);
         entityBeans = initializeTestClass();
         entityManager.flush();
-        entityManager.clear();
+        //TODO: clearing context displays SQL statements executed to retrieve domain entity;  however currently; entities may have uninitialized collections
+//        entityManager.clear();
     }
 
     private void doSerializationTest(ObjectWriter writer) {
@@ -82,8 +82,9 @@ public class HibernateSerializationTest extends AbstractDomainEntityUnitTest imp
 
 //        Map<Class<?>, String> outMap = entityBeans.stream().collect(Collectors.toMap(Object::getClass, writer::out));
 //        outMap.forEach((clazz, out) -> {
+//            LOG.debug("Contents using string reflection {}", clazz);
 //            System.out.println(clazz);
-//            System.out.println(out);
+//            debugEntity(out);
 //        });
 
         enableSQL();
@@ -92,7 +93,7 @@ public class HibernateSerializationTest extends AbstractDomainEntityUnitTest imp
             DomainBaseEntity entity = (DomainBaseEntity) entityManager.find(clazz, id, LockModeType.READ);
 //            DomainBaseEntity entity = (DomainBaseEntity) entityManager.getReference(clazz, id);
             writer.out(entity, writer.view_clazz);
-            entityManager.clear();
+//            entityManager.clear();
 
         });
         disableSQL();
@@ -188,7 +189,7 @@ public class HibernateSerializationTest extends AbstractDomainEntityUnitTest imp
 
                 entityManager.persist(obj);
                 entityManager.flush();
-                entityManager.clear();
+//                entityManager.clear();
 
                 LOG.trace("Saving {} {}", () -> {return clazz.getSimpleName();}, () -> {
                     final int ent_cnt = sessionCounter.getEntities();
@@ -235,7 +236,6 @@ public class HibernateSerializationTest extends AbstractDomainEntityUnitTest imp
         @Override
         public void transactionCompletion(boolean successful) {
             LOG.trace("TransactionComplete: success {}", successful);
-
         }
 
         @Override
@@ -324,12 +324,12 @@ public class HibernateSerializationTest extends AbstractDomainEntityUnitTest imp
         public void flushEnd(int numberOfEntities, int numberOfCollections) {
             this.entities += numberOfEntities;
             this.collections += numberOfCollections;
+            LOG.trace("flushEnd entities {} collections {}", numberOfEntities, numberOfCollections);
         }
 
         @Override
         public void partialFlushStart() {
             LOG.trace("partialFlushStart");
-
         }
 
         @Override

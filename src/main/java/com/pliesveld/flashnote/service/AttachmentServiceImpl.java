@@ -1,6 +1,9 @@
 package com.pliesveld.flashnote.service;
 
-import com.pliesveld.flashnote.domain.*;
+import com.pliesveld.flashnote.domain.AbstractAttachment;
+import com.pliesveld.flashnote.domain.AttachmentBinary;
+import com.pliesveld.flashnote.domain.AttachmentText;
+import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.exception.AttachmentNotFoundException;
 import com.pliesveld.flashnote.exception.AttachmentUploadException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
@@ -39,15 +42,6 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Autowired
     private StudentService studentService;
-
-    private StudentDetails verifyStudentDetails(final int id) throws StudentNotFoundException
-    {
-        final StudentDetails studentDetails = studentService.findStudentDetailsById(id);
-        if(studentDetails == null)
-            throw new StudentNotFoundException(id);
-
-        return studentDetails;
-    }
 
     private Student verifyStudent(final int id) throws StudentNotFoundException
     {
@@ -165,8 +159,8 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public List<AbstractAttachment> findAttachmentByStudent(final int id) throws StudentNotFoundException {
 
-        final StudentDetails studentDetails = verifyStudentDetails(id);
-        final String email = studentDetails.getStudent().getEmail();
+        final Student student = verifyStudent(id);
+        final String email = student.getEmail();
 
         return attachmentRepository.findAllByAuthor(email).collect(Collectors.toList());
     }

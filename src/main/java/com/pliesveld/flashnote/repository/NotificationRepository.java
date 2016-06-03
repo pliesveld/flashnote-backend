@@ -1,7 +1,7 @@
 package com.pliesveld.flashnote.repository;
 
 import com.pliesveld.flashnote.domain.Notification;
-import com.pliesveld.flashnote.domain.StudentDetails;
+import com.pliesveld.flashnote.domain.Student;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -15,13 +15,13 @@ public interface NotificationRepository extends PagingAndSortingRepository<Notif
 
     @Modifying
     @Query("delete from Notification n where n.recipient <= ?1")
-    void deleteAllByRecipient(StudentDetails recipient);
+    void deleteAllByRecipient(Student recipient);
 
     @Modifying
     @Query("delete from Notification n where n.createdOn <= ?1")
     void deleteAllByCreatedOnLessThan(Instant now);
 
-    Stream<Notification> findByRecipientOrderByCreatedOnAsc(StudentDetails recipient);
+    Stream<Notification> findByRecipientOrderByCreatedOnAsc(Student recipient);
 
-    Stream<Notification> findByRecipientAndCreatedOnLessThanOrderByCreatedOnAsc(StudentDetails recipient, Instant last_login);
+    Stream<Notification> findByRecipientAndCreatedOnLessThanOrderByCreatedOnAsc(Student recipient, Instant last_login);
 }

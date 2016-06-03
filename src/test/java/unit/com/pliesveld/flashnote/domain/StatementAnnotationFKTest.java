@@ -39,15 +39,15 @@ public class StatementAnnotationFKTest extends AbstractDomainEntityUnitTest {
     {
         Question question = this.questionBean();
 
-        StudentDetails studentDetails = this.studentDetailsBean();
+        Student student = this.studentBean();
 
         question = questionRepository.save(question);
         question_id = question.getId();
 
-        studentDetails = studentDetailsRepository.save(studentDetails);
-        student_id = studentDetails.getId();
+        student = studentRepository.save(student);
+        student_id = student.getId();
 
-        AnnotatedStatement annotatedStatement = new AnnotatedStatement(studentDetails,MESSAGE);
+        AnnotatedStatement annotatedStatement = new AnnotatedStatement(student,MESSAGE);
         question.addAnnotation(annotatedStatement);
 
         entityManager.flush();
@@ -62,10 +62,10 @@ public class StatementAnnotationFKTest extends AbstractDomainEntityUnitTest {
     }
 
     @Test
-    public void testEntitySanity()
+    public void whenContextLoad_thenCorrect()
     {
         assertNotNull(entityManager.find(Question.class, question_id));
-        assertNotNull(entityManager.find(StudentDetails.class,student_id));
+        assertNotNull(entityManager.find(Student.class,student_id));
 
         this.assertQuestionRepositoryCount(1);
         this.assertStatementRepositoryCount(1);

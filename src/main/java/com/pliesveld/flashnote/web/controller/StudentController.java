@@ -4,9 +4,8 @@ package com.pliesveld.flashnote.web.controller;
 import com.pliesveld.flashnote.domain.AbstractStatement;
 import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.domain.Student;
-import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
-import com.pliesveld.flashnote.model.json.response.ExistingStudentDetails;
+import com.pliesveld.flashnote.model.json.response.StudentResponseJson;
 import com.pliesveld.flashnote.service.AdminService;
 import com.pliesveld.flashnote.service.StudentService;
 import org.apache.logging.log4j.LogManager;
@@ -57,9 +56,9 @@ public class StudentController {
     @RequestMapping(value="/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getStudent(@PathVariable Integer id)
     {
-        LOG.info("Getting studentDetails by id " + id);
+        LOG.info("Getting student by id " + id);
         Student student = verifyStudent(id);
-        ExistingStudentDetails existingStudent = ExistingStudentDetails.convert(student);
+        StudentResponseJson existingStudent = StudentResponseJson.convert(student);
         return new ResponseEntity<>(existingStudent,HttpStatus.OK);
     }
 
@@ -68,8 +67,8 @@ public class StudentController {
     @ResponseStatus(code = HttpStatus.OK)
     public List<AbstractStatement> retrieveStudentStatements(@PathVariable("id") int student_id)
     {
-        StudentDetails studentDetails = verifyStudent(student_id).getStudentDetails();
-        return studentService.findStatementsBy(studentDetails);
+        Student student = verifyStudent(student_id);
+        return studentService.findStatementsBy(student);
     }
 
     @RequestMapping(value="/{id}/decks", method = RequestMethod.GET)

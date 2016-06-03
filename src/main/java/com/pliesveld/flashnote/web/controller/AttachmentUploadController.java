@@ -73,9 +73,9 @@ public class AttachmentUploadController {
 
         String fileName = file.getOriginalFilename();
 
-        if(!StringUtils.hasText(fileName) || attachmentType.supportsFilenameBySuffix(fileName))
+        if(!StringUtils.hasText(fileName) || !attachmentType.supportsFilenameBySuffix(fileName))
         {
-            throw new AttachmentUploadException("Invalid file extension");
+            throw new AttachmentUploadException("Invalid file extension. " + attachmentType + " does not support " + fileName);
         }
 
 

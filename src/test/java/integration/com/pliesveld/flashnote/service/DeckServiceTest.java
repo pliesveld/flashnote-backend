@@ -42,6 +42,7 @@ public class DeckServiceTest extends AbstractTransactionalServiceUnitTest {
     @Autowired
     private DeckService deckService;
 
+    private Category category = null;
     private static Integer category_id;
 
     @Test
@@ -59,15 +60,14 @@ public class DeckServiceTest extends AbstractTransactionalServiceUnitTest {
             Category category = categoryRepository.findOneByNameEquals("TEST DECK CATEGORY");
             category_id = category.getId();
         }
+        category = new Category();
+        category.setId(category_id);
     }
 
     @Test
     public void whenCreateDeck_thenCorrect() {
 
-        Deck deck = new Deck(UUID.randomUUID().toString());
-        Category category = new Category();
-        category.setId(category_id);
-        deck.setCategory(category);
+        Deck deck = new Deck(category, UUID.randomUUID().toString());
         deck = deckService.createDeck(deck);
         assertNotNull(deck);
         assertNotNull(deck.getId());
@@ -76,70 +76,39 @@ public class DeckServiceTest extends AbstractTransactionalServiceUnitTest {
     @Test
     public void whenCreatingDeckWithFlashCard_thenCorrect() {
 
-        Deck deck = new Deck(UUID.randomUUID().toString());
-        Category category = new Category();
-        category.setId(category_id);
-        deck.setCategory(category);
+        Deck deck = new Deck(category, UUID.randomUUID().toString());
         deck = deckService.createDeck(deck);
         FlashCard flashCard = new FlashCard(new Question("Que?"), new Answer(("Ans.")));
-        deckService.addToDeckFlashCard(deck, flashCard);
+        deckService.updateDeckAddFlashCard(deck.getId(), flashCard);
     }
 
 
     @Test
     public void whenCreatingDeckWithFlashCardCascade_thenCorrect() {
 
-        Deck deck = new Deck(UUID.randomUUID().toString());
-        Category category = new Category();
-        category.setId(category_id);
-        deck.setCategory(category);
-
+        Deck deck = new Deck(category, UUID.randomUUID().toString());
         FlashCard flashCard = new FlashCard(new Question("Que?"), new Answer(("Ans.")));
         deck.getFlashcards().add(flashCard);
-
         deck = deckService.createDeck(deck);
-
         assertNotNull(deck);
         assertNotNull(deck.getId());
     }
 
-
     @Test
     public void givenQuestion_whenCreatingDeckWithFlashCardByReferencingQuestion_thenCorrect() {
-        Deck deck = new Deck(UUID.randomUUID().toString());
-        Category category = new Category();
-        category.setId(category_id);
-        deck.setCategory(category);
+        Deck deck = new Deck(category, UUID.randomUUID().toString());
         deck = deckService.createDeck(deck);
         final Specification<Question> spec = QuestionSpecification.contentContainsIgnoreCase("EXISTINGQUESTION");
         final Question question = questionRepository.findOne(spec);
         assertNotNull(question);
         FlashCard flashCard = new FlashCard(question, new Answer(("Ans.")));
-        deckService.addToDeckFlashCard(deck, flashCard);
-    }
-
-
-    @Test
-    public void givenAnswer_whenCreatingDeckWithFlashCardByReferenceAnswer_thenCorrect() {
-        Deck deck = new Deck(UUID.randomUUID().toString());
-        Category category = new Category();
-        category.setId(category_id);
-        deck.setCategory(category);
-        deck = deckService.createDeck(deck);
-        final Specification<Answer> answerSpec = AnswerSpecification.contentContainsIgnoreCase("EXISTINGANSWER");
-        final Answer answer = answerRepository.findOne(answerSpec);
-        assertNotNull(answer);
-        FlashCard flashCard = new FlashCard(new Question("Que?"), answer);
-        deckService.addToDeckFlashCard(deck, flashCard);
+        deckService.updateDeckAddFlashCard(deck.getId(), flashCard);
     }
 
     @Test(expected = DataIntegrityViolationException.class)
     public void givenQuestion_whenCreatingDeckWithFlashCardByReference_thenCorrect() {
 
-        Deck deck = new Deck(UUID.randomUUID().toString());
-        Category category = new Category();
-        category.setId(category_id);
-        deck.setCategory(category);
+        Deck deck = new Deck(category, UUID.randomUUID().toString());
         deck = deckService.createDeck(deck);
         final Specification<Question> questionSpec = QuestionSpecification.contentContainsIgnoreCase("EXISTINGQUESTION");
         final Question question = questionRepository.findOne(questionSpec);
@@ -148,9 +117,8 @@ public class DeckServiceTest extends AbstractTransactionalServiceUnitTest {
         final Answer answer = answerRepository.findOne(answerSpec);
         assertNotNull(answer);
         FlashCard flashCard = new FlashCard(question, answer);
-        deckService.addToDeckFlashCard(deck, flashCard);
+        deckService.updateDeckAddFlashCard(deck.getId(), flashCard);
     }
-
 
     @Test
     public void givenExistingDeck_whenFind_thenCorrect() {
@@ -184,7 +152,6 @@ public class DeckServiceTest extends AbstractTransactionalServiceUnitTest {
         assertTrue(flashcards.stream().map(FlashCard::getId).map(FlashCardPrimaryKey::getAnswerId).anyMatch(id -> id.equals(answer.getId())));
     }
 
-
     @Test(expected = FlashCardCreateException.class)
     public void givenExistingDeck_whenAddingExistingFlashCard_thenCorrect() {
 
@@ -208,9 +175,7 @@ public class DeckServiceTest extends AbstractTransactionalServiceUnitTest {
 
         FlashCard flashCard = new FlashCard(question, answer);
         deckService.updateDeckAddFlashCard(deckId, flashCard);
-
     }
-
 
 }
 

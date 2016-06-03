@@ -40,9 +40,9 @@ public class AttachmentTextTest extends AbstractDomainEntityUnitTest {
     }
 
     @Test
-    public void testEntitySanity()
+    public void whenContextLoad_thenCorrect()
     {
-        assertNotNull(entityManager.find(AttachmentText.class,attachment_id));
+        assertNotNull(entityManager.find(AttachmentText.class, attachment_id));
     }
 
     @Test

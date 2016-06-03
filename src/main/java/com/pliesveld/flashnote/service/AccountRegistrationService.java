@@ -16,7 +16,6 @@ public interface AccountRegistrationService {
 
     long countAccountRegistration();
     long countStudent();
-    long countStudentDetails();
 
     @Transactional
 	void taskPurgeExpiredAccounts();

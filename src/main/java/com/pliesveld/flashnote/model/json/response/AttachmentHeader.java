@@ -18,17 +18,17 @@ import java.time.Instant;
 public class AttachmentHeader extends ModelBase implements JsonWebResponseSerializable {
 
     @JsonView(Views.Summary.class)
-    AttachmentType contentType;
+    private AttachmentType contentType;
 
     @JsonView(Views.Summary.class)
-    int length;
+    private int length;
 
     @JsonView(Views.Summary.class)
-    Instant modified;
+    private Instant modified;
 
     public AttachmentHeader() {}
 
-    public AttachmentHeader(AttachmentType contentType, int length, Instant modified) {
+    public AttachmentHeader(final AttachmentType contentType, final int length, final Instant modified) {
         this.contentType = contentType;
         this.length = length;
         this.modified = modified;

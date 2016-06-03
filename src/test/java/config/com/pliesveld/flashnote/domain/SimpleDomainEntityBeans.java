@@ -15,15 +15,9 @@ public class SimpleDomainEntityBeans {
 
     @Bean
     @Scope("prototype")
-    public Student studentBean() {
-        return StudentGenerator.randomizedStudent(true);
-    }
-
-    @Bean
-    @Scope("prototype")
-    public StudentDetails studentDetailsBean()
+    public Student studentBean()
     {
-        return StudentGenerator.randomizedStudent(true).getStudentDetails();
+        return StudentGenerator.randomizedStudent();
     }
 
     @Bean

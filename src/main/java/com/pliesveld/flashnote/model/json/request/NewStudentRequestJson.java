@@ -1,7 +1,7 @@
 package com.pliesveld.flashnote.model.json.request;
 
+import com.pliesveld.flashnote.domain.AccountRole;
 import com.pliesveld.flashnote.domain.Student;
-import com.pliesveld.flashnote.domain.StudentRole;
 import com.pliesveld.flashnote.model.json.base.JsonWebRequestSerializable;
 import com.pliesveld.flashnote.model.json.base.ModelBase;
 import org.hibernate.validator.constraints.Email;
@@ -9,40 +9,38 @@ import org.hibernate.validator.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import static com.pliesveld.flashnote.schema.Constants.*;
+
 /**
- * Subset of studentDetails model for account creation
+ * Subset of student model for account creation
  */
 
-public class NewStudentDetails extends ModelBase implements JsonWebRequestSerializable
+public class NewStudentRequestJson extends ModelBase implements JsonWebRequestSerializable
 {
-    @Size(min = 3,max = 32) @NotNull
+    @NotNull @Size(min = MIN_ACCOUNT_NAME_LENGTH, max = MAX_ACCOUNT_NAME_LENGTH)
     private String name;
-    
-    @Email @NotNull @Size(min = 5,max = 48)
+
+    @NotNull @Email @Size(min =  MIN_ACCOUNT_EMAIL_LENGTH, max = MAX_ACCOUNT_EMAIL_LENGTH)
     private String email;
-    
-    @Size(min = 1, max = 60) @NotNull
+
+    @NotNull @Size(min = MIN_ACCOUNT_PASSWORD_LENGTH, max = MAX_ACCOUNT_PASSWORD_LENGTH)
     private String password;
 
     @NotNull
-    private StudentRole role;
+    private AccountRole role;
 
-    public NewStudentDetails() {
+    public NewStudentRequestJson() {
     }
 
-    public static NewStudentDetails convert(Student student) {
+    public static NewStudentRequestJson convert(Student student) {
         if (student == null)
-            throw new NullPointerException("studentDetails argument was null");
+            throw new NullPointerException("student argument was null");
 
-        NewStudentDetails newStudent = new NewStudentDetails();
-//        newStudent.setName(studentDetails.getDescription());
+        NewStudentRequestJson newStudent = new NewStudentRequestJson();
         newStudent.setEmail(student.getEmail());
         newStudent.setPassword(student.getPassword());
         newStudent.setRole(student.getRole());
-
-        if (student.getStudentDetails() != null)
-            newStudent.setName(student.getStudentDetails().getName());
-
+        newStudent.setName(student.getName());
         return newStudent;
     }
 
@@ -72,7 +70,7 @@ public class NewStudentDetails extends ModelBase implements JsonWebRequestSerial
         this.password = password;
     }
 
-    public StudentRole getRole() { return this.role; }
+    public AccountRole getRole() { return this.role; }
 
-    public void setRole(StudentRole role) { this.role = role; }
+    public void setRole(AccountRole role) { this.role = role; }
 }

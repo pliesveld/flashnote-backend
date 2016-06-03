@@ -3,11 +3,9 @@ package com.pliesveld.flashnote.service;
 import com.pliesveld.flashnote.domain.AbstractStatement;
 import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.domain.Student;
-import com.pliesveld.flashnote.domain.StudentDetails;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.repository.DeckRepository;
 import com.pliesveld.flashnote.repository.StatementRepository;
-import com.pliesveld.flashnote.repository.StudentDetailsRepository;
 import com.pliesveld.flashnote.repository.StudentRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,9 +26,6 @@ public class StudentServiceImpl implements StudentService {
     private StudentRepository studentRepository;
 
     @Resource
-    private StudentDetailsRepository studentDetailsRepository;
-
-    @Resource
     private DeckRepository deckRepository;
 
     @Resource
@@ -42,18 +37,13 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentDetails findStudentDetailsById(final int id) {
-        return studentDetailsRepository.findOne(id);
-    }
-
-    @Override
     public Student findStudentById(final int id) {
         return studentRepository.findOne(id);
     }
 
     @Override
-    public Page<StudentDetails> findAll(final Pageable page) {
-        return studentDetailsRepository.findAll(page);
+    public Page<Student> findAll(final Pageable page) {
+        return studentRepository.findAll(page);
     }
 
     @Override
@@ -62,40 +52,39 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentDetails findByName(final String name) {
-        return studentDetailsRepository.findByName(name);
+    public Student findByName(final String name) {
+        return studentRepository.findByName(name);
     }
 
     @Override
-    public StudentDetails delete(final int id) throws StudentNotFoundException {
+    public Student delete(final int student_id) throws StudentNotFoundException {
 
         // delete RegistrationToken
         // delete PasswordResetToken
         // delete Deck
 
-        StudentDetails deletedStudentDetails = studentDetailsRepository.findOne(id);
-        if(deletedStudentDetails == null)
-            throw new StudentNotFoundException(id);
+        Student student = studentRepository.findOne(student_id);
+        if(student == null)
+            throw new StudentNotFoundException(student_id);
 
-        studentDetailsRepository.delete(deletedStudentDetails);
-        return deletedStudentDetails;
+        studentRepository.delete(student);
+        return student;
     }
 
     @Override
     public Long count() {
-        return studentDetailsRepository.count();
+        return studentRepository.count();
     }
 
     @Override
-    public List<AbstractStatement> findStatementsBy(final StudentDetails studentDetails) throws StudentNotFoundException {
-        Student student = studentDetails.getStudent();
+    public List<AbstractStatement> findStatementsBy(final Student student) throws StudentNotFoundException {
 
         if(student == null)
         {
-            throw new StudentNotFoundException(studentDetails.getId());
+            throw new StudentNotFoundException(student.getId());
         }
 
-        final String email = studentDetails.getStudent().getEmail();
+        final String email = student.getEmail();
         final List<AbstractStatement> list = statementRepository.findAllByAuthor(email).collect(Collectors.toList());
         return list;
     }

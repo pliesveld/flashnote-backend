@@ -4,7 +4,7 @@ package com.pliesveld.flashnote.web.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.pliesveld.flashnote.domain.Category;
 import com.pliesveld.flashnote.domain.Deck;
-import com.pliesveld.flashnote.domain.StudentDetails;
+import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.exception.CategoryNotFoundException;
 import com.pliesveld.flashnote.exception.DeckNotFoundException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
@@ -43,13 +43,13 @@ public class DeckController {
     @Autowired
     private AttachmentService attachmentService;
     
-    private StudentDetails verifyStudent(int id) throws StudentNotFoundException
+    private Student verifyStudent(int id) throws StudentNotFoundException
     {
-        StudentDetails studentDetails = studentService.findStudentDetailsById(id);
-        if(studentDetails == null)
+        Student student = studentService.findStudentById(id);
+        if(student == null)
             throw new StudentNotFoundException(id);
 
-        return studentDetails;
+        return student;
     }
     
     private Deck verifyDeck(int id) throws DeckNotFoundException

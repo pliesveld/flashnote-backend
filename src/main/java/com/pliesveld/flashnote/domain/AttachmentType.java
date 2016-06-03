@@ -31,7 +31,7 @@ public enum AttachmentType
         }
     }
 
-    AttachmentType(int id, String mime, MediaType mediatype, String extension, AttachmentTypeDataFormat dataFormat) { this.id = id; this.mime = mime; this.mediatype = mediatype; this.extension = extension; this.dataFormat = dataFormat;}
+    AttachmentType(final int id, final String mime, final MediaType mediatype, final String extension, final AttachmentTypeDataFormat dataFormat) { this.id = id; this.mime = mime; this.mediatype = mediatype; this.extension = extension; this.dataFormat = dataFormat;}
 
     public String getMime() { return this.mime; };
 
@@ -56,22 +56,22 @@ public enum AttachmentType
         return dataFormat == AttachmentTypeDataFormat.BINARY;
     }
 
-    public static AttachmentType fromInteger(Integer id)
+    public static AttachmentType fromInteger(final Integer id)
     {
         return intToEnum.get(id);
     }
 
-    public boolean supportsMimeType(String type)
+    public boolean supportsMimeType(final String type)
     {
         return mime.equalsIgnoreCase(type);
     }
 
-    public boolean supportsFilenameBySuffix(String filename)
+    public boolean supportsFilenameBySuffix(final String filename)
     {
         return StringUtils.endsWithIgnoreCase(filename, this.getExtension());
     }
 
-    public static AttachmentType valueOfMime(String mime) throws IllegalArgumentException
+    public static AttachmentType valueOfMime(final String mime) throws IllegalArgumentException
     {
         for(AttachmentType type : values())
         {
@@ -81,7 +81,7 @@ public enum AttachmentType
         return null;
     }
 
-    public static AttachmentType valueOfFileSuffix(String filename) throws IllegalArgumentException
+    public static AttachmentType valueOfFileSuffix(final String filename) throws IllegalArgumentException
     {
         for(AttachmentType type : values())
         {

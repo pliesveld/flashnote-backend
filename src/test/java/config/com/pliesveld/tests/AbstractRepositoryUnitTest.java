@@ -1,10 +1,7 @@
 package com.pliesveld.tests;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import com.pliesveld.flashnote.repository.*;
-import com.pliesveld.flashnote.serializer.HibernateAwareObjectMapper;
 import com.pliesveld.flashnote.serializer.HibernateAwareObjectMapperImpl;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.logging.log4j.LogManager;
@@ -74,9 +71,6 @@ public abstract class AbstractRepositoryUnitTest
     protected StatementRepository statementRepository;
 
     @Autowired(required = false)
-    protected StudentDetailsRepository studentDetailsRepository;
-
-    @Autowired(required = false)
     protected StudentRepository studentRepository;
 
     @Autowired(required = false)
@@ -103,7 +97,6 @@ public abstract class AbstractRepositoryUnitTest
         assertNotNull(questionRepository);
         assertNotNull(questionBankRepository);
         assertNotNull(statementRepository);
-        assertNotNull(studentDetailsRepository);
         assertNotNull(studentRepository);
         assertNotNull(registrationRepository);
         assertNotNull(passwordResetRepository);
@@ -160,11 +153,6 @@ public abstract class AbstractRepositoryUnitTest
     protected void assertStatementRepositoryCount(long value)
     {
             assertEquals("The entity count of StatementRepository should be " + value, value, questionRepository.count() + answerRepository.count());
-    }
-    @Transactional(readOnly = true)
-    protected void assertStudentDetailsRepositoryCount(long value)
-    {
-            assertEquals("The entity count of StudentDetailsRepository should be " + value, value, studentDetailsRepository.count());
     }
     @Transactional(readOnly = true)
     protected void assertStudentRepositoryCount(long value)
