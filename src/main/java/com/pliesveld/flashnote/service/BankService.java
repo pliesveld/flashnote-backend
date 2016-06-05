@@ -23,7 +23,7 @@ public interface BankService {
 
     Page<QuestionBank> browseBanks(final Pageable pageRequest);
 
-    QuestionBank findQuestionBankById(final int id)   throws QuestionBankNotFoundException;
+    QuestionBank findQuestionBankById(final int bankId)   throws QuestionBankNotFoundException;
 
     Page<QuestionBank> findBySearchTerm(final String searchTerm, final Pageable pageRequest);
 
@@ -33,10 +33,10 @@ public interface BankService {
     QuestionBank createQuestionBank(final QuestionBank questionBank);
 
     @Transactional
-    void deleteBank(final int id)             throws QuestionBankNotFoundException;
+    void deleteBank(final int bankId)             throws QuestionBankNotFoundException;
 
     @Transactional
-    void updateQuestionBankAddQuestion(final int questionBankId, @NotNull Question question);
+    void updateQuestionBankAddQuestion(final int bankId, @NotNull Question question);
 
     @Transactional
     void updateQuestionBankRemoveQuestion(@NotNull final QuestionBank questionBank, final int questionId) throws QuestionNotFoundException;

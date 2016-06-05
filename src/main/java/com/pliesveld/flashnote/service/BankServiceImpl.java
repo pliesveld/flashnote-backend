@@ -49,15 +49,15 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public QuestionBank findQuestionBankById(final int id) {
-        QuestionBank questionBank = questionBankRepository.findOne(id);
+    public QuestionBank findQuestionBankById(final int bankId) {
+        QuestionBank questionBank = questionBankRepository.findOne(bankId);
         if (questionBank == null) {
-            throw new QuestionBankNotFoundException(id);
+            throw new QuestionBankNotFoundException(bankId);
         }
         questionBank.getId();
         questionBank.getDescription();
         Hibernate.initialize(questionBank.getQuestions());
-        questionBank.getQuestions().forEach((que) -> Hibernate.initialize(que.getAnnotations()));
+
         return questionBank;
     }
 
@@ -92,11 +92,11 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public void updateQuestionBankAddQuestion(final int questionBankId, @NotNull Question question) {
-        QuestionBank questionBank = questionBankRepository.getOne(questionBankId);
+    public void updateQuestionBankAddQuestion(final int bankId, @NotNull Question question) {
+        QuestionBank questionBank = questionBankRepository.getOne(bankId);
         if(questionBank == null)
         {
-            throw new QuestionBankNotFoundException(questionBankId);
+            throw new QuestionBankNotFoundException(bankId);
         }
 
         if(question.getId() == null) {
@@ -120,19 +120,19 @@ public class BankServiceImpl implements BankService {
      * Removes QuestionBank specified by identifier.  Removes Question entities that are not referenced by other
      * QuestionBanks or FlashCards.
      *
-     * @param id of questionBank to remove
+     * @param bankId of questionBank to remove
      */
     @Override
-    public void deleteBank(final int id) {
-        if (!questionBankRepository.exists(id))
-            throw new QuestionBankNotFoundException(id);
-        final QuestionBank questionBank = questionBankRepository.findOne(id);
+    public void deleteBank(final int bankId) {
+        if (!questionBankRepository.exists(bankId))
+            throw new QuestionBankNotFoundException(bankId);
+        final QuestionBank questionBank = questionBankRepository.findOne(bankId);
         final List<Question> questionIds = questionBank.getQuestions().stream().collect(Collectors.toList());
         final List<Integer> orphanQuestions = new ArrayList<>();
         for(Question question : questionIds) {
             final Integer questionId = question.getId();
 
-            if( questionBankRepository.findByQuestionsContaining(question).stream().filter(qb -> qb.getId() != id).count() > 0)
+            if( questionBankRepository.findByQuestionsContaining(question).stream().filter(qb -> qb.getId() != bankId).count() > 0)
             {
                 continue;
             }

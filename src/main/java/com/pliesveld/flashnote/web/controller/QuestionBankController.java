@@ -120,11 +120,11 @@ public class QuestionBankController {
 
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{bankId}", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(Views.SummaryWithCollections.class)
-    public ResponseEntity<?> retrieveQuestionBank(@PathVariable("id") int id) throws JsonProcessingException {
-        QuestionBank questionBank = bankService.findQuestionBankById(id);
+    public ResponseEntity<?> retrieveQuestionBank(@PathVariable("bankId") int bankId) throws JsonProcessingException {
+        QuestionBank questionBank = bankService.findQuestionBankById(bankId);
 
         if(questionBank == null )
             return ResponseEntity.notFound().build();
@@ -132,19 +132,19 @@ public class QuestionBankController {
         return ResponseEntity.ok(questionBank);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{bankId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public ResponseEntity<?> deleteQuestionBank(@PathVariable("id") int id)
+    public ResponseEntity<?> deleteQuestionBank(@PathVariable("bankId") int bankId)
     {
-        bankService.deleteBank(id);
+        bankService.deleteBank(bankId);
         return ResponseEntity.ok().build();
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/{bankId}", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<?> QuestionBank(@PathVariable("id") int id, @Valid @RequestBody Question question)
+    public ResponseEntity<?> QuestionBank(@PathVariable("bankId") int bankId, @Valid @RequestBody Question question)
     {
-        QuestionBank questionBank = bankService.findQuestionBankById(id);
+        QuestionBank questionBank = bankService.findQuestionBankById(bankId);
 
         if(questionBank == null )
             return ResponseEntity.notFound().build();
@@ -156,8 +156,8 @@ public class QuestionBankController {
             return ResponseEntity.created(
                     MvcUriComponentsBuilder
                             .fromController(QuestionBankController.class)
-                            .path("/{id}/{que_id}")
-                            .buildAndExpand(id, question.getId())
+                            .path("/{bankId}/{questionId}")
+                            .buildAndExpand(bankId, question.getId())
                             .toUri()).build();
 
         }
@@ -172,26 +172,26 @@ public class QuestionBankController {
         return ResponseEntity.ok().build();
     }
 
-    @RequestMapping(value = "/{qb_id}/{que_id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{bankId}/{questionId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public ResponseEntity<?> removeQuestion(@PathVariable("qb_id") int qb_id, @PathVariable("que_id") int que_id)
+    public ResponseEntity<?> removeQuestion(@PathVariable("bankId") int bankId, @PathVariable("questionId") int questionId)
     {
-        QuestionBank questionBank = bankService.findQuestionBankById(qb_id);
+        QuestionBank questionBank = bankService.findQuestionBankById(bankId);
 
         if(questionBank == null )
             return ResponseEntity.notFound().build();
 
-        bankService.updateQuestionBankRemoveQuestion(questionBank, que_id);
+        bankService.updateQuestionBankRemoveQuestion(questionBank, questionId);
         return ResponseEntity.ok().build();
     }
 
 
 
-    @RequestMapping(value = "/{qb_id}/{que_id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{bankId}/{questionId}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<?> getQuestion(@PathVariable("qb_id") int qb_id, @PathVariable("que_id") int que_id)
+    public ResponseEntity<?> getQuestion(@PathVariable("bankId") int bankId, @PathVariable("questionId") int questionId)
     {
-        Question question = bankService.findQuestion(qb_id, que_id);
+        Question question = bankService.findQuestion(bankId, questionId);
 
         if(question == null )
             return ResponseEntity.notFound().build();
