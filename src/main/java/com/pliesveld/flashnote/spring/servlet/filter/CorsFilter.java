@@ -6,7 +6,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Enumeration;
@@ -18,29 +17,27 @@ public class CorsFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-        HttpServletRequest http_request = (HttpServletRequest) request;
+//        HttpServletRequest http_request = (HttpServletRequest) request;
 
-        if (http_request.getMethod() != "OPTIONS") {
-            chain.doFilter(request, response);
-        } else {
-            HttpServletResponse http_response = (HttpServletResponse) response;
-            http_response.setHeader("Access-Control-Allow-Origin", "*");
-            http_response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
-            http_response.setHeader("Access-Control-Max-Age", "3600");
-            http_response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me, X-AUTH-TOKEN");
-        }
 
+        chain.doFilter(request, response);
+
+        HttpServletResponse http_response = (HttpServletResponse) response;
+        http_response.setHeader("Access-Control-Allow-Origin", "*");
+        http_response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
+        http_response.setHeader("Access-Control-Max-Age", "86400");
+        http_response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me, X-AUTH-TOKEN");
 
     }
+
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         StringBuilder sb = new StringBuilder(512);
 
-        sb.append("Adding CORS filter to ").append(filterConfig.getFilterName()).append('\n');
+        sb.append("Adding CORS filter ").append(filterConfig.getFilterName()).append('\n');
 
-        Enumeration<String> params = filterConfig.getInitParameterNames();
-
+        Enumeration <String> params = filterConfig.getInitParameterNames();
         sb.append("With filter params: ").append('\n');
         while( params.hasMoreElements() )
         {
