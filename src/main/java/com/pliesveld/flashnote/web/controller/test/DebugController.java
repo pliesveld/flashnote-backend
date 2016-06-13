@@ -282,7 +282,6 @@ public class DebugController {
 
     @PostConstruct
     public void postConstruct() {
-        LOG.debug(Markers.DEBUG, "Calling POST CONSTRUCT");
 
         Properties props = System.getProperties();
 
@@ -293,10 +292,10 @@ public class DebugController {
         ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(true)).reconfigure();
         for(DebugRequestJson.LOG_TYPE log : DebugRequestJson.LOG_TYPE.values()) {
             //DebugController.updateLog(log, DebugRequestJson.LEVEL.WARN);
-            LOG.debug(Markers.DEBUG, "{} => {}", log, System.getProperty(log.toString()));
-
+            final String level = System.getProperty(log.toString());
+            if(level != null)
+                LOG.debug(Markers.DEBUG, "{} => {}", log, level);
         }
-
 
 //        props.forEach((k,v) -> {
 //            LOG.debug(Markers.DEBUG,"key {} = {}", k, v);
