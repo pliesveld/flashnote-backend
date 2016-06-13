@@ -14,12 +14,14 @@ final public class StudentPrincipal extends User implements UserDetails {
     private static final long serialVersionUID = 5639683223516504866L;
 
     private int id;
+    private String handle;
     private Instant lastPasswordResetDate;
 
     public StudentPrincipal(final Student student, final Collection<GrantedAuthority> authorities) {
         super(student.getEmail(),student.getPassword(),authorities);
         lastPasswordResetDate = student.getLastPasswordResetDate();
         id = student.getId();
+        handle = student.getName();
     }
 
     public Instant getLastPasswordResetDate() {
@@ -28,4 +30,5 @@ final public class StudentPrincipal extends User implements UserDetails {
 
     public int getId() { return id; }
 
+    public String getHandle() { return handle; }
 }
