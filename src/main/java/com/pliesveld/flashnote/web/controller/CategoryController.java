@@ -1,11 +1,14 @@
 package com.pliesveld.flashnote.web.controller;
 
 import com.pliesveld.flashnote.domain.Category;
+import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.service.CategoryService;
+import com.pliesveld.flashnote.service.DeckService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +25,9 @@ public class CategoryController {
 
     @Autowired
     CategoryService categoryService;
+
+    @Autowired
+    DeckService deckService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public List<Category> listAllCategories()
@@ -68,6 +74,13 @@ public class CategoryController {
     public Page<Category> findBySearchTerm(@RequestParam("query") String searchTerm, Pageable pageRequest) {
         return categoryService.findBySearchTerm(searchTerm, pageRequest);
     }
+
+    @RequestMapping(value = "/root/{id}/decks", method = RequestMethod.GET)
+    public Page<Deck> listDecksInCategory(@PathVariable Integer id, PageRequest pageRequest)
+    {
+        return deckService.findByCategory(id, pageRequest);
+    }
+
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity createCategory(@Valid @RequestBody Category category)
