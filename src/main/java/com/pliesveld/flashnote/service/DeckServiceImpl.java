@@ -68,6 +68,11 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Override
+    public Page<Deck> browseDecksWithSpec(Specification<Deck> specification, Pageable pageRequest) {
+        return deckRepository.findAll(specification, pageRequest);
+    }
+
+    @Override
     public List<Deck> findAllDecks() {
         List<Deck> list = new ArrayList<>();
         deckRepository.findAll().forEach(deck -> {
@@ -158,4 +163,10 @@ public class DeckServiceImpl implements DeckService {
         orphanQuestions.forEach(questionRepository::delete);
     }
 
+    @Override
+    public Page<Deck> findByCategory(Integer id, Pageable pageRequest) {
+        final Specification<Deck> spec = DeckSpecification.hasCategory(id);
+        return deckRepository.findAll(spec, pageRequest);
+
+    }
 }

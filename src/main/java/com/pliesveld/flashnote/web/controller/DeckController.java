@@ -10,12 +10,14 @@ import com.pliesveld.flashnote.exception.DeckNotFoundException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.model.json.response.CardStatistics;
+import com.pliesveld.flashnote.repository.specifications.DeckSpecification;
 import com.pliesveld.flashnote.service.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,12 +62,21 @@ public class DeckController {
         return deck;
     }
 
-    @RequestMapping(value="", method = RequestMethod.GET)
+    @RequestMapping(value="", method = RequestMethod.GET, params = "!categoryId")
     @ResponseStatus(code = HttpStatus.OK)
     @JsonView(Views.Summary.class)
     public Page<Deck> retrieveAllDecks(Pageable pageRequest)
     {
         return deckService.browseDecks(pageRequest);
+    }
+
+    @RequestMapping(value="", method = RequestMethod.GET, params = "categoryId")
+    @ResponseStatus(code = HttpStatus.OK)
+    @JsonView(Views.Summary.class)
+    public Page<Deck> retrieveAllDecksInCategory(@RequestParam("categoryId") int categoryId, Pageable pageRequest)
+    {
+        final Specification<Deck> spec = DeckSpecification.hasCategory(categoryId);
+        return deckService.browseDecksWithSpec(spec, pageRequest);
     }
 
     @RequestMapping(value="", method = RequestMethod.POST)

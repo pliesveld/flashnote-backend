@@ -43,4 +43,13 @@ final public class DeckSpecification {
             return "%" + searchTerm.toLowerCase() + "%";
         }
     }
+
+    public static Specification<Deck> hasCategory(final Integer categoryId) {
+        return (root, query, cb) -> {
+            Path<Category> categoryExp = root.join(Deck_.category);
+            Expression<Integer> categoryIdExp = categoryExp.<Integer>get(Category_.id);
+            return cb.equal(categoryIdExp, categoryId);
+        };
+    }
 }
+

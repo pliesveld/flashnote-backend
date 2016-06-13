@@ -13,5 +13,5 @@ public interface DeckRepository extends PagingAndSortingRepository<Deck,Integer>
     List<Deck> findByOwner(int id);
 
     List<Deck> findByFlashcardsContaining(FlashCard flashCard);
-//    List<Deck> findByAuthor_Id(int id);
+
 }

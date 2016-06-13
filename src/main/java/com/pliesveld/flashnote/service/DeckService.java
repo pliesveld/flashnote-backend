@@ -5,6 +5,7 @@ import com.pliesveld.flashnote.domain.FlashCard;
 import com.pliesveld.flashnote.exception.DeckNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
@@ -21,6 +22,10 @@ public interface DeckService {
 
     Page<Deck> browseDecks(final Pageable pageRequest);
 
+    Page<Deck> browseDecksWithSpec(final Specification<Deck> specification, final Pageable pageRequest);
+
+    Page<Deck> findByCategory(final Integer id, final Pageable pageRequest);
+
     @Deprecated
     @Transactional
     void addToDeckFlashCard(final Deck deck, final FlashCard flashCard);
@@ -33,5 +38,6 @@ public interface DeckService {
 
     @Transactional
     void deleteDeck(final int id);
+
 
 }
