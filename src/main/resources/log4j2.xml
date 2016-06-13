@@ -21,6 +21,7 @@
         <Property name="LOG_MVC_LEVEL">WARN</Property>
         <Property name="LOG_SECURITY_LEVEL">WARN</Property>
         <Property name="LOG_APP_LEVEL">WARN</Property>
+        <Property name="LOG_AUDIT_LEVEL">WARN</Property>
 
         <Property name="LOG_SPRING_LEVEL">WARN</Property>
         <Property name="LOG_BEANS_LEVEL">WARN</Property>
@@ -123,6 +124,10 @@
         </logger>
 
         <logger name="org.springframework.jdbc.core" level="${sys:LOG_JDBC_LEVEL}" additivity="false">
+            <AppenderRef ref="CONSOLE"/>
+        </logger>
+
+        <logger name="org.springframework.data.repository.init" level="${sys:LOG_AUDIT_LEVEL}" additivity="false">
             <AppenderRef ref="CONSOLE"/>
         </logger>
 
