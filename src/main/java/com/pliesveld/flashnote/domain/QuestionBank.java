@@ -43,7 +43,7 @@ public class QuestionBank extends DomainBaseEntity<Integer> {
     private String description;
 
     @NotNull
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.DETACH}, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH}, fetch = FetchType.LAZY)
     @JoinTable(name = "QUESTION_BANK_COLLECTION",
             joinColumns = @JoinColumn(name = "QUESTION_BANK_ID", foreignKey = @ForeignKey(name = "FK_QUESTION_BANK_COLLECTION_QUESTION_BANK_ID")),
             inverseJoinColumns = @JoinColumn(name = "QUESTION_ID", nullable = false,

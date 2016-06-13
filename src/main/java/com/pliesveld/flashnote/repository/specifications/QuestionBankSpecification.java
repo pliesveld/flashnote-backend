@@ -42,4 +42,10 @@ final public class QuestionBankSpecification {
             return "%" + searchTerm.toLowerCase() + "%";
         }
     }
+
+    public static Specification<QuestionBank> hasCategory(final Integer categoryId) {
+        return (root, query, cb) -> {
+            return cb.equal(root.<Integer>get(QuestionBank_.id), categoryId);
+        };
+    }
 }

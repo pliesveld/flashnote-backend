@@ -116,8 +116,7 @@ public class QuestionBankController {
                         .fromController(QuestionBankController.class)
                         .path("/{id}")
                         .buildAndExpand(questionBank.getId())
-                        .toUri()).build();
-
+                        .toUri()).body(questionBank);
     }
 
     @RequestMapping(value = "/{bankId}", method = RequestMethod.GET)
