@@ -8,8 +8,10 @@ import os
 
 try:
     from .settings import *
+    from .hooks import *
 except SystemError:
         from settings import *
+        from hooks import *
 
 USER_RESOURCE =  URL + 'user'
 AUTH_RESOURCE =  URL + 'auth'
@@ -23,7 +25,7 @@ class TokenTest(unittest.TestCase):
 
         req = requests.Request(method='POST', url=AUTH_RESOURCE,json=auth_req)
         req = req.prepare()
-        
+
         log.debug("sending headers: " + str(req.headers.__dict__))
         r = requests.models.Response()
 
@@ -42,8 +44,10 @@ class TokenTest(unittest.TestCase):
                      'password' : 'password' }
 
         req = requests.Request(method='POST', url=AUTH_RESOURCE,json=auth_req)
+
         req = req.prepare()
-        
+#        req.prepare_hooks(hooks=dict(response=[print_json,log_json]))
+
         log.debug("sending headers: " + str(req.headers.__dict__))
         r = requests.models.Response()
 
@@ -57,7 +61,7 @@ class TokenTest(unittest.TestCase):
             req = requests.Request(method='GET', url=USER_RESOURCE)
             req.headers['X-AUTH-TOKEN'] = token
             req = req.prepare()
- 
+
             log.debug("sending headers: " + str(req.headers.__dict__))
             r = requests.models.Response()
 
@@ -73,7 +77,7 @@ class TokenTest(unittest.TestCase):
 
         req = requests.Request(method='POST', url=AUTH_RESOURCE,json=auth_req)
         req = req.prepare()
-        
+
         log.debug("sending headers: " + str(req.headers.__dict__))
         r = requests.models.Response()
 
@@ -87,7 +91,7 @@ class TokenTest(unittest.TestCase):
             req = requests.Request(method='GET', url=REFRESH_RESOURCE)
             req.headers['X-AUTH-TOKEN'] = token
             req = req.prepare()
- 
+
             log.debug("sending headers: " + str(req.headers.__dict__))
             r = requests.models.Response()
 
@@ -103,7 +107,7 @@ class TokenTest(unittest.TestCase):
 
         req = requests.Request(method='POST', url=AUTH_RESOURCE,json=auth_req)
         req = req.prepare()
-        
+
         log.debug("sending headers: " + str(req.headers.__dict__))
         r = requests.models.Response()
 
