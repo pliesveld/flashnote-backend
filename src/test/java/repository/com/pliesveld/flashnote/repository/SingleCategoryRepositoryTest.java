@@ -1,7 +1,7 @@
 package com.pliesveld.flashnote.repository;
 
 import com.pliesveld.flashnote.spring.Profiles;
-import com.pliesveld.flashnote.spring.repository.RepositorySettings;
+import com.pliesveld.populator.repository.reader.RepositorySettings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;

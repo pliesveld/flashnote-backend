@@ -25,7 +25,7 @@ public class Constants {
     public static final int MIN_ATTACHMENT_FILENAME_LENGTH = 4;
     public static final int MAX_ATTACHMENT_FILENAME_LENGTH = 48;
 
-    public static final int MAX_CATEGORY_NAME_LENGTH = 34;
+    public static final int MAX_CATEGORY_NAME_LENGTH = 48;
     public static final int MAX_CATEGORY_DESCRIPTION_LENGTH = 512;
 
     public static final int MIN_DECK_DESCRIPTION_LENGTH = 8;

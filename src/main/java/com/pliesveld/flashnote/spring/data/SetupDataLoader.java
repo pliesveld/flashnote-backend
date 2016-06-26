@@ -50,6 +50,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         Category test_category = createCategoryIfNotFound("TEST CATEGORY", "A sample container for testing.");
         Category test_category_nested = createCategoryIfNotFound("TEST SUB CATEGORY", "A sample sub-category for testing.");
         createCategoryRelationship(test_category,test_category_nested);
+        alreadySetup = true;
     }
 
     @Transactional

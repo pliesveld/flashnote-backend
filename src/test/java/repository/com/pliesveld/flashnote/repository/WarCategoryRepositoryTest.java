@@ -15,34 +15,36 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextHierarchy({
-    @ContextConfiguration(name = "REPOSITORY", classes = { PopulatedQuestionsRepositoryTest.class }, loader = AnnotationConfigContextLoader.class)
+        @ContextConfiguration(name = "REPOSITORY", classes = { WarCategoryRepositoryTest.class }, loader = AnnotationConfigContextLoader.class)
 })
 @DirtiesContext
-public class PopulatedQuestionsRepositoryTest extends AbstractPopulatedRepositoryUnitTest {
+@Transactional
+public class WarCategoryRepositoryTest extends AbstractPopulatedRepositoryUnitTest {
     private static final Logger LOG = LogManager.getLogger();
 
     @Bean
     public RepositorySettings repositorySettings() {
-        RepositorySettings repositorySettings = new RepositorySettings(new Resource[] {new ClassPathResource("test-data-questions.json", this.getClass()) });
+        RepositorySettings repositorySettings = new RepositorySettings(new Resource[] {new ClassPathResource("test-category-war-1.json", this.getClass()) });
         return repositorySettings;
     }
 
     @Test
-    public void whenContextLoad_thenCorrect()
-    {
-        assertNotNull(questionRepository);
+    public void whenContextLoad_thenCorrect() {
+        assertTrue(categoryRepository.count() > 0);
     }
 
     @Test
-    public void givenContextLoad_whenRepositoryPopulated_thenCorrect()
-    {
-        assertTrue(questionRepository.count() > 0);
+    public void whenCategoryFind_thenCorrect() {
+        assertNotNull(categoryRepository.findOne(500));
+        debugRepository(categoryRepository);
     }
 
 }

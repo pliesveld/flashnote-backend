@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.spring;
+package com.pliesveld.populator.repository.reader;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

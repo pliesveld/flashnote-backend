@@ -2,7 +2,7 @@ package com.pliesveld.flashnote.repository;
 
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.spring.Profiles;
-import com.pliesveld.flashnote.spring.repository.RepositorySettings;
+import com.pliesveld.populator.repository.reader.RepositorySettings;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.context.annotation.Bean;

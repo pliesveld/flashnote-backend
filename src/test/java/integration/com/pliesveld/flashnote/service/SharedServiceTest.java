@@ -3,7 +3,7 @@ package com.pliesveld.flashnote.service;
 import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.exception.FlashCardCreateException;
 import com.pliesveld.flashnote.spring.Profiles;
-import com.pliesveld.flashnote.spring.repository.RepositorySettings;
+import com.pliesveld.populator.repository.reader.RepositorySettings;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;

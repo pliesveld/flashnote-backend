@@ -131,12 +131,7 @@ public class Category extends DomainBaseEntity<Integer> implements Serializable
         this.description = description;
     }
 
-    public void setParentCategory(Category parentCategory)
-    {
-        this.parentCategory = parentCategory;
-        if(this.parentCategory != null)
-            this.parentCategory.getChildCategories().add(this);
-    }
+    public void setParentCategory(Category parentCategory) { this.parentCategory = parentCategory; }
 
     protected void setChildCategories(Set<Category> childCategories)
     {

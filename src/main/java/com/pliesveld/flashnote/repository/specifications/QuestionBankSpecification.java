@@ -1,14 +1,12 @@
 package com.pliesveld.flashnote.repository.specifications;
 
-import com.pliesveld.flashnote.domain.Question;
-import com.pliesveld.flashnote.domain.QuestionBank;
-import com.pliesveld.flashnote.domain.QuestionBank_;
-import com.pliesveld.flashnote.domain.Question_;
+import com.pliesveld.flashnote.domain.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.SetJoin;
 
 final public class QuestionBankSpecification {
@@ -45,7 +43,9 @@ final public class QuestionBankSpecification {
 
     public static Specification<QuestionBank> hasCategory(final Integer categoryId) {
         return (root, query, cb) -> {
-            return cb.equal(root.<Integer>get(QuestionBank_.id), categoryId);
+            Path<Category> categoryExp = root.join(QuestionBank_.category);
+            Expression<Integer> categoryIdExp = categoryExp.<Integer>get(Category_.id);
+            return cb.equal(categoryIdExp, categoryId);
         };
     }
 }

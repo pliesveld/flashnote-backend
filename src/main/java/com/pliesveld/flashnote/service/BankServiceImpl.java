@@ -87,7 +87,17 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
+    public Page<QuestionBank> browseBanksWithSpec(Specification<QuestionBank> spec, Pageable pageRequest) {
+        return questionBankRepository.findAll(spec, pageRequest);
+    }
+
+    @Override
     public QuestionBank createQuestionBank(QuestionBank questionBank) {
+        questionBank.getQuestions().forEach((question) -> {
+            if(question.getId() == null) {
+                question = questionRepository.save(question);
+            }
+        });
         return questionBankRepository.save(questionBank);
     }
 

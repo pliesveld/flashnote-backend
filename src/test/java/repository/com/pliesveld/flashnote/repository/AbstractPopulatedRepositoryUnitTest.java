@@ -2,7 +2,7 @@ package com.pliesveld.flashnote.repository;
 
 import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import com.pliesveld.flashnote.spring.Profiles;
-import com.pliesveld.flashnote.spring.repository.RepositoryPopulatorConfig;
+import com.pliesveld.populator.spring.RepositoryPopulatorConfig;
 import com.pliesveld.flashnote.spring.SpringDataTestConfig;
 import com.pliesveld.tests.AbstractTransactionalRepositoryUnitTest;
 import org.apache.logging.log4j.LogManager;

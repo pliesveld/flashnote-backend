@@ -10,6 +10,7 @@ import com.pliesveld.flashnote.exception.QuestionNotFoundException;
 import com.pliesveld.flashnote.exception.StatementNotFoundException;
 import com.pliesveld.flashnote.exception.StudentNotFoundException;
 import com.pliesveld.flashnote.model.json.Views;
+import com.pliesveld.flashnote.repository.specifications.QuestionBankSpecification;
 import com.pliesveld.flashnote.service.BankService;
 import com.pliesveld.flashnote.service.CardService;
 import com.pliesveld.flashnote.service.CategoryService;
@@ -20,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -84,14 +86,22 @@ public class QuestionBankController {
         return ResponseEntity.ok().build();
     }
 
-    @RequestMapping(value="", method = RequestMethod.GET)
+    @RequestMapping(value="", method = RequestMethod.GET, params = "!categoryId")
     @ResponseStatus(code = HttpStatus.OK)
     @JsonView(Views.Summary.class)
-    public Page<QuestionBank> retrieveAllDecks(Pageable pageRequest)
+    public Page<QuestionBank> retrieveAllBankss(Pageable pageRequest)
     {
         return bankService.browseBanks(pageRequest);
     }
 
+    @RequestMapping(value="", method = RequestMethod.GET, params = "categoryId")
+    @ResponseStatus(code = HttpStatus.OK)
+    @JsonView(Views.Summary.class)
+    public Page<QuestionBank> retrieveAllBanksInCategory(@RequestParam("categoryId") int categoryId, Pageable pageRequest)
+    {
+        final Specification<QuestionBank> spec = QuestionBankSpecification.hasCategory(categoryId);
+        return bankService.browseBanksWithSpec(spec, pageRequest);
+    }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity<?> createQuestionBank(@Valid @RequestBody QuestionBank questionBank)

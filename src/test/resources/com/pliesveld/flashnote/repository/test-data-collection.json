@@ -1,8 +1,8 @@
 {
-    "_class" : "com.pliesveld.flashnote.spring.DataSet",
+    "_class" : "com.pliesveld.populator.repository.reader.DataSet",
     "categories" : [
         {
-            "@id" : 500,
+            "@id" : 501,
             "name" : "Java Testing Frameworks",
             "description" : "The contents of this category was populated from test-data-question-bank-ref.json"
 
@@ -35,13 +35,13 @@
     "questionBanks" : [
         {
             "@id" : 90000,
-            "category" : 500,
+            "category" : 501,
             "description" : "Basic jUnit interview questions.",
             "questions" : [10000,10001,10002,10003,10004]
         },
         {
             "@id" : 90001,
-            "category" : 500,
+            "category" : 501,
             "description" : "QuestionBank Referncing Category in other file.",
             "questions" : [10000]
         }

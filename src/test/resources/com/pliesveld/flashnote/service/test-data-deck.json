@@ -1,5 +1,5 @@
 {
-    "_class" : "com.pliesveld.flashnote.spring.DataSet",
+    "_class" : "com.pliesveld.populator.repository.reader.DataSet",
 
     "categories" : [
         {

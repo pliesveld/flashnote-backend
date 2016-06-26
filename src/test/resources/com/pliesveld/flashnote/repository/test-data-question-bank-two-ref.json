@@ -1,10 +1,10 @@
 {
-    "_class" : "com.pliesveld.flashnote.spring.DataSet",
+    "_class" : "com.pliesveld.populator.repository.reader.DataSet",
     "categories" : [
         {
             "@id" : 500,
             "name" : "Java Testing Frameworks",
-            "description" : "The contents of this category was populated from test-data-question-bank-ref.json"
+            "description" : "The contents of this category was populated from test-data-question-bank-two-ref.json"
 
         }
     ],

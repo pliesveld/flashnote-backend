@@ -1,4 +1,4 @@
-package com.pliesveld.populator;
+package com.pliesveld.populator.repository;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

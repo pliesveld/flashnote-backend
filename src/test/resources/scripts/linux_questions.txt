@@ -1,0 +1,35 @@
+# Navigation
+What are some common linux filesystem navigation commands?
+What is the difference between a relative path and an absolute path?
+What file permissions exist, and what commands manage them?
+What is a symbolic link?
+
+# Files and Processes
+What is the command to display the currently running processes?
+How do you terminate a process?
+What directories are specified in the Linux Filesystem Hierarchy?
+What is the purpose of grub?
+What are kernel modules, and what commands manage them?
+What is the difference between sudo and su?
+What files are commonly found in /etc?
+Where are system log files found?
+How do you find a file?
+In a debian-like system; How do you install an application from a repository?
+What are the common instructions for installing an application or library from source?
+What is the difference between a virtual console and X11? and how do you switch between them?
+What is the tar command?
+What is the grep command?
+What is the sed command?
+
+
+#Bash commands
+
+What is the environment variable $PATH, and how do you locate commands?
+What is .bashrc?
+How do you suspend a task?
+How do you background a task?
+What is stdin, stdout, stderr?
+How do you redirect the standard streams?
+What are environment variables?
+What is the difference between concatinating commands with | ; && || ?
+

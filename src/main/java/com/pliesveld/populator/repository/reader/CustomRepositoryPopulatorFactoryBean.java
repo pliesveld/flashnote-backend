@@ -1,4 +1,4 @@
-package com.pliesveld.flashnote.spring.repository;
+package com.pliesveld.populator.repository.reader;
 
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -8,15 +8,11 @@ import com.fasterxml.jackson.databind.introspect.Annotated;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.introspect.ObjectIdInfo;
 import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
-import com.pliesveld.flashnote.logging.Markers;
-import com.pliesveld.flashnote.spring.CustomJackson2ResouceReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.event.EventListener;
 import org.springframework.core.io.Resource;
 import org.springframework.data.repository.init.Jackson2RepositoryPopulatorFactoryBean;
-import org.springframework.data.repository.init.RepositoriesPopulatedEvent;
 import org.springframework.data.repository.init.ResourceReader;
 import org.springframework.data.repository.init.ResourceReaderRepositoryPopulator;
 import org.springframework.util.Assert;

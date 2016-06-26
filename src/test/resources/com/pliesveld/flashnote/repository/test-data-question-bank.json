@@ -1,56 +1,47 @@
 {
-    "_class" : "com.pliesveld.flashnote.spring.DataSet",
+    "_class" : "com.pliesveld.populator.repository.reader.DataSet",
 
     "questions" : [
-    ],
+        {
+            "@id" : 90001,
+            "content" :"Where would you venture a shopping?"
+        },
+        {
+            "@id" : 90002,
+            "content" : "When would a web developer use a god?"
+        },
+        {
+            "@id" : 90003,
+            "content" : "Where would you venture a shopping?"
+        },
+        {
+            "@id" : 90004,
+            "content" : "When would a computer scientist use a variety?"
+        }
+
+],
     "students" : [
     ],
     "categories" : [
         {
+            "id" : 500,
             "@id" : 500,
-            "name" : "Test category for question banks",
+            "name" : "Test category with two question banks",
             "description" : "The contents of this category was populated from test-data-question-bank.json"
 
         }
     ],
     "questionBanks" : [
         {
-            "id" : null,
-                "category" : 500,
-                "description" : "a4250e47-55fb FINDME -4983-a76a-1856b78dab62",
-                "questions" : [
-                    {
-                        "content" : "Where would you venture a shopping?",
-                        "title" : "Untitled Question"
-                    },
-                    {
-                        "content" : "When would a web developer use a god?",
-                        "title" : "Untitled Question"
-                    }, {
-                        "content" : "When would a computer scientist use a variety?",
-                        "title" : "Untitled Question"
-                    }
-                ]
 
+            "category" : 500,
+            "description" : "a4250e47-55fb FINDME -4983-a76a-1856b78dab62",
+            "questions" : [90001,90002]
         },
         {
-            "id" : null,
             "category" : 500,
             "description" : "NO SEARCH TERM IN DESCRIPTION",
-            "questions" : [
-                {
-                    "content" : "Where would you venture a shopping?",
-                    "title" : "Untitled Question"
-                },
-                {
-                    "content" : "When would a FINDME veloper use a god?",
-                    "title" : "Untitled Question"
-                }, {
-                    "content" : "When would a computer scientist use a variety?",
-                    "title" : "Untitled Question"
-                }
-            ]
-
+            "questions" : [90003, 9004]
         }
 
 

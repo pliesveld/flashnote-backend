@@ -6,6 +6,7 @@ import com.pliesveld.flashnote.exception.QuestionBankNotFoundException;
 import com.pliesveld.flashnote.exception.QuestionNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
@@ -22,6 +23,8 @@ public interface BankService {
     Question findQuestion(final int bankId, final int questionId);
 
     Page<QuestionBank> browseBanks(final Pageable pageRequest);
+
+    Page<QuestionBank> browseBanksWithSpec(final Specification<QuestionBank> spec, final Pageable pageRequest);
 
     QuestionBank findQuestionBankById(final int bankId)   throws QuestionBankNotFoundException;
 
@@ -42,4 +45,5 @@ public interface BankService {
     void updateQuestionBankRemoveQuestion(@NotNull final QuestionBank questionBank, final int questionId) throws QuestionNotFoundException;
 
     List<QuestionBank> findBanksContainingQuestion(Question question);
+
 }
