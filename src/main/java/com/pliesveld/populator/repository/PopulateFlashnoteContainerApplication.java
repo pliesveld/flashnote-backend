@@ -24,6 +24,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
@@ -161,6 +162,8 @@ public class PopulateFlashnoteContainerApplication {
                 bce.printStackTrace();
                 LOG.error("Bean creation: {}", bce.getMessage());
                 throw bce;
+            } catch(DataIntegrityViolationException dive) {
+                LOG.warn("Failed to save {}", dive.getMessage());
             }
 
 
