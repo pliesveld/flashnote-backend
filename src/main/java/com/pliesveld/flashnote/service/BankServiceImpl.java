@@ -2,8 +2,10 @@ package com.pliesveld.flashnote.service;
 
 import com.pliesveld.flashnote.domain.Question;
 import com.pliesveld.flashnote.domain.QuestionBank;
+import com.pliesveld.flashnote.exception.CategoryNotFoundException;
 import com.pliesveld.flashnote.exception.QuestionBankNotFoundException;
 import com.pliesveld.flashnote.exception.QuestionNotFoundException;
+import com.pliesveld.flashnote.repository.CategoryRepository;
 import com.pliesveld.flashnote.repository.FlashCardRepository;
 import com.pliesveld.flashnote.repository.QuestionBankRepository;
 import com.pliesveld.flashnote.repository.QuestionRepository;
@@ -20,8 +22,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service("bankService")
@@ -37,6 +38,9 @@ public class BankServiceImpl implements BankService {
 
     @Autowired
     private QuestionRepository questionRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -99,6 +103,33 @@ public class BankServiceImpl implements BankService {
             }
         });
         return questionBankRepository.save(questionBank);
+    }
+
+    @Override
+    public QuestionBank updateQuestionBank(QuestionBank questionBank) {
+
+        int id;
+        if(questionBank.getId() == null) {
+            throw new QuestionBankNotFoundException("No bank id property");
+        }
+        id = questionBank.getId();
+
+        final QuestionBank orig = questionBankRepository.findOne(id);
+        int catId = questionBank.getCategory().getId();
+        if(!categoryRepository.exists(catId)) {
+            throw new CategoryNotFoundException(catId);
+        }
+
+        Set<Question> newQuestions = new HashSet<>();
+        Set<Question> questions = orig.getQuestions();
+
+        questionBank.getQuestions().stream().filter((que) -> que.getId() == null).forEach((question) -> {
+            question = questionRepository.save(question);
+            newQuestions.add(question);
+        });
+
+        questions.addAll(newQuestions);
+        return questionBankRepository.save(orig);
     }
 
     @Override

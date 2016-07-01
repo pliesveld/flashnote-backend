@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -34,6 +35,9 @@ public interface BankService {
 
     @Transactional
     QuestionBank createQuestionBank(final QuestionBank questionBank);
+
+    @Transactional
+    QuestionBank updateQuestionBank(@Valid final QuestionBank questionBank);
 
     @Transactional
     void deleteBank(final int bankId)             throws QuestionBankNotFoundException;

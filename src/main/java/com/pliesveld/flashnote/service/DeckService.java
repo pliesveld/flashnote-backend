@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Validated
@@ -35,6 +36,9 @@ public interface DeckService {
 
     @Transactional
     Deck createDeck(final Deck deck);
+
+    @Transactional
+    Deck updateDeck(@Valid final Deck deck);
 
     @Transactional
     void deleteDeck(final int id);
