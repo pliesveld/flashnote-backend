@@ -21,8 +21,7 @@ import java.util.Objects;
 @Table(name = "STATEMENT")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorValue(value = "STATEMENT")
-public abstract class AbstractStatement extends AbstractAuditableEntity<Integer>
-{
+public abstract class AbstractStatement extends AbstractAuditableEntity<Integer> {
     protected Integer id;
     protected String content;
     protected String contentHash;
@@ -37,7 +36,9 @@ public abstract class AbstractStatement extends AbstractAuditableEntity<Integer>
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "statement_gen")
     @Column(name = "STATEMENT_ID")
     @JsonView(Views.Summary.class)
-    public Integer getId() { return id; }
+    public Integer getId() {
+        return id;
+    }
 
     @NotNull
     @Size(min = Constants.MIN_STATEMENT_CONTENT_LENGTH, max = Constants.MAX_STATEMENT_CONTENT_LENGTH)
@@ -56,34 +57,40 @@ public abstract class AbstractStatement extends AbstractAuditableEntity<Integer>
 
     @Size(min = 0, max = Constants.MAX_STATEMENT_ANNOTATIONS_SIZE)
     @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "ANNOTATION", joinColumns = { @JoinColumn(name = "STATEMENT_ID",foreignKey = @ForeignKey(name = "FK_ANNOTATION_STATEMENT"))})
+    @CollectionTable(name = "ANNOTATION", joinColumns = {@JoinColumn(name = "STATEMENT_ID", foreignKey = @ForeignKey(name = "FK_ANNOTATION_STATEMENT"))})
     @SequenceGenerator(name = "annotation_gen", sequenceName = "annotation_id_seq", initialValue = 15000)
 //    @GenericGenerator(name="annotation_gen", strategy="annontation_id_seq")
     @CollectionId(
-            columns   = @Column(name = "ANNOTATION_ID"),
-            type      = @Type(type = "integer"),
+            columns = @Column(name = "ANNOTATION_ID"),
+            type = @Type(type = "integer"),
             generator = "annotation_gen"
     )
     @LazyCollection(LazyCollectionOption.EXTRA)
     @JsonView(Views.SummaryWithCollections.class)
-    public Collection<AnnotatedStatement> getAnnotations() { return annotations; }
+    public Collection<AnnotatedStatement> getAnnotations() {
+        return annotations;
+    }
 
-    protected void setId(final Integer id)
-    {
+    protected void setId(final Integer id) {
         this.id = id;
     }
 
-    public void setContent(final String content)
-    {
+    public void setContent(final String content) {
         this.content = content;
         this.updateContent();
     }
 
-    private void setContentHash(final String contentHash) { this.contentHash = contentHash; }
+    private void setContentHash(final String contentHash) {
+        this.contentHash = contentHash;
+    }
 
-    protected void setAnnotations(Collection<AnnotatedStatement> annotations) { this.annotations = annotations; }
+    protected void setAnnotations(Collection<AnnotatedStatement> annotations) {
+        this.annotations = annotations;
+    }
 
-    public void addAnnotation(AnnotatedStatement annotatedStatement) { this.annotations.add(annotatedStatement); }
+    public void addAnnotation(AnnotatedStatement annotatedStatement) {
+        this.annotations.add(annotatedStatement);
+    }
 
     @Override
     public int hashCode() {

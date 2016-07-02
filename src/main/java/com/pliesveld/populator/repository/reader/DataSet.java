@@ -47,15 +47,27 @@ public class DataSet {
         this.questionBanks = questionBanks;
     }
 
-    public Collection<Deck> getDecks() { return decks; }
+    public Collection<Deck> getDecks() {
+        return decks;
+    }
 
-    public void setDecks(Collection<Deck> decks) { this.decks = decks; }
+    public void setDecks(Collection<Deck> decks) {
+        this.decks = decks;
+    }
 
-    public Collection<FlashCard> getFlashcards() { return flashcards; }
+    public Collection<FlashCard> getFlashcards() {
+        return flashcards;
+    }
 
-    public void setFlashcards(Collection<FlashCard> flashcards) { this.flashcards = flashcards; }
+    public void setFlashcards(Collection<FlashCard> flashcards) {
+        this.flashcards = flashcards;
+    }
 
-    public Collection<Answer> getAnswers() { return answers; }
+    public Collection<Answer> getAnswers() {
+        return answers;
+    }
 
-    public void setAnswers(Collection<Answer> answers) { this.answers = answers; }
+    public void setAnswers(Collection<Answer> answers) {
+        this.answers = answers;
+    }
 }

@@ -9,9 +9,8 @@ import java.io.Serializable;
 
 
 public class FlashnoteRepositoryImpl<T, ID extends Serializable>
-    extends SimpleJpaRepository<T,ID>
-    implements FlashnoteRepository<T,ID>
-{
+        extends SimpleJpaRepository<T, ID>
+        implements FlashnoteRepository<T, ID> {
     private Class<T> domainClass;
     private EntityManager entityManager;
 

@@ -18,8 +18,7 @@ public class AnnotatedStatement {
     private Student createdBy;
     private String message;
 
-    protected AnnotatedStatement()
-    {
+    protected AnnotatedStatement() {
         super();
     }
 
@@ -35,24 +34,36 @@ public class AnnotatedStatement {
     @Convert(converter = InstantConverter.class)
     @JsonProperty("created")
     @JsonView(Views.Summary.class)
-    public Instant getCreatedOn() { return createdOn; }
+    public Instant getCreatedOn() {
+        return createdOn;
+    }
 
     @NotNull
     @ManyToOne(targetEntity = Student.class, fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "STUDENT_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_ANNOTATION_STUDENT"))
     @JsonProperty("created_by")
     @JsonView(Views.Summary.class)
-    public Student getCreatedBy() { return createdBy; }
+    public Student getCreatedBy() {
+        return createdBy;
+    }
 
     @NotNull
     @Size(min = Constants.MIN_NOTIFICATION_MESSAGE_LENGTH, max = Constants.MAX_NOTIFICATION_MESSAGE_LENGTH)
     @Column(name = "MESSAGE", length = Constants.MAX_NOTIFICATION_MESSAGE_LENGTH, nullable = false)
     @JsonView(Views.Summary.class)
-    public String getMessage() { return message; }
+    public String getMessage() {
+        return message;
+    }
 
-    protected void setCreatedOn(Instant createdOn) { this.createdOn = createdOn; }
+    protected void setCreatedOn(Instant createdOn) {
+        this.createdOn = createdOn;
+    }
 
-    protected void setCreatedBy(Student createdBy) { this.createdBy = createdBy; }
+    protected void setCreatedBy(Student createdBy) {
+        this.createdBy = createdBy;
+    }
 
-    protected void setMessage(String message) { this.message = message; }
+    protected void setMessage(String message) {
+        this.message = message;
+    }
 }

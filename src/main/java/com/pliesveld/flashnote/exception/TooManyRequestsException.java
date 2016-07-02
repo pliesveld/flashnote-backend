@@ -7,6 +7,7 @@ import java.time.temporal.ChronoUnit;
 
 public class TooManyRequestsException extends ResourceRepositoryException {
     final String dev_message;
+
     public TooManyRequestsException(int secondsToWait) {
         super("Must wait " + secondsToWait);
         dev_message = Instant.now().plus(secondsToWait, ChronoUnit.SECONDS).toString();

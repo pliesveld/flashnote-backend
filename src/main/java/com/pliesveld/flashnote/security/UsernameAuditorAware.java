@@ -20,8 +20,7 @@ public class UsernameAuditorAware implements AuditorAware<String> {
     public String getCurrentAuditor() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated())
-        {
+        if (authentication == null || !authentication.isAuthenticated()) {
             LOG.trace(Markers.AUDIT, "No authentication object or is not authenticated.", authentication);
             return null;
         }
@@ -32,24 +31,22 @@ public class UsernameAuditorAware implements AuditorAware<String> {
         Object details = authentication.getDetails();
 
         if (principal != null) {
-            LOG.trace(Markers.AUDIT, "Principal {} : {}",principal.getClass().getName(), principal);
+            LOG.trace(Markers.AUDIT, "Principal {} : {}", principal.getClass().getName(), principal);
         }
 
         if (details != null) {
-            LOG.trace(Markers.AUDIT, "Details {} : {}",details.getClass().getName(), details);
+            LOG.trace(Markers.AUDIT, "Details {} : {}", details.getClass().getName(), details);
         }
 
 //        Object credentials = authentication.getCredentials();
 //        Collection<?> authorities = authentication.getAuthorities();
 
-        if (principal instanceof StudentPrincipal)
-        {
+        if (principal instanceof StudentPrincipal) {
             StudentPrincipal studentPrincipal = (StudentPrincipal) principal;
             LOG.debug(Markers.AUDIT, "Found StudentPrincipal : {} ", studentPrincipal);
             return studentPrincipal.getUsername();
-        }
-        else {
-            LOG.debug(Markers.AUDIT, "Principal {} : {}",principal.getClass().getName(), principal);
+        } else {
+            LOG.debug(Markers.AUDIT, "Principal {} : {}", principal.getClass().getName(), principal);
             return "SYSTEM";
         }
     }

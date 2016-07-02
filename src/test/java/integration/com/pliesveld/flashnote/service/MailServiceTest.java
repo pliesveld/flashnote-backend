@@ -41,9 +41,9 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextHierarchy({
-        @ContextConfiguration(classes = { SpringDataTestConfig.class }, loader = AnnotationConfigContextLoader.class),
-        @ContextConfiguration(classes = { SpringServiceTestConfig.class }, loader = AnnotationConfigContextLoader.class),
-        @ContextConfiguration(classes = { SpringMailServiceTestConfig.class }, loader = AnnotationConfigContextLoader.class)
+        @ContextConfiguration(classes = {SpringDataTestConfig.class}, loader = AnnotationConfigContextLoader.class),
+        @ContextConfiguration(classes = {SpringServiceTestConfig.class}, loader = AnnotationConfigContextLoader.class),
+        @ContextConfiguration(classes = {SpringMailServiceTestConfig.class}, loader = AnnotationConfigContextLoader.class)
 })
 @DirtiesContext
 @Transactional
@@ -54,10 +54,8 @@ public class MailServiceTest extends AbstractRepositoryUnitTest {
     protected EntityManager entityManager;
 
     @After
-    public void flushAfter()
-    {
-        if (entityManager != null && entityManager.isJoinedToTransaction())
-        {
+    public void flushAfter() {
+        if (entityManager != null && entityManager.isJoinedToTransaction()) {
             LOG_SQL.debug("Flushing Persistence Context");
             entityManager.flush();
         }
@@ -65,12 +63,12 @@ public class MailServiceTest extends AbstractRepositoryUnitTest {
 
     @Autowired
     StudentRepository studentRepository;
-    
+
     @Autowired
     RegistrationRepository registrationRepository;
-    
+
     @Autowired
-    AccountRegistrationService accountService;  
+    AccountRegistrationService accountService;
 
     @Test
     public void contextLoads() {
@@ -82,8 +80,7 @@ public class MailServiceTest extends AbstractRepositoryUnitTest {
 
     @Bean
     @Scope("SCOPE_PROTOTYPE")
-    Student studentBean()
-    {
+    Student studentBean() {
         Student student = new Student();
         final String name = UUID.randomUUID().toString().substring(8);
         student.setName(name);
@@ -91,28 +88,26 @@ public class MailServiceTest extends AbstractRepositoryUnitTest {
         student.setPassword(UUID.randomUUID().toString());
         student.setRole(AccountRole.ROLE_ACCOUNT);
         entityManager.persist(student);
-        
+
         return student;
     }
-    
+
     @Bean
     @Scope("SCOPE_PROTOTYPE")
-    AccountRegistrationToken registrationExpiredBean()
-    {
+    AccountRegistrationToken registrationExpiredBean() {
         Student student = this.studentBean();
         AccountRegistrationToken registration = new AccountRegistrationToken();
         registration.setStudent(student);
         registration.setToken(UUID.randomUUID().toString());
         entityManager.persist(registration);
-        registration.setExpiration(Instant.now().minus(1 + Constants.REGISTRATION_TOKEN_DURATION_DAYS,ChronoUnit.DAYS));
+        registration.setExpiration(Instant.now().minus(1 + Constants.REGISTRATION_TOKEN_DURATION_DAYS, ChronoUnit.DAYS));
         entityManager.flush();
         return registration;
     }
-    
+
     @Bean
     @Scope("SCOPE_PROTOTYPE")
-    AccountRegistrationToken registrationBean()
-    {
+    AccountRegistrationToken registrationBean() {
         Student student = this.studentBean();
         AccountRegistrationToken registration = new AccountRegistrationToken();
         registration.setStudent(student);
@@ -120,7 +115,7 @@ public class MailServiceTest extends AbstractRepositoryUnitTest {
         entityManager.persist(registration);
         return registration;
     }
-    
+
     @Test
     public void givenAccountExpired_whenPurge_thenCorrect() throws Exception {
         Student student = new Student();
@@ -130,28 +125,28 @@ public class MailServiceTest extends AbstractRepositoryUnitTest {
         student.setName("newuser");
         student = studentRepository.save(student);
         entityManager.flush();
-        
+
         Integer student_id = student.getId();
         assertNotNull(student_id);
-        
-        String test_token = UUID.randomUUID().toString(); 
-        AccountRegistrationToken accountRegistrationToken = new AccountRegistrationToken(student,test_token);
+
+        String test_token = UUID.randomUUID().toString();
+        AccountRegistrationToken accountRegistrationToken = new AccountRegistrationToken(student, test_token);
         accountRegistrationToken = registrationRepository.saveAndFlush(accountRegistrationToken);
-        
+
         assertNotNull(accountRegistrationToken);
         assertNotNull(accountRegistrationToken.getId());
         assertNotNull(accountRegistrationToken.getExpiration());
-        
+
         Instant expiration = accountRegistrationToken.getExpiration();
         assertTrue(expiration.isAfter(Instant.now()));
-        
 
-        accountRegistrationToken.setExpiration(Instant.now().minus(1 + Constants.REGISTRATION_TOKEN_DURATION_DAYS,ChronoUnit.DAYS));
+
+        accountRegistrationToken.setExpiration(Instant.now().minus(1 + Constants.REGISTRATION_TOKEN_DURATION_DAYS, ChronoUnit.DAYS));
         entityManager.flush();
         entityManager.clear();
         student = null;
         accountRegistrationToken = null;
-        
+
         {
             Stream<AccountRegistrationToken> expired = registrationRepository.findAllByExpirationLessThan(Instant.now());
             assertNotNull(expired);
@@ -160,7 +155,7 @@ public class MailServiceTest extends AbstractRepositoryUnitTest {
             assertTrue(it.hasNext());
             expired.close();
         }
-        
+
         accountService.taskPurgeExpiredAccounts();
         entityManager.flush();
         
@@ -168,24 +163,24 @@ public class MailServiceTest extends AbstractRepositoryUnitTest {
         student = studentRepository.findOne(student_id);
         assertNull(student);
     }
-        
+
     @Test
     public void givenAccountsMultiple_whenPurgeUnregisteredOnly_thenCorrect() {
         AccountRegistrationToken registration1 = this.registrationExpiredBean(); // new account to be purged
         AccountRegistrationToken registration2 = this.registrationExpiredBean(); // user account with expired registration, should not be purged
         //AccountRegistrationToken registration3 = this.registrationBean(); // user account without matching registration
         AccountRegistrationToken registration4 = this.registrationBean(); // new account registration has not expired
-        
+
         Student student1 = registration1.getStudent();
         Student student2 = registration2.getStudent();
         Student student3 = this.studentBean();
         Student student4 = registration4.getStudent();
-        
-        assertNotEquals(student1.getEmail(),student2.getEmail());
-        assertNotEquals(student2.getEmail(),student3.getEmail());
-        assertNotEquals(student1.getEmail(),student3.getEmail());
-        assertNotEquals(student1.getEmail(),student4.getEmail());
-        
+
+        assertNotEquals(student1.getEmail(), student2.getEmail());
+        assertNotEquals(student2.getEmail(), student3.getEmail());
+        assertNotEquals(student1.getEmail(), student3.getEmail());
+        assertNotEquals(student1.getEmail(), student4.getEmail());
+
         Serializable student1_id = student1.getId();
         Serializable student2_id = student2.getId();
         Serializable student3_id = student3.getId();
@@ -193,14 +188,14 @@ public class MailServiceTest extends AbstractRepositoryUnitTest {
 
         student2.setRole(AccountRole.ROLE_USER);
         student3.setRole(AccountRole.ROLE_USER);
-    
+
         entityManager.flush();
         entityManager.clear();
         registration1 = registration2 = registration4 = null;
         student1 = student2 = student3 = student4 = null;
-        
-        assertEquals(3,registrationRepository.count());
-        assertEquals(4,studentRepository.count());
+
+        assertEquals(3, registrationRepository.count());
+        assertEquals(4, studentRepository.count());
 
         /*
          * At this point we have:
@@ -215,33 +210,33 @@ public class MailServiceTest extends AbstractRepositoryUnitTest {
          * 
          *         3) the registration that has not expired should persist for accounts of type ROLE_ACCOUNT 
          */
-        
+
         assertEquals(1L, registrationRepository.findAllAsStream()
                 .map((r) -> r.getStudent())
                 .map((s) -> s.getRole())
                 .filter((role) -> role == AccountRole.ROLE_USER)
                 .count());
-        
+
         assertEquals(2L, studentRepository.findAllAsStream()
                 .map((s) -> s.getRole())
                 .filter((role) -> role == AccountRole.ROLE_USER)
                 .count());
 
-        
+
         assertEquals(2L, registrationRepository.findAllAsStream()
                 .map((r) -> r.getStudent())
                 .map((s) -> s.getRole())
                 .filter((role) -> role == AccountRole.ROLE_ACCOUNT)
                 .count());
-        
+
 
         assertEquals(1L, registrationRepository.findAllByExpirationLessThan(Instant.now())
                 .map(AccountRegistrationToken::getStudent)
                 .map(Student::getRole)
                 .filter((role) -> role == AccountRole.ROLE_ACCOUNT)
                 .count());
-                
-            
+
+
         assertEquals(1L, registrationRepository.findAllByExpirationLessThan(Instant.now())
                 .map((r) -> r.getStudent())
                 .map((s) -> s.getRole())
@@ -249,15 +244,13 @@ public class MailServiceTest extends AbstractRepositoryUnitTest {
                 .count());
 
 
-        
-
         accountService.taskPurgeExpiredAccounts();
         entityManager.flush();
 
-    
+
         assertEquals(0L, registrationRepository.findAllByExpirationLessThan(Instant.now())
                 .filter((account) -> account.getStudent().getRole() == AccountRole.ROLE_ACCOUNT).count());
-        
+
         assertEquals(0L, registrationRepository.findAllByExpirationLessThan(Instant.now())
                 .map(AccountRegistrationToken::getStudent)
                 .map(Student::getRole)
@@ -267,37 +260,36 @@ public class MailServiceTest extends AbstractRepositoryUnitTest {
         assertEquals(2L, studentRepository.findAllAsStream()
                 .map(Student::getRole)
                 .filter((role) -> role == AccountRole.ROLE_USER).count());
-        
+
         assertEquals(1L, studentRepository.findAllAsStream()
                 .map(Student::getRole)
                 .filter((role) -> role == AccountRole.ROLE_ACCOUNT).count());
 
-        
 
-        assertEquals(1,registrationRepository.count());
-        assertEquals(3,studentRepository.count());
-        
+        assertEquals(1, registrationRepository.count());
+        assertEquals(3, studentRepository.count());
+
     }
 
     @Test
     public void givenNewAccount_whenRegistrationProcessed_thenCorrect() {
         AccountRegistrationToken registration = this.registrationBean();
         String token = registration.getToken();
-        
-        assertEquals(1,studentRepository.count());
-        assertEquals(1,registrationRepository.count());
-        
+
+        assertEquals(1, studentRepository.count());
+        assertEquals(1, registrationRepository.count());
+
         assertEquals(1L, studentRepository.findAllAsStream()
                 .map(Student::getRole)
                 .filter((role) -> role == AccountRole.ROLE_ACCOUNT).count());
-        
+
         Student student = accountService.processRegistrationConfirmation(token);
         assertNotNull(student);
         //entityManager.flush();
-        
-        assertEquals(1,studentRepository.count());
-        assertEquals(0,registrationRepository.count());
-        
+
+        assertEquals(1, studentRepository.count());
+        assertEquals(0, registrationRepository.count());
+
         assertEquals(1L, studentRepository.findAllAsStream()
                 .map(Student::getRole)
                 .filter((role) -> role == AccountRole.ROLE_USER).count());

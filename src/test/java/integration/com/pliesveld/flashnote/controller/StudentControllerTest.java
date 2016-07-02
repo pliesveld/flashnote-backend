@@ -47,7 +47,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
-@ContextConfiguration(classes = { MockServletContext.class, SpringEntityTestConfig.class }, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = {MockServletContext.class, SpringEntityTestConfig.class}, loader = AnnotationConfigContextLoader.class)
 @WebAppConfiguration
 public class StudentControllerTest {
     private static final Logger LOG = LogManager.getLogger();
@@ -71,7 +71,7 @@ public class StudentControllerTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
         MockitoAnnotations.initMocks(this);
-        mockMvc = standaloneSetup(studentController,adminController).build();
+        mockMvc = standaloneSetup(studentController, adminController).build();
     }
 
 
@@ -98,18 +98,18 @@ public class StudentControllerTest {
 
         final String JSON_DATA = mapper.writeValueAsString(newStudent);
         LOG.info(JSON_DATA);
-        when(registrationService.createStudent(any(String.class),any(String.class),any(String.class))).thenReturn(student);
+        when(registrationService.createStudent(any(String.class), any(String.class), any(String.class))).thenReturn(student);
         MvcResult result = mockMvc.perform(post("/admin/student/create")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JSON_DATA))
 
-            //.andDo(print())
-            .andExpect(status().isCreated())
+                //.andDo(print())
+                .andExpect(status().isCreated())
 
-         //   .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-         //  .andExpect(content().string("{JSON_DATA}"));
-            .andReturn();
+                        //   .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                        //  .andExpect(content().string("{JSON_DATA}"));
+                .andReturn();
 
 
         MockHttpServletResponse mhsr = result.getResponse();

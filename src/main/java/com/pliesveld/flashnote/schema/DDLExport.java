@@ -27,14 +27,11 @@ import java.util.Properties;
 /**
  * Generates database schemas for annotated classes. Requires dialects and
  * naming schemes.
- *
- *
  */
 
 @org.springframework.context.annotation.Configuration
 @PropertySource(value = {"classpath:dev-datasource.properties"})
-public class DDLExport
-{
+public class DDLExport {
     private static final Logger LOG = LogManager.getLogger();
 
     @Value("${entitymanager.packages.to.scan}")
@@ -68,8 +65,7 @@ public class DDLExport
     }
 
 
-    public void DDLExport()
-    {
+    public void DDLExport() {
     }
 
     public static void main(String[] args) throws IllegalAccessException {
@@ -82,11 +78,10 @@ public class DDLExport
 
         DDLExport ddlExport = ctx.getBean(DDLExport.class);
         ddlExport.displayProfile(ctx);
-        ddlExport.real_main(args,ctx);
+        ddlExport.real_main(args, ctx);
     }
 
-    public void real_main(String[] args,AnnotationConfigApplicationContext ctx) throws IllegalAccessException
-    {
+    public void real_main(String[] args, AnnotationConfigApplicationContext ctx) throws IllegalAccessException {
         try {
 
             writeDDLScript(PROPERTY_NAME_ENTITY_PACKAGES, this.hibernateProperties());
@@ -109,8 +104,7 @@ public class DDLExport
     }
 
 
-    private void displayProfile(ApplicationContext ctx)
-    {
+    private void displayProfile(ApplicationContext ctx) {
         LOG.info("ApplicationContext: " + ctx.getDisplayName());
 
         StringBuilder sb = new StringBuilder();
@@ -169,12 +163,15 @@ public class DDLExport
     private void truncate(String filename) throws IOException {
         File f = new File(filename);
 
-        if (!f.exists() || !f.isFile())
-        {
+        if (!f.exists() || !f.isFile()) {
             throw new IOException("file not found " + filename);
         }
 
-        try { new FileOutputStream(filename).getChannel().truncate(0).close(); } catch (IOException e) { LOG.error(e); }
+        try {
+            new FileOutputStream(filename).getChannel().truncate(0).close();
+        } catch (IOException e) {
+            LOG.error(e);
+        }
     }
 /*
      private MetadataImplementor buildMetadata(StandardServiceRegistry serviceRegistry) {

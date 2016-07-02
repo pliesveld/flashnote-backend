@@ -22,20 +22,19 @@ public class SpringConfigRepositoryTest {
     private static final Logger LOG = LogManager.getLogger();
 
     @Test
-    public void constructDeckRepositry()
-    {
+    public void constructDeckRepositry() {
 
-        System.setProperty("spring.profiles.active",Profiles.INTEGRATION_TEST);
+        System.setProperty("spring.profiles.active", Profiles.INTEGRATION_TEST);
         AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
 
         LOG.info(StringUtils.arrayToCommaDelimitedString(ctx.getEnvironment().getActiveProfiles()));
         try {
-        ctx.register(SpringDataTestConfig.class);
-        ctx.register(TestRepositoryConfig.class);
+            ctx.register(SpringDataTestConfig.class);
+            ctx.register(TestRepositoryConfig.class);
 
 
-        ctx.register(TestRepositoryConfig.class);
-        ctx.refresh();
+            ctx.register(TestRepositoryConfig.class);
+            ctx.refresh();
         } catch (PropertyReferenceException pre) {
             fail(pre.getMessage());
             throw pre;
@@ -63,8 +62,8 @@ class TestRepositoryConfig {
     DeckRepository deckRepository;
 
 
-
-    public TestRepositoryConfig() {}
+    public TestRepositoryConfig() {
+    }
 
     int sample = 4;
 }

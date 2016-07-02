@@ -19,15 +19,13 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @BlankEntityTestAnnotations
 @Transactional
-final public class QuestionBankTest extends AbstractTransactionalDomainEntityUnitTest
-{
+final public class QuestionBankTest extends AbstractTransactionalDomainEntityUnitTest {
     private static final Logger LOG = LogManager.getLogger();
 
     private int cat_id;
 
     @Before
-    public void givenCategory()
-    {
+    public void givenCategory() {
         Category category = new Category();
         category.setName("ROOT");
         category.setDescription("ROOT category description");
@@ -37,10 +35,9 @@ final public class QuestionBankTest extends AbstractTransactionalDomainEntityUni
     }
 
     @Test
-    public void givenCategoryInPersistenceContext_whenFindCategory_whenPersistBank_thenCorrect()
-    {
+    public void givenCategoryInPersistenceContext_whenFindCategory_whenPersistBank_thenCorrect() {
         QuestionBank questionBank = new QuestionBank();
-        Category category = entityManager.find(Category.class,cat_id);
+        Category category = entityManager.find(Category.class, cat_id);
         assertNotNull(category);
         questionBank.setCategory(category);
         questionBank.setDescription("A sample question bank with no questions.");
@@ -48,8 +45,7 @@ final public class QuestionBankTest extends AbstractTransactionalDomainEntityUni
     }
 
     @Test
-    public void givenCategoryInPersistenceContext_whenCategoryByReference_whenPersistBank_thenCorrect()
-    {
+    public void givenCategoryInPersistenceContext_whenCategoryByReference_whenPersistBank_thenCorrect() {
         QuestionBank questionBank = new QuestionBank();
         Category category = entityManager.getReference(Category.class, cat_id);
         assertNotNull(category);
@@ -59,8 +55,7 @@ final public class QuestionBankTest extends AbstractTransactionalDomainEntityUni
     }
 
     @Test
-    public void givenCategory_whenFindCategory_whenPersistBank_thenCorrect()
-    {
+    public void givenCategory_whenFindCategory_whenPersistBank_thenCorrect() {
         entityManager.clear();
         QuestionBank questionBank = new QuestionBank();
         Category category = entityManager.find(Category.class, cat_id);
@@ -71,8 +66,7 @@ final public class QuestionBankTest extends AbstractTransactionalDomainEntityUni
     }
 
     @Test
-    public void givenCategory_whenDetachedCategory_whenPersistBank_thenCorrect()
-    {
+    public void givenCategory_whenDetachedCategory_whenPersistBank_thenCorrect() {
         entityManager.clear();
         QuestionBank questionBank = new QuestionBank();
         Category category = new Category();
@@ -89,8 +83,7 @@ final public class QuestionBankTest extends AbstractTransactionalDomainEntityUni
     }
 
     @Test
-    public void givenCategory_whenDetachedCategory_whenMergeBank_thenCorrect()
-    {
+    public void givenCategory_whenDetachedCategory_whenMergeBank_thenCorrect() {
         entityManager.clear();
         QuestionBank questionBank = new QuestionBank();
         Category category = new Category();
@@ -115,8 +108,7 @@ final public class QuestionBankTest extends AbstractTransactionalDomainEntityUni
 
 
     @Test
-    public void givenPersistingBank_whenQuestionCascade_thenCorrect()
-    {
+    public void givenPersistingBank_whenQuestionCascade_thenCorrect() {
         QuestionBank questionBank = new QuestionBank();
         Category category = entityManager.getReference(Category.class, cat_id);
         assertNotNull(category);
@@ -134,8 +126,7 @@ final public class QuestionBankTest extends AbstractTransactionalDomainEntityUni
     }
 
     @Test
-    public void givenPersistingBank_whenQuestionByReference_thenCorrect()
-    {
+    public void givenPersistingBank_whenQuestionByReference_thenCorrect() {
         Integer question_id;
         {
             Question question = new Question("Que?");
@@ -159,8 +150,7 @@ final public class QuestionBankTest extends AbstractTransactionalDomainEntityUni
 
 
     @Test
-    public void givenPersistingBank_whenQuestionDetached_thenCorrect()
-    {
+    public void givenPersistingBank_whenQuestionDetached_thenCorrect() {
         Integer question_id;
         {
             Question question = new Question("Que?");
@@ -185,15 +175,13 @@ final public class QuestionBankTest extends AbstractTransactionalDomainEntityUni
     }
 
     @Test
-    public void givenQuestionBank_whenProxyReference_thenCollectionContentsNotLoaded()
-    {
+    public void givenQuestionBank_whenProxyReference_thenCollectionContentsNotLoaded() {
         QuestionBank questionBank = new QuestionBank();
-        Category category = entityManager.find(Category.class,cat_id);
+        Category category = entityManager.find(Category.class, cat_id);
         questionBank.setCategory(category);
         questionBank.setDescription("A sample question bank with a question.");
 
-        for (int i = 0; i < 3;i++)
-        {
+        for (int i = 0; i < 3; i++) {
             Question question = this.questionBean();
 
             entityManager.persist(question);
@@ -214,7 +202,7 @@ final public class QuestionBankTest extends AbstractTransactionalDomainEntityUni
         assertFalse("QuestionBank proxy should be proxy", Hibernate.isInitialized(questionBank));
         assertFalse("All FetchType.EAGER have been loaded", persistenceUtil.isLoaded(questionBank));
         assertFalse("identifier attribute has been loaded", persistenceUtil.isLoaded(questionBank, "id"));
-        assertFalse("Collection has been loaded", persistenceUtil.isLoaded(questionBank,"questions"));
+        assertFalse("Collection has been loaded", persistenceUtil.isLoaded(questionBank, "questions"));
 
         Collection<Question> questionCollectionProxy = questionBank.getQuestions();
         assertFalse(Hibernate.isInitialized(questionCollectionProxy));

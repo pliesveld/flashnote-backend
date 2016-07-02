@@ -24,8 +24,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    private void verifyCategoryTerm(String categoryTerm) throws CategorySearchException
-    {
+    private void verifyCategoryTerm(String categoryTerm) throws CategorySearchException {
         if (StringUtils.containsWhitespace(categoryTerm))
             throw new CategorySearchException(categoryTerm);
     }
@@ -33,8 +32,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category getCategoryById(int id) throws CategoryNotFoundException {
         Category category = categoryRepository.findOne(id);
-        if (category == null)
-        {
+        if (category == null) {
             throw new CategoryNotFoundException(id);
         }
         return category;
@@ -84,7 +82,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Page<Category> findBySearchTerm(String searchTerm, Pageable pageRequest) {
         Specification<Category> searchSpec = CategorySpecification.titleOrDescriptionContainsIgnoreCase(searchTerm);
-        return categoryRepository.findAll(searchSpec,pageRequest);
+        return categoryRepository.findAll(searchSpec, pageRequest);
     }
 
 

@@ -41,14 +41,12 @@ public class DomainEntityBeanTest {
     private final static String LOG_TAG = "LOG_SQL_LEVEL";
     private static final Logger LOG = LogManager.getLogger("org.hibernate.SQL");
 
-    public static void disableSQL()
-    {
+    public static void disableSQL() {
         System.setProperty(LOG_TAG, "ERROR");
         ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
     }
 
-    public static void enableSQL()
-    {
+    public static void enableSQL() {
         System.setProperty(LOG_TAG, "DEBUG");
         ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
     }
@@ -70,7 +68,7 @@ public class DomainEntityBeanTest {
             fail(pre.getMessage());
             throw pre;
         } catch (BeanCreationException bce) {
-           bce.printStackTrace();
+            bce.printStackTrace();
             fail(bce.getMessage());
         }
 //
@@ -85,7 +83,6 @@ public class DomainEntityBeanTest {
 
         TestAnnotationTransactionalAware testAnnotationTransactionalAware = ctx.getBean(TestAnnotationTransactionalAware.class);
         assertNotNull(testAnnotationTransactionalAware);
-
 
 
 //
@@ -152,22 +149,23 @@ public class DomainEntityBeanTest {
 //    }
 
 
-
-            final BaseEntity domain =
-                    testAnnotationTransactionalAware.doInTransaction(
-                    () -> { return ctx.getBean(QuestionBank.class); },
+        final BaseEntity domain =
+                testAnnotationTransactionalAware.doInTransaction(
+                        () -> {
+                            return ctx.getBean(QuestionBank.class);
+                        },
                         EMOP_ENTITY.PERSIST,
-                    (entity) -> {
-                        write.out(entity);
-                    },
-                    EMOP_ASSERT.CONTAINS_ENTITY_TRUE
+                        (entity) -> {
+                            write.out(entity);
+                        },
+                        EMOP_ASSERT.CONTAINS_ENTITY_TRUE
 
-            );
+                );
 
 //            ((Question) domain).setId(((int)domain.getId()) + 1024*24);
-            System.out.println(write.out(domain));
+        System.out.println(write.out(domain));
 
-            final Serializable id = domain.getId();
+        final Serializable id = domain.getId();
 
     }
 
@@ -217,7 +215,6 @@ public class DomainEntityBeanTest {
 //        write.out(domain4);
 
 
-
     static public class ObjectWriter<T extends ObjectMapper> {
         private static final Logger LOG = LogManager.getLogger("org.hibernate.SQL");
         private ObjectMapper objectMapper;
@@ -259,8 +256,7 @@ class TestEntityRepositoryConfig {
 }
 
 @Component
-class TestAnnotationTransactionalAware
-{
+class TestAnnotationTransactionalAware {
     private static final Logger LOG = LogManager.getLogger("org.hibernate.SQL");
 
     @PersistenceContext
@@ -292,8 +288,7 @@ class TestAnnotationTransactionalAware
             EMOP emop_first,
             Consumer<DomainBaseEntity> consumer,
             EMOP emop
-    )
-    {
+    ) {
         LOG.debug("begin Transaction context #{}", cnt.incrementAndGet());
         assertEntityManager();
 
@@ -312,8 +307,7 @@ class TestAnnotationTransactionalAware
             EMOP emop_first,
             Consumer<DomainBaseEntity> consumer,
             EMOP emop
-    )
-    {
+    ) {
         LOG.debug("begin Transaction context #{}", cnt.incrementAndGet());
         assertEntityManager();
 
@@ -325,8 +319,6 @@ class TestAnnotationTransactionalAware
         LOG.debug("end Transaction test #{}", cnt.get());
         return entity;
     }
-
-
 
 
     private void assertEntityManager() {

@@ -8,8 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface FlashCardRepository extends JpaRepository<FlashCard,FlashCardPrimaryKey> {
+public interface FlashCardRepository extends JpaRepository<FlashCard, FlashCardPrimaryKey> {
 
     List<FlashCard> findAllByQuestion_id(int id);
+
     List<FlashCard> findAllByAnswer_id(int id);
 }

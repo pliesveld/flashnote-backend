@@ -49,15 +49,13 @@ public class AccountRegistrationTokenServiceTest {
 
     @Before
     @Transactional
-    public void removeAccountInfo()
-    {
+    public void removeAccountInfo() {
         registrationRepository.deleteAll();
         studentRepository.deleteAll();
     }
 
     @Test
-    public void whenAccountCreate_thenCorrect()
-    {
+    public void whenAccountCreate_thenCorrect() {
         assertEquals(0, accountRegistrationService.countAccountRegistration());
         assertEquals(0, accountRegistrationService.countStudent());
         assertEquals(0, accountRegistrationService.countStudent());
@@ -68,8 +66,7 @@ public class AccountRegistrationTokenServiceTest {
     }
 
     @Test
-    public void whenAccountDuplicateCreate_thenException()
-    {
+    public void whenAccountDuplicateCreate_thenException() {
         String name = "TESTUSER";
         String email = "unit-test@example.com";
         String password = "123456";
@@ -85,8 +82,7 @@ public class AccountRegistrationTokenServiceTest {
 
 
     @Test
-    public void givenAccountRegistration_whenRemove_thenCorrect()
-    {
+    public void givenAccountRegistration_whenRemove_thenCorrect() {
         Student student = accountRegistrationService.createStudent("Student1", "student@example.com", "password");
         assertNotNull(student);
         AccountRegistrationToken registration = accountRegistrationService.createAccountRegistration(student);

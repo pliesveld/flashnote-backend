@@ -131,6 +131,7 @@ public class DeckServiceImpl implements DeckService {
      * Deletes deck specified by id.
      * Iterates flashcards to find any orphaned Question entities and removes them if no other QuestionBank
      * or Deck contains a reference to the Question.
+     *
      * @param id
      */
     @Override
@@ -146,13 +147,11 @@ public class DeckServiceImpl implements DeckService {
         for (FlashCard flashcard : flashCards) {
             final FlashCardPrimaryKey flashcardId = flashcard.getId();
 
-            if ( flashcardRepository.findAllByQuestion_id(flashcardId.getQuestionId()).stream().filter( fc -> !flashCards.contains(fc)).count() > 0)
-            {
+            if (flashcardRepository.findAllByQuestion_id(flashcardId.getQuestionId()).stream().filter(fc -> !flashCards.contains(fc)).count() > 0) {
                 continue;
             }
 
-            if ( questionBankRepository.findByQuestionsContaining(flashcard.getQuestion()).size() > 0)
-            {
+            if (questionBankRepository.findByQuestionsContaining(flashcard.getQuestion()).size() > 0) {
                 continue;
             }
 

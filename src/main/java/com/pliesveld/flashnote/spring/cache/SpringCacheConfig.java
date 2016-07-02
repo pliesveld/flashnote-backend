@@ -19,14 +19,14 @@ public class SpringCacheConfig {
     public SimpleCacheManager localGuavaCaches() {
         final SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
         final GuavaCache tokenCache = new GuavaCache(CacheConstants.TOKEN_CACHE, CacheBuilder.newBuilder()
-                                                  .concurrencyLevel(3) //Choose per your own will.
-                                                  .expireAfterAccess(2, TimeUnit.MINUTES) //Expire if not accessed within 2 minutes.
-                                                  .maximumSize(1000).build()); //For a maximum of 1000 User Objects.
+                .concurrencyLevel(3) //Choose per your own will.
+                .expireAfterAccess(2, TimeUnit.MINUTES) //Expire if not accessed within 2 minutes.
+                .maximumSize(1000).build()); //For a maximum of 1000 User Objects.
 
         simpleCacheManager.setCaches(Arrays.asList(tokenCache));
 
         return simpleCacheManager;
-}
+    }
 
     public static class CacheConstants {
         public static final String TOKEN_CACHE = "TOKEN_CACHE";

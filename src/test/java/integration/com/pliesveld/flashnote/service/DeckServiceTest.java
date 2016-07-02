@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextHierarchy({
-        @ContextConfiguration(name = "REPOSITORY", classes = { PopulatedDecksRepositoryTest.class }, loader = AnnotationConfigContextLoader.class)
+        @ContextConfiguration(name = "REPOSITORY", classes = {PopulatedDecksRepositoryTest.class}, loader = AnnotationConfigContextLoader.class)
 })
 @DirtiesContext
 public class DeckServiceTest extends AbstractTransactionalServiceUnitTest {
@@ -46,17 +46,14 @@ public class DeckServiceTest extends AbstractTransactionalServiceUnitTest {
     private static Integer category_id;
 
     @Test
-    public void whenContextLoad_thenCorrect()
-    {
+    public void whenContextLoad_thenCorrect() {
         assertTrue(categoryRepository.count() > 0);
         assertTrue(deckRepository.count() > 0);
     }
 
     @Before
-    public void givenExistingCategory()
-    {
-        if ( category_id == null )
-        {
+    public void givenExistingCategory() {
+        if (category_id == null) {
             Category category = categoryRepository.findOneByNameEquals("TEST DECK CATEGORY");
             category_id = category.getId();
         }

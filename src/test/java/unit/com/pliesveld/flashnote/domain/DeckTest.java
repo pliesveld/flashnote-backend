@@ -20,8 +20,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @BlankEntityTestAnnotations
 @Transactional
-public class DeckTest extends StudentTest
-{
+public class DeckTest extends StudentTest {
     @PersistenceContext
     EntityManager entityManager;
 
@@ -30,8 +29,7 @@ public class DeckTest extends StudentTest
 
     @Before
     @Override
-    public void setupEntities()
-    {
+    public void setupEntities() {
         super.setupEntities();
         assertNotNull(student_id);
 
@@ -44,24 +42,21 @@ public class DeckTest extends StudentTest
     }
 
     @Test
-    public void whenContextLoad_thenCorrect()
-    {
+    public void whenContextLoad_thenCorrect() {
         assertStudentRepositoryCount(1);
         assertStudentRepositoryCount(1);
         assertNotNull(student_id);
-        assertNotNull(entityManager.find(Student.class,student_id));
-        assertNotNull(entityManager.find(Student.class,student_id));
+        assertNotNull(entityManager.find(Student.class, student_id));
+        assertNotNull(entityManager.find(Student.class, student_id));
     }
 
     @After
-    public void flushAfter()
-    {
+    public void flushAfter() {
         entityManager.flush();
     }
 
     @Test
-    public void givenDeck_whenAddFlashcardWithSharedQuesiton_thenCorrect()
-    {
+    public void givenDeck_whenAddFlashcardWithSharedQuesiton_thenCorrect() {
         Question question = questionBean();
         Answer answer1 = answerBean();
         Answer answer2 = answerBean();
@@ -71,8 +66,8 @@ public class DeckTest extends StudentTest
 //        entityManager.persist(answer1);
 //        entityManager.persist(answer2);
 
-        FlashCard fc1 = new FlashCard(question,answer1);
-        FlashCard fc2 = new FlashCard(question,answer2);
+        FlashCard fc1 = new FlashCard(question, answer1);
+        FlashCard fc2 = new FlashCard(question, answer2);
 
         entityManager.persist(fc1);
         entityManager.persist(fc2);
@@ -93,8 +88,7 @@ public class DeckTest extends StudentTest
     }
 
     @Test
-    public void givenDeck_whenSavingMultipleFlashcards_thenCorrect()
-    {
+    public void givenDeck_whenSavingMultipleFlashcards_thenCorrect() {
         int i = 1;
         int a_no = 0;
         int q_no = 0;
@@ -119,7 +113,7 @@ public class DeckTest extends StudentTest
             entityManager.persist(que);
 
 
-            FlashCard fc = new FlashCard(que,ans);
+            FlashCard fc = new FlashCard(que, ans);
 
             entityManager.persist(fc);
             list.add(fc);
@@ -134,13 +128,12 @@ public class DeckTest extends StudentTest
         assertFlashCardRepositoryCount(5);
         assertDeckRepositoryCount(1);
 
-        assertEquals("Deck size should be 5",5,deck.getFlashcards().size());
+        assertEquals("Deck size should be 5", 5, deck.getFlashcards().size());
     }
 
 
     @Test
-    public void givenDeck_whenRemovingFlashcard_thenCorrect()
-    {
+    public void givenDeck_whenRemovingFlashcard_thenCorrect() {
         int i = 1;
         int a_no = 0;
         int q_no = 0;
@@ -164,7 +157,7 @@ public class DeckTest extends StudentTest
             entityManager.persist(que);
 
 
-            FlashCard fc = new FlashCard(que,ans);
+            FlashCard fc = new FlashCard(que, ans);
             entityManager.persist(fc);
 
             list.add(fc);
@@ -180,21 +173,19 @@ public class DeckTest extends StudentTest
         assertFlashCardRepositoryCount(5);
         assertDeckRepositoryCount(1);
 
-        assertEquals("Deck size should be 5",5,deck.getFlashcards().size());
+        assertEquals("Deck size should be 5", 5, deck.getFlashcards().size());
 
         FlashCard fc_removed = deck.getFlashcards().remove(2);
         entityManager.remove(fc_removed);
 
-        assertEquals("Deck size should be 4",4,deck.getFlashcards().size());
+        assertEquals("Deck size should be 4", 4, deck.getFlashcards().size());
         assertFlashCardRepositoryCount(4);
 
     }
 
 
-
     @Test
-    public void givenDeck_whenLoad_thenCorrect()
-    {
+    public void givenDeck_whenLoad_thenCorrect() {
         int i = 1;
         int a_no = 0;
         int q_no = 0;
@@ -216,7 +207,7 @@ public class DeckTest extends StudentTest
             ans.setContent(String.format("%d", a_no++));
             entityManager.persist(ans);
 
-            FlashCard fc = new FlashCard(que,ans);
+            FlashCard fc = new FlashCard(que, ans);
 
             entityManager.persist(fc);
             entityManager.flush();
@@ -235,20 +226,19 @@ public class DeckTest extends StudentTest
 
         {
             Deck deck2 = entityManager.find(Deck.class, deck_id);
-            assertEquals("Decks should be equal",deck,deck2);
+            assertEquals("Decks should be equal", deck, deck2);
 
-            assertNotNull("Loading a deck had a null list",deck2.getFlashcards());
-            assertFalse("Loaded deck should have elements",deck2.getFlashcards().isEmpty());
+            assertNotNull("Loading a deck had a null list", deck2.getFlashcards());
+            assertFalse("Loaded deck should have elements", deck2.getFlashcards().isEmpty());
             assertEquals("Loaded deck should have 5 elements", 5, deck2.getFlashcards().size());
 
 
             List<FlashCard> deck_list = deck2.getFlashcards();
 
-            String expected_string[] = {"0","1","2","3","4"};
+            String expected_string[] = {"0", "1", "2", "3", "4"};
 
             int j = 0;
-            for (FlashCard fc : deck_list)
-            {
+            for (FlashCard fc : deck_list) {
                 assertEquals("Fetched answer differed", expected_string[j], fc.getAnswer().getContent());
                 j++;
             }
@@ -263,18 +253,17 @@ public class DeckTest extends StudentTest
         {
             Deck deck3 = entityManager.find(Deck.class, deck_id);
 
-            assertNotNull("Loading a deck had a null list",deck3.getFlashcards());
-            assertFalse("Loaded deck should have elements",deck3.getFlashcards().isEmpty());
-            assertEquals("Loaded deck should have 5 elements",5,deck3.getFlashcards().size());
+            assertNotNull("Loading a deck had a null list", deck3.getFlashcards());
+            assertFalse("Loaded deck should have elements", deck3.getFlashcards().isEmpty());
+            assertEquals("Loaded deck should have 5 elements", 5, deck3.getFlashcards().size());
 
 
             List<FlashCard> deck_list = deck3.getFlashcards();
 
-            String expected_string[] = {"0","2","3","4","1"};
+            String expected_string[] = {"0", "2", "3", "4", "1"};
 
             int j = 0;
-            for (FlashCard fc : deck_list)
-            {
+            for (FlashCard fc : deck_list) {
                 assertEquals("Fetched answer differed", expected_string[j], fc.getAnswer().getContent());
                 j++;
             }

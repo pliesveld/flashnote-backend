@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Service(value = "studentService")
 public class StudentServiceImpl implements StudentService {
-    
+
     private static final Logger LOG = LogManager.getLogger();
 
     @Resource
@@ -79,8 +79,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<AbstractStatement> findStatementsBy(final Student student) throws StudentNotFoundException {
 
-        if (student == null)
-        {
+        if (student == null) {
             throw new StudentNotFoundException(student.getId());
         }
 

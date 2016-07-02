@@ -26,16 +26,14 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @BlankEntityTestAnnotations
 @Transactional
-public class AttachmentBinaryFileTest
-{
+public class AttachmentBinaryFileTest {
     private static final Logger LOG = LogManager.getLogger();
 
     @PersistenceContext
     protected EntityManager entityManager;
 
     @Before
-    public void setupSession()
-    {
+    public void setupSession() {
         assertNotNull(entityManager);
     }
 
@@ -92,18 +90,18 @@ public class AttachmentBinaryFileTest
         LOG.info("Fetching binary file attachment");
         {
             assertNotNull(id);
-            AttachmentBinary attachment2 = entityManager.find(AttachmentBinary.class,id);
+            AttachmentBinary attachment2 = entityManager.find(AttachmentBinary.class, id);
             assertNotNull(attachment2.getAttachmentType());
             assertNotNull(attachment2.getFileName());
-            assertEquals(expected_type,attachment2.getAttachmentType());
-            assertEquals("puppy.jpg",attachment2.getFileName());
-            assertEquals(len,attachment2.getFileLength());
+            assertEquals(expected_type, attachment2.getAttachmentType());
+            assertEquals("puppy.jpg", attachment2.getFileName());
+            assertEquals(len, attachment2.getFileLength());
             assertNotNull(attachment2.getContents());
 
-            String fileout = Paths.get(resource_dir,"puppy_out.jpg").toString();
-            saveBytesToFile(fileout,attachment2.getContents());
+            String fileout = Paths.get(resource_dir, "puppy_out.jpg").toString();
+            saveBytesToFile(fileout, attachment2.getContents());
 
-            verifyFiles(resource.getFile(),new File(fileout));
+            verifyFiles(resource.getFile(), new File(fileout));
             // TODO: verify files match
 
             creationTime = attachment2.getModifiedOn();
@@ -117,7 +115,7 @@ public class AttachmentBinaryFileTest
 
         LOG.info("Fetching binary file, content only");
         {
-            AttachmentBinary attachment3 = entityManager.find(AttachmentBinary.class,id);
+            AttachmentBinary attachment3 = entityManager.find(AttachmentBinary.class, id);
             assertNotNull(attachment3.getContents());
             entityManager.flush();
             entityManager.clear();
@@ -129,9 +127,9 @@ public class AttachmentBinaryFileTest
         /* Unit testing named query to fetch header information only */
         {
             //TypedQuery<AttachmentHeader> query = entityManager.createNamedQuery("AbstractAttachment.findHeaderByAttachmentId",AttachmentHeader.class);
-            TypedQuery<AttachmentHeader> query = entityManager.createQuery("select new com.pliesveld.flashnote.model.json.response.AttachmentHeader(a.attachmentType, a.fileLength, a.modifiedOn) from AbstractAttachment a where a.id = :id",AttachmentHeader.class);
+            TypedQuery<AttachmentHeader> query = entityManager.createQuery("select new com.pliesveld.flashnote.model.json.response.AttachmentHeader(a.attachmentType, a.fileLength, a.modifiedOn) from AbstractAttachment a where a.id = :id", AttachmentHeader.class);
 
-            query.setParameter("id",id);
+            query.setParameter("id", id);
 
             AttachmentHeader header = query.getSingleResult();
 
@@ -140,14 +138,15 @@ public class AttachmentBinaryFileTest
             assertNotNull(header.getLength());
             assertNotNull(header.getModified());
 
-            assertEquals(attachmentType,header.getContentType());
-            assertEquals(length,header.getLength());
-            assertEquals(creationTime,header.getModified());
+            assertEquals(attachmentType, header.getContentType());
+            assertEquals(length, header.getLength());
+            assertEquals(creationTime, header.getModified());
             entityManager.flush();
             entityManager.clear();
         }
 
     }
+
     private String computeHash(InputStream inputStream) throws IOException {
         MessageDigest md = null;
         try {
@@ -159,16 +158,15 @@ public class AttachmentBinaryFileTest
         byte[] dataBytes = new byte[1024];
 
         int nread = 0;
-        while ((nread = inputStream.read(dataBytes)) != -1)
-        {
-            md.update(dataBytes,0,nread);
+        while ((nread = inputStream.read(dataBytes)) != -1) {
+            md.update(dataBytes, 0, nread);
         }
 
         byte[] mdbytes = md.digest();
 
         StringBuffer hexString = new StringBuffer();
-        for (int i = 0;i < mdbytes.length;i++) {
-          hexString.append(Integer.toHexString(0xFF & mdbytes[i]));
+        for (int i = 0; i < mdbytes.length; i++) {
+            hexString.append(Integer.toHexString(0xFF & mdbytes[i]));
         }
 
         return hexString.toString();
@@ -179,7 +177,6 @@ public class AttachmentBinaryFileTest
         assertNotNull(file_out);
 
 
-
         try {
             FileInputStream fis = new FileInputStream(file_in);
             FileInputStream fis2 = new FileInputStream(file_out);
@@ -188,7 +185,7 @@ public class AttachmentBinaryFileTest
                 String hash1 = computeHash(fis);
                 String hash2 = computeHash(fis2);
 
-                assertEquals(hash1,hash2);
+                assertEquals(hash1, hash2);
             } catch (IOException ioe) {
                 fail(ioe.getMessage());
             }

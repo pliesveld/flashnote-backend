@@ -16,8 +16,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextHierarchy({
-    @ContextConfiguration(classes = SpringEntityTestConfig.class, loader = AnnotationConfigContextLoader.class),
-    @ContextConfiguration(classes = DomainEntities.class, loader = AnnotationConfigContextLoader.class)
+        @ContextConfiguration(classes = SpringEntityTestConfig.class, loader = AnnotationConfigContextLoader.class),
+        @ContextConfiguration(classes = DomainEntities.class, loader = AnnotationConfigContextLoader.class)
 })
-@TestPropertySource( locations = "classpath:test-datasource.properties" )
-public @interface DefaultEntityTestAnnotations { }
+@TestPropertySource(locations = "classpath:test-datasource.properties")
+public @interface DefaultEntityTestAnnotations {
+}

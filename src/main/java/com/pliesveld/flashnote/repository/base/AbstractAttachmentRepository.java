@@ -2,7 +2,6 @@ package com.pliesveld.flashnote.repository.base;
 
 
 import com.pliesveld.flashnote.domain.AbstractAttachment;
-import com.pliesveld.flashnote.domain.AbstractStatement;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
@@ -13,8 +12,7 @@ import java.util.stream.Stream;
 
 @NoRepositoryBean
 public interface AbstractAttachmentRepository<T extends AbstractAttachment>
-        extends Repository<T,Integer>, JpaSpecificationExecutor<T>
-{
+        extends Repository<T, Integer>, JpaSpecificationExecutor<T> {
     @Query("select t from #{#entityName} t where t.id = ?1")
     T findOneById(int id);
 

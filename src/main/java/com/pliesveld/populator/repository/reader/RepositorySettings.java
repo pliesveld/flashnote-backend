@@ -10,11 +10,11 @@ public class RepositorySettings {
     private Resource[] resources;
 
     public RepositorySettings(String s) {
-        this.resources = new Resource[] {new ClassPathResource(s)};
+        this.resources = new Resource[]{new ClassPathResource(s)};
     }
 
     public RepositorySettings(Resource resource) {
-        this.resources = new Resource[] {resource };
+        this.resources = new Resource[]{resource};
     }
 
     public Resource[] getResources() {
@@ -30,7 +30,7 @@ public class RepositorySettings {
     }
 
     public static RepositorySettings load(String s, Class<?> clazz) {
-        RepositorySettings repositorySettings = new RepositorySettings(new ClassPathResource(s,clazz));
+        RepositorySettings repositorySettings = new RepositorySettings(new ClassPathResource(s, clazz));
         return repositorySettings;
     }
 

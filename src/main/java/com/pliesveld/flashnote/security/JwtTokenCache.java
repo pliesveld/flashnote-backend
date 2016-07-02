@@ -10,8 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 /**
-* @author Patrick Liesveld
-*/
+ * @author Patrick Liesveld
+ */
 @Component
 public class JwtTokenCache {
     private static final Logger LOG = LogManager.getLogger();
@@ -23,8 +23,7 @@ public class JwtTokenCache {
     }
 
     @CachePut(cacheNames = SpringCacheConfig.CacheConstants.TOKEN_CACHE, key = "#token")
-    public UserDetails cacheUserByToken(String token, UserDetails user)
-    {
+    public UserDetails cacheUserByToken(String token, UserDetails user) {
         LOG.debug(Markers.SECURITY_CACHE, "Caching token {} to user {}", token, user);
         return user;
     }

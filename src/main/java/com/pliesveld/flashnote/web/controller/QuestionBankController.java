@@ -49,31 +49,27 @@ public class QuestionBankController {
     private ObjectMapper objectMapper;
 
     @Autowired
-    public void setObjectMapper(ObjectMapper jackson2ObjectMapper)
-    {
+    public void setObjectMapper(ObjectMapper jackson2ObjectMapper) {
         objectMapper = jackson2ObjectMapper;
         ObjectMapperDebug.debug(this, objectMapper);
     }
-    
-    private Student verifyStudent(int id) throws StudentNotFoundException
-    {
+
+    private Student verifyStudent(int id) throws StudentNotFoundException {
         Student student = studentService.findStudentById(id);
         if (student == null)
             throw new StudentNotFoundException(id);
 
         return student;
     }
-    
-    private Question verifyQuestion(int id) throws QuestionNotFoundException
-    {
+
+    private Question verifyQuestion(int id) throws QuestionNotFoundException {
         Question que = cardService.findQuestionById(id);
         if (que == null)
             throw new QuestionNotFoundException(id);
         return que;
     }
 
-    private AbstractStatement verifyStatement(int id) throws StatementNotFoundException
-    {
+    private AbstractStatement verifyStatement(int id) throws StatementNotFoundException {
         AbstractStatement statement = cardService.findStatementById(id);
         if (statement == null)
             throw new StatementNotFoundException(id);
@@ -81,40 +77,34 @@ public class QuestionBankController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.OPTIONS)
-    public ResponseEntity methodsAllowed()
-    {
+    public ResponseEntity methodsAllowed() {
         return ResponseEntity.ok().build();
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET, params = "!categoryId")
     @ResponseStatus(code = HttpStatus.OK)
     @JsonView(Views.Summary.class)
-    public Page<QuestionBank> retrieveAllBankss(Pageable pageRequest)
-    {
+    public Page<QuestionBank> retrieveAllBankss(Pageable pageRequest) {
         return bankService.browseBanks(pageRequest);
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET, params = "categoryId")
     @ResponseStatus(code = HttpStatus.OK)
     @JsonView(Views.Summary.class)
-    public Page<QuestionBank> retrieveAllBanksInCategory(@RequestParam("categoryId") int categoryId, Pageable pageRequest)
-    {
+    public Page<QuestionBank> retrieveAllBanksInCategory(@RequestParam("categoryId") int categoryId, Pageable pageRequest) {
         final Specification<QuestionBank> spec = QuestionBankSpecification.hasCategory(categoryId);
         return bankService.browseBanksWithSpec(spec, pageRequest);
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity<?> createQuestionBank(@Valid @RequestBody QuestionBank questionBank)
-    {
+    public ResponseEntity<?> createQuestionBank(@Valid @RequestBody QuestionBank questionBank) {
         Category category = questionBank.getCategory();
-        if (category == null || category.getId() == null)
-        {
+        if (category == null || category.getId() == null) {
             throw new CategoryNotFoundException(0);
         }
 
         int id = category.getId();
-        if (!categoryService.doesCategoryIdExist(id))
-        {
+        if (!categoryService.doesCategoryIdExist(id)) {
 
             throw new CategoryNotFoundException(id);
         }
@@ -135,7 +125,7 @@ public class QuestionBankController {
     public ResponseEntity<?> retrieveQuestionBank(@PathVariable("bankId") int bankId) throws JsonProcessingException {
         QuestionBank questionBank = bankService.findQuestionBankById(bankId);
 
-        if (questionBank == null )
+        if (questionBank == null)
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(questionBank);
@@ -143,19 +133,17 @@ public class QuestionBankController {
 
     @RequestMapping(value = "/{bankId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public ResponseEntity<?> deleteQuestionBank(@PathVariable("bankId") int bankId)
-    {
+    public ResponseEntity<?> deleteQuestionBank(@PathVariable("bankId") int bankId) {
         bankService.deleteBank(bankId);
         return ResponseEntity.ok().build();
     }
 
     @RequestMapping(value = "/{bankId}", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<?> QuestionBank(@PathVariable("bankId") int bankId, @Valid @RequestBody Question question)
-    {
+    public ResponseEntity<?> QuestionBank(@PathVariable("bankId") int bankId, @Valid @RequestBody Question question) {
         QuestionBank questionBank = bankService.findQuestionBankById(bankId);
 
-        if (questionBank == null )
+        if (questionBank == null)
             return ResponseEntity.notFound().build();
 
         Integer question_id = question.getId();
@@ -171,8 +159,7 @@ public class QuestionBankController {
 
         }
 
-        if ((question = cardService.findQuestionById(question_id)) != null)
-        {
+        if ((question = cardService.findQuestionById(question_id)) != null) {
             bankService.updateQuestionBankAddQuestion(questionBank.getId(), question);
         } else {
             return ResponseEntity.notFound().build();
@@ -183,11 +170,10 @@ public class QuestionBankController {
 
     @RequestMapping(value = "/{bankId}/{questionId}", method = RequestMethod.DELETE)
     @ResponseBody
-    public ResponseEntity<?> removeQuestion(@PathVariable("bankId") int bankId, @PathVariable("questionId") int questionId)
-    {
+    public ResponseEntity<?> removeQuestion(@PathVariable("bankId") int bankId, @PathVariable("questionId") int questionId) {
         QuestionBank questionBank = bankService.findQuestionBankById(bankId);
 
-        if (questionBank == null )
+        if (questionBank == null)
             return ResponseEntity.notFound().build();
 
         bankService.updateQuestionBankRemoveQuestion(questionBank, questionId);
@@ -195,14 +181,12 @@ public class QuestionBankController {
     }
 
 
-
     @RequestMapping(value = "/{bankId}/{questionId}", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<?> getQuestion(@PathVariable("bankId") int bankId, @PathVariable("questionId") int questionId)
-    {
+    public ResponseEntity<?> getQuestion(@PathVariable("bankId") int bankId, @PathVariable("questionId") int questionId) {
         Question question = bankService.findQuestion(bankId, questionId);
 
-        if (question == null )
+        if (question == null)
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(question);

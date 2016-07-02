@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.stream.Stream;
 
 @Repository
-public interface StudentRepository extends JpaRepository<Student,Integer> {
+public interface StudentRepository extends JpaRepository<Student, Integer> {
     Student findOneByEmail(final String email);
 
     @Query("select s from Student s")

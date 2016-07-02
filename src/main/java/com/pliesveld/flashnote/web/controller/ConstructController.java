@@ -29,8 +29,7 @@ public class ConstructController {
     @Autowired
     private DeckService deckService;
 
-    private Deck verifyDeck(int id) throws DeckNotFoundException
-    {
+    private Deck verifyDeck(int id) throws DeckNotFoundException {
         Deck deck = deckService.findDeckById(id);
         if (deck == null)
             throw new DeckNotFoundException(id);
@@ -40,14 +39,13 @@ public class ConstructController {
     @RequestMapping(value = "/deck/{id}", method = RequestMethod.POST)
     public ResponseEntity<?> processDeckCreation(@PathVariable("id") int id,
                                                  @RequestParam(name = "questionId", required = true) int questionId,
-                                                 @RequestParam(name = "answerId", required = true) int answerId)
-    {
+                                                 @RequestParam(name = "answerId", required = true) int answerId) {
         Deck deck = verifyDeck(id);
 
         Question question = cardService.findQuestionById(questionId);
         Answer answer = cardService.findAnswerById(answerId);
 
-        FlashCard fc = new FlashCard(question,answer);
+        FlashCard fc = new FlashCard(question, answer);
         deckService.updateDeckAddFlashCard(id, fc);
 
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -56,16 +54,15 @@ public class ConstructController {
                 .path("/{id}").query("card={value}").queryParam("card", fc.getId())
 
                 .path("/flashcard/{fc}")
-                .buildAndExpand(deck.getId(),fc.getId())
+                .buildAndExpand(deck.getId(), fc.getId())
                 .toUri();
 
         responseHeaders.setLocation(newStudentUri);
-        return new ResponseEntity<>(null,responseHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/question", method = RequestMethod.POST)
-    public ResponseEntity<?> createQuestion(@Valid @RequestBody Question question)
-    {
+    public ResponseEntity<?> createQuestion(@Valid @RequestBody Question question) {
         Question que = cardService.createQuestion(question);
 
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -76,13 +73,12 @@ public class ConstructController {
                 .toUri();
 
         responseHeaders.setLocation(newQuestionUri);
-        return new ResponseEntity<>(null,responseHeaders,HttpStatus.CREATED);
+        return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
     }
 
 
     @RequestMapping(value = "/answer", method = RequestMethod.POST)
-    public ResponseEntity<?> createAnswer(@Valid @RequestBody Answer answer)
-    {
+    public ResponseEntity<?> createAnswer(@Valid @RequestBody Answer answer) {
         Answer ans = cardService.createAnswer(answer);
 
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -93,6 +89,6 @@ public class ConstructController {
                 .toUri();
 
         responseHeaders.setLocation(newAnswerUri);
-        return new ResponseEntity<>(null,responseHeaders,HttpStatus.CREATED);
+        return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
     }
 }

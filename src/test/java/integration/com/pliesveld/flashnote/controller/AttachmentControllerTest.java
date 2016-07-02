@@ -38,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
-@ContextConfiguration(classes = {PersistenceContext.class,SpringDataConfig.class, SpringEntityTestConfig.class}, loader = AnnotationConfigWebContextLoader.class)
+@ContextConfiguration(classes = {PersistenceContext.class, SpringDataConfig.class, SpringEntityTestConfig.class}, loader = AnnotationConfigWebContextLoader.class)
 @WebAppConfiguration
 public class AttachmentControllerTest {
     private static final Logger LOG = LogManager.getLogger();
@@ -71,7 +71,7 @@ public class AttachmentControllerTest {
 
         InputStream is = new ClassPathResource("puppy.jpg", BinaryFileTest.class).getInputStream();
 
-        MockMultipartFile binaryFile = new MockMultipartFile("file","puppy.jpg","image/jpeg",is);
+        MockMultipartFile binaryFile = new MockMultipartFile("file", "puppy.jpg", "image/jpeg", is);
 
         AttachmentBinary attachmentBinary = new AttachmentBinary();
         attachmentBinary.setId(4);
@@ -85,7 +85,7 @@ public class AttachmentControllerTest {
                 .file(binaryFile))
 //                .andDo(print())
                 .andExpect(status().is(HttpStatus.OK.value()))
-                ;
+        ;
     }
 
 }

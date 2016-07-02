@@ -36,8 +36,7 @@ public class StatementAnnotationTest extends AbstractDomainEntityUnitTest {
 
 
     @Before
-    public void setupEntities()
-    {
+    public void setupEntities() {
         Question question = this.questionBean();
         Answer answer = this.answerBean();
         Student student = this.studentBean();
@@ -51,11 +50,11 @@ public class StatementAnnotationTest extends AbstractDomainEntityUnitTest {
         student_id = student.getId();
 
         {
-            AnnotatedStatement annotatedStatement = new AnnotatedStatement(student,MESSAGE);
+            AnnotatedStatement annotatedStatement = new AnnotatedStatement(student, MESSAGE);
             question.addAnnotation(annotatedStatement);
         }
         {
-            AnnotatedStatement annotatedStatement = new AnnotatedStatement(student,MESSAGE);
+            AnnotatedStatement annotatedStatement = new AnnotatedStatement(student, MESSAGE);
             answer.addAnnotation(annotatedStatement);
         }
 
@@ -64,19 +63,17 @@ public class StatementAnnotationTest extends AbstractDomainEntityUnitTest {
     }
 
     @Test
-    public void testEntityContext()
-    {
+    public void testEntityContext() {
         assertNotNull(question_id);
         assertNotNull(answer_id);
         assertNotNull(student_id);
     }
 
     @Test
-    public void whenContextLoad_thenCorrect()
-    {
+    public void whenContextLoad_thenCorrect() {
         assertNotNull(entityManager.find(Question.class, question_id));
         assertNotNull(entityManager.find(Answer.class, answer_id));
-        assertNotNull(entityManager.find(Student.class,student_id));
+        assertNotNull(entityManager.find(Student.class, student_id));
 
         this.assertQuestionRepositoryCount(1);
         this.assertAnswerRepositoryCount(1);
@@ -84,22 +81,19 @@ public class StatementAnnotationTest extends AbstractDomainEntityUnitTest {
     }
 
     @Test
-    public void testQuestionContainsAnnotation()
-    {
+    public void testQuestionContainsAnnotation() {
         Question question = entityManager.find(Question.class, question_id);
         assertEquals(1, question.getAnnotations().size());
     }
 
     @Test
-    public void testAnswerContainsAnnotation()
-    {
+    public void testAnswerContainsAnnotation() {
         Answer answer = entityManager.find(Answer.class, answer_id);
-        assertEquals(1,answer.getAnnotations().size());
+        assertEquals(1, answer.getAnnotations().size());
     }
 
     @Test
-    public void testQuestionAnnotationRemoval()
-    {
+    public void testQuestionAnnotationRemoval() {
         {
             Question question = entityManager.find(Question.class, question_id);
             assertEquals(1, question.getAnnotations().size());
@@ -115,8 +109,7 @@ public class StatementAnnotationTest extends AbstractDomainEntityUnitTest {
 
 
     @Test
-    public void testAnnotationIsLazyLoaded()
-    {
+    public void testAnnotationIsLazyLoaded() {
         Question question = entityManager.find(Question.class, question_id);
         assertFalse(Hibernate.isInitialized(question.getAnnotations()));
         assertFalse(Hibernate.isInitialized(question.getAnnotations()));
@@ -136,8 +129,7 @@ public class StatementAnnotationTest extends AbstractDomainEntityUnitTest {
 
 
     @Test
-    public void testAnnotationIsLazyLoaded_whenGetReference()
-    {
+    public void testAnnotationIsLazyLoaded_whenGetReference() {
         Question question = entityManager.getReference(Question.class, question_id);
         assertFalse(Hibernate.isInitialized(question));
         Collection<AnnotatedStatement> annotations = question.getAnnotations();
@@ -149,8 +141,7 @@ public class StatementAnnotationTest extends AbstractDomainEntityUnitTest {
     }
 
     @After
-    public void flushAfter()
-    {
+    public void flushAfter() {
         entityManager.flush();
     }
 

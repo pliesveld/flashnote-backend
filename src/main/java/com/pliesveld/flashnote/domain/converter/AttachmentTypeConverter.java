@@ -6,8 +6,7 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 @Converter
-public class AttachmentTypeConverter implements AttributeConverter<AttachmentType,Integer>
-{
+public class AttachmentTypeConverter implements AttributeConverter<AttachmentType, Integer> {
     @Override
     public Integer convertToDatabaseColumn(AttachmentType attribute) {
         return attribute.getId();

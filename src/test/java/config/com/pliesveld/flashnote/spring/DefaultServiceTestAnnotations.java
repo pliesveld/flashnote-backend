@@ -13,4 +13,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextConfiguration(classes = com.pliesveld.flashnote.spring.SpringServiceTestConfig.class, loader = AnnotationConfigContextLoader.class)
-public @interface DefaultServiceTestAnnotations { }
+public @interface DefaultServiceTestAnnotations {
+}

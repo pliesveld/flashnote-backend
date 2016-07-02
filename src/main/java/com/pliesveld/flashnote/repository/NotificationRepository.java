@@ -11,7 +11,7 @@ import java.time.Instant;
 import java.util.stream.Stream;
 
 @Repository
-public interface NotificationRepository extends PagingAndSortingRepository<Notification,Integer> {
+public interface NotificationRepository extends PagingAndSortingRepository<Notification, Integer> {
 
     @Modifying
     @Query("delete from Notification n where n.recipient <= ?1")

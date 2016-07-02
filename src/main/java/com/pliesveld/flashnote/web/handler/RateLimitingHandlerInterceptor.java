@@ -26,14 +26,14 @@ public class RateLimitingHandlerInterceptor extends HandlerInterceptorAdapter {
         if (HandlerMethod.class.isAssignableFrom(handler.getClass())) {
             rateLimit(request, (HandlerMethod) handler);
         }
-        return super.preHandle(request,response,handler);
+        return super.preHandle(request, response, handler);
     }
 
     private void rateLimit(HttpServletRequest request, HandlerMethod handlerMethod) {
         //if (handlerMethod.getMethodAnnotation(RateLimited.class) != null) {
         String ipAddr = request.getRemoteAddr();
 
-        LOG.debug("Rate limiting request has been made from {}",ipAddr);
+        LOG.debug("Rate limiting request has been made from {}", ipAddr);
 
         if (rateLimitService.isBlocked(ipAddr)) {
             throw new TooManyRequestsException(Constants.ACCESS_LIMIT_LOGIN_DELAY);

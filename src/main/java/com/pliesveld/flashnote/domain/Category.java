@@ -21,11 +21,10 @@ import java.util.Set;
 
 
 @Entity
-@EntityListeners(value = { LogEntityListener.class })
+@EntityListeners(value = {LogEntityListener.class})
 @Table(name = "CATEGORY",
-        uniqueConstraints = @UniqueConstraint(name = "UNIQUE_CATEGORY_NAME",columnNames = {"CATEGORY_NAME"}))
-public class Category extends DomainBaseEntity<Integer> implements Serializable
-{
+        uniqueConstraints = @UniqueConstraint(name = "UNIQUE_CATEGORY_NAME", columnNames = {"CATEGORY_NAME"}))
+public class Category extends DomainBaseEntity<Integer> implements Serializable {
 
     private Integer id;
     private String name;
@@ -44,7 +43,7 @@ public class Category extends DomainBaseEntity<Integer> implements Serializable
     }
 
     public Category(final String name, final String description, @NotNull final Category parentCategory) {
-        this(name,description);
+        this(name, description);
         parentCategory.addChildCategory(this);
 
     }
@@ -62,22 +61,22 @@ public class Category extends DomainBaseEntity<Integer> implements Serializable
     @NotNull
     @Column(name = "CATEGORY_NAME", length = Constants.MAX_CATEGORY_NAME_LENGTH, nullable = false)
     @JsonView(Views.Summary.class)
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
     @NotNull
     @Column(name = "CATEGORY_DESC", length = Constants.MAX_CATEGORY_DESCRIPTION_LENGTH, nullable = false)
-    public String getDescription() { return description; }
+    public String getDescription() {
+        return description;
+    }
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name = "CATEGORY_PARENT_ID", referencedColumnName = "CATEGORY_ID", nullable = true, foreignKey = @ForeignKey(name = "FK_CATEGORY_PARENT"))
     @LazyToOne(LazyToOneOption.PROXY)
     @JsonSerialize(using = DomainObjectSerializer.class)
     @JsonView(Views.SummaryWithCollections.class)
-    public Category getParentCategory()
-    {
+    public Category getParentCategory() {
         return parentCategory;
     }
 
@@ -85,13 +84,11 @@ public class Category extends DomainBaseEntity<Integer> implements Serializable
     @LazyCollection(LazyCollectionOption.EXTRA)
     @JsonSerialize(contentUsing = DomainObjectSerializer.class)
     @JsonView(Views.SummaryWithCollections.class)
-    public Set<Category> getChildCategories()
-    {
+    public Set<Category> getChildCategories() {
         return childCategories;
     }
 
-    public boolean isParent(String category)
-    {
+    public boolean isParent(String category) {
         Category c = this;
         do {
             if (c.getName().equals(category)) return true;
@@ -100,13 +97,11 @@ public class Category extends DomainBaseEntity<Integer> implements Serializable
         return false;
     }
 
-    public boolean isParent(Category category)
-    {
+    public boolean isParent(Category category) {
         return this.isParent(category.getName());
     }
 
-    public void addChildCategory(Category childCategory)
-    {
+    public void addChildCategory(Category childCategory) {
         if (childCategory == null) throw new IllegalArgumentException("Null child category!");
 
         if (childCategory.getParentCategory() != null)
@@ -116,25 +111,23 @@ public class Category extends DomainBaseEntity<Integer> implements Serializable
         childCategories.add(childCategory);
     }
 
-    public void setId(Integer id)
-    {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public void setDescription(String description)
-    {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public void setParentCategory(Category parentCategory) { this.parentCategory = parentCategory; }
+    public void setParentCategory(Category parentCategory) {
+        this.parentCategory = parentCategory;
+    }
 
-    protected void setChildCategories(Set<Category> childCategories)
-    {
+    protected void setChildCategories(Set<Category> childCategories) {
         this.childCategories = childCategories;
     }
 

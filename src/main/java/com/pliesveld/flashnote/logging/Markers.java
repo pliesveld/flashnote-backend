@@ -20,7 +20,8 @@ public class Markers {
     public static final Marker SQL_PERSIST = MarkerManager.getMarker("SQL_PERSIST").addParents(SQL_MARKER);
     public static final Marker SQL_UPDATE = MarkerManager.getMarker("SQL_UPDATE").addParents(SQL_MARKER);
     public static final Marker SQL_QUERY = MarkerManager.getMarker("SQL_QUERY").addParents(SQL_MARKER);
-    public static final Marker SQL_DELETE = MarkerManager.getMarker("SQL_DELETE").addParents(SQL_MARKER);;
+    public static final Marker SQL_DELETE = MarkerManager.getMarker("SQL_DELETE").addParents(SQL_MARKER);
+    ;
 
     public static final Marker SECURITY = MarkerManager.getMarker("SECURITY");
     public static final Marker SECURITY_INIT = MarkerManager.getMarker("SECURITY_INIT").addParents(SECURITY, INIT);
@@ -44,7 +45,7 @@ public class Markers {
     public static final Marker REST_EXCEPTION_INTERNAL = MarkerManager.getMarker("REST_EXCEPTION_INTERNAL").addParents(REST_EXCEPTION);
 
     public static final Marker SERVLET = MarkerManager.getMarker("SERVLET");
-    public static final Marker SERVLET_INIT = MarkerManager.getMarker("SERVLET_INIT").addParents(SERVLET,INIT);
+    public static final Marker SERVLET_INIT = MarkerManager.getMarker("SERVLET_INIT").addParents(SERVLET, INIT);
 
     public static final Marker DEBUG = MarkerManager.getMarker("DEBUG");
     public static final Marker DEBUG_INIT = MarkerManager.getMarker("DEBUG_HEADER").addParents(DEBUG, INIT);

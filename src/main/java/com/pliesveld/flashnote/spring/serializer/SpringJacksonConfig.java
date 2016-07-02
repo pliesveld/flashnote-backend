@@ -71,8 +71,7 @@ public class SpringJacksonConfig {
     }
 
     @Bean
-    public Hibernate5Module jacksonHibernateModule()
-    {
+    public Hibernate5Module jacksonHibernateModule() {
         Hibernate5Module jacksonHibernateModule = new Hibernate5Module()
                 .configure(Hibernate5Module.Feature.FORCE_LAZY_LOADING, force)
                 .configure(Hibernate5Module.Feature.USE_TRANSIENT_ANNOTATION, trans)
@@ -80,8 +79,7 @@ public class SpringJacksonConfig {
                 .configure(Hibernate5Module.Feature.REQUIRE_EXPLICIT_LAZY_LOADING_MARKER, marker);
 
         LOG.debug(Markers.OBJECT_MAPPER_INIT, "Configuring Hibernate module {}", jacksonHibernateModule);
-        for (Hibernate5Module.Feature feature : Hibernate5Module.Feature.values())
-        {
+        for (Hibernate5Module.Feature feature : Hibernate5Module.Feature.values()) {
             LOG.debug(Markers.OBJECT_MAPPER_INIT, "{} = {}", feature, jacksonHibernateModule.isEnabled(feature));
         }
         return jacksonHibernateModule;

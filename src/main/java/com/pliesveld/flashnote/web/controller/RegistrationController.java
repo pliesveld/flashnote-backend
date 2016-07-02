@@ -45,13 +45,11 @@ public class RegistrationController {
     @RequestMapping(path = "/sign-up", method = RequestMethod.OPTIONS)
     @CrossOrigin
     @ResponseStatus(HttpStatus.OK)
-    public void discoverOptions()
-    {
+    public void discoverOptions() {
     }
 
-    @RequestMapping(path = "/sign-up", method = RequestMethod.POST )
-    public ResponseEntity<RegistrationResponseJson> processRegistrationMessage(@Valid @RequestBody RegistrationRequestJson registrationRequestJson, HttpServletRequest request)
-    {
+    @RequestMapping(path = "/sign-up", method = RequestMethod.POST)
+    public ResponseEntity<RegistrationResponseJson> processRegistrationMessage(@Valid @RequestBody RegistrationRequestJson registrationRequestJson, HttpServletRequest request) {
         String ipAddr = request.getHeader("X-FORWARDED-FOR");
         if (ipAddr == null)
             ipAddr = request.getRemoteAddr();
@@ -66,13 +64,11 @@ public class RegistrationController {
 
         HttpStatus statusCode = HttpStatus.OK;
 
-        if (studentService.findByEmail(email) != null)
-        {
+        if (studentService.findByEmail(email) != null) {
             response = new RegistrationResponseJson(EMAIL_TAKEN, "Email address has already been registered");
             statusCode = HttpStatus.FORBIDDEN;
 
-        } else  if (studentService.findByName(name) != null)
-        {
+        } else if (studentService.findByName(name) != null) {
             response = new RegistrationResponseJson(NAME_TAKEN, "Name has already been registered");
             statusCode = HttpStatus.FORBIDDEN;
         } else {
@@ -87,7 +83,7 @@ public class RegistrationController {
                     .fromController(RegistrationController.class)
                     .path("/confirm")
                     .queryParam("token", token)
-                .build().toUriString();
+                    .build().toUriString();
 
 
             registrationService.emailVerificationConfirmationURLtoAccountHolder(student, confirmURL);
@@ -95,17 +91,15 @@ public class RegistrationController {
         }
 
 
-        return new ResponseEntity<>(response,statusCode);
+        return new ResponseEntity<>(response, statusCode);
     }
 
     @RequestMapping(path = "/confirm", method = RequestMethod.GET)
     public ResponseEntity<?> processRegistrationConfirmation(@Valid
-            @RequestParam(value = "token", required = true) String token)
-    {
-        LOG.debug("Checking token={}",token);
+                                                             @RequestParam(value = "token", required = true) String token) {
+        LOG.debug("Checking token={}", token);
         Student student = registrationService.processRegistrationConfirmation(token);
-        if (student != null)
-        {
+        if (student != null) {
             eventPublisher.publishEvent(new OnRegistrationCompleteEvent(student));
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -113,9 +107,8 @@ public class RegistrationController {
     }
 
 
-    @RequestMapping(path = "/reset", method = RequestMethod.POST )
-    public ResponseEntity<RegistrationResponseJson> processAccountPasswordResetRequest(@Valid @RequestBody PasswordResetRequestJson passwordResetRequestJson, HttpServletRequest request)
-    {
+    @RequestMapping(path = "/reset", method = RequestMethod.POST)
+    public ResponseEntity<RegistrationResponseJson> processAccountPasswordResetRequest(@Valid @RequestBody PasswordResetRequestJson passwordResetRequestJson, HttpServletRequest request) {
         String ipAddr = request.getHeader("X-FORWARDED-FOR");
         if (ipAddr == null)
             ipAddr = request.getRemoteAddr();
@@ -129,8 +122,7 @@ public class RegistrationController {
         HttpStatus statusCode = HttpStatus.OK;
         Student student = null;
 
-        if ((student = studentService.findByEmail(email)) == null)
-        {
+        if ((student = studentService.findByEmail(email)) == null) {
             throw new StudentNotFoundException(email);
         }
 
@@ -139,10 +131,8 @@ public class RegistrationController {
         Instant last_email = resetToken.getEmailSentOn();
         Instant email_threshold = Instant.now().plus(3L, ChronoUnit.HOURS);
 
-        if (last_email != null)
-        {
-            if (last_email.isBefore(email_threshold))
-            {
+        if (last_email != null) {
+            if (last_email.isBefore(email_threshold)) {
                 LOG.info("refusing to send email before {}", email_threshold);
                 throw new ResourceLimitException("Cannot resend email until " + email_threshold);
             }
@@ -157,11 +147,11 @@ public class RegistrationController {
         registrationService.emailPasswordResetToAccountHolder(email, confirmURL);
         response = new RegistrationResponseJson(EMAIL_SENT, "A password reset confirmation link has been sent to your email address " + email);
 
-        return new ResponseEntity<>(response,statusCode);
+        return new ResponseEntity<>(response, statusCode);
     }
 
 
-    @RequestMapping(path = "/reset/confirm", method = RequestMethod.GET )
+    @RequestMapping(path = "/reset/confirm", method = RequestMethod.GET)
     public ResponseEntity<RegistrationResponseJson> processResetConfirmMessage(
             @RequestParam(value = "token", required = true) String token)
 
@@ -171,8 +161,7 @@ public class RegistrationController {
         RegistrationResponseJson response = null;
         HttpStatus statusCode = HttpStatus.OK;
 
-        if (student == null)
-        {
+        if (student == null) {
             statusCode = HttpStatus.NOT_FOUND;
             return new ResponseEntity<>(statusCode);
         }
@@ -180,10 +169,10 @@ public class RegistrationController {
         String email = student.getEmail();
         String temp_password = student.getPassword();
 
-        registrationService.emailTemporaryPasswordToAccountHolder(email,temp_password);
+        registrationService.emailTemporaryPasswordToAccountHolder(email, temp_password);
         response = new RegistrationResponseJson(EMAIL_SENT, "A temporary password has been sent to your address email address " + email);
 
-        return new ResponseEntity<>(response,statusCode);
+        return new ResponseEntity<>(response, statusCode);
     }
 
 }

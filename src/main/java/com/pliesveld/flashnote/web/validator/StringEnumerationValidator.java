@@ -28,7 +28,7 @@ public class StringEnumerationValidator implements ConstraintValidator<StringEnu
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if ( value == null ) {
+        if (value == null) {
             return true;
         } else {
             if (!AVAILABLE_ENUM_NAMES.contains(value)) {

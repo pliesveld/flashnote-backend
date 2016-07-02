@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RememberTokenRepository extends CrudRepository<AccountRememberMeToken,String> {
+public interface RememberTokenRepository extends CrudRepository<AccountRememberMeToken, String> {
 
     @Modifying
     @Query("delete AccountRememberMeToken t where t.username = ?1")

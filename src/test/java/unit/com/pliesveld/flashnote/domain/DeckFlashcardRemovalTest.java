@@ -18,39 +18,33 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @BlankEntityTestAnnotations
 @Transactional
-public class DeckFlashcardRemovalTest extends StudentTest
-{
+public class DeckFlashcardRemovalTest extends StudentTest {
     @PersistenceContext
     private EntityManager entityManager;
 
     @Before
     @Override
-    public void setupEntities()
-    {
+    public void setupEntities() {
         super.setupEntities();
     }
 
     @Test
-    public void whenContextLoad_thenCorrect()
-    {
+    public void whenContextLoad_thenCorrect() {
 
     }
 
     @After
-    public void flushAfter()
-    {
+    public void flushAfter() {
         entityManager.flush();
     }
 
 
     @Test
-    public void studentDeckRemove()
-    {
-        Serializable sid = null; 
+    public void studentDeckRemove() {
+        Serializable sid = null;
         Serializable did = null;
-        
-        
-    
+
+
         {
             Category category = this.categoryBean();
             entityManager.persist(category);
@@ -63,11 +57,11 @@ public class DeckFlashcardRemovalTest extends StudentTest
 
             Question que = new Question("Question?");
             Answer ans = new Answer("Answer.");
-            
+
             entityManager.persist(que);
             entityManager.persist(ans);
-            
-            FlashCard fc = new FlashCard(que,ans);
+
+            FlashCard fc = new FlashCard(que, ans);
             Deck deck = new Deck(category, UUID.randomUUID().toString());
             deck.getFlashcards().add(fc);
             deck.setCategory(category);
@@ -75,26 +69,26 @@ public class DeckFlashcardRemovalTest extends StudentTest
             entityManager.persist(student1);
             entityManager.persist(deck);
             entityManager.flush();
-            
+
             did = deck.getId();
             sid = student1.getId();
         }
-        
+
         assertNotNull(sid);
         Student student = entityManager.find(Student.class, sid);
         assertNotNull(student);
-        
 
-        Deck deck = entityManager.find(Deck.class,did);
-        
-        
+
+        Deck deck = entityManager.find(Deck.class, did);
+
+
         FlashCard fc = deck.getFlashcards().get(0);
-        
+
         Question que = fc.getQuestion();
         Answer ans = fc.getAnswer();
 
         entityManager.remove(fc);
-        
+
         entityManager.remove(que);
         entityManager.remove(ans);
 

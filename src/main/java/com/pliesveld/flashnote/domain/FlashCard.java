@@ -11,17 +11,16 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@EntityListeners(value = { LogEntityListener.class })
+@EntityListeners(value = {LogEntityListener.class})
 @Table(name = "FLASHCARD")
-public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey>
-{
+public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey> {
     private static final Logger LOG = LogManager.getLogger();
 
     @EmbeddedId
     private FlashCardPrimaryKey id = new FlashCardPrimaryKey();
 
-//    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH},
-    @ManyToOne(cascade = { CascadeType.MERGE },
+    //    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH},
+    @ManyToOne(cascade = {CascadeType.MERGE},
             targetEntity = com.pliesveld.flashnote.domain.Question.class)
     @JoinColumn(name = "QUESTION_ID",
             nullable = false, insertable = false, updatable = false,
@@ -29,7 +28,7 @@ public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey>
     @MapsId("questionId")
     private Question question;
 
-    @ManyToOne(cascade = {CascadeType.MERGE,CascadeType.REMOVE},
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE},
             targetEntity = com.pliesveld.flashnote.domain.Answer.class)
     @JoinColumn(name = "ANSWER_ID",
             nullable = false, insertable = false, updatable = false,
@@ -56,7 +55,9 @@ public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey>
     }
 
     @JsonView(Views.Summary.class)
-    public FlashCardPrimaryKey getId()        { return id; }
+    public FlashCardPrimaryKey getId() {
+        return id;
+    }
 
     public void setId(FlashCardPrimaryKey id) {
         this.id = id;
@@ -70,10 +71,14 @@ public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey>
     }
 
     @JsonView(Views.Summary.class)
-    public Question getQuestion()             { return question; }
+    public Question getQuestion() {
+        return question;
+    }
 
     @JsonView(Views.Summary.class)
-    public Answer getAnswer()                 { return answer; }
+    public Answer getAnswer() {
+        return answer;
+    }
 
     @Override
     public int hashCode() {

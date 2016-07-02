@@ -5,13 +5,14 @@ import com.pliesveld.flashnote.domain.Answer_;
 import org.springframework.data.jpa.domain.Specification;
 
 final public class AnswerSpecification {
-    private AnswerSpecification() {}
+    private AnswerSpecification() {
+    }
 
     public static Specification<Answer> contentContainsIgnoreCase(String searchTerm) {
         return (root, query, cb) -> {
             String containsLikePattern = getContainsLikePattern(searchTerm);
 
-            return cb.like(cb.lower(root.<String>get(Answer_.content)),containsLikePattern);
+            return cb.like(cb.lower(root.<String>get(Answer_.content)), containsLikePattern);
         };
     }
 

@@ -8,10 +8,14 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CategoryRepository extends CrudRepository<Category,Integer>, JpaSpecificationExecutor<Category> {
+public interface CategoryRepository extends CrudRepository<Category, Integer>, JpaSpecificationExecutor<Category> {
     List<Category> findByParentCategoryIsNull();
+
     List<Category> findByParentCategory_id(int parentCategory);
-    Category        findOneByNameEquals(String categoryName);
+
+    Category findOneByNameEquals(String categoryName);
+
     List<Category> findByNameContains(String categoryTerm);
+
     List<Category> findByDescriptionContains(String categoryTerm);
 }

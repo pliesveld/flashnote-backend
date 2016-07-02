@@ -8,8 +8,10 @@ import org.springframework.validation.annotation.Validated;
 public interface HousekeepingService {
     @Transactional
     public void expiredAccountPurgeJob();
+
     @Transactional
     public void expiredDeckPurgeJob();
+
     @Transactional
     public void indexDeckCollectionJob();
 }

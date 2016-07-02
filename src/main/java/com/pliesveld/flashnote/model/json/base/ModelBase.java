@@ -1,7 +1,6 @@
 package com.pliesveld.flashnote.model.json.base;
 
 
-
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.io.Serializable;

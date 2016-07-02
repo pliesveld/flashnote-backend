@@ -20,15 +20,15 @@ import javax.validation.constraints.Size;
  */
 @Component
 @JsonInclude(JsonInclude.Include.ALWAYS)
-public class StudentResponseJson extends ModelBase implements JsonWebRequestSerializable
-{
+public class StudentResponseJson extends ModelBase implements JsonWebRequestSerializable {
     @NotNull
-    @Size(min = 3,max = 32)
+    @Size(min = 3, max = 32)
     @JsonView(Views.Summary.class)
     private String name;
 
     @Email
-    @NotNull @Size(min = 5,max = 48)
+    @NotNull
+    @Size(min = 5, max = 48)
     @JsonView(Views.Summary.class)
     private String email;
 
@@ -53,13 +53,11 @@ public class StudentResponseJson extends ModelBase implements JsonWebRequestSeri
         return responseJson;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -71,5 +69,7 @@ public class StudentResponseJson extends ModelBase implements JsonWebRequestSeri
         this.email = email;
     }
 
-    public void setRole(AccountRole role) { this.role = role; }
+    public void setRole(AccountRole role) {
+        this.role = role;
+    }
 }

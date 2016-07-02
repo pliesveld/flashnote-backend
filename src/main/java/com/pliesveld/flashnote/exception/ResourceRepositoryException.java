@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 public abstract class ResourceRepositoryException extends RuntimeException {
 
     abstract public String getRepositoryMessage();
+
     abstract public HttpStatus getRepositoryStatus();
 
     public ResourceRepositoryException(String message) {

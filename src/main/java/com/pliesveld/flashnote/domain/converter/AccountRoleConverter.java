@@ -6,8 +6,7 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 @Converter
-public class AccountRoleConverter implements AttributeConverter<AccountRole,Integer>
-{
+public class AccountRoleConverter implements AttributeConverter<AccountRole, Integer> {
     @Override
     public Integer convertToDatabaseColumn(AccountRole attribute) {
         return attribute.getId();

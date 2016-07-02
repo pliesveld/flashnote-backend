@@ -20,12 +20,12 @@ public class AudioMetadataReader {
 
         try {
             AudioFileFormat format = AudioSystem.getAudioFileFormat(is);
-            LOG.debug(SERVICE_ATTACHMENT,"Audio Format: " + format);
+            LOG.debug(SERVICE_ATTACHMENT, "Audio Format: " + format);
             return new AudioMetadata(format, mimeContentType);
 
         } catch (UnsupportedAudioFileException | IOException e) {
-            LOG.debug(SERVICE_ATTACHMENT,"Could not get audio file format from file.");
-            throw new AudioFormatNotSupportedException("Could not read file",e);
+            LOG.debug(SERVICE_ATTACHMENT, "Could not get audio file format from file.");
+            throw new AudioFormatNotSupportedException("Could not read file", e);
         }
 
     }
@@ -35,11 +35,11 @@ public class AudioMetadataReader {
         verifyMimeTypeSupported(mimeContentType);
         try {
             AudioFileFormat format = AudioSystem.getAudioFileFormat(inFile);
-            LOG.debug(SERVICE_ATTACHMENT,"Format: " + format);
+            LOG.debug(SERVICE_ATTACHMENT, "Format: " + format);
             return new AudioMetadata(format, mimeContentType);
         } catch (UnsupportedAudioFileException | IOException e) {
-            LOG.debug(SERVICE_ATTACHMENT,"Could not get audio file format from file.");
-            throw new AudioFormatNotSupportedException("Could not read file",e);
+            LOG.debug(SERVICE_ATTACHMENT, "Could not get audio file format from file.");
+            throw new AudioFormatNotSupportedException("Could not read file", e);
         }
 
     }
@@ -51,18 +51,18 @@ public class AudioMetadataReader {
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(contents);
             ais = AudioSystem.getAudioInputStream(byteArrayInputStream);
             AudioFormat format = ais.getFormat();
-            LOG.debug(SERVICE_ATTACHMENT,"audio file format of " + name + ": " + format);
+            LOG.debug(SERVICE_ATTACHMENT, "audio file format of " + name + ": " + format);
             return new AudioMetadata(format, mimeContentType);
         } catch (IOException e) {
-            throw new AudioFormatNotSupportedException("Could not read input stream",e);
+            throw new AudioFormatNotSupportedException("Could not read input stream", e);
         } catch (UnsupportedAudioFileException e) {
-            throw new AudioFormatNotSupportedException("No provider supports audio format",e);
+            throw new AudioFormatNotSupportedException("No provider supports audio format", e);
         } finally {
             if (ais != null) {
                 try {
                     ais.close();
                 } catch (IOException e) {
-                    throw new AudioFormatNotSupportedException("Could not close audio input stream.",e);
+                    throw new AudioFormatNotSupportedException("Could not close audio input stream.", e);
                 }
             }
         }

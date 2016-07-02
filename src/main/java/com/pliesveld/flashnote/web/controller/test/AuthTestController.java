@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 
 @RestController
-@RequestMapping( { "/anon",  "/auth", "/admin" })
+@RequestMapping({"/anon", "/auth", "/admin"})
 public class AuthTestController {
     private static final org.apache.logging.log4j.Logger LOG = org.apache.logging.log4j.LogManager.getLogger();
 
@@ -30,32 +30,28 @@ public class AuthTestController {
 
     @RequestMapping(value = "/StudentPrincipal", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public StudentPrincipal getAuthByCustomSpringPrincipal(@CurrentUser StudentPrincipal studentPrincipal)
-    {
+    public StudentPrincipal getAuthByCustomSpringPrincipal(@CurrentUser StudentPrincipal studentPrincipal) {
         LOG.info("@CurrentUser StudentPrincipal " + studentPrincipal);
         return studentPrincipal;
     }
 
     @RequestMapping(value = "/User", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public User getAuthBySpringUser(@AuthenticationPrincipal User user)
-    {
+    public User getAuthBySpringUser(@AuthenticationPrincipal User user) {
         LOG.info("@AuthenticationPrincipal org.springframework.security.core.userdetails.User " + user);
         return user;
     }
 
     @RequestMapping(value = "/UserDetails", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public UserDetails getAuthByUserDetails(@AuthenticationPrincipal UserDetails userDetails)
-    {
+    public UserDetails getAuthByUserDetails(@AuthenticationPrincipal UserDetails userDetails) {
         LOG.info("org.springframework.security.core.userdetails.UserDetails " + userDetails);
         return userDetails;
     }
 
     @RequestMapping(value = "/Principal", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public Principal getAuthByPrincipal(Principal principal)
-    {
+    public Principal getAuthByPrincipal(Principal principal) {
         LOG.info("java.security.Principal " + principal);
         return principal;
     }

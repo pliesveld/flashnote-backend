@@ -30,14 +30,12 @@ public class CategoryController {
     DeckService deckService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public List<Category> listAllCategories()
-    {
+    public List<Category> listAllCategories() {
         return categoryService.allCategories();
     }
 
     @RequestMapping(value = "/root", method = RequestMethod.GET)
-    public List<Category> listRootCategories()
-    {
+    public List<Category> listRootCategories() {
         return categoryService.rootCategories();
     }
 //
@@ -58,14 +56,12 @@ public class CategoryController {
 //    }
 
     @RequestMapping(value = "/root/{id}", method = RequestMethod.GET)
-    public List<Category> listChildCategories(@PathVariable Integer id)
-    {
+    public List<Category> listChildCategories(@PathVariable Integer id) {
         return categoryService.childCategories(id);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Category getCategory(@PathVariable Integer id)
-    {
+    public Category getCategory(@PathVariable Integer id) {
         Category category = categoryService.getCategoryById(id);
         return category;
     }
@@ -76,22 +72,20 @@ public class CategoryController {
     }
 
     @RequestMapping(value = "/root/{id}/decks", method = RequestMethod.GET)
-    public Page<Deck> listDecksInCategory(@PathVariable Integer id, PageRequest pageRequest)
-    {
+    public Page<Deck> listDecksInCategory(@PathVariable Integer id, PageRequest pageRequest) {
         return deckService.findByCategory(id, pageRequest);
     }
 
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity createCategory(@Valid @RequestBody Category category)
-    {
+    public ResponseEntity createCategory(@Valid @RequestBody Category category) {
 
         Category new_category = categoryService.createCategory(category);
         return ResponseEntity.created(
                 MvcUriComponentsBuilder
                         .fromController(CategoryController.class)
                         .path("/{id}").buildAndExpand(new_category.getId()).toUri())
-                    .build();
+                .build();
     }
 
 }

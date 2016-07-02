@@ -17,16 +17,14 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @BlankEntityTestAnnotations
 @Transactional
-public class CategoryTest extends AbstractDomainEntityUnitTest
-{
+public class CategoryTest extends AbstractDomainEntityUnitTest {
     @PersistenceContext
     EntityManager entityManager;
 
     Serializable category_id;
 
     @Before
-    public void setupEntities()
-    {
+    public void setupEntities() {
         Category category = categoryBean();
         category = categoryRepository.save(category);
         category_id = category.getId();
@@ -34,32 +32,28 @@ public class CategoryTest extends AbstractDomainEntityUnitTest
         entityManager.clear();
     }
 
-    protected Category categoryFromTest()
-    {
+    protected Category categoryFromTest() {
         assertNotNull(category_id);
-        Category category = entityManager.find(Category.class,category_id);
+        Category category = entityManager.find(Category.class, category_id);
         assertNotNull(category);
         return category;
     }
 
     @Test
-    public void whenContextLoad_thenCorrect()
-    {
+    public void whenContextLoad_thenCorrect() {
         assertNotNull(category_id);
-        Category category = entityManager.find(Category.class,category_id);
+        Category category = entityManager.find(Category.class, category_id);
         assertNotNull(category);
         assertCategoryRepositoryCount(1);
     }
 
     @After
-    public void flushAfter()
-    {
+    public void flushAfter() {
         entityManager.flush();
     }
 
     @Test
-    public void generateCategoryHierarchy()
-    {
+    public void generateCategoryHierarchy() {
         Category root = entityManager.find(Category.class, category_id);
 
         Category child1 = categoryBean();
@@ -83,8 +77,7 @@ public class CategoryTest extends AbstractDomainEntityUnitTest
     }
 
     @Test
-    public void generateCategoryHierarchyCascade()
-    {
+    public void generateCategoryHierarchyCascade() {
         Category root = entityManager.find(Category.class, category_id);
 
         Category child1 = categoryBean();

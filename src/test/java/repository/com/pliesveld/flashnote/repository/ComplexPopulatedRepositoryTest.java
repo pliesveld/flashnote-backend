@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextHierarchy({
-        @ContextConfiguration(name = "REPOSITORY", classes = { ComplexPopulatedRepositoryTest.class }, loader = AnnotationConfigContextLoader.class)
+        @ContextConfiguration(name = "REPOSITORY", classes = {ComplexPopulatedRepositoryTest.class}, loader = AnnotationConfigContextLoader.class)
 })
 @DirtiesContext
 public class ComplexPopulatedRepositoryTest extends AbstractPopulatedRepositoryUnitTest {

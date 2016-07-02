@@ -26,7 +26,8 @@ public class AttachmentHeader extends ModelBase implements JsonWebResponseSerial
     @JsonView(Views.Summary.class)
     private Instant modified;
 
-    public AttachmentHeader() {}
+    public AttachmentHeader() {
+    }
 
     public AttachmentHeader(final AttachmentType contentType, final int length, final Instant modified) {
         this.contentType = contentType;
@@ -46,9 +47,15 @@ public class AttachmentHeader extends ModelBase implements JsonWebResponseSerial
         return modified;
     }
 
-    public void setContentType(AttachmentType contentType) { this.contentType = contentType; }
+    public void setContentType(AttachmentType contentType) {
+        this.contentType = contentType;
+    }
 
-    public void setLength(int length) { this.length = length; }
+    public void setLength(int length) {
+        this.length = length;
+    }
 
-    public void setModified(Instant modified) { this.modified = modified; }
+    public void setModified(Instant modified) {
+        this.modified = modified;
+    }
 }

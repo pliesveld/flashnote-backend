@@ -21,14 +21,12 @@ public class JavaAttachmentValidator implements Validator {
 //    private Validator basicValidator;
 
 
-
     @Override
     public void validate(Object target, Errors errors) {
         LOG.debug("Validating " + target);
-  //      basicValidator.validate(target,errors);
+        //      basicValidator.validate(target,errors);
 
-        if (errors.hasErrors())
-        {
+        if (errors.hasErrors()) {
             LOG.debug("Validation of " + target + " had errors.");
             return;
         }
@@ -37,20 +35,18 @@ public class JavaAttachmentValidator implements Validator {
         AttachmentType attachmentType = attachment.getAttachmentType();
 
         if (!StringUtils.hasLength(attachment.getFileName()))
-            errors.rejectValue("fileName","required","required");
+            errors.rejectValue("fileName", "required", "required");
 
 
         boolean check_content = true;
 
-        if (attachment.getAttachmentType() == null)
-        {
-            errors.rejectValue("contentType","required","required");
+        if (attachment.getAttachmentType() == null) {
+            errors.rejectValue("contentType", "required", "required");
             check_content = false;
         }
 
-        if (attachment.getContents() == null)
-        {
-            errors.rejectValue("fileData","required","required");
+        if (attachment.getContents() == null) {
+            errors.rejectValue("fileData", "required", "required");
             check_content = false;
         }
 
@@ -60,18 +56,17 @@ public class JavaAttachmentValidator implements Validator {
 
         switch (attachmentType) {
             case AUDIO:
-                validateAudioAttachment(attachment,errors);
+                validateAudioAttachment(attachment, errors);
                 break;
             case TEXT:
-                validateDocumentAttachment(attachment,errors);
+                validateDocumentAttachment(attachment, errors);
                 break;
             case IMAGE:
-                validateImageAttachment(attachment,errors);
+                validateImageAttachment(attachment, errors);
                 break;
         }
 
     }
-
 
 
     private void validateImageAttachment(AttachmentBinary attachment, Errors errors) {
@@ -83,14 +78,13 @@ public class JavaAttachmentValidator implements Validator {
             ImageMetadataReader.readImageMetadata(fileName, content, mime);
 
         } catch (IOException e) {
-            errors.rejectValue("fileData","invalid","invalid");
+            errors.rejectValue("fileData", "invalid", "invalid");
         }
     }
 
     private void validateDocumentAttachment(AttachmentBinary attachment, Errors errors) {
-        if (!isValidUTF8(attachment.getContents()))
-        {
-            errors.rejectValue("fileData","invalid","invalid");
+        if (!isValidUTF8(attachment.getContents())) {
+            errors.rejectValue("fileData", "invalid", "invalid");
         }
     }
 
@@ -104,18 +98,17 @@ public class JavaAttachmentValidator implements Validator {
     }
 
     /**
-        Used to verify attachment of text content types do not
-        contain binary data.
+     * Used to verify attachment of text content types do not
+     * contain binary data.
      */
-    public static boolean isValidUTF8( byte[] input ) {
+    public static boolean isValidUTF8(byte[] input) {
 
         CharsetDecoder cs = Charset.forName("UTF-8").newDecoder();
 
         try {
             cs.decode(ByteBuffer.wrap(input));
             return true;
-        }
-        catch (CharacterCodingException e) {
+        } catch (CharacterCodingException e) {
             return false;
         }
     }

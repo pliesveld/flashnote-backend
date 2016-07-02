@@ -47,7 +47,7 @@ import static org.junit.Assert.assertNotNull;
         @ContextConfiguration(classes = DomainEntities.class, loader = AnnotationConfigContextLoader.class),
         @ContextConfiguration(classes = HibernateSerializationTest.class, loader = AnnotationConfigContextLoader.class)
 })
-@TestPropertySource( locations = "classpath:test-datasource.properties" )
+@TestPropertySource(locations = "classpath:test-datasource.properties")
 @Transactional
 //@TestExecutionListeners(listeners = LogHibernateTestExecutionListener.class, mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 @DirtiesContext
@@ -159,6 +159,7 @@ public class HibernateSerializationTest extends AbstractDomainEntityUnitTest imp
                 throw new IllegalArgumentException("Could not serialize " + obj.getClass().getName());
             }
         }
+
         public String out(Object obj, Class<?> temp_view_clazz) {
             try {
                 String out = this.objectMapper.writerWithView(temp_view_clazz).writeValueAsString(obj);
@@ -181,8 +182,7 @@ public class HibernateSerializationTest extends AbstractDomainEntityUnitTest imp
 
         ArrayList<DomainBaseEntity> entityBeans = new ArrayList<>(entityClassList.size());
 
-        for (Class<?> clazz : entityClassList)
-        {
+        for (Class<?> clazz : entityClassList) {
             try {
                 sessionCounter.clear();
                 Object obj = ctx.getBean(clazz);
@@ -191,17 +191,18 @@ public class HibernateSerializationTest extends AbstractDomainEntityUnitTest imp
                 entityManager.flush();
 //                entityManager.clear();
 
-                LOG.trace("Saving {} {}", () -> { return clazz.getSimpleName(); }, () -> {
+                LOG.trace("Saving {} {}", () -> {
+                    return clazz.getSimpleName();
+                }, () -> {
                     final int ent_cnt = sessionCounter.getEntities();
                     final int col_cnt = sessionCounter.getCollections();
                     if (ent_cnt == col_cnt && ent_cnt == 0)
                         return "";
-                    return String.format("[Entities=%d, Collections=%d]",ent_cnt, col_cnt);
+                    return String.format("[Entities=%d, Collections=%d]", ent_cnt, col_cnt);
                 });
 
 
-                if (DomainBaseEntity.class.isAssignableFrom(clazz))
-                {
+                if (DomainBaseEntity.class.isAssignableFrom(clazz)) {
                     DomainBaseEntity dbe = (DomainBaseEntity) obj;
                     entityBeans.add(dbe);
                 } else {

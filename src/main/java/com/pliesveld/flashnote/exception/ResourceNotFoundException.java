@@ -11,7 +11,9 @@ public class ResourceNotFoundException extends ResourceRetrieveException {
         super(id);
     }
 
-    public HttpStatus getRepositoryStatus() { return HttpStatus.NOT_FOUND; }
+    public HttpStatus getRepositoryStatus() {
+        return HttpStatus.NOT_FOUND;
+    }
 
     @Override
     public String getRepositoryMessage() {

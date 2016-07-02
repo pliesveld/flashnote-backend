@@ -10,9 +10,9 @@ import java.util.stream.Stream;
 
 public interface RegistrationRepository extends JpaRepository<AccountRegistrationToken, Integer> {
     AccountRegistrationToken findByToken(String token);
-    
+
     @Query("select a from AccountRegistrationToken a")
     Stream<AccountRegistrationToken> findAllAsStream();
-    
+
     Stream<AccountRegistrationToken> findAllByExpirationLessThan(Instant now);
 }

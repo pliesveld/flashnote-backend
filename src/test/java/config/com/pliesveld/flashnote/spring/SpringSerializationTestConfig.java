@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@ComponentScan( basePackageClasses = com.pliesveld.flashnote.serializer.HibernateAwareObjectMapper.class)
+@ComponentScan(basePackageClasses = com.pliesveld.flashnote.serializer.HibernateAwareObjectMapper.class)
 @Import(SpringJacksonConfig.class)
 public class SpringSerializationTestConfig {
 

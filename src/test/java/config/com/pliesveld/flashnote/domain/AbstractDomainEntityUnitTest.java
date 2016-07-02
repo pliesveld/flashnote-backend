@@ -14,51 +14,48 @@ import javax.persistence.EntityManager;
 
 @Component
 @Configuration
-public class AbstractDomainEntityUnitTest extends AbstractRepositoryUnitTest implements ApplicationContextAware
-{
+public class AbstractDomainEntityUnitTest extends AbstractRepositoryUnitTest implements ApplicationContextAware {
     private static final Logger LOG = LogManager.getLogger();
 
     protected ApplicationContext ctx;
 
-    public Question questionBean()
-    {
+    public Question questionBean() {
         return ctx.getBean(Question.class);
     }
 
-    public QuestionBank questionBankBean()
-    {
+    public QuestionBank questionBankBean() {
         return ctx.getBean(QuestionBank.class);
     }
-    public Answer answerBean()
-    {
+
+    public Answer answerBean() {
         return ctx.getBean(Answer.class);
     }
-    public AttachmentText attachmentTextBean()
-    {
+
+    public AttachmentText attachmentTextBean() {
         return ctx.getBean(AttachmentText.class);
     }
-    public AttachmentBinary attachmentBinaryBean()
-    {
+
+    public AttachmentBinary attachmentBinaryBean() {
         return ctx.getBean(AttachmentBinary.class);
     }
-    public Category categoryBean()
-    {
+
+    public Category categoryBean() {
         return ctx.getBean(Category.class);
     }
-    public Deck deckBean()
-    {
+
+    public Deck deckBean() {
         return ctx.getBean(Deck.class);
     }
-    public FlashCard flashcardBean()
-    {
+
+    public FlashCard flashcardBean() {
         return ctx.getBean(FlashCard.class);
     }
-    public Student studentBean()
-    {
+
+    public Student studentBean() {
         return ctx.getBean(Student.class);
     }
-    public AccountPasswordResetToken accountPasswordResetTokenBean()
-    {
+
+    public AccountPasswordResetToken accountPasswordResetTokenBean() {
         return ctx.getBean(AccountPasswordResetToken.class);
     }
     /*
@@ -72,11 +69,12 @@ public class AbstractDomainEntityUnitTest extends AbstractRepositoryUnitTest imp
          * ctx.getBean("&entityManager"); entityManager =
          * sfb.getConfiguration().buildEntityManagerFactory();
          */
- //   }
+    //   }
 
-    void logSessionFlush(EntityManager entityManager)
-    {
-        MySessionFlushEndListener listener = (entities, collections) -> { LOG.info("Flush ended with #{} entities and col #{} collections", entities, collections); };
+    void logSessionFlush(EntityManager entityManager) {
+        MySessionFlushEndListener listener = (entities, collections) -> {
+            LOG.info("Flush ended with #{} entities and col #{} collections", entities, collections);
+        };
         entityManager.unwrap(org.hibernate.Session.class).addEventListeners(listener);
     }
 
@@ -88,8 +86,7 @@ public class AbstractDomainEntityUnitTest extends AbstractRepositoryUnitTest imp
 
 
 @FunctionalInterface
-interface MySessionFlushEndListener extends SessionEventListener
-{
+interface MySessionFlushEndListener extends SessionEventListener {
     @Override
     public abstract void flushEnd(int numberOfEntities, int numberOfCollections);
 
@@ -139,38 +136,50 @@ interface MySessionFlushEndListener extends SessionEventListener
     }
 
     @Override
-    public default void jdbcExecuteBatchStart(){}
+    public default void jdbcExecuteBatchStart() {
+    }
 
     @Override
-    public default void jdbcExecuteBatchEnd(){}
+    public default void jdbcExecuteBatchEnd() {
+    }
 
     @Override
-    public default void cachePutStart(){}
+    public default void cachePutStart() {
+    }
 
     @Override
-    public default void cachePutEnd(){}
+    public default void cachePutEnd() {
+    }
 
     @Override
-    public default void cacheGetStart(){}
+    public default void cacheGetStart() {
+    }
 
     @Override
-    public default void cacheGetEnd(boolean hit){}
+    public default void cacheGetEnd(boolean hit) {
+    }
 
     @Override
-    public default void flushStart(){}
+    public default void flushStart() {
+    }
 
     @Override
-    public default void partialFlushStart(){}
+    public default void partialFlushStart() {
+    }
 
     @Override
-    public default void partialFlushEnd(int numberOfEntities, int numberOfCollections){}
+    public default void partialFlushEnd(int numberOfEntities, int numberOfCollections) {
+    }
 
     @Override
-    public default void dirtyCalculationStart(){}
+    public default void dirtyCalculationStart() {
+    }
 
     @Override
-    public default void dirtyCalculationEnd(boolean dirty){}
+    public default void dirtyCalculationEnd(boolean dirty) {
+    }
 
     @Override
-    public default void end(){}
+    public default void end() {
+    }
 }

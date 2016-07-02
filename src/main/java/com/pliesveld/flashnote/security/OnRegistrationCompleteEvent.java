@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationEvent;
 
 public class OnRegistrationCompleteEvent extends ApplicationEvent {
     private final Student student;
+
     public OnRegistrationCompleteEvent(final Student student) {
         super(student);
         this.student = student;

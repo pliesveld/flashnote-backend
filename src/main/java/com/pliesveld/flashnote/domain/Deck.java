@@ -20,12 +20,11 @@ import java.util.Objects;
 
 
 @Entity
-@EntityListeners(value = { LogEntityListener.class })
+@EntityListeners(value = {LogEntityListener.class})
 @Table(name = "DECK",
-        indexes = { @Index(name = "IDX_DECK_OWNER_ID",
-                           columnList = "OWNER_ID") })
-public class Deck extends DomainBaseEntity<Integer> implements Serializable
-{
+        indexes = {@Index(name = "IDX_DECK_OWNER_ID",
+                columnList = "OWNER_ID")})
+public class Deck extends DomainBaseEntity<Integer> implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "DECK_ID")
@@ -41,10 +40,10 @@ public class Deck extends DomainBaseEntity<Integer> implements Serializable
 
             inverseForeignKey = @ForeignKey(name = "FK_FLASHCARD"),
             inverseJoinColumns = {
-                            @JoinColumn(table = "QUESTION",  name = "QUESTION_ID", foreignKey = @ForeignKey(name = "FK_DECK_FLASHCARD_QUESTION_ID")),
-                            @JoinColumn(table = "ANSWER",    name = "ANSWER_ID",   foreignKey = @ForeignKey(name = "FK_DECK_FLASHCARD_ANSWER_ID"))
+                    @JoinColumn(table = "QUESTION", name = "QUESTION_ID", foreignKey = @ForeignKey(name = "FK_DECK_FLASHCARD_QUESTION_ID")),
+                    @JoinColumn(table = "ANSWER", name = "ANSWER_ID", foreignKey = @ForeignKey(name = "FK_DECK_FLASHCARD_ANSWER_ID"))
             },
-            uniqueConstraints = {@UniqueConstraint(name = "UNIQUE_FLASHCARD",columnNames = {"QUESTION_ID","ANSWER_ID"})}
+            uniqueConstraints = {@UniqueConstraint(name = "UNIQUE_FLASHCARD", columnNames = {"QUESTION_ID", "ANSWER_ID"})}
 
     )
     @JsonView(Views.SummaryWithCollections.class)
@@ -81,8 +80,7 @@ public class Deck extends DomainBaseEntity<Integer> implements Serializable
     public Deck(final String description, FlashCard... cards) {
         this(description);
 
-        for (FlashCard fc : cards)
-        {
+        for (FlashCard fc : cards) {
             flashcards.add(fc);
         }
     }
@@ -96,8 +94,7 @@ public class Deck extends DomainBaseEntity<Integer> implements Serializable
     public Deck(final Category category, final String description, FlashCard... cards) {
         this(category, description);
 
-        for (FlashCard fc : cards)
-        {
+        for (FlashCard fc : cards) {
             flashcards.add(fc);
         }
     }
@@ -110,13 +107,11 @@ public class Deck extends DomainBaseEntity<Integer> implements Serializable
         this.description = description;
     }
 
-    public Integer getId()
-    {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id)
-    {
+    public void setId(Integer id) {
         this.id = id;
     }
 

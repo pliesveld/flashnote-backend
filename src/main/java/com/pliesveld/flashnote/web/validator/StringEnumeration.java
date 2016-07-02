@@ -11,13 +11,15 @@ import static java.lang.annotation.ElementType.*;
 
 @Documented
 @Constraint(validatedBy = StringEnumerationValidator.class)
-@Target({ METHOD, FIELD, ANNOTATION_TYPE, PARAMETER, CONSTRUCTOR })
+@Target({METHOD, FIELD, ANNOTATION_TYPE, PARAMETER, CONSTRUCTOR})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface StringEnumeration {
 
-  String message() default "{com.pliesveld.flashnote.web.validator.StringEnumeration.message}";
-  Class<?>[] groups() default {};
-  Class<? extends Payload>[] payload() default {};
+    String message() default "{com.pliesveld.flashnote.web.validator.StringEnumeration.message}";
 
-  Class<? extends Enum<?>> enumClass();
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
+
+    Class<? extends Enum<?>> enumClass();
 }

@@ -43,9 +43,8 @@ public class AdministrationController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/student/create", method = RequestMethod.POST)
-    public ResponseEntity<Void> createStudent(@Valid @RequestBody NewStudentRequestJson studentdto)
-    {
-        Student student = registrationService.createStudent(studentdto.getName(),studentdto.getEmail(),studentdto.getPassword());
+    public ResponseEntity<Void> createStudent(@Valid @RequestBody NewStudentRequestJson studentdto) {
+        Student student = registrationService.createStudent(studentdto.getName(), studentdto.getEmail(), studentdto.getPassword());
 
         LOG.info("User created account: " + student);
 
@@ -57,13 +56,12 @@ public class AdministrationController {
                 .toUri();
 
         responseHeaders.setLocation(newStudentUri);
-        return new ResponseEntity<>(null,responseHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/students", method = RequestMethod.GET)
-    public ResponseEntity<Iterable<Student>> getAllStudents()
-    {
+    public ResponseEntity<Iterable<Student>> getAllStudents() {
         LOG.info("Retrieving list of all students");
         Iterable<Student> allStudents = adminService.findAllStudent();
         return new ResponseEntity<>(allStudents, HttpStatus.OK);
@@ -72,16 +70,14 @@ public class AdministrationController {
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/remove/attachment/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
-    public void deleteAttachment(@PathVariable("id") int id)
-    {
+    public void deleteAttachment(@PathVariable("id") int id) {
         attachmentService.removeAttachmentById(id);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/remove/student/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
-    public void deleteStudent(@PathVariable("id") int id)
-    {
+    public void deleteStudent(@PathVariable("id") int id) {
         adminService.deleteStudent(id);
     }
 
@@ -89,8 +85,7 @@ public class AdministrationController {
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/questionbanks", method = RequestMethod.GET)
     @JsonView(Views.Internal.class)
-    public ResponseEntity<?> retrieveAllDecks()
-    {
+    public ResponseEntity<?> retrieveAllDecks() {
         return ResponseEntity.ok(deckService.findAllDecks());
     }
 
@@ -98,8 +93,7 @@ public class AdministrationController {
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/decks", method = RequestMethod.GET)
     @JsonView(Views.Internal.class)
-    public ResponseEntity<?> retrieveAllQuestionBanks()
-    {
+    public ResponseEntity<?> retrieveAllQuestionBanks() {
         return ResponseEntity.ok(bankService.findAllQuestionBanks());
     }
 

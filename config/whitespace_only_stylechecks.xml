@@ -5,12 +5,11 @@
 
 <module name="Checker">
     <property name="charset" value="UTF-8"/>
-
     <property name="severity" value="warning"/>
 
-    <module name="SuppressionFilter">
-        <property name="file" value="suppress_generated.xml"/>
-    </module>
+    <!--<module name="SuppressionFilter">-->
+        <!--<property name="file" value="suppress_generated.xml"/>-->
+    <!--</module>-->
 
     <module name="FileTabCharacter">
         <property name="eachLine" value="true"/>
@@ -21,6 +20,15 @@
     </module>
 
     <module name="TreeWalker">
+        <module name="LeftCurly">
+            <property name="option" value="eol"/>
+            <property name="tokens" value="CLASS_DEF,INTERFACE_DEF,ANNOTATION_DEF, ENUM_DEF"/>
+        </module>
+        <module name="RightCurly"/>
+        <module name="RightCurly">
+            <property name="option" value="alone"/>
+            <property name="tokens" value="CLASS_DEF"/>
+        </module>
         <module name="WhitespaceAround">
             <property name="allowEmptyConstructors" value="true"/>
             <property name="allowEmptyMethods" value="true"/>
@@ -32,10 +40,26 @@
              <message key="ws.notPreceded"
              value="WhitespaceAround: ''{0}'' is not preceded with whitespace."/>
         </module>
+        <module name="ParenPad">
+            <property name="option" value="nospace"/>
+        </module>
         <module name="NoWhitespaceAfter">
             <property name="tokens" value="INC, DEC, UNARY_MINUS, UNARY_PLUS, BNOT, LNOT, DOT, INDEX_OP"/>
             <message key="ws.followed"
              value="NoWhitespaceAfter ''{0}'' is followed by whitespace."/>
+        </module>
+        <module name="EmptyLineSeparator">
+            <property name="allowNoEmptyLineBetweenFields" value="true"/>
+            <property name="tokens" value="PACKAGE_DEF, IMPORT"/>
+            <!--<property name="tokens" value="PACKAGE_DEF, IMPORT, CLASS_DEF, INTERFACE_DEF, ENUM_DEF, STATIC_INIT, INSTANCE_INIT, CTOR_DEF, VARIABLE_DEF"/>-->
+        </module>
+        <module name="SeparatorWrap">
+            <property name="tokens" value="DOT"/>
+            <property name="option" value="nl"/>
+        </module>
+        <module name="SeparatorWrap">
+            <property name="tokens" value="COMMA"/>
+            <property name="option" value="EOL"/>
         </module>
         <module name="GenericWhitespace">
             <message key="ws.followed"
@@ -47,7 +71,6 @@
              <message key="ws.notPreceded"
              value="GenericWhitespace ''{0}'' is not preceded with whitespace."/>
         </module>
-
         <module name="MethodParamPad">
             <property name="tokens" value="CTOR_DEF, LITERAL_NEW, METHOD_CALL, METHOD_DEF, SUPER_CTOR_CALL"/>
              <message key="ws.preceded"
@@ -55,15 +78,6 @@
              <message key="ws.notPreceded"
              value="MethodParamPad ''{0}'' is not preceded with whitespace."/>
         </module>
-
     </module>
-
-<!--  
-        <module name="EmptyLineSeparator">
-            <property name="allowNoEmptyLineBetweenFields" value="true"/>
-            <property name="tokens" value="PACKAGE_DEF, IMPORT, CLASS_DEF, INTERFACE_DEF, ENUM_DEF, STATIC_INIT, INSTANCE_INIT, CTOR_DEF, VARIABLE_DEF"/>
-        </module>
--->
-
 </module>
 

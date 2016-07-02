@@ -33,14 +33,14 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public Notification sendSystemMessage(final int student_id, final String message) {
         Student student = verifyStudent(student_id);
-        Notification notification = new Notification(NotificationType.SYSTEM_INFO, student,message);
+        Notification notification = new Notification(NotificationType.SYSTEM_INFO, student, message);
         return notificationRepository.save(notification);
     }
 
     @Override
     public Notification sendSystemErrorMessage(final int student_id, final String message) {
         Student student = verifyStudent(student_id);
-        Notification notification = new Notification(student,message);
+        Notification notification = new Notification(student, message);
         return notificationRepository.save(notification);
     }
 

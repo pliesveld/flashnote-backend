@@ -11,14 +11,16 @@ import javax.persistence.criteria.SetJoin;
 
 final public class QuestionBankSpecification {
     private static final Logger LOG = LogManager.getLogger();
-    private QuestionBankSpecification() {}
+
+    private QuestionBankSpecification() {
+    }
 
     public static Specification<QuestionBank> descriptionContainsIgnoreCase(String searchTerm) {
 
         return (root, query, cb) -> {
             String containsLikePattern = getContainsLikePattern(searchTerm);
 
-            SetJoin<QuestionBank,Question> questionBankQuestionsJoin = root.join(QuestionBank_.questions);
+            SetJoin<QuestionBank, Question> questionBankQuestionsJoin = root.join(QuestionBank_.questions);
             Expression<String> contentsExp = questionBankQuestionsJoin.<String>get(Question_.content);
 
 //            LOG.debug("SetJoin : {}", questionBankQuestionsJoin);
@@ -26,9 +28,9 @@ final public class QuestionBankSpecification {
 
             query.distinct(true);
 
-           return
-                   cb.or(cb.like(cb.lower(root.<String>get(QuestionBank_.description)), containsLikePattern),
-                           cb.like(cb.lower(contentsExp), containsLikePattern));
+            return
+                    cb.or(cb.like(cb.lower(root.<String>get(QuestionBank_.description)), containsLikePattern),
+                            cb.like(cb.lower(contentsExp), containsLikePattern));
         };
     }
 

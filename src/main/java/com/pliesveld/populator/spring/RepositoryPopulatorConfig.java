@@ -15,8 +15,7 @@ public class RepositoryPopulatorConfig {
 
     @Autowired
     @Bean(name = "populator")
-    public CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean(RepositorySettings repositorySettings)
-    {
+    public CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean(RepositorySettings repositorySettings) {
         CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean = new CustomRepositoryPopulatorFactoryBean();
         Resource[] resources = repositorySettings.getResources();
         if (resources == null) {

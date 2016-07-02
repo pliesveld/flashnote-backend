@@ -24,11 +24,11 @@ public class RateLimitServiceImpl implements RateLimitService {
                 .expireAfterAccess(3, TimeUnit.SECONDS)
                 .removalListener((notification) -> LOG.debug("Removing cached key {}", notification.getKey()))
                 .build(new CacheLoader<String, Integer>() {
-            @Override
-            public Integer load(final String key) {
-                return 1;
-            }
-        });
+                    @Override
+                    public Integer load(final String key) {
+                        return 1;
+                    }
+                });
     }
 
     @Override
@@ -40,7 +40,7 @@ public class RateLimitServiceImpl implements RateLimitService {
             ret = false;
         }
 
-        LOG.debug("Rate limiting access check for {} has returned {}",key,ret);
+        LOG.debug("Rate limiting access check for {} has returned {}", key, ret);
         return ret;
     }
 
@@ -55,6 +55,6 @@ public class RateLimitServiceImpl implements RateLimitService {
             attempts = 0;
         }
         attempts++;
-        attemptsCache.put(key,attempts);
+        attemptsCache.put(key, attempts);
     }
 }

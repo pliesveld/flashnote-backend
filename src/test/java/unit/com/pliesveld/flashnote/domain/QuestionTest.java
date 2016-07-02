@@ -36,25 +36,23 @@ final public class QuestionTest extends com.pliesveld.flashnote.domain.AbstractT
     }
 
     @Test
-    public void whenContextLoad_thenCorrect()
-    {
+    public void whenContextLoad_thenCorrect() {
         assertNotNull(que_id);
         assertQuestionRepositoryCount(1);
     }
 
 
     @Test
-    public void givenClearedContext_whenProxy_thenCorrect()
-    {
+    public void givenClearedContext_whenProxy_thenCorrect() {
         entityManager.clear();
         Question question = questionRepository.getOne(que_id);
         Question question2 = questionRepository.getOne(que_id);
         assertNotNull(question);
-        assertEquals(question,question2);
+        assertEquals(question, question2);
     }
+
     @Test
-    public void givenClearedContext_whenProxyGetId_thenCorrect()
-    {
+    public void givenClearedContext_whenProxyGetId_thenCorrect() {
         entityManager.clear();
         Question question = questionRepository.getOne(que_id);
         assertNotNull(question);
@@ -62,8 +60,7 @@ final public class QuestionTest extends com.pliesveld.flashnote.domain.AbstractT
     }
 
     @Test
-    public void givenClearedContext_whenLoad_thenCorrect()
-    {
+    public void givenClearedContext_whenLoad_thenCorrect() {
         entityManager.clear();
         Question question = questionRepository.findOne(que_id);
         assertNotNull(question);

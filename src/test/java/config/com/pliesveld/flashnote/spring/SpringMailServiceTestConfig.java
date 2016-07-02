@@ -19,14 +19,12 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @Import({SpringMailConfig.class, SpringDataConfig.class, SpringAuditConfig.class, PersistenceContext.class})
 @ComponentScan(basePackageClasses = FlashNoteService.class)
-@PropertySource("classpath:test-mail.properties" )
-public class SpringMailServiceTestConfig
-{
+@PropertySource("classpath:test-mail.properties")
+public class SpringMailServiceTestConfig {
 
     @Bean
     @ConditionalOnMissingBean(PasswordEncoder.class)
-    public PasswordEncoder passwordEncoder()
-    {
+    public PasswordEncoder passwordEncoder() {
         return org.springframework.security.crypto.password.NoOpPasswordEncoder.getInstance();
     }
 

@@ -31,8 +31,7 @@ public class SpringMailConfig {
 
     @Bean
     @Qualifier("accountPasswordResetConfirmationMessage")
-    public SimpleMailMessage templatePasswordResetConfirmationMessage()
-    {
+    public SimpleMailMessage templatePasswordResetConfirmationMessage() {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(this.systemEmailAddress());
         message.setReplyTo(this.systemEmailAddress());
@@ -55,8 +54,7 @@ public class SpringMailConfig {
     }
 
     @Bean
-    String systemEmailAddress()
-    {
+    String systemEmailAddress() {
         return "flashnote.web@gmail.com";
     }
 }

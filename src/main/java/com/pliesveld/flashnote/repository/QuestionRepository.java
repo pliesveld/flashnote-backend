@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface QuestionRepository extends AbstractStatementRepository<Question>, JpaRepository<Question,Integer> {
+public interface QuestionRepository extends AbstractStatementRepository<Question>, JpaRepository<Question, Integer> {
     List<Question> findByAttachmentId(int id);
 }

@@ -7,8 +7,8 @@ import org.hibernate.Hibernate;
 import javax.persistence.EntityManager;
 
 /**
-* @author Patrick Liesveld
-*/
+ * @author Patrick Liesveld
+ */
 public enum EMOP_ASSERT implements EMOP {
     CONTAINS_ENTITY_TRUE {
         @Override
@@ -45,12 +45,12 @@ public enum EMOP_ASSERT implements EMOP {
         public void apply(EntityManager entityManager, DomainBaseEntity entity) {
             Asserts.check(!entityManager.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(entity), "entity should not be loaded");
         }
-    }
-    ;
+    };
 
     public void apply(EntityManager entityManager) {
         throw new IllegalStateException("Need domain entity to apply " + this.toString());
     }
+
     public abstract void apply(EntityManager entityManager, DomainBaseEntity entity);
 
 }

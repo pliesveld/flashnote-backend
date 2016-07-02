@@ -12,13 +12,14 @@ public abstract class ResourceRetrieveException extends ResourceRepositoryExcept
         super("Resource not found");
         this.id = id;
     }
-    public Serializable getRepositoryId()
-    {
+
+    public Serializable getRepositoryId() {
         return id;
     }
 
 
     abstract public String getRepositoryMessage();
+
     abstract public HttpStatus getRepositoryStatus();
 
 

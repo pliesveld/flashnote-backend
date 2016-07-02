@@ -43,7 +43,7 @@ import static org.hamcrest.Matchers.notNullValue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles({Profiles.INTEGRATION_TEST, Profiles.AUTH})
-@SpringApplicationConfiguration(classes = {SpringRootConfig.class, SpringCacheConfig.class, SpringSecurityConfig.class, SpringWebConfig.class, SpringDataConfig.class, SpringJacksonConfig.class, SpringMailConfig.class ,PersistenceContext.class, AuthTokenTests.class})
+@SpringApplicationConfiguration(classes = {SpringRootConfig.class, SpringCacheConfig.class, SpringSecurityConfig.class, SpringWebConfig.class, SpringDataConfig.class, SpringJacksonConfig.class, SpringMailConfig.class, PersistenceContext.class, AuthTokenTests.class})
 @WebAppConfiguration
 @IntegrationTest
 @EnableAutoConfiguration
@@ -71,17 +71,18 @@ public class AuthTokenTests {
 
         }
     }
-/*
-    @Bean
-    EmbeddedServletInitializerListener EmbeddedServletInitializerListenerImpl()
-    {
-        return new EmbeddedServletInitializerListener();
-    }
+
+    /*
+        @Bean
+        EmbeddedServletInitializerListener EmbeddedServletInitializerListenerImpl()
+        {
+            return new EmbeddedServletInitializerListener();
+        }
 
 
-    RestAssured.config = RestAssuredConfig.config().objectMapperConfig(new ObjectMapperConfig(ObjectMapperType.JACKSON_2));
+        RestAssured.config = RestAssuredConfig.config().objectMapperConfig(new ObjectMapperConfig(ObjectMapperType.JACKSON_2));
 
-*/
+    */
     @Autowired
     Environment environment;
 
@@ -107,10 +108,9 @@ public class AuthTokenTests {
 
 
     @Before
-    public void saveUser()
-    {
+    public void saveUser() {
         if (null == studentRepository.findOneByEmail("student@example.com"))
-            registrationService.createStudent("newuser","student@example.com","password");
+            registrationService.createStudent("newuser", "student@example.com", "password");
 
         if (token == null) {
 
@@ -126,21 +126,20 @@ public class AuthTokenTests {
                     .contentType(ContentType.JSON)
                     .when().post("/auth")
                     .then()
-                    .log().ifStatusCodeMatches(isOneOf(400,401,402,403))
+                    .log().ifStatusCodeMatches(isOneOf(400, 401, 402, 403))
                     .statusCode(200)
                     .body("token", notNullValue())
                     .extract().path("token")
-                    ;
+            ;
         }
 
         stopWatch.start();
     }
 
     @After
-    public void afterTest()
-    {
+    public void afterTest() {
         stopWatch.stop();
-        LOG.debug("Authentication took: {}ms",stopWatch.getLastTaskTimeMillis());
+        LOG.debug("Authentication took: {}ms", stopWatch.getLastTaskTimeMillis());
     }
 
     @Test
@@ -149,7 +148,7 @@ public class AuthTokenTests {
 
         Authorities authorities = RestAssured.given().header("X-AUTH-TOKEN", token)
                 .when()
-                    .get("/user")
+                .get("/user")
                 .then()
                 .statusCode(200)
                 .body("username", notNullValue())

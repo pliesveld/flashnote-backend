@@ -109,8 +109,8 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public FlashCard createFlashCard(final Question question, final Answer answer) {
-                   
-        final FlashCard fc = new FlashCard(question,answer);
+
+        final FlashCard fc = new FlashCard(question, answer);
         return flashCardRepository.save(fc);
     }
 
@@ -119,8 +119,7 @@ public class CardServiceImpl implements CardService {
         if (!questionRepository.exists(questionId))
             throw new QuestionNotFoundException(questionId);
 
-        if (!answerRepository.exists(answer.getId()))
-        {
+        if (!answerRepository.exists(answer.getId())) {
             answer = answerRepository.save(answer);
         } else {
             final FlashCard fc = flashCardRepository.findOne(new FlashCardPrimaryKey(questionId, answer.getId()));
@@ -129,7 +128,7 @@ public class CardServiceImpl implements CardService {
         }
 
         final Question question = questionRepository.findOne(questionId);
-        return createFlashCard(question,answer);
+        return createFlashCard(question, answer);
     }
 
 }

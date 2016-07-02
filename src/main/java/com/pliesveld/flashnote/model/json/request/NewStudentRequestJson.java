@@ -15,15 +15,18 @@ import static com.pliesveld.flashnote.schema.Constants.*;
  * Subset of student model for account creation
  */
 
-public class NewStudentRequestJson extends ModelBase implements JsonWebRequestSerializable
-{
-    @NotNull @Size(min = MIN_ACCOUNT_NAME_LENGTH, max = MAX_ACCOUNT_NAME_LENGTH)
+public class NewStudentRequestJson extends ModelBase implements JsonWebRequestSerializable {
+    @NotNull
+    @Size(min = MIN_ACCOUNT_NAME_LENGTH, max = MAX_ACCOUNT_NAME_LENGTH)
     private String name;
 
-    @NotNull @Email @Size(min =  MIN_ACCOUNT_EMAIL_LENGTH, max = MAX_ACCOUNT_EMAIL_LENGTH)
+    @NotNull
+    @Email
+    @Size(min = MIN_ACCOUNT_EMAIL_LENGTH, max = MAX_ACCOUNT_EMAIL_LENGTH)
     private String email;
 
-    @NotNull @Size(min = MIN_ACCOUNT_PASSWORD_LENGTH, max = MAX_ACCOUNT_PASSWORD_LENGTH)
+    @NotNull
+    @Size(min = MIN_ACCOUNT_PASSWORD_LENGTH, max = MAX_ACCOUNT_PASSWORD_LENGTH)
     private String password;
 
     @NotNull
@@ -44,13 +47,11 @@ public class NewStudentRequestJson extends ModelBase implements JsonWebRequestSe
         return newStudent;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -70,7 +71,11 @@ public class NewStudentRequestJson extends ModelBase implements JsonWebRequestSe
         this.password = password;
     }
 
-    public AccountRole getRole() { return this.role; }
+    public AccountRole getRole() {
+        return this.role;
+    }
 
-    public void setRole(AccountRole role) { this.role = role; }
+    public void setRole(AccountRole role) {
+        this.role = role;
+    }
 }

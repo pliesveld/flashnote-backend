@@ -26,7 +26,7 @@ public interface BankService {
 
     Page<QuestionBank> browseBanksWithSpec(final Specification<QuestionBank> spec, final Pageable pageRequest);
 
-    QuestionBank findQuestionBankById(final int bankId)   throws QuestionBankNotFoundException;
+    QuestionBank findQuestionBankById(final int bankId) throws QuestionBankNotFoundException;
 
     Page<QuestionBank> findBySearchTerm(final String searchTerm, final Pageable pageRequest);
 
@@ -36,7 +36,7 @@ public interface BankService {
     QuestionBank createQuestionBank(final QuestionBank questionBank);
 
     @Transactional
-    void deleteBank(final int bankId)             throws QuestionBankNotFoundException;
+    void deleteBank(final int bankId) throws QuestionBankNotFoundException;
 
     @Transactional
     void updateQuestionBankAddQuestion(final int bankId, @NotNull Question question);

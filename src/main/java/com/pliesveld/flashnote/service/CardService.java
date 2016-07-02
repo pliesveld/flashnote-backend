@@ -16,19 +16,19 @@ import java.util.List;
 public interface CardService {
 
     Question findQuestionById(final int id);
-    
+
     Answer findAnswerById(final int id);
-    
+
     AbstractStatement findStatementById(final int id);
 
     Long countQuestions();
-    
+
     Long countAnswers();
-    
+
     Long countFlashCards();
-    
+
     Long countDecks();
-    
+
     Long countQuestionBanks();
 
     List<FlashCard> findFlashCardsByContainingQuestionId(final int questionId) throws QuestionNotFoundException;

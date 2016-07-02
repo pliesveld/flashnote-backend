@@ -1,7 +1,6 @@
 package com.pliesveld.flashnote.exception;
 
-public class AudioFormatNotSupportedException extends Exception
-{
+public class AudioFormatNotSupportedException extends Exception {
     public AudioFormatNotSupportedException() {
     }
 

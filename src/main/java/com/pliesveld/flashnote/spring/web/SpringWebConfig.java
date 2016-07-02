@@ -50,7 +50,7 @@ import java.util.List;
         "com.pliesveld.flashnote.web.validator"
 
 })
-@PropertySource(value = { "classpath:application-local.properties" })
+@PropertySource(value = {"classpath:application-local.properties"})
 public class SpringWebConfig extends WebMvcConfigurerAdapter {
     private static final Logger LOG = LogManager.getLogger();
 
@@ -66,8 +66,7 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public MethodValidationPostProcessor methodValidationPostProcessor()
-    {
+    public MethodValidationPostProcessor methodValidationPostProcessor() {
         MethodValidationPostProcessor processor
                 = new MethodValidationPostProcessor();
 
@@ -115,8 +114,7 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public RateLimitingHandlerInterceptor rateLimitingInterceptor()
-    {
+    public RateLimitingHandlerInterceptor rateLimitingInterceptor() {
         return new RateLimitingHandlerInterceptor();
     }
 
@@ -135,20 +133,23 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
 //            }
 //        }
 //    }
-/**  UGLY HACK **/
+
+    /**
+     * UGLY HACK *
+     */
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         LOG.debug(Markers.OBJECT_MAPPER_INIT, "Scanning SpringMVC HttpMessageConverters");
 
         int i = 0;
         for (HttpMessageConverter<?> converter : converters) {
-            LOG.debug(Markers.OBJECT_MAPPER_INIT, "Converter {}: {} ",++i, converter);
+            LOG.debug(Markers.OBJECT_MAPPER_INIT, "Converter {}: {} ", ++i, converter);
             if (converter instanceof MappingJackson2HttpMessageConverter) {
                 MappingJackson2HttpMessageConverter jsonMessageConverter = (MappingJackson2HttpMessageConverter) converter;
                 ObjectMapper objectMapper = jsonMessageConverter.getObjectMapper();
                 LOG.debug(Markers.OBJECT_MAPPER_INIT, "ObjectMapper settings for MappingJackson2HttpMessageConverter");
                 ObjectMapperDebug.debug(WebMvcConfigurerAdapter.class, objectMapper);
-              //  break;
+                //  break;
             }
         }
     }

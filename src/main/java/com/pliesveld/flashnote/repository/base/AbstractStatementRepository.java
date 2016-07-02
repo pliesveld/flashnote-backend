@@ -12,8 +12,7 @@ import java.util.stream.Stream;
 
 @NoRepositoryBean
 public interface AbstractStatementRepository<T extends AbstractStatement>
-        extends Repository<T,Integer>, JpaSpecificationExecutor<T>
-{
+        extends Repository<T, Integer>, JpaSpecificationExecutor<T> {
     @Query("select t from #{#entityName} t where t.id = ?1")
     T findOneById(int id);
 

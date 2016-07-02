@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextHierarchy({
-        @ContextConfiguration(name = "REPOSITORY", classes = { SimpleQuestionBanksRepositoryTest.class }, loader = AnnotationConfigContextLoader.class)
+        @ContextConfiguration(name = "REPOSITORY", classes = {SimpleQuestionBanksRepositoryTest.class}, loader = AnnotationConfigContextLoader.class)
 })
 @DirtiesContext
 public class SimpleQuestionBanksRepositoryTest extends AbstractPopulatedRepositoryUnitTest {
@@ -33,13 +33,12 @@ public class SimpleQuestionBanksRepositoryTest extends AbstractPopulatedReposito
 
     @Bean
     public RepositorySettings repositorySettings() {
-        RepositorySettings repositorySettings = new RepositorySettings(new Resource[] {new ClassPathResource("test-data-question-bank.json", this.getClass()) });
+        RepositorySettings repositorySettings = new RepositorySettings(new Resource[]{new ClassPathResource("test-data-question-bank.json", this.getClass())});
         return repositorySettings;
     }
 
     @Test
-    public void whenContextLoad_thenCorrect()
-    {
+    public void whenContextLoad_thenCorrect() {
         long que_count = questionRepository.count();
         long cat_count = categoryRepository.count();
         long bank_count = questionBankRepository.count();
@@ -65,7 +64,9 @@ public class SimpleQuestionBanksRepositoryTest extends AbstractPopulatedReposito
         LOG_SQL.debug("QuestionBanks returned: {}", qb.size());
 
         qb.forEach(LOG_SQL::debug);
-        qb.forEach((bank) -> { debug(bank); });
+        qb.forEach((bank) -> {
+            debug(bank);
+        });
 
     }
 

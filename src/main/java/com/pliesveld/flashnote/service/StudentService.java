@@ -18,21 +18,22 @@ import java.util.List;
 public interface StudentService {
 
     Student findByEmail(@NotNull String email);
+
     Student findByName(@NotNull String name);
 
     @Transactional
-    Student delete(final int id)                        throws StudentNotFoundException;
+    Student delete(final int id) throws StudentNotFoundException;
 
-    Student findStudentById(final int id)        throws StudentNotFoundException;
+    Student findStudentById(final int id) throws StudentNotFoundException;
 
     @NotNull
-    Long                count();
+    Long count();
 
     @NotNull
     Page<Student> findAll(final Pageable page);
 
     @NotNull
-    List<Deck>          findDecksByOwner(final int id);
+    List<Deck> findDecksByOwner(final int id);
 
     @NotNull
     List<AbstractStatement> findStatementsBy(final Student student);

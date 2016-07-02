@@ -30,8 +30,7 @@ public class StudentController {
     @Autowired
     private AdminService adminService;
 
-    private Student verifyStudent(int id) throws StudentNotFoundException
-    {
+    private Student verifyStudent(int id) throws StudentNotFoundException {
         Student student = studentService.findStudentById(id);
         if (student == null)
             throw new StudentNotFoundException(id);
@@ -41,32 +40,28 @@ public class StudentController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> removeStudent(@PathVariable Integer id)
-    {
+    public ResponseEntity<?> removeStudent(@PathVariable Integer id) {
         adminService.deleteStudent(id);
-        return new ResponseEntity<>(null,HttpStatus.OK);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllStudent(Pageable page)
-    {
+    public ResponseEntity<?> getAllStudent(Pageable page) {
         return ResponseEntity.ok(studentService.findAll(page));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getStudent(@PathVariable Integer id)
-    {
+    public ResponseEntity<?> getStudent(@PathVariable Integer id) {
         LOG.info("Getting student by id " + id);
         Student student = verifyStudent(id);
         StudentResponseJson existingStudent = StudentResponseJson.convert(student);
-        return new ResponseEntity<>(existingStudent,HttpStatus.OK);
+        return new ResponseEntity<>(existingStudent, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}/statements", method = RequestMethod.GET)
     @ResponseBody
     @ResponseStatus(code = HttpStatus.OK)
-    public List<AbstractStatement> retrieveStudentStatements(@PathVariable("id") int student_id)
-    {
+    public List<AbstractStatement> retrieveStudentStatements(@PathVariable("id") int student_id) {
         Student student = verifyStudent(student_id);
         return studentService.findStatementsBy(student);
     }
@@ -74,8 +69,7 @@ public class StudentController {
     @RequestMapping(value = "/{id}/decks", method = RequestMethod.GET)
     @ResponseBody
     @ResponseStatus(code = HttpStatus.OK)
-    public List<Deck> retrieveStudentDecks(@PathVariable("id") int student_id)
-    {
+    public List<Deck> retrieveStudentDecks(@PathVariable("id") int student_id) {
         return studentService.findDecksByOwner(student_id);
     }
 

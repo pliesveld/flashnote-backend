@@ -36,8 +36,7 @@ public class QuestionAttachmentTextTest extends AbstractDomainEntityUnitTest {
     Serializable question_id;
 
     @Before
-    public void setupEntities()
-    {
+    public void setupEntities() {
         Question que = new Question("que?");
         que = questionRepository.save(que);
         assertNotNull(que);
@@ -55,21 +54,19 @@ public class QuestionAttachmentTextTest extends AbstractDomainEntityUnitTest {
     }
 
     @Test
-    public void whenContextLoad_thenCorrect()
-    {
+    public void whenContextLoad_thenCorrect() {
         assertNotNull(question_id);
         assertNotNull(attachment_id);
-        assertNotNull(entityManager.find(Question.class,question_id));
+        assertNotNull(entityManager.find(Question.class, question_id));
 
-        assertNotNull(entityManager.find(AbstractAttachment.class,attachment_id));
+        assertNotNull(entityManager.find(AbstractAttachment.class, attachment_id));
 
-        assertNotNull(entityManager.find(Question.class,question_id).getAttachment());
+        assertNotNull(entityManager.find(Question.class, question_id).getAttachment());
         assertEquals(attachment_id, entityManager.find(Question.class, question_id).getAttachment().getId());
     }
 
     @Test
-    public void givenTextAttachment_whenLoadingQuestionById()
-    {
+    public void givenTextAttachment_whenLoadingQuestionById() {
         Question question = questionRepository.findOneById((Integer) question_id);
         assertNotNull(question);
         assertTrue(Hibernate.isInitialized(question));
@@ -77,8 +74,7 @@ public class QuestionAttachmentTextTest extends AbstractDomainEntityUnitTest {
     }
 
     @Test
-    public void givenTextAttachment_whenLazyLoadingQuestionById()
-    {
+    public void givenTextAttachment_whenLazyLoadingQuestionById() {
         Question question = questionRepository.findOne((Integer) question_id);
         assertNotNull(question);
         assertTrue(Hibernate.isInitialized(question));
@@ -87,8 +83,7 @@ public class QuestionAttachmentTextTest extends AbstractDomainEntityUnitTest {
 
 
     @Test
-    public void givenTextAttachment_whenLoading_andReferencingById()
-    {
+    public void givenTextAttachment_whenLoading_andReferencingById() {
         Question question = questionRepository.findOneById((Integer) question_id);
         assertNotNull(question);
         assertTrue(Hibernate.isInitialized(question));
@@ -99,8 +94,7 @@ public class QuestionAttachmentTextTest extends AbstractDomainEntityUnitTest {
     }
 
     @Test
-    public void givenTextAttachment_whenDeletingAttachment_thenFKViolation()
-    {
+    public void givenTextAttachment_whenDeletingAttachment_thenFKViolation() {
         thrown.expect(PersistenceException.class);
         attachmentRepository.delete((Integer) attachment_id);
     }
@@ -115,8 +109,7 @@ public class QuestionAttachmentTextTest extends AbstractDomainEntityUnitTest {
 
 
     @Test
-    public void givenTextAttachment_whenLoading_andIniitializingHibernateProxy()
-    {
+    public void givenTextAttachment_whenLoading_andIniitializingHibernateProxy() {
         Question question = questionRepository.findOneById((Integer) question_id);
         assertNotNull(question);
         assertTrue(Hibernate.isInitialized(question));
@@ -126,8 +119,7 @@ public class QuestionAttachmentTextTest extends AbstractDomainEntityUnitTest {
     }
 
     @After
-    public void flushAfter()
-    {
+    public void flushAfter() {
         entityManager.flush();
     }
 

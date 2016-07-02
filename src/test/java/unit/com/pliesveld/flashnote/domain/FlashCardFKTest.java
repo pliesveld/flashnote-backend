@@ -21,8 +21,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @BlankEntityTestAnnotations
 @Transactional
-public class FlashCardFKTest extends FlashCardTest
-{
+public class FlashCardFKTest extends FlashCardTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -31,8 +30,7 @@ public class FlashCardFKTest extends FlashCardTest
 
     @Before
     @Override
-    public void setupEntities()
-    {
+    public void setupEntities() {
         super.setupEntities();
 
         entityManager.flush();
@@ -40,14 +38,12 @@ public class FlashCardFKTest extends FlashCardTest
     }
 
     @Test
-    public void testSubTestLoad()
-    {
+    public void testSubTestLoad() {
     }
 
     @Test
     @Override
-    public void whenContextLoad_thenCorrect()
-    {
+    public void whenContextLoad_thenCorrect() {
         assertNotNull(flashcard_id);
 
         FlashCard fc = entityManager.find(FlashCard.class, flashcard_id);
@@ -63,21 +59,18 @@ public class FlashCardFKTest extends FlashCardTest
     }
 
     @After
-    public void flushAfter()
-    {
+    public void flushAfter() {
         entityManager.flush();
     }
 
     @Test
-    public void testQuestionRemovalFKViolation()
-    {
+    public void testQuestionRemovalFKViolation() {
         thrown.expect(PersistenceException.class);
         questionRepository.deleteAll();
     }
 
     @Test
-    public void testAnswerRemovalFKViolation()
-    {
+    public void testAnswerRemovalFKViolation() {
         thrown.expect(PersistenceException.class);
         answerRepository.deleteAll();
     }

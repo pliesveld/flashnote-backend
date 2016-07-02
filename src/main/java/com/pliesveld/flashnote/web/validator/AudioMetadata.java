@@ -36,5 +36,7 @@ public class AudioMetadata {
         return audioFormat;
     }
 
-    public String getMimeContentType() { return mimeContentType; }
+    public String getMimeContentType() {
+        return mimeContentType;
+    }
 }

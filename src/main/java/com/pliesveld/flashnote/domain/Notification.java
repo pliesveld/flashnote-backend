@@ -87,8 +87,7 @@ public class Notification extends DomainBaseEntity<Integer> {
     }
 
     @PrePersist
-    protected void onCreate()
-    {
+    protected void onCreate() {
         createdOn = Instant.now();
     }
 

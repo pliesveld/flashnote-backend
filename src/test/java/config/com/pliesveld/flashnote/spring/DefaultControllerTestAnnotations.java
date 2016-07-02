@@ -20,9 +20,10 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @SpringApplicationConfiguration(classes = FlashnoteContainerApplication.class)
-@ContextConfiguration(classes = { MockServletContext.class, SpringWebTestConfig.class, SpringEntityTestConfig.class }, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = {MockServletContext.class, SpringWebTestConfig.class, SpringEntityTestConfig.class}, loader = AnnotationConfigContextLoader.class)
 @WebAppConfiguration
 @Transactional
 @Rollback
-@TestPropertySource( locations = "classpath:test-datasource.properties" )
-public @interface DefaultControllerTestAnnotations { }
+@TestPropertySource(locations = "classpath:test-datasource.properties")
+public @interface DefaultControllerTestAnnotations {
+}

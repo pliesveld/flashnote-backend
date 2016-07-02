@@ -92,16 +92,16 @@ public class StudentControllerTestMock {
         /*
             Checks that the underlying mocked dependency invoked the method findAllStudent once.
          */
-        verify(adminService,times(1)).findAllStudent();
+        verify(adminService, times(1)).findAllStudent();
 
         /*
             Asserts that the HTTP status coded returned by the Controller was OK.
             Asserts that the response returned Iteration of student elements was zero.
          */
-        assertEquals(HttpStatus.OK,allStudentsEntry.getStatusCode());
+        assertEquals(HttpStatus.OK, allStudentsEntry.getStatusCode());
         List<Student> target = new ArrayList<>();
         allStudentsEntry.getBody().forEach(target::add);
-        assertEquals(0,target.size());
+        assertEquals(0, target.size());
     }
 
     @Test
@@ -120,10 +120,10 @@ public class StudentControllerTestMock {
 
         final String JSON_DATA = mapper.writeValueAsString(newStudent);
         LOG.info(JSON_DATA);
-        when(accountRegistrationService.createStudent(any(String.class),any(String.class),any(String.class))).thenReturn(student);
+        when(accountRegistrationService.createStudent(any(String.class), any(String.class), any(String.class))).thenReturn(student);
 
         ResponseEntity<?> creationResponse = administrationController.createStudent(newStudent);
-        assertEquals(HttpStatus.CREATED,creationResponse.getStatusCode());
+        assertEquals(HttpStatus.CREATED, creationResponse.getStatusCode());
     }
 
 }

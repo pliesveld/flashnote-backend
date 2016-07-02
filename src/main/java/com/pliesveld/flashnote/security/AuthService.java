@@ -29,8 +29,7 @@ public class AuthService implements UserDetailsService {
 
         final Student student = studentRepository.findOneByEmail(username);
 
-        if (student == null)
-        {
+        if (student == null) {
             throw new UsernameNotFoundException(String.format("Student with an email address of %s does not exist", username));
         }
 
@@ -46,7 +45,7 @@ public class AuthService implements UserDetailsService {
 //            LOG.debug(SECURITY_AUTH, sb.toString());
 //        }
 
-        final StudentPrincipal principal = new StudentPrincipal(student,authorities);
+        final StudentPrincipal principal = new StudentPrincipal(student, authorities);
         return principal;
     }
 }

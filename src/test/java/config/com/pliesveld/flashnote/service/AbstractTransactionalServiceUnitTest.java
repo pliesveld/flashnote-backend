@@ -28,26 +28,23 @@ import javax.persistence.EntityManager;
 //@RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextHierarchy({
-    @ContextConfiguration(classes = { SpringDataTestConfig.class }, loader = AnnotationConfigContextLoader.class),
-    @ContextConfiguration(classes = {SpringDataConfig.class, SpringAuditConfig.class, PersistenceContext.class, SpringServiceTestConfig.class }, loader = AnnotationConfigContextLoader.class),
-    @ContextConfiguration(name = "REPOSITORY", classes = { DefaultRepositorySettingsConfig.class }, loader = AnnotationConfigContextLoader.class),
-    @ContextConfiguration(name = "REPOSITORY_POPULATOR", classes = { RepositoryPopulatorConfig.class }, loader = AnnotationConfigContextLoader.class)
+        @ContextConfiguration(classes = {SpringDataTestConfig.class}, loader = AnnotationConfigContextLoader.class),
+        @ContextConfiguration(classes = {SpringDataConfig.class, SpringAuditConfig.class, PersistenceContext.class, SpringServiceTestConfig.class}, loader = AnnotationConfigContextLoader.class),
+        @ContextConfiguration(name = "REPOSITORY", classes = {DefaultRepositorySettingsConfig.class}, loader = AnnotationConfigContextLoader.class),
+        @ContextConfiguration(name = "REPOSITORY_POPULATOR", classes = {RepositoryPopulatorConfig.class}, loader = AnnotationConfigContextLoader.class)
 })
-@TestExecutionListeners(listeners = { IntegrationTestPropertiesListener.class,
+@TestExecutionListeners(listeners = {IntegrationTestPropertiesListener.class,
         DirtiesContextBeforeModesTestExecutionListener.class,
         DependencyInjectionTestExecutionListener.class,
         DirtiesContextTestExecutionListener.class,
         TransactionalTestExecutionListener.class, SqlScriptsTestExecutionListener.class, LogHibernateTestExecutionListener.class})
-public class AbstractTransactionalServiceUnitTest extends AbstractRepositoryUnitTest
-{
+public class AbstractTransactionalServiceUnitTest extends AbstractRepositoryUnitTest {
     @javax.persistence.PersistenceContext
     protected EntityManager entityManager;
 
     @After
-    public void flushAfter()
-    {
-        if (entityManager != null && entityManager.isJoinedToTransaction())
-        {
+    public void flushAfter() {
+        if (entityManager != null && entityManager.isJoinedToTransaction()) {
             LOG_SQL.debug("Flushing Persistence Context");
             entityManager.flush();
         }

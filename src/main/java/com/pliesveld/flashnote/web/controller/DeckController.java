@@ -44,18 +44,16 @@ public class DeckController {
 
     @Autowired
     private AttachmentService attachmentService;
-    
-    private Student verifyStudent(int id) throws StudentNotFoundException
-    {
+
+    private Student verifyStudent(int id) throws StudentNotFoundException {
         Student student = studentService.findStudentById(id);
         if (student == null)
             throw new StudentNotFoundException(id);
 
         return student;
     }
-    
-    private Deck verifyDeck(int id) throws DeckNotFoundException
-    {
+
+    private Deck verifyDeck(int id) throws DeckNotFoundException {
         Deck deck = deckService.findDeckById(id);
         if (deck == null)
             throw new DeckNotFoundException(id);
@@ -65,33 +63,28 @@ public class DeckController {
     @RequestMapping(value = "", method = RequestMethod.GET, params = "!categoryId")
     @ResponseStatus(code = HttpStatus.OK)
     @JsonView(Views.Summary.class)
-    public Page<Deck> retrieveAllDecks(Pageable pageRequest)
-    {
+    public Page<Deck> retrieveAllDecks(Pageable pageRequest) {
         return deckService.browseDecks(pageRequest);
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET, params = "categoryId")
     @ResponseStatus(code = HttpStatus.OK)
     @JsonView(Views.Summary.class)
-    public Page<Deck> retrieveAllDecksInCategory(@RequestParam("categoryId") int categoryId, Pageable pageRequest)
-    {
+    public Page<Deck> retrieveAllDecksInCategory(@RequestParam("categoryId") int categoryId, Pageable pageRequest) {
         final Specification<Deck> spec = DeckSpecification.hasCategory(categoryId);
         return deckService.browseDecksWithSpec(spec, pageRequest);
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity createDeck(@Valid @RequestBody Deck deck)
-    {
+    public ResponseEntity createDeck(@Valid @RequestBody Deck deck) {
         Category category = deck.getCategory();
-        if (category == null || category.getId() == null)
-        {
+        if (category == null || category.getId() == null) {
             throw new CategoryNotFoundException(0);
         }
 
         int id = category.getId();
-        if (!categoryService.doesCategoryIdExist(id))
-        {
+        if (!categoryService.doesCategoryIdExist(id)) {
 
             throw new CategoryNotFoundException(id);
         }
@@ -105,22 +98,20 @@ public class DeckController {
 
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    @ResponseBody @ResponseStatus(code = HttpStatus.OK)
-    public Deck retrieveDeck(@PathVariable("id") int id)
-    {
+    @ResponseBody
+    @ResponseStatus(code = HttpStatus.OK)
+    public Deck retrieveDeck(@PathVariable("id") int id) {
         return verifyDeck(id);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(code = HttpStatus.OK)
-    public void deleteDeck(@PathVariable("id") int id)
-    {
+    public void deleteDeck(@PathVariable("id") int id) {
         deckService.deleteDeck(id);
     }
 
     @RequestMapping(value = "/count", method = RequestMethod.GET)
-    public ResponseEntity<?> getCardStatistics()
-    {
+    public ResponseEntity<?> getCardStatistics() {
         LOG.info("Retrieving counts of all decks");
         CardStatistics cardStatistics = new CardStatistics();
         cardStatistics.setDeckCount(cardService.countDecks());
@@ -129,7 +120,7 @@ public class DeckController {
         cardStatistics.setQuestionsCount(cardService.countQuestions());
         cardStatistics.setAnswersCount(cardService.countAnswers());
         cardStatistics.setAnswersCount(attachmentService.countAttachments());
-        return new ResponseEntity<>(cardStatistics,HttpStatus.OK);
+        return new ResponseEntity<>(cardStatistics, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)

@@ -5,10 +5,9 @@ import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import javax.persistence.EntityManager;
 
 /**
-* @author Patrick Liesveld
-*/
-public enum EMOP_PERSISTENCE implements EMOP
-{
+ * @author Patrick Liesveld
+ */
+public enum EMOP_PERSISTENCE implements EMOP {
     FLUSH {
         public void apply(EntityManager entityManager) {
             entityManager.flush();

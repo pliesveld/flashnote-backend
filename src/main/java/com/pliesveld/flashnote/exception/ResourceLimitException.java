@@ -4,13 +4,11 @@ import org.springframework.http.HttpStatus;
 
 public class ResourceLimitException extends RuntimeException {
 
-    public String getRepositoryMessage()
-    {
+    public String getRepositoryMessage() {
         return this.getMessage();
     }
 
-    public HttpStatus getRepositoryStatus()
-    {
+    public HttpStatus getRepositoryStatus() {
         return HttpStatus.BANDWIDTH_LIMIT_EXCEEDED;
     }
 
