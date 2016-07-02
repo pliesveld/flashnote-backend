@@ -8,6 +8,10 @@
 
     <property name="severity" value="warning"/>
 
+    <module name="SuppressionFilter">
+        <property name="file" value="suppress_generated.xml"/>
+    </module>
+
     <module name="FileTabCharacter">
         <property name="eachLine" value="true"/>
     </module>
@@ -51,7 +55,9 @@
              <message key="ws.notPreceded"
              value="MethodParamPad ''{0}'' is not preceded with whitespace."/>
         </module>
+
     </module>
+
 <!--  
         <module name="EmptyLineSeparator">
             <property name="allowNoEmptyLineBetweenFields" value="true"/>
