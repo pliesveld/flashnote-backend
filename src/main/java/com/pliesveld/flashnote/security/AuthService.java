@@ -29,7 +29,7 @@ public class AuthService implements UserDetailsService {
 
         final Student student = studentRepository.findOneByEmail(username);
 
-        if(student == null)
+        if (student == null)
         {
             throw new UsernameNotFoundException(String.format("Student with an email address of %s does not exist", username));
         }
@@ -38,7 +38,7 @@ public class AuthService implements UserDetailsService {
         student.getPassword();
         final List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(student.getRole().toString());
 
-//        if(LOG.isDebugEnabled(SECURITY_AUTH))
+//        if (LOG.isDebugEnabled(SECURITY_AUTH))
 //        {
 //            StringBuilder sb = new StringBuilder(128);
 //            sb.append("Loading UserDetails for ").append(username).append(".  Granted Authorities: ");

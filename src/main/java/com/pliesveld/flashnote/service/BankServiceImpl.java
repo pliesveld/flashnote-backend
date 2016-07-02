@@ -98,7 +98,7 @@ public class BankServiceImpl implements BankService {
     @Override
     public QuestionBank createQuestionBank(QuestionBank questionBank) {
         questionBank.getQuestions().forEach((question) -> {
-            if(question.getId() == null) {
+            if (question.getId() == null) {
                 question = questionRepository.save(question);
             }
         });
@@ -135,12 +135,12 @@ public class BankServiceImpl implements BankService {
     @Override
     public void updateQuestionBankAddQuestion(final int bankId, @NotNull Question question) {
         QuestionBank questionBank = questionBankRepository.getOne(bankId);
-        if(questionBank == null)
+        if (questionBank == null)
         {
             throw new QuestionBankNotFoundException(bankId);
         }
 
-        if(question.getId() == null) {
+        if (question.getId() == null) {
             question = questionRepository.saveAndFlush(question);
         }
 
@@ -170,15 +170,15 @@ public class BankServiceImpl implements BankService {
         final QuestionBank questionBank = questionBankRepository.findOne(bankId);
         final List<Question> questionIds = questionBank.getQuestions().stream().collect(Collectors.toList());
         final List<Integer> orphanQuestions = new ArrayList<>();
-        for(Question question : questionIds) {
+        for (Question question : questionIds) {
             final Integer questionId = question.getId();
 
-            if( questionBankRepository.findByQuestionsContaining(question).stream().filter(qb -> qb.getId() != bankId).count() > 0)
+            if ( questionBankRepository.findByQuestionsContaining(question).stream().filter(qb -> qb.getId() != bankId).count() > 0)
             {
                 continue;
             }
 
-            if( flashCardRepository.findAllByQuestion_id(questionId).size() > 0)
+            if ( flashCardRepository.findAllByQuestion_id(questionId).size() > 0)
             {
                 continue;
             }

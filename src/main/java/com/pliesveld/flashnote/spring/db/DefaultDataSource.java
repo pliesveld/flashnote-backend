@@ -42,7 +42,7 @@ public class DefaultDataSource {
         dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
         dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
 
-        if(LOG.isDebugEnabled())
+        if (LOG.isDebugEnabled())
         {
             LOG.debug(SQL_INIT, "DataSource properties");
             LOG.debug(SQL_INIT, "jdbc.driverClassName = {}", environment.getRequiredProperty("jdbc.driverClassName"));
@@ -77,7 +77,7 @@ public class DefaultDataSource {
         properties.put("hibernate.cache.region.factory_class",      environment.getRequiredProperty("hibernate.cache.region.factory_class"));
         */
 
-        if(LOG.isDebugEnabled()) {
+        if (LOG.isDebugEnabled()) {
             LOG.debug(SQL_INIT, "Hibernate Properties");
             properties.entrySet().iterator().forEachRemaining((entry) ->            {
                 LOG.debug(SQL_INIT, "{} = {}", entry.getKey(), entry.getValue());

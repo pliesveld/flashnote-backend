@@ -25,8 +25,6 @@ public interface CategoryService {
     Page<Category> findBySearchTerm(final String searchTerm, final Pageable pageRequest);
     List<Category> allCategories();
 
-
-
     @Transactional
     Category createCategory(@Valid final Category category);
 }

@@ -23,7 +23,7 @@ public class AudioMetadataReader {
             LOG.debug(SERVICE_ATTACHMENT,"Audio Format: " + format);
             return new AudioMetadata(format, mimeContentType);
 
-        } catch (UnsupportedAudioFileException |IOException e) {
+        } catch (UnsupportedAudioFileException | IOException e) {
             LOG.debug(SERVICE_ATTACHMENT,"Could not get audio file format from file.");
             throw new AudioFormatNotSupportedException("Could not read file",e);
         }
@@ -37,7 +37,7 @@ public class AudioMetadataReader {
             AudioFileFormat format = AudioSystem.getAudioFileFormat(inFile);
             LOG.debug(SERVICE_ATTACHMENT,"Format: " + format);
             return new AudioMetadata(format, mimeContentType);
-        } catch (UnsupportedAudioFileException|IOException e) {
+        } catch (UnsupportedAudioFileException | IOException e) {
             LOG.debug(SERVICE_ATTACHMENT,"Could not get audio file format from file.");
             throw new AudioFormatNotSupportedException("Could not read file",e);
         }

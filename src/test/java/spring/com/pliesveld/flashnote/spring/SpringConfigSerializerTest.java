@@ -44,7 +44,7 @@ public class SpringConfigSerializerTest {
         TestEntitySerializerConfig testRepositoryConfig = ctx.getBean(TestEntitySerializerConfig.class);
         assertNotNull(testRepositoryConfig.entityManager);
 
-        if(testRepositoryConfig.hibernateAwareObjectMapper != null)
+        if (testRepositoryConfig.hibernateAwareObjectMapper != null)
             ObjectMapperDebug.debug(this, (ObjectMapper) testRepositoryConfig.hibernateAwareObjectMapper);
     }
 
@@ -64,10 +64,10 @@ public class SpringConfigSerializerTest {
     {
         try {
             ctx.refresh();
-        } catch(PropertyReferenceException pre) {
+        } catch (PropertyReferenceException pre) {
             fail(pre.getMessage());
             throw pre;
-        } catch(BeanCreationException bce) {
+        } catch (BeanCreationException bce) {
             bce.printStackTrace();
             fail(bce.getMessage());
         }

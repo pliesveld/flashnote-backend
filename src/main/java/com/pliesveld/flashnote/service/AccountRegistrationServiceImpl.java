@@ -37,13 +37,13 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
     @Autowired
     private MailProvider mailProvider;
 
-	@Autowired
+    @Autowired
     private RegistrationRepository registrationRepository;
 
     @Autowired
     private PasswordResetRepository passwordResetRepository;
-	
-	@Autowired
+
+    @Autowired
     private StudentRepository studentRepository;
 
     @Autowired
@@ -53,7 +53,7 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
     public AccountRegistrationToken createAccountRegistration(@Valid final Student student) throws ResourceRepositoryException {
         Integer student_id = student.getId();
 
-        if(!studentRepository.exists(student.getId()))
+        if (!studentRepository.exists(student.getId()))
         {
             throw new StudentNotFoundException(student_id);
         }
@@ -69,7 +69,7 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
     public AccountPasswordResetToken findOrCreatePasswordResetToken(@Valid final Student student) {
         final Integer student_id = student.getId();
 
-        if(!studentRepository.exists(student_id))
+        if (!studentRepository.exists(student_id))
         {
             throw new StudentNotFoundException(student_id);
         }
@@ -78,7 +78,7 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
 
         final String token = UUID.randomUUID().toString().substring(0,8).toUpperCase();
 
-        if(resetToken == null)
+        if (resetToken == null)
         {
             resetToken = new AccountPasswordResetToken(student, token);
             passwordResetRepository.save(resetToken);
@@ -93,7 +93,7 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
     @Override
     public AccountRegistrationToken deleteAccountRegistration(final int id) {
         final AccountRegistrationToken registration = registrationRepository.findOne(id);
-        if(registration != null)
+        if (registration != null)
         {
             registrationRepository.delete(registration);
         }
@@ -105,7 +105,7 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
 
         final Student other = studentRepository.findOneByEmail(email);
 
-        if(other != null)
+        if (other != null)
             throw new StudentCreateException(email);
 
         final Student student = new Student();
@@ -116,7 +116,7 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
 
         try {
             studentRepository.save(student);
-        } catch(DataAccessException cdae) {
+        } catch (DataAccessException cdae) {
             throw new StudentCreateException("Could not create account");
         }
 
@@ -125,39 +125,39 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
 
 
 
-	@Override
-	public Student processRegistrationConfirmation(String token) {
-		AccountRegistrationToken registration = registrationRepository.findByToken(token);
+    @Override
+    public Student processRegistrationConfirmation(String token) {
+        AccountRegistrationToken registration = registrationRepository.findByToken(token);
         Student student = null;
-		if(registration == null || (student = registration.getStudent()) == null)
-			return null;
+        if (registration == null || (student = registration.getStudent()) == null)
+            return null;
 
-		if(student.getRole() == AccountRole.ROLE_ACCOUNT)
-		{
-			LOG.info("User registrated: {}",student.getEmail());
-			student.setRole(AccountRole.ROLE_USER);
-			registrationRepository.delete(registration);
-			return studentRepository.save(student);
-		} else {
-			LOG.warn("User registration: User {} has role {} != ROLE_ACCOUNT",student.getEmail(),student.getRole());
-			registrationRepository.delete(registration);
-			return student;
-		}
-	}
+        if (student.getRole() == AccountRole.ROLE_ACCOUNT)
+        {
+            LOG.info("User registrated: {}",student.getEmail());
+            student.setRole(AccountRole.ROLE_USER);
+            registrationRepository.delete(registration);
+            return studentRepository.save(student);
+        } else {
+            LOG.warn("User registration: User {} has role {} != ROLE_ACCOUNT",student.getEmail(),student.getRole());
+            registrationRepository.delete(registration);
+            return student;
+        }
+    }
 
     @Override
     public Student processPasswordResetConfirmation(String token) {
         AccountPasswordResetToken resetToken = passwordResetRepository.findByToken(token);
         Student student = null;
 
-        if(resetToken == null || (student = resetToken.getStudent()) == null)
+        if (resetToken == null || (student = resetToken.getStudent()) == null)
             return null;
 
         LOG.info("Setting temporary password for {}", student.getEmail());
 
         String temp_password = "";
 
-        for(int i = 0; i < 8;i++)
+        for (int i = 0; i < 8;i++)
         {
             String source = UUID.randomUUID().toString();
             int rnd_idx = ThreadLocalRandom.current().nextInt(source.length());
@@ -178,36 +178,36 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
     }
 
     /* 5am every day */
-	@Scheduled(cron = "0 0 5 * * ?")
-	@Override
-	public void taskPurgeExpiredAccounts() {
-		taskLogger.info("Checking accounts to be purged.");
+    @Scheduled(cron = "0 0 5 * * ?")
+    @Override
+    public void taskPurgeExpiredAccounts() {
+        taskLogger.info("Checking accounts to be purged.");
 
-		
-		List<AccountRegistrationToken> list_expired =
-				registrationRepository.findAllByExpirationLessThan(Instant.now())
-				.collect(Collectors.toList());
-		
-		List<Student> list_student =
-		list_expired.stream().map(AccountRegistrationToken::getStudent)
-			.filter((student) -> student.getRole() == AccountRole.ROLE_ACCOUNT)
-			.collect(Collectors.toList());
+        
+        List<AccountRegistrationToken> list_expired =
+                registrationRepository.findAllByExpirationLessThan(Instant.now())
+                .collect(Collectors.toList());
+        
+        List<Student> list_student =
+        list_expired.stream().map(AccountRegistrationToken::getStudent)
+            .filter((student) -> student.getRole() == AccountRole.ROLE_ACCOUNT)
+            .collect(Collectors.toList());
 
-		taskLogger.info("Purging {} registration tokens",list_expired.size());
-		registrationRepository.delete(list_expired);
+        taskLogger.info("Purging {} registration tokens",list_expired.size());
+        registrationRepository.delete(list_expired);
 
-		StringBuilder sb = new StringBuilder();
-		sb.append("Purging accounts (id, email): ");
-		list_student.forEach((student) -> {
-			sb.append("(")
-				.append(student.getId()).append(',')
-				.append(student.getEmail()).append(") ");
-			});
-				
-		taskLogger.info(sb.toString());
-		studentRepository.delete(list_student);
-		
-	}
+        StringBuilder sb = new StringBuilder();
+        sb.append("Purging accounts (id, email): ");
+        list_student.forEach((student) -> {
+            sb.append("(")
+                .append(student.getId()).append(',')
+                .append(student.getEmail()).append(") ");
+            });
+                
+        taskLogger.info(sb.toString());
+        studentRepository.delete(list_student);
+        
+    }
 
     @Override
     public long countAccountRegistration() {
@@ -223,7 +223,7 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
     public void emailVerificationConfirmationURLtoAccountHolder(Student student, String confirmURL) {
         AccountRegistrationToken registration = registrationRepository.findOne(student.getId());
 
-        if(registration == null)
+        if (registration == null)
         {
             throw new StudentNotFoundException("No registration found for student id: " + student.getId());
         }
@@ -232,24 +232,24 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
         Instant last_email = registration.getEmailSentOn();
         Instant email_threshold = Instant.now().plus(3L, ChronoUnit.HOURS);
 
-        if(last_email != null)
+        if (last_email != null)
         {
-            if(last_email.isBefore(email_threshold))
+            if (last_email.isBefore(email_threshold))
             {
                 LOG.info("refusing to send email before {}", email_threshold);
                 throw new ResourceLimitException("Cannot resend email until " + email_threshold);
             }
         }
 
-        if(mailProvider.emailAccountRegistrationConfirmationLink(student.getEmail(), confirmURL))
+        if (mailProvider.emailAccountRegistrationConfirmationLink(student.getEmail(), confirmURL))
         {
             registration.setEmailSentOn(Instant.now());
         }
     }
 
     @Override
-    public void emailTemporaryPasswordToAccountHolder(String email, String temp_password) {
-        mailProvider.emailAccountTemporaryPassword(email, temp_password);
+    public void emailTemporaryPasswordToAccountHolder(String email, String tempPassword) {
+        mailProvider.emailAccountTemporaryPassword(email, tempPassword);
     }
 
     @Override

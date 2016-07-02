@@ -54,7 +54,7 @@ public class CategoryServiceTest extends AbstractTransactionalServiceUnitTest{
         categoryService.createCategory(category);
         assertEquals(1,categoryRepository.count());
 
-        List<Category> categoryList = categoryService.categoriesHavingName ("ROOT");
+        List<Category> categoryList = categoryService.categoriesHavingName("ROOT");
         assertNotNull(categoryList);
         assertEquals(1,categoryList.size());
     }
@@ -69,7 +69,7 @@ public class CategoryServiceTest extends AbstractTransactionalServiceUnitTest{
         categoryService.createCategory(category);
         assertEquals(1,categoryRepository.count());
 
-        List<Category> categoryList = categoryService.categoriesHavingName (" ROOT ");
+        List<Category> categoryList = categoryService.categoriesHavingName(" ROOT ");
         assertNotNull(categoryList);
         assertEquals(1,categoryList.size());
     }

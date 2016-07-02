@@ -17,7 +17,7 @@ public abstract class AbstractTransactionalRepositoryUnitTest extends AbstractRe
     @After
     public void flushAfter()
     {
-        if(entityManager != null && entityManager.isJoinedToTransaction())
+        if (entityManager != null && entityManager.isJoinedToTransaction())
         {
             LOG_SQL.trace("Flushing Persistence Context");
             entityManager.flush();

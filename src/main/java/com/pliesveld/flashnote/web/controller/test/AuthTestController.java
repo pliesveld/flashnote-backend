@@ -28,7 +28,7 @@ public class AuthTestController {
     @Autowired
     private CardService cardService;
 
-    @RequestMapping(value="/StudentPrincipal", method = RequestMethod.GET)
+    @RequestMapping(value = "/StudentPrincipal", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public StudentPrincipal getAuthByCustomSpringPrincipal(@CurrentUser StudentPrincipal studentPrincipal)
     {
@@ -36,7 +36,7 @@ public class AuthTestController {
         return studentPrincipal;
     }
 
-    @RequestMapping(value="/User", method = RequestMethod.GET)
+    @RequestMapping(value = "/User", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public User getAuthBySpringUser(@AuthenticationPrincipal User user)
     {
@@ -44,7 +44,7 @@ public class AuthTestController {
         return user;
     }
 
-    @RequestMapping(value="/UserDetails", method = RequestMethod.GET)
+    @RequestMapping(value = "/UserDetails", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public UserDetails getAuthByUserDetails(@AuthenticationPrincipal UserDetails userDetails)
     {
@@ -52,7 +52,7 @@ public class AuthTestController {
         return userDetails;
     }
 
-    @RequestMapping(value="/Principal", method = RequestMethod.GET)
+    @RequestMapping(value = "/Principal", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public Principal getAuthByPrincipal(Principal principal)
     {

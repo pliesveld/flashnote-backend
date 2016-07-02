@@ -26,13 +26,13 @@ public class ImageMetadataReader {
 
     static {
         IIORegistry iioRegistry = IIORegistry.getDefaultInstance();
-        iioRegistry.getCategories().forEachRemaining((c) ->
-                iioRegistry.getServiceProviders(c,true).forEachRemaining((it) ->
+        iioRegistry.getCategories().forEachRemaining((category) ->
+                iioRegistry.getServiceProviders(category,true).forEachRemaining((it) ->
 
                 {
-                    LOG.trace("providers {} for category {}",it,c);
+                    LOG.trace("providers {} for category {}",it, category);
 
-                    switch(it.getClass().getPackage().getName())
+                    switch (it.getClass().getPackage().getName())
                     {
                         case "com.sun.imageio.plugins.bmp":
                         case "com.sun.imageio.plugins.gif":
@@ -64,10 +64,10 @@ public class ImageMetadataReader {
         ImageInputStream iis = ImageIO.createImageInputStream(byteArrayInputStream);
         Iterator<ImageReader> readers = null;
 
-        if(StringUtils.hasText(mime_type)) {
-            for(String mime_supported : IMAGE_MIME_TYPES)
+        if (StringUtils.hasText(mime_type)) {
+            for (String mime_supported : IMAGE_MIME_TYPES)
             {
-                if(mime_supported.equalsIgnoreCase(mime_type))
+                if (mime_supported.equalsIgnoreCase(mime_type))
                 {
                     readers = ImageIO.getImageReadersByMIMEType(mime_type);
                     break;
@@ -76,9 +76,9 @@ public class ImageMetadataReader {
 
         }
 
-        if(readers == null && StringUtils.hasText(name)) {
-            for(String suffix : IMAGE_FILE_SUFFIXES) {
-                if(StringUtils.endsWithIgnoreCase(name,suffix))
+        if (readers == null && StringUtils.hasText(name)) {
+            for (String suffix : IMAGE_FILE_SUFFIXES) {
+                if (StringUtils.endsWithIgnoreCase(name,suffix))
                 {
                     readers = ImageIO.getImageReadersBySuffix(suffix);
                     break;
@@ -86,11 +86,11 @@ public class ImageMetadataReader {
             }
         }
 
-        if( readers == null ) {
+        if ( readers == null ) {
             readers = ImageIO.getImageReaders(iis);
         }
 
-        if(readers.hasNext())
+        if (readers.hasNext())
         {
             //pick the first available ImageReader
             ImageReader reader = readers.next();

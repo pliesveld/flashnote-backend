@@ -61,12 +61,12 @@ public class QuestionGenerator {
 
     static String[] mergeAllWordArrays(String[]... args)
     {
-        if(args.length <2)
+        if (args.length < 2)
             throw new IndexOutOfBoundsException("Need more arguments to sort.");
 
         String[] ret = StringUtils.mergeStringArrays(args[0],args[1]);
 
-        for(int idx = 2; idx < args.length;idx++)
+        for (int idx = 2; idx < args.length;idx++)
         {
             ret = StringUtils.mergeStringArrays(ret,args[idx]);
         }
@@ -81,11 +81,11 @@ public class QuestionGenerator {
     }
 
     static private String hasTag(String sentence) {
-        if(StringUtils.hasText(sentence))
+        if (StringUtils.hasText(sentence))
         {
-            for(String tag : TAGS)
+            for (String tag : TAGS)
             {
-                if(StringUtils.countOccurrencesOf(sentence,tag) > 0)
+                if (StringUtils.countOccurrencesOf(sentence,tag) > 0)
                 {
                     return tag;
                 }
@@ -96,7 +96,7 @@ public class QuestionGenerator {
 
     static private String expandQuestion(String sentence) {
         String tag = null;
-        while((tag = hasTag(sentence)) != null)
+        while ((tag = hasTag(sentence)) != null)
         {
             String replace_with = randomValue(tagLookup.get(tag));
             sentence = StringUtils.replace(sentence,tag,replace_with);
@@ -120,7 +120,7 @@ public class QuestionGenerator {
 
     public static void main(String[] args)
     {
-        for(int i = 0; i < 100; i++)
+        for (int i = 0; i < 100; i++)
         {
             System.out.println(randomSentenceQuestion());
         }

@@ -27,7 +27,7 @@ public class JavaAttachmentValidator implements Validator {
         LOG.debug("Validating " + target);
   //      basicValidator.validate(target,errors);
 
-        if(errors.hasErrors())
+        if (errors.hasErrors())
         {
             LOG.debug("Validation of " + target + " had errors.");
             return;
@@ -36,29 +36,29 @@ public class JavaAttachmentValidator implements Validator {
         AttachmentBinary attachment = (AttachmentBinary) target;
         AttachmentType attachmentType = attachment.getAttachmentType();
 
-        if(!StringUtils.hasLength(attachment.getFileName()))
+        if (!StringUtils.hasLength(attachment.getFileName()))
             errors.rejectValue("fileName","required","required");
 
 
         boolean check_content = true;
 
-        if(attachment.getAttachmentType() == null)
+        if (attachment.getAttachmentType() == null)
         {
             errors.rejectValue("contentType","required","required");
             check_content = false;
         }
 
-        if(attachment.getContents() == null)
+        if (attachment.getContents() == null)
         {
             errors.rejectValue("fileData","required","required");
             check_content = false;
         }
 
-        if(!check_content)
+        if (!check_content)
             return;
 
 
-        switch(attachmentType) {
+        switch (attachmentType) {
             case AUDIO:
                 validateAudioAttachment(attachment,errors);
                 break;
@@ -88,7 +88,7 @@ public class JavaAttachmentValidator implements Validator {
     }
 
     private void validateDocumentAttachment(AttachmentBinary attachment, Errors errors) {
-        if(!isValidUTF8(attachment.getContents()))
+        if (!isValidUTF8(attachment.getContents()))
         {
             errors.rejectValue("fileData","invalid","invalid");
         }
@@ -115,7 +115,7 @@ public class JavaAttachmentValidator implements Validator {
             cs.decode(ByteBuffer.wrap(input));
             return true;
         }
-        catch(CharacterCodingException e){
+        catch (CharacterCodingException e) {
             return false;
         }
     }

@@ -46,7 +46,7 @@ public class AttachmentText extends AbstractAttachment {
     @PrePersist
     public void prePersist()
     {
-        if(attachmentType == null)
+        if (attachmentType == null)
             attachmentType = AttachmentType.TEXT;
     }
 

@@ -64,7 +64,7 @@ public class StudentServiceImpl implements StudentService {
         // delete Deck
 
         Student student = studentRepository.findOne(student_id);
-        if(student == null)
+        if (student == null)
             throw new StudentNotFoundException(student_id);
 
         studentRepository.delete(student);
@@ -79,7 +79,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public List<AbstractStatement> findStatementsBy(final Student student) throws StudentNotFoundException {
 
-        if(student == null)
+        if (student == null)
         {
             throw new StudentNotFoundException(student.getId());
         }

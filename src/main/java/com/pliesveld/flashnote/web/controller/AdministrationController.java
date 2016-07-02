@@ -19,7 +19,7 @@ import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
-@RequestMapping(value="/admin")
+@RequestMapping(value = "/admin")
 public class AdministrationController {
     private static final Logger LOG = LogManager.getLogger();
 
@@ -61,7 +61,7 @@ public class AdministrationController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @RequestMapping(value="/students", method = RequestMethod.GET)
+    @RequestMapping(value = "/students", method = RequestMethod.GET)
     public ResponseEntity<Iterable<Student>> getAllStudents()
     {
         LOG.info("Retrieving list of all students");
@@ -70,7 +70,7 @@ public class AdministrationController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @RequestMapping(value="/remove/attachment/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/remove/attachment/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void deleteAttachment(@PathVariable("id") int id)
     {
@@ -78,7 +78,7 @@ public class AdministrationController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @RequestMapping(value="/remove/student/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/remove/student/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void deleteStudent(@PathVariable("id") int id)
     {
@@ -87,7 +87,7 @@ public class AdministrationController {
 
 
     @PreAuthorize("hasRole('ADMIN')")
-    @RequestMapping(value="/questionbanks", method = RequestMethod.GET)
+    @RequestMapping(value = "/questionbanks", method = RequestMethod.GET)
     @JsonView(Views.Internal.class)
     public ResponseEntity<?> retrieveAllDecks()
     {

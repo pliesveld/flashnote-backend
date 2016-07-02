@@ -18,12 +18,12 @@ public class LoggingFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         boolean clear = false;
-        if(!ThreadContext.containsKey("id")) {
+        if (!ThreadContext.containsKey("id")) {
             clear = true;
             ThreadContext.put("id", UUID.randomUUID().toString());
             HttpSession session = ((HttpServletRequest)request).getSession(false);
             ThreadContext.put("hostName", request.getServerName());
-            if(session != null)
+            if (session != null)
             {
                 ThreadContext.put("username",(String)session.getAttribute("username"));
             }
@@ -32,7 +32,7 @@ public class LoggingFilter implements Filter {
         try {
             chain.doFilter(request, response);
         } finally {
-            if(clear)
+            if (clear)
                 ThreadContext.clearAll();
         }
     }

@@ -26,32 +26,32 @@ public class ObjectMapperDebug {
 //            }
 //        });
 //
-        if(LOG.isDebugEnabled(OBJECT_MAPPER_INIT))
+        if (LOG.isDebugEnabled(OBJECT_MAPPER_INIT))
         {
             LOG.debug(OBJECT_MAPPER_INIT, "{} has a configured ObjectMapper {}", clazz.getSimpleName(), objectMapper);
             LOG.debug(OBJECT_MAPPER_INIT, "ObjectMapper serialization configuration");
             LOG.debug(OBJECT_MAPPER_INIT, "active view: {}",serializationConfig.getActiveView());
             LOG.debug(OBJECT_MAPPER_INIT, "Serialization Inclusion = {}",serializationConfig.getSerializationInclusion());
 
-            for(SerializationFeature feature : SerializationFeature.class.getEnumConstants())
+            for (SerializationFeature feature : SerializationFeature.class.getEnumConstants())
             {
                 boolean enabled = serializationConfig.hasSerializationFeatures(feature.getMask());
-                if(feature.enabledByDefault() != enabled)
+                if (feature.enabledByDefault() != enabled)
                 {
                     LOG.debug(OBJECT_MAPPER_INIT, "{} = {}", feature, enabled);
                 }
             }
 
-            for(MapperFeature feature : MapperFeature.class.getEnumConstants())
+            for (MapperFeature feature : MapperFeature.class.getEnumConstants())
             {
                 boolean enabled = serializationConfig.hasMapperFeatures(feature.getMask());
-                if(feature.enabledByDefault() != enabled)
+                if (feature.enabledByDefault() != enabled)
                 {
                     LOG.debug(OBJECT_MAPPER_INIT, "{} = {}", feature, enabled);
                 }
             }
 
-            if(serializationConfig.mixInCount() > 0)
+            if (serializationConfig.mixInCount() > 0)
                 LOG.debug(OBJECT_MAPPER_INIT, "mixIn {} : ", serializationConfig.mixInCount());
 
 
@@ -60,25 +60,25 @@ public class ObjectMapperDebug {
             LOG.debug(OBJECT_MAPPER_INIT, "ObjectMapper deserialization configuration");
             LOG.debug(OBJECT_MAPPER_INIT, "ACTIVE VIEW: {}",deserializationConfig.getActiveView());
 
-            for(DeserializationFeature feature : DeserializationFeature.class.getEnumConstants())
+            for (DeserializationFeature feature : DeserializationFeature.class.getEnumConstants())
             {
                 boolean enabled = deserializationConfig.hasDeserializationFeatures(feature.getMask());
-                if(feature.enabledByDefault() != enabled)
+                if (feature.enabledByDefault() != enabled)
                 {
                     LOG.debug(OBJECT_MAPPER_INIT, "{} = {}", feature, enabled);
                 }
             }
 
-            for(MapperFeature feature : MapperFeature.class.getEnumConstants())
+            for (MapperFeature feature : MapperFeature.class.getEnumConstants())
             {
                 boolean enabled = deserializationConfig.hasMapperFeatures(feature.getMask());
-                if(feature.enabledByDefault() != enabled)
+                if (feature.enabledByDefault() != enabled)
                 {
                     LOG.debug(OBJECT_MAPPER_INIT, "{} = {}", feature, enabled);
                 }
             }
 
-            if(deserializationConfig.mixInCount() > 0)
+            if (deserializationConfig.mixInCount() > 0)
                 LOG.debug(OBJECT_MAPPER_INIT, "mixIn {} : ", deserializationConfig.mixInCount());
         }
 

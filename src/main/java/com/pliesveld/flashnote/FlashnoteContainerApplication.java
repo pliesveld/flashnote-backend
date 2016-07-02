@@ -23,5 +23,5 @@ public class FlashnoteContainerApplication {
         SpringApplication application = new SpringApplication(FlashnoteContainerApplication.class);
         //application.addListeners(new ApplicationPidFileWriter("./bin/app.pid"));
         application.run(args);
-	}
+    }
 }

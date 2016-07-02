@@ -36,7 +36,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void deleteStudent(final int id) throws StudentNotFoundException {
-        if(!studentRepository.exists(id))
+        if (!studentRepository.exists(id))
         {
             throw new StudentNotFoundException(id);
         }
@@ -52,7 +52,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     private <ID extends Serializable, R extends CrudRepository<?,ID>> void checkRepositoryAndDelete(final R repository, final ID id) {
-        if(repository.exists(id))
+        if (repository.exists(id))
         {
             repository.delete(id);
         } else {

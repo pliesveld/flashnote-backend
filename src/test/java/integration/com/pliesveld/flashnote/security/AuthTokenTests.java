@@ -109,10 +109,10 @@ public class AuthTokenTests {
     @Before
     public void saveUser()
     {
-        if(null == studentRepository.findOneByEmail("student@example.com"))
+        if (null == studentRepository.findOneByEmail("student@example.com"))
             registrationService.createStudent("newuser","student@example.com","password");
 
-        if(token == null) {
+        if (token == null) {
 
             int port = Integer.valueOf(this.port);
             String URL_BASE = "http://localhost:" + port;
@@ -145,7 +145,7 @@ public class AuthTokenTests {
 
     @Test
     @Repeat(value = 10)
-	public void contextLoad() {
+    public void contextLoad() {
 
         Authorities authorities = RestAssured.given().header("X-AUTH-TOKEN", token)
                 .when()
@@ -158,7 +158,7 @@ public class AuthTokenTests {
 
         LOG.debug(authorities.getAuthorities());
 
-	}
+    }
 
 }
 

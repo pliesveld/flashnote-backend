@@ -44,7 +44,12 @@ import static com.pliesveld.flashnote.logging.Markers.SECURITY_INIT;
 public class SpringSecurityConfig {
     private static final Logger LOG = LogManager.getLogger();
 
-
+    @Bean
+    @ConditionalOnMissingBean(PasswordEncoder.class)
+    PasswordEncoder passwordEncoder()
+    {
+        return NoOpPasswordEncoder.getInstance();
+    }
 
     @Configuration
     @Profile(Profiles.AUTH)
@@ -65,9 +70,9 @@ public class SpringSecurityConfig {
             RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
             roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_MODERATOR and ROLE_MODERATOR > ROLE_PREMIUM and ROLE_PREMIUM > ROLE_USER and ROLE_USER > ROLE_ACCOUNT");
 
-            if(LOG.isDebugEnabled(SECURITY_INIT))
+            if (LOG.isDebugEnabled(SECURITY_INIT))
             {
-                for(AccountRole role : AccountRole.values())
+                for (AccountRole role : AccountRole.values())
                 {
                     StringBuilder sb = new StringBuilder();
                     sb.append("for Role ");
@@ -168,215 +173,6 @@ public class SpringSecurityConfig {
             http.headers().disable();
 
         }
-
-/*
-
-    Form based authentication configuration
-
-
-        @Autowired
-        RememberService rememberService;
-
-        protected void configure(HttpSecurity http) throws Exception {
-
-
-            http.authorizeRequests().antMatchers("/**").hasRole("USER");
-            http.formLogin().permitAll();
-            http.rememberMe().tokenRepository(this.rememberService).userDetailsService(this.userDetailsService);
-
-
-            //http.httpBasic().realmName("FlashNote");
-            //http.addFilter(this.authenticationFilter());
-
-/*            http.formLogin()
- *                   .successHandler(this.savedRequestAwareAuthenticationSuccessHandler())
- *                   .permitAll();
- *
- *            http.rememberMe().tokenRepository(this.rememberService).userDetailsService(this.userDetailsService);
- *            //http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
- */
-/*
-            @Bean
-            public SavedRequestAwareAuthenticationSuccessHandler
-            savedRequestAwareAuthenticationSuccessHandler() {
-
-                SavedRequestAwareAuthenticationSuccessHandler auth
-                        = new SavedRequestAwareAuthenticationSuccessHandler();
-                auth.setTargetUrlParameter("targetUrl");
-                return auth;
-            }
-*/
-
-
-/*
-        @Bean
-        public AuthenticationProvider authenticationProvider() {
-            DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-            authProvider.setUserDetailsService(userDetailsService);
-            authProvider.setPasswordEncoder(this.passwordEncoder());
-            return authProvider;
-        }
-
-        @Override
-        protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-            auth
-                    .authenticationProvider(this.authenticationProvider());
-        }
-
-
-        @Bean
-        public MyAuthenticationFilter authenticationFilter() {
-            MyAuthenticationFilter authFilter = new MyAuthenticationFilter();
-            authFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login","POST"));
-            authFilter.setAuthenticationManager(authenticationManager);
-            authFilter.setAuthenticationSuccessHandler(new MySuccessHandler("/app"));
-            authFilter.setAuthenticationFailureHandler(new MyFailureHandler("/login?error=1"));
-            authFilter.setUsernameParameter("username");
-            authFilter.setPasswordParameter("password");
-            return authFilter;
-        }
-
-
-    static class MyAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-        private static final Logger LOG = LogManager.getLogger();
-        @Override
-        public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-
-            Authentication auth =  super.attemptAuthentication(request, response);
-            LOG.debug(Markers.SECURITY_AUTH, "MyAuthFilter principal returned {}", auth.getPrincipal());
-            LOG.debug(Markers.SECURITY_AUTH, "MyAuthFilter.details {}", auth.getDetails());
-            return auth;
-        }
     }
 
-    static class MySuccessHandler implements AuthenticationSuccessHandler {
-        private static final Logger LOG = LogManager.getLogger();
-        public MySuccessHandler(String s) {
-        }
-
-        @Override
-        public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-            LOG.debug("My success handler for {}", authentication.getPrincipal());
-
-        }
-    }
-
-    static class MyFailureHandler implements AuthenticationFailureHandler {
-        private static final Logger LOG = LogManager.getLogger();
-        public MyFailureHandler(String s) {
-        }
-
-        @Override
-        public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-            LOG.debug("My failure handler for {}", exception.getMessage());
-
-        }
-    }
-*/
-    }
-
-
-    @Bean
-    @ConditionalOnMissingBean(PasswordEncoder.class)
-    PasswordEncoder passwordEncoder()
-    {
-        return NoOpPasswordEncoder.getInstance();
-    }
 }
-
-
-
-
-
-
-
-  /*
-
-    @Profile("security-basic")
-    protected static class LocalWebSecurity extends WebSecurityConfigurerAdapter {
-
-        @Override
-        protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-            auth
-                .inMemoryAuthentication()
-                    .withUser("student").password("student").roles("USER").authorities("USER")
-                    .and()
-                    .withUser("admin").password("admin").roles("USER","ADMIN").authorities("ADMIN");
-        }
-        
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-
-
-            http
-                    .httpBasic().realmName("FlashNotes")
-                    .and()
-                    .authorizeRequests()
-                    .antMatchers("/resources/**").permitAll()
-                    .anyRequest().authenticated();
-        }
-    }
-
-
-    @Profile("oauth2")
-    @Configuration
-    protected static class OAuthWebSecurity extends WebSecurityConfigurerAdapter {
-
-        @Override
-        @Bean
-        protected AuthenticationManager authenticationManager() throws Exception {
-            return super.authenticationManager();
-        }
-    }
-
-    @Profile("oauth2")
-    @Configuration
-    @EnableAuthorizationServer
-    protected static class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
-        @Inject AuthenticationManager authenticationManager;
-
-        @Autowired
-        private UserDetailsService userDetailsService;
-
-        @Override
-        public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-            clients
-                    .inMemory()
-                    .withClient("flashnoteClient")
-                    .secret("top_secret")
-                    .authorizedGrantTypes("password")
-                    .scopes("read","write")
-                    .resourceIds("FlashNote_Resources");
-        }
-
-        @Override
-        public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-//            endpoints.userDetailsService(userDetailsService);
-            endpoints.authenticationManager(this.authenticationManager);
-            //super.configure(endpoints);
-        }
-    }
-
-    @Profile("oauth2")
-    @Configuration
-    @EnableResourceServer
-    protected static class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter {
-        @Override
-        public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-            resources.resourceId("FlashNote_Resources");
-        }
-
-        @Override
-        public void configure(HttpSecurity http) throws Exception {
-            http
-                    .requestMatchers().antMatchers("/oauth2/secured/**")
-                    .and()
-                    .authorizeRequests().antMatchers("/oauth2/secured/**").authenticated();
-        }
-    }
-
-
-
-
-
-}*/

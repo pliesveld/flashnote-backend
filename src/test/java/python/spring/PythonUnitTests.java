@@ -90,17 +90,17 @@ public class PythonUnitTests {
     String port;
 
     @Test
-	public void pythonUnitTestTest() throws IOException, InterruptedException {
+    public void pythonUnitTestTest() throws IOException, InterruptedException {
 
         assertNotNull(port);
 
-		ClassLoader classLoader = PythonUnitTests.class.getClassLoader();
-		File rootDir = new File(classLoader.getResource("./scripts/").getFile());
-		System.out.println(rootDir);
-		assert rootDir.exists();
-		assert rootDir.isDirectory();
+        ClassLoader classLoader = PythonUnitTests.class.getClassLoader();
+        File rootDir = new File(classLoader.getResource("./scripts/").getFile());
+        System.out.println(rootDir);
+        assert rootDir.exists();
+        assert rootDir.isDirectory();
 
-		//ProcessBuilder pb = new ProcessBuilder("python3","-m","unittest","tests.test_env");
+        //ProcessBuilder pb = new ProcessBuilder("python3","-m","unittest","tests.test_env");
         //ProcessBuilder pb = new ProcessBuilder("python3","-m","unittest","tests.test_upload");
         ProcessBuilder pb = new ProcessBuilder("python3","-m","unittest", "tests.test_auth_jwt");
         Map<String,String> env = pb.environment();
@@ -113,20 +113,20 @@ public class PythonUnitTests {
 
 //        env.put("DEBUG","true");
 
-		pb.directory(rootDir);
-		Process p = pb.start();
+        pb.directory(rootDir);
+        Process p = pb.start();
 
-		BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-		in.lines().forEach((line) -> System.out.println(line));
+        BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        in.lines().forEach((line) -> System.out.println(line));
 
-		BufferedReader in_err = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-		in_err.lines().forEach((line) -> System.out.println(line));
+        BufferedReader in_err = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+        in_err.lines().forEach((line) -> System.out.println(line));
 
         int exit_value = p.waitFor();
         assertEquals(0,exit_value);
 
 
-	}
+    }
 
 
 

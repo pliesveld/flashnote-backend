@@ -42,5 +42,4 @@ public class PopulatedCategoriesRepositoryTest extends AbstractPopulatedReposito
     public void whenCategoryFind_thenCorrect() {
         debugRepository(categoryRepository);
     }
-
 }

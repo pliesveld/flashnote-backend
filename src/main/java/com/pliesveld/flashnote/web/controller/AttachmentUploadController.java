@@ -49,17 +49,17 @@ public class AttachmentUploadController {
     private AttachmentService attachmentService;
 
     @PreAuthorize("hasRole('ROLE_USER')")
-    @RequestMapping(value="/upload", method = RequestMethod.POST)
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public ResponseEntity<?> handleFileupload(
             @RequestParam("file") MultipartFile file,
-            @RequestParam(name = "question_id", required = false) Integer question_id,
+            @RequestParam(name = "questionId", required = false) Integer questionId,
             HttpServletRequest request) throws AttachmentUploadException
     {
         Principal principal = request.getUserPrincipal();
 
         Question question = null;
-        if(question_id != null) {
-            question = cardService.findQuestionById(question_id);
+        if (questionId != null) {
+            question = cardService.findQuestionById(questionId);
         }
 
         LOG.info("Uploading attachment ip: {} size: {} user: {} file: {} orig: {}", request.getRemoteAddr(),file.getSize() ,principal,file.getName(),file.getOriginalFilename());
@@ -67,13 +67,13 @@ public class AttachmentUploadController {
         String fileContentType = file.getContentType();
         AttachmentType attachmentType = AttachmentType.valueOfMime(fileContentType);
 
-        if(attachmentType == null)
+        if (attachmentType == null)
             throw new AttachmentUploadException("Unknown content-type: " + fileContentType);
 
 
         String fileName = file.getOriginalFilename();
 
-        if(!StringUtils.hasText(fileName) || !attachmentType.supportsFilenameBySuffix(fileName))
+        if (!StringUtils.hasText(fileName) || !attachmentType.supportsFilenameBySuffix(fileName))
         {
             throw new AttachmentUploadException("Invalid file extension. " + attachmentType + " does not support " + fileName);
         }
@@ -90,7 +90,7 @@ public class AttachmentUploadController {
         int id = 0;
 
         AbstractAttachment abstractAttachment = null;
-        if(attachmentType.isBinary()) {
+        if (attachmentType.isBinary()) {
             AttachmentBinary attachment = new AttachmentBinary();
             attachment.setContents(contents);
             attachment.setAttachmentType(attachmentType);
@@ -111,7 +111,7 @@ public class AttachmentUploadController {
         }
 
 
-        if(question != null )
+        if (question != null )
         {
             question.setAttachment(abstractAttachment);
             cardService.update(question);

@@ -36,10 +36,10 @@ public class SpringConfigRepositoryTest {
 
         ctx.register(TestRepositoryConfig.class);
         ctx.refresh();
-        } catch(PropertyReferenceException pre) {
+        } catch (PropertyReferenceException pre) {
             fail(pre.getMessage());
             throw pre;
-        } catch(BeanCreationException bce) {
+        } catch (BeanCreationException bce) {
             bce.printStackTrace();
             fail(bce.getMessage());
         }

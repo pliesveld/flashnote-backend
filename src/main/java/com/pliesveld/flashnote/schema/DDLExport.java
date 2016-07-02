@@ -169,7 +169,7 @@ public class DDLExport
     private void truncate(String filename) throws IOException {
         File f = new File(filename);
 
-        if(!f.exists() || !f.isFile())
+        if (!f.exists() || !f.isFile())
         {
             throw new IOException("file not found " + filename);
         }

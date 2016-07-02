@@ -96,7 +96,7 @@ public class Category extends DomainBaseEntity<Integer> implements Serializable
         do {
             if (c.getName().equals(category)) return true;
             c = c.getParentCategory();
-        } while(c != null);
+        } while (c != null);
         return false;
     }
 

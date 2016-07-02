@@ -53,7 +53,7 @@ public class RegistrationController {
     public ResponseEntity<RegistrationResponseJson> processRegistrationMessage(@Valid @RequestBody RegistrationRequestJson registrationRequestJson, HttpServletRequest request)
     {
         String ipAddr = request.getHeader("X-FORWARDED-FOR");
-        if(ipAddr == null)
+        if (ipAddr == null)
             ipAddr = request.getRemoteAddr();
 
         LOG.info("from {} Processing registration request {}", ipAddr, registrationRequestJson);
@@ -66,12 +66,12 @@ public class RegistrationController {
 
         HttpStatus statusCode = HttpStatus.OK;
 
-        if(studentService.findByEmail(email) != null)
+        if (studentService.findByEmail(email) != null)
         {
             response = new RegistrationResponseJson(EMAIL_TAKEN, "Email address has already been registered");
             statusCode = HttpStatus.FORBIDDEN;
 
-        } else  if(studentService.findByName(name) != null)
+        } else  if (studentService.findByName(name) != null)
         {
             response = new RegistrationResponseJson(NAME_TAKEN, "Name has already been registered");
             statusCode = HttpStatus.FORBIDDEN;
@@ -104,7 +104,7 @@ public class RegistrationController {
     {
         LOG.debug("Checking token={}",token);
         Student student = registrationService.processRegistrationConfirmation(token);
-        if(student != null)
+        if (student != null)
         {
             eventPublisher.publishEvent(new OnRegistrationCompleteEvent(student));
             return new ResponseEntity<>(HttpStatus.OK);
@@ -117,7 +117,7 @@ public class RegistrationController {
     public ResponseEntity<RegistrationResponseJson> processAccountPasswordResetRequest(@Valid @RequestBody PasswordResetRequestJson passwordResetRequestJson, HttpServletRequest request)
     {
         String ipAddr = request.getHeader("X-FORWARDED-FOR");
-        if(ipAddr == null)
+        if (ipAddr == null)
             ipAddr = request.getRemoteAddr();
 
         LOG.info("from {} Processing registration request {}", ipAddr, passwordResetRequestJson);
@@ -129,7 +129,7 @@ public class RegistrationController {
         HttpStatus statusCode = HttpStatus.OK;
         Student student = null;
 
-        if((student = studentService.findByEmail(email)) == null)
+        if ((student = studentService.findByEmail(email)) == null)
         {
             throw new StudentNotFoundException(email);
         }
@@ -139,9 +139,9 @@ public class RegistrationController {
         Instant last_email = resetToken.getEmailSentOn();
         Instant email_threshold = Instant.now().plus(3L, ChronoUnit.HOURS);
 
-        if(last_email != null)
+        if (last_email != null)
         {
-            if(last_email.isBefore(email_threshold))
+            if (last_email.isBefore(email_threshold))
             {
                 LOG.info("refusing to send email before {}", email_threshold);
                 throw new ResourceLimitException("Cannot resend email until " + email_threshold);
@@ -171,7 +171,7 @@ public class RegistrationController {
         RegistrationResponseJson response = null;
         HttpStatus statusCode = HttpStatus.OK;
 
-        if(student == null)
+        if (student == null)
         {
             statusCode = HttpStatus.NOT_FOUND;
             return new ResponseEntity<>(statusCode);

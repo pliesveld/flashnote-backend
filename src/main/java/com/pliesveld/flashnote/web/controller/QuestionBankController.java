@@ -58,7 +58,7 @@ public class QuestionBankController {
     private Student verifyStudent(int id) throws StudentNotFoundException
     {
         Student student = studentService.findStudentById(id);
-        if(student == null)
+        if (student == null)
             throw new StudentNotFoundException(id);
 
         return student;
@@ -67,7 +67,7 @@ public class QuestionBankController {
     private Question verifyQuestion(int id) throws QuestionNotFoundException
     {
         Question que = cardService.findQuestionById(id);
-        if(que == null)
+        if (que == null)
             throw new QuestionNotFoundException(id);
         return que;
     }
@@ -75,7 +75,7 @@ public class QuestionBankController {
     private AbstractStatement verifyStatement(int id) throws StatementNotFoundException
     {
         AbstractStatement statement = cardService.findStatementById(id);
-        if(statement == null)
+        if (statement == null)
             throw new StatementNotFoundException(id);
         return statement;
     }
@@ -86,7 +86,7 @@ public class QuestionBankController {
         return ResponseEntity.ok().build();
     }
 
-    @RequestMapping(value="", method = RequestMethod.GET, params = "!categoryId")
+    @RequestMapping(value = "", method = RequestMethod.GET, params = "!categoryId")
     @ResponseStatus(code = HttpStatus.OK)
     @JsonView(Views.Summary.class)
     public Page<QuestionBank> retrieveAllBankss(Pageable pageRequest)
@@ -94,7 +94,7 @@ public class QuestionBankController {
         return bankService.browseBanks(pageRequest);
     }
 
-    @RequestMapping(value="", method = RequestMethod.GET, params = "categoryId")
+    @RequestMapping(value = "", method = RequestMethod.GET, params = "categoryId")
     @ResponseStatus(code = HttpStatus.OK)
     @JsonView(Views.Summary.class)
     public Page<QuestionBank> retrieveAllBanksInCategory(@RequestParam("categoryId") int categoryId, Pageable pageRequest)
@@ -107,13 +107,13 @@ public class QuestionBankController {
     public ResponseEntity<?> createQuestionBank(@Valid @RequestBody QuestionBank questionBank)
     {
         Category category = questionBank.getCategory();
-        if(category == null || category.getId() == null)
+        if (category == null || category.getId() == null)
         {
             throw new CategoryNotFoundException(0);
         }
 
         int id = category.getId();
-        if(!categoryService.doesCategoryIdExist(id))
+        if (!categoryService.doesCategoryIdExist(id))
         {
 
             throw new CategoryNotFoundException(id);
@@ -161,7 +161,7 @@ public class QuestionBankController {
     public ResponseEntity<?> retrieveQuestionBank(@PathVariable("bankId") int bankId) throws JsonProcessingException {
         QuestionBank questionBank = bankService.findQuestionBankById(bankId);
 
-        if(questionBank == null )
+        if (questionBank == null )
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(questionBank);
@@ -181,11 +181,11 @@ public class QuestionBankController {
     {
         QuestionBank questionBank = bankService.findQuestionBankById(bankId);
 
-        if(questionBank == null )
+        if (questionBank == null )
             return ResponseEntity.notFound().build();
 
         Integer question_id = question.getId();
-        if(question_id == null) {
+        if (question_id == null) {
 
             bankService.updateQuestionBankAddQuestion(questionBank.getId(), question);
             return ResponseEntity.created(
@@ -197,7 +197,7 @@ public class QuestionBankController {
 
         }
 
-        if((question = cardService.findQuestionById(question_id)) != null)
+        if ((question = cardService.findQuestionById(question_id)) != null)
         {
             bankService.updateQuestionBankAddQuestion(questionBank.getId(), question);
         } else {
@@ -213,7 +213,7 @@ public class QuestionBankController {
     {
         QuestionBank questionBank = bankService.findQuestionBankById(bankId);
 
-        if(questionBank == null )
+        if (questionBank == null )
             return ResponseEntity.notFound().build();
 
         bankService.updateQuestionBankRemoveQuestion(questionBank, questionId);
@@ -228,7 +228,7 @@ public class QuestionBankController {
     {
         Question question = bankService.findQuestion(bankId, questionId);
 
-        if(question == null )
+        if (question == null )
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(question);

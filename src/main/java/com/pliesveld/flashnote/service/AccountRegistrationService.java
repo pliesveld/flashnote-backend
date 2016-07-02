@@ -15,10 +15,11 @@ import javax.validation.Valid;
 public interface AccountRegistrationService {
 
     long countAccountRegistration();
+
     long countStudent();
 
     @Transactional
-	void taskPurgeExpiredAccounts();
+    void taskPurgeExpiredAccounts();
 
     @Transactional
     AccountRegistrationToken deleteAccountRegistration(final int id);
@@ -40,7 +41,7 @@ public interface AccountRegistrationService {
 
     void emailVerificationConfirmationURLtoAccountHolder(final Student student, final String confirmURL);
 
-    void emailTemporaryPasswordToAccountHolder(final String email, final String temp_password);
+    void emailTemporaryPasswordToAccountHolder(final String email, final String tempPassword);
 
     void emailPasswordResetToAccountHolder(final String email, final String confirmURL);
 }

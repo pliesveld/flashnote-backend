@@ -52,7 +52,7 @@ public class AnnotatedStatement {
 
     protected void setCreatedOn(Instant createdOn) { this.createdOn = createdOn; }
 
-    protected void setCreatedBy(Student createdBy) {this.createdBy = createdBy; }
+    protected void setCreatedBy(Student createdBy) { this.createdBy = createdBy; }
 
     protected void setMessage(String message) { this.message = message; }
 }

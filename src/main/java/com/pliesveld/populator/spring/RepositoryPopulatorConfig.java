@@ -19,13 +19,13 @@ public class RepositoryPopulatorConfig {
     {
         CustomRepositoryPopulatorFactoryBean customRepositoryPopulatorFactoryBean = new CustomRepositoryPopulatorFactoryBean();
         Resource[] resources = repositorySettings.getResources();
-        if(resources == null) {
+        if (resources == null) {
             LOG.error("repositorySettings returned null");
-        } else if(resources.length == 0) {
+        } else if (resources.length == 0) {
             LOG.warn("repositorySettings returned zero-length array");
         } else {
             LOG.debug("Creating populator bean with resources:");
-            for(Resource resource : resources) {
+            for (Resource resource : resources) {
                 LOG.debug("{}", resource);
 
             }

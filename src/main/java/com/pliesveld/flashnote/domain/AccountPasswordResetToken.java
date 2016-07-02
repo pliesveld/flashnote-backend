@@ -14,8 +14,8 @@ import java.time.Instant;
 )
 public class AccountPasswordResetToken {
 
-	@Id
-	private Integer id;
+    @Id
+    private Integer id;
 
     @NotNull
     @MapsId
@@ -36,66 +36,66 @@ public class AccountPasswordResetToken {
     private Instant emailSentOn;
 
     public AccountPasswordResetToken() {
-		super();
-	}
+        super();
+    }
 
-	public AccountPasswordResetToken(@NotNull Student student, String reset_token) {
-		this.student = student;
-		this.id = student.getId();
-		this.token = reset_token;
-	}
+    public AccountPasswordResetToken(@NotNull Student student, String reset_token) {
+        this.student = student;
+        this.id = student.getId();
+        this.token = reset_token;
+    }
 
     @PrePersist
     public void prePersist() {
-        if(expiration == null)
+        if (expiration == null)
             expiration = Instant.now().plus(Duration.ofDays(Constants.PASSWORD_RESET_TOKEN_DURATION_DAYS));
     }
 
-	public Integer getId() {
-		return id;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	protected void setId(Integer id) {
-		this.id = id;
-	}
+    protected void setId(Integer id) {
+        this.id = id;
+    }
 
-	public Student getStudent() {
-		return student;
-	}
+    public Student getStudent() {
+        return student;
+    }
 
-	public void setStudent(Student student) {
-		this.student = student;
-		this.id = student.getId();
-	}
+    public void setStudent(Student student) {
+        this.student = student;
+        this.id = student.getId();
+    }
 
-	public String getToken() {
-		return token;
-	}
+    public String getToken() {
+        return token;
+    }
 
-	public void setToken(String token) {
-		this.token = token;
-	}
+    public void setToken(String token) {
+        this.token = token;
+    }
 
-	public Instant getExpiration() {
-		return expiration;
-	}
+    public Instant getExpiration() {
+        return expiration;
+    }
 
-	public void setExpiration(Instant expiration) {
-		this.expiration = expiration;
-	}
-	
-	public Instant getEmailSentOn() {
-		return emailSentOn;
-	}
+    public void setExpiration(Instant expiration) {
+        this.expiration = expiration;
+    }
+    
+    public Instant getEmailSentOn() {
+        return emailSentOn;
+    }
 
-	public void setEmailSentOn(Instant emailSentOn) {
-		this.emailSentOn = emailSentOn;
-	}
+    public void setEmailSentOn(Instant emailSentOn) {
+        this.emailSentOn = emailSentOn;
+    }
 
-	@Override
-	public String toString() {
-		return "AccountPasswordResetToken [id=" + id + ", token=" + token
-				+ ", expiration=" + expiration + ", emailSentOn=" + emailSentOn + "]";
-	}
+    @Override
+    public String toString() {
+        return "AccountPasswordResetToken [id=" + id + ", token=" + token
+                + ", expiration=" + expiration + ", emailSentOn=" + emailSentOn + "]";
+    }
 
 }

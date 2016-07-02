@@ -26,7 +26,7 @@ public class AbstractTransactionalDomainEntityUnitTest extends AbstractDomainEnt
     @After
     final public void givenFlushAfterUnitTest()
     {
-        if(entityManager != null && entityManager.isJoinedToTransaction()) {
+        if (entityManager != null && entityManager.isJoinedToTransaction()) {
             LOG.trace("Flushing Persistence Context");
             entityManager.flush();
         }
@@ -62,12 +62,12 @@ public class AbstractTransactionalDomainEntityUnitTest extends AbstractDomainEnt
 
     @Transactional(propagation = Propagation.MANDATORY)
     protected EntityState stateOf(Object object) {
-        if(entityManager.contains(object)) {
+        if (entityManager.contains(object)) {
             return EntityState.PERSISTENT;
         }
         entityManager.flush();
         Serializable id = (Serializable) entityManager.getEntityManagerFactory().getPersistenceUnitUtil().getIdentifier(object);
-        if(id == null) {
+        if (id == null) {
             return EntityState.TRANSIENT;
         }
         return EntityState.DETACHED;

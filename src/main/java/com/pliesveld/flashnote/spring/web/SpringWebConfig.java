@@ -177,7 +177,7 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
 //    @Override
 //    public void addFormatters(FormatterRegistry registry) {
 //        super.addFormatters(registry);
-//        if(!(registry instanceof FormattingConversionService))
+//        if (!(registry instanceof FormattingConversionService))
 //        {
 //            LOG.warn("Unable to register Spring Data JPA converter.");
 //            return;

@@ -52,7 +52,7 @@ public class DeckServiceImpl implements DeckService {
     @Override
     public Deck findDeckById(final int id) throws DeckNotFoundException {
         Deck deck = deckRepository.findOne(id);
-        if(deck == null)
+        if (deck == null)
             throw new DeckNotFoundException(id);
 
         Hibernate.initialize(deck.getFlashcards());
@@ -101,25 +101,25 @@ public class DeckServiceImpl implements DeckService {
     @Override
     public void updateDeckAddFlashCard(final int deckId, FlashCard flashCard) {
         final Deck deck = findDeckById(deckId);
-        if(deck == null)
+        if (deck == null)
             throw new DeckNotFoundException(deckId);
 
-        if(LOG.isDebugEnabled()) {
+        if (LOG.isDebugEnabled()) {
             LOG.debug("Adding fc: {}", flashCard.getId());
             LOG.debug("Checking Deck:");
             deck.getFlashcards().forEach(fc -> LOG.debug("Has {}", fc.getId()));
         }
 
-        if(flashCard.getId() != null) {
+        if (flashCard.getId() != null) {
             final Integer questionId = flashCard.getId().getQuestionId();
             final Integer answerId = flashCard.getId().getAnswerId();
 
-            if(questionId != null) {
+            if (questionId != null) {
                 flashCard = entityManager.merge(flashCard);
             }
 
             final FlashCardPrimaryKey flashcardId = flashCard.getId();
-            if(deck.getFlashcards().stream().map(FlashCard::getId).anyMatch(fc -> fc.equals(flashcardId))) {
+            if (deck.getFlashcards().stream().map(FlashCard::getId).anyMatch(fc -> fc.equals(flashcardId))) {
                 throw new FlashCardCreateException(flashCard.getId());
             }
         }
@@ -183,22 +183,22 @@ public class DeckServiceImpl implements DeckService {
     @Override
     public void deleteDeck(final int id) {
 
-        if(!deckRepository.exists(id))
+        if (!deckRepository.exists(id))
             throw new DeckNotFoundException(id);
 
         final Deck deck = deckRepository.findOne(id);
         final List<FlashCard> flashCards = deck.getFlashcards().stream().collect(Collectors.toList());
         final List<Integer> orphanQuestions = new ArrayList<>();
 
-        for(FlashCard flashcard : flashCards) {
+        for (FlashCard flashcard : flashCards) {
             final FlashCardPrimaryKey flashcardId = flashcard.getId();
 
-            if( flashcardRepository.findAllByQuestion_id(flashcardId.getQuestionId()).stream().filter( fc -> ! flashCards.contains(fc)).count() > 0)
+            if ( flashcardRepository.findAllByQuestion_id(flashcardId.getQuestionId()).stream().filter( fc -> !flashCards.contains(fc)).count() > 0)
             {
                 continue;
             }
 
-            if( questionBankRepository.findByQuestionsContaining(flashcard.getQuestion()).size() > 0)
+            if ( questionBankRepository.findByQuestionsContaining(flashcard.getQuestion()).size() > 0)
             {
                 continue;
             }

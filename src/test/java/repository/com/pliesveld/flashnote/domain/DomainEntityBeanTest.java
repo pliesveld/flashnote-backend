@@ -91,7 +91,7 @@ public class DomainEntityBeanTest {
 //
 
 //        enableSQL();
-//        for(String beanName : ctx.getBeanDefinitionNames()) {
+//        for (String beanName : ctx.getBeanDefinitionNames()) {
 //            LOG.debug(beanName);
 //        }
 //
@@ -101,13 +101,13 @@ public class DomainEntityBeanTest {
 //        ArrayList<DomainBaseEntity> entityBeans = new ArrayList<>(entityClassList.size());
 //
 //        enableSQL();
-//        for(Class<?> clazz : entityClassList)
+//        for (Class<?> clazz : entityClassList)
 //        {
 //            try {
 //                Object obj = ctx.getBean(clazz);
 //
 //
-//                if(DomainBaseEntity.class.isAssignableFrom(clazz))
+//                if (DomainBaseEntity.class.isAssignableFrom(clazz))
 //                {
 //                    DomainBaseEntity dbe = (DomainBaseEntity) obj;
 //                    entityBeans.add(dbe);
@@ -116,7 +116,7 @@ public class DomainEntityBeanTest {
 //                    LOG.warn("Got bean; but class {} could not be assigned to DomainBaseEntity.class", clazz);
 //                }
 //
-//            } catch(Exception e) {
+//            } catch (Exception e) {
 //                LOG.debug("Couldn't load bean of class {}",clazz);
 //
 //            }
@@ -125,7 +125,7 @@ public class DomainEntityBeanTest {
 //
         final ObjectWriter write = new ObjectWriter(((ObjectMapper) testRepositoryConfig.hibernateAwareObjectMapper).copy());
 //
-//        for(final DomainBaseEntity obj : entityBeans)
+//        for (final DomainBaseEntity obj : entityBeans)
 //        {
 //            try {
 //                LOG.debug("Persisting {}", obj.getClass().getName());
@@ -141,7 +141,7 @@ public class DomainEntityBeanTest {
 //                        );
 //                write.out(domain);
 //
-//            } catch(PersistenceException | IllegalStateException e) {
+//            } catch (PersistenceException | IllegalStateException e) {
 //                LOG.warn("Error persisting {} = {} {}", obj.getClass().getName(), e.getMessage(), e.getCause().getMessage());
 //            }
 //        }

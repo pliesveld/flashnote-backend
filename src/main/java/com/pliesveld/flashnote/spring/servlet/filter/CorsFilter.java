@@ -35,9 +35,9 @@ public class CorsFilter implements Filter {
 
         sb.append("Adding CORS filter ").append(filterConfig.getFilterName()).append('\n');
 
-        Enumeration <String> params = filterConfig.getInitParameterNames();
+        Enumeration<String> params = filterConfig.getInitParameterNames();
         sb.append("With filter params: ").append('\n');
-        while( params.hasMoreElements() )
+        while ( params.hasMoreElements() )
         {
             final String param = params.nextElement();
             sb.append(param)

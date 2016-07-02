@@ -20,7 +20,7 @@ public class UsernameAuditorAware implements AuditorAware<String> {
     public String getCurrentAuditor() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null || !authentication.isAuthenticated())
+        if (authentication == null || !authentication.isAuthenticated())
         {
             LOG.trace(Markers.AUDIT, "No authentication object or is not authenticated.", authentication);
             return null;
@@ -31,18 +31,18 @@ public class UsernameAuditorAware implements AuditorAware<String> {
         Object principal = authentication.getPrincipal();
         Object details = authentication.getDetails();
 
-        if(principal != null) {
+        if (principal != null) {
             LOG.trace(Markers.AUDIT, "Principal {} : {}",principal.getClass().getName(), principal);
         }
 
-        if(details != null) {
+        if (details != null) {
             LOG.trace(Markers.AUDIT, "Details {} : {}",details.getClass().getName(), details);
         }
 
 //        Object credentials = authentication.getCredentials();
 //        Collection<?> authorities = authentication.getAuthorities();
 
-        if(principal instanceof StudentPrincipal)
+        if (principal instanceof StudentPrincipal)
         {
             StudentPrincipal studentPrincipal = (StudentPrincipal) principal;
             LOG.debug(Markers.AUDIT, "Found StudentPrincipal : {} ", studentPrincipal);

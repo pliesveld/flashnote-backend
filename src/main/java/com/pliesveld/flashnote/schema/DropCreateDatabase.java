@@ -79,7 +79,7 @@ public class DropCreateDatabase {
 
         String newJdbcUrl = jdbcURL.substring(0,last_slash);
 
-        if(jdbcURL.contains("postgres"))
+        if (jdbcURL.contains("postgres"))
         {
             newJdbcUrl = newJdbcUrl.concat("postgres");
         }
@@ -108,7 +108,7 @@ public class DropCreateDatabase {
                 LOG.info("{}",sql);
         //        LOG.catching(Level.ERROR,e);
             } finally {
-                if(statement != null)
+                if (statement != null)
                     try {
                         statement.close();
                     } catch (SQLException e) {
@@ -161,10 +161,10 @@ public class DropCreateDatabase {
             stmt.executeUpdate(sql);
             LOG.info("Database created successfully...");
 
-            if(StringUtils.hasText(DB_INIT))
+            if (StringUtils.hasText(DB_INIT))
             {
                 Resource resource = new ClassPathResource(DB_INIT);
-                if(!resource.exists())
+                if (!resource.exists())
                 {
                     LOG.error("Could not find {}",DB_INIT);
                 } else {
@@ -186,15 +186,15 @@ public class DropCreateDatabase {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException se) {
-            }// do nothing
+            }
             try {
                 if (conn != null)
                     conn.close();
             } catch (SQLException se) {
                 se.printStackTrace();
-            }//end finally try
-        }//end try
-    }//end main
+            }
+        }
+    }
 
     private void initializeDB(Resource resource) throws IOException {
         //STEP 3: Open a connection
@@ -215,7 +215,7 @@ public class DropCreateDatabase {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if(conn != null)
+            if (conn != null)
                 try {
                     conn.close();
                 } catch (SQLException e) {

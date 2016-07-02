@@ -24,7 +24,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     private Student verifyStudent(final int id) throws StudentNotFoundException {
         Student student = studentRepository.findOne(id);
-        if(student == null) {
+        if (student == null) {
             throw new StudentNotFoundException(id);
         }
         return student;

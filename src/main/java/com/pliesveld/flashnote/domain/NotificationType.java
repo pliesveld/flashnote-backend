@@ -19,7 +19,7 @@ public enum NotificationType
     private final static Map<Integer,NotificationType> intToEnum = new HashMap<>();
 
     static {
-        for(NotificationType type : values())
+        for (NotificationType type : values())
         {
             intToEnum.put(type.getId(),type);
         }
@@ -35,5 +35,4 @@ public enum NotificationType
     {
         return intToEnum.get(id);
     }
-
 }
