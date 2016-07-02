@@ -92,11 +92,11 @@ public abstract class AbstractAuditableEntity<ID extends Serializable> extends D
 //    protected void onCreate()
 //    {
 //        modifiedOn = createdOn = Instant.now();
-//        if(createdByUser == null)
+//        if (createdByUser == null)
 //        {
 //            createdByUser = "SYSTEM";
 //        }
-//        if(modifiedByUser == null)
+//        if (modifiedByUser == null)
 //        {
 //            modifiedByUser = createdByUser;
 //        }
@@ -106,7 +106,7 @@ public abstract class AbstractAuditableEntity<ID extends Serializable> extends D
 //    protected void onUpdate()
 //    {
 //        modifiedOn = Instant.now();
-//        if(modifiedByUser == null)
+//        if (modifiedByUser == null)
 //            modifiedByUser = "SYSTEM";
 //    }
 

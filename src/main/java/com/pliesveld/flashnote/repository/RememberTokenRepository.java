@@ -12,5 +12,4 @@ public interface RememberTokenRepository extends CrudRepository<AccountRememberM
     @Modifying
     @Query("delete AccountRememberMeToken t where t.username = ?1")
     void deleteTokensForUser(String username);
-
 }

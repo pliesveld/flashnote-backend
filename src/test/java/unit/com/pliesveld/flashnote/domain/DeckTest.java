@@ -124,7 +124,7 @@ public class DeckTest extends StudentTest
             entityManager.persist(fc);
             list.add(fc);
 
-        } while(i++ < 5);
+        } while (i++ < 5);
 
         deck.setFlashcards(list);
         entityManager.persist(deck);
@@ -169,7 +169,7 @@ public class DeckTest extends StudentTest
 
             list.add(fc);
 
-        } while(i++ < 5);
+        } while (i++ < 5);
 
         deck.setFlashcards(list);
         entityManager.persist(deck);
@@ -222,7 +222,7 @@ public class DeckTest extends StudentTest
             entityManager.flush();
             list.add(fc);
 
-        } while(i++ < 5);
+        } while (i++ < 5);
 
         deck.setFlashcards(list);
         entityManager.persist(deck);
@@ -247,7 +247,7 @@ public class DeckTest extends StudentTest
             String expected_string[] = {"0","1","2","3","4"};
 
             int j = 0;
-            for(FlashCard fc : deck_list)
+            for (FlashCard fc : deck_list)
             {
                 assertEquals("Fetched answer differed", expected_string[j], fc.getAnswer().getContent());
                 j++;
@@ -273,7 +273,7 @@ public class DeckTest extends StudentTest
             String expected_string[] = {"0","2","3","4","1"};
 
             int j = 0;
-            for(FlashCard fc : deck_list)
+            for (FlashCard fc : deck_list)
             {
                 assertEquals("Fetched answer differed", expected_string[j], fc.getAnswer().getContent());
                 j++;

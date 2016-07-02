@@ -50,7 +50,7 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public List<FlashCard> findFlashCardsByContainingQuestionId(final int questionId) throws QuestionNotFoundException {
-        if(!questionRepository.exists(questionId))
+        if (!questionRepository.exists(questionId))
             throw new QuestionNotFoundException(questionId);
 
         return flashCardRepository.findAllByQuestion_id(questionId);
@@ -116,15 +116,15 @@ public class CardServiceImpl implements CardService {
 
     @Override
     public FlashCard createFlashCardReferecingQuestion(final int questionId, Answer answer) throws QuestionNotFoundException {
-        if(!questionRepository.exists(questionId))
+        if (!questionRepository.exists(questionId))
             throw new QuestionNotFoundException(questionId);
 
-        if(!answerRepository.exists(answer.getId()))
+        if (!answerRepository.exists(answer.getId()))
         {
             answer = answerRepository.save(answer);
         } else {
             final FlashCard fc = flashCardRepository.findOne(new FlashCardPrimaryKey(questionId, answer.getId()));
-            if(fc != null)
+            if (fc != null)
                 throw new FlashCardCreateException(fc.getId());
         }
 

@@ -92,7 +92,7 @@ public class Student extends DomainBaseEntity<Integer> {
 
     @PrePersist
     public void prePersist() {
-        if(role == null)
+        if (role == null)
             role = AccountRole.ROLE_ACCOUNT;
         temporaryPassword = false;
         lastPasswordResetDate = Instant.now();

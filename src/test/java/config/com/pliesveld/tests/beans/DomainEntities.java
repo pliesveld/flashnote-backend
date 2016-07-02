@@ -97,7 +97,7 @@ public class DomainEntities {
 
        List<FlashCard> list = new ArrayList<FlashCard>();
        int max = RandomUtils.nextInt(1,15);
-       for(int i = 0; i < max ; i++)
+       for (int i = 0; i < max ; i++)
        {
            FlashCard fc = this.flashcardBean();
            fc = domainBeanHelperService.makeEntityIfNotFound(fc);
@@ -117,7 +117,7 @@ public class DomainEntities {
         QuestionBank questionBank = new QuestionBank(categoryBean, UUID.randomUUID().toString());
 
         int max = RandomUtils.nextInt(1,8);
-        for(int i = 0; i < max ; i ++)
+        for (int i = 0; i < max ; i ++)
         {
             Question question = this.questionBean();
             question = domainBeanHelperService.makeEntityIfNotFound(question);
@@ -158,7 +158,7 @@ class DomainBeanHelperService
 
     private <T extends DomainBaseEntity<Integer>> T persist(Class<?> clazz, T domainObj) {
         T ret;
-        if(domainObj.getId() == null || (ret = (T) entityManager.find(clazz, domainObj.getId())) == null) {
+        if (domainObj.getId() == null || (ret = (T) entityManager.find(clazz, domainObj.getId())) == null) {
             entityManager.persist(domainObj);
         } else { // merge?
             return ret;
@@ -185,7 +185,7 @@ class DomainBeanHelperService
     FlashCard makeEntityIfNotFound(FlashCard fc) {
 
         FlashCard ret = null;
-        if(fc.getId() == null || (ret = entityManager.find(FlashCard.class, fc.getId())) == null)
+        if (fc.getId() == null || (ret = entityManager.find(FlashCard.class, fc.getId())) == null)
         {
             entityManager.persist(fc);
         } else {

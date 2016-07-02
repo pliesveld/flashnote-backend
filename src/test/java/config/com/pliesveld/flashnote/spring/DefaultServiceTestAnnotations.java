@@ -12,5 +12,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
-@ContextConfiguration(classes = SpringServiceTestConfig.class, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = com.pliesveld.flashnote.spring.SpringServiceTestConfig.class, loader = AnnotationConfigContextLoader.class)
 public @interface DefaultServiceTestAnnotations { }

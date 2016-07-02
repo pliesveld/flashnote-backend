@@ -23,9 +23,3 @@ public interface FlashnoteRepository<T, ID extends Serializable>
     enum RepositoryPermissions { NONE, READ, WRITE }
     public RepositoryPermissions permissions(StudentPrincipal currentUser, T resource);
 }
-
-
-/*
-
-
- */

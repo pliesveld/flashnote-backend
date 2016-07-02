@@ -57,7 +57,7 @@ public class PopulateFlashnoteContainerApplication {
     @Autowired
     PopulateSettings populateSettings;
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 //        System.setProperty("spring.profiles.default", System.getProperty("spring.profiles.default", "local"));
 //        System.setProperty("spring.profiles.active", "local");
         LOG.info("Starting ApplicationContext with initially populated data");
@@ -67,7 +67,7 @@ public class PopulateFlashnoteContainerApplication {
         //application.setWebEnvironment(false);
 //        application.addListeners(new ApplicationPidFileWriter("./bin/app.pid"));
         application.run(args);
-	}
+    }
 
 
 
@@ -75,7 +75,7 @@ public class PopulateFlashnoteContainerApplication {
     private void populateMessagesFor(Student studentDetails) {
         List<Notification> list = new ArrayList<>(15);
 
-        for(int i = 0; i < 15; i++) {
+        for (int i = 0; i < 15; i++) {
             String message = "This is a sample notification number " + i;
 
             Notification notification = new Notification(studentDetails, message);
@@ -91,11 +91,11 @@ public class PopulateFlashnoteContainerApplication {
     public CommandLineRunner populateStudents() {
         return (args) -> {
             try {
-                for(int i = 0;i < populateSettings.getCountStudents(); i++) {
+                for (int i = 0;i < populateSettings.getCountStudents(); i++) {
                     Student student = StudentGenerator.randomizedStudent();
                     studentRepository.save(student);
                 }
-            } catch(ConstraintViolationException cve) {
+            } catch (ConstraintViolationException cve) {
                 LOG.error("Could not save student: {}", cve);
             }
         };
@@ -117,10 +117,10 @@ public class PopulateFlashnoteContainerApplication {
 
             ArrayList<Resource> resources = new ArrayList<>();
 
-            for(String arg : args) {
-                if(!FileUtils.getFile(arg).exists())
+            for (String arg : args) {
+                if (!FileUtils.getFile(arg).exists())
                     continue;
-                if(!FileUtils.getFile(arg).isDirectory())
+                if (!FileUtils.getFile(arg).isDirectory())
                     continue;
 
                 LOG.debug("Checking directory {}", arg);
@@ -130,7 +130,7 @@ public class PopulateFlashnoteContainerApplication {
                 files.forEach(file -> LOG.debug("Loading file {}", file));
 
 
-                for(File file : files) {
+                for (File file : files) {
                     resources.add(new FileSystemResource(file));
                 }
 
@@ -141,7 +141,7 @@ public class PopulateFlashnoteContainerApplication {
 
             resources_array = (Resource[]) resources.toArray(resources_array);
 
-            for(Resource res : resources_array)
+            for (Resource res : resources_array)
             {
                 LOG.info(res);
             }
@@ -155,14 +155,14 @@ public class PopulateFlashnoteContainerApplication {
                 ctx.register(RepositoryPopulatorConfig.class);
                 ctx.scan("com.pliesveld.populator.spring");
                 ctx.refresh();
-            } catch(PropertyReferenceException pre) {
+            } catch (PropertyReferenceException pre) {
                 LOG.error("Registering populator {}", pre.getMessage());
                 throw pre;
-            } catch(BeanCreationException bce) {
+            } catch (BeanCreationException bce) {
                 bce.printStackTrace();
                 LOG.error("Bean creation: {}", bce.getMessage());
                 throw bce;
-            } catch(DataIntegrityViolationException dive) {
+            } catch (DataIntegrityViolationException dive) {
                 LOG.warn("Failed to save {}", dive.getMessage());
             }
 

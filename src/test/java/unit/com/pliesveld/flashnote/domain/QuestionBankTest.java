@@ -192,7 +192,7 @@ final public class QuestionBankTest extends AbstractTransactionalDomainEntityUni
         questionBank.setCategory(category);
         questionBank.setDescription("A sample question bank with a question.");
 
-        for(int i = 0; i < 3;i++)
+        for (int i = 0; i < 3;i++)
         {
             Question question = this.questionBean();
 

@@ -46,7 +46,9 @@ public class SpringJacksonConfig {
     Boolean defaultview;
 
     @Bean
-    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() { return new PropertySourcesPlaceholderConfigurer();}
+    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 
     @Bean
     public Jackson2ObjectMapperBuilder objectMapperBuilder() {
@@ -78,7 +80,7 @@ public class SpringJacksonConfig {
                 .configure(Hibernate5Module.Feature.REQUIRE_EXPLICIT_LAZY_LOADING_MARKER, marker);
 
         LOG.debug(Markers.OBJECT_MAPPER_INIT, "Configuring Hibernate module {}", jacksonHibernateModule);
-        for(Hibernate5Module.Feature feature : Hibernate5Module.Feature.values())
+        for (Hibernate5Module.Feature feature : Hibernate5Module.Feature.values())
         {
             LOG.debug(Markers.OBJECT_MAPPER_INIT, "{} = {}", feature, jacksonHibernateModule.isEnabled(feature));
         }

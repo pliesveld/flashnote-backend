@@ -32,20 +32,20 @@ public class ConstructController {
     private Deck verifyDeck(int id) throws DeckNotFoundException
     {
         Deck deck = deckService.findDeckById(id);
-        if(deck == null)
+        if (deck == null)
             throw new DeckNotFoundException(id);
         return deck;
     }
 
-    @RequestMapping(value="/deck/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/deck/{id}", method = RequestMethod.POST)
     public ResponseEntity<?> processDeckCreation(@PathVariable("id") int id,
-                                                 @RequestParam(name = "question_id", required = true) int question_id,
-                                                 @RequestParam(name = "answer_id", required = true) int answer_id)
+                                                 @RequestParam(name = "questionId", required = true) int questionId,
+                                                 @RequestParam(name = "answerId", required = true) int answerId)
     {
         Deck deck = verifyDeck(id);
 
-        Question question = cardService.findQuestionById(question_id);
-        Answer answer = cardService.findAnswerById(answer_id);
+        Question question = cardService.findQuestionById(questionId);
+        Answer answer = cardService.findAnswerById(answerId);
 
         FlashCard fc = new FlashCard(question,answer);
         deckService.updateDeckAddFlashCard(id, fc);
@@ -95,6 +95,4 @@ public class ConstructController {
         responseHeaders.setLocation(newAnswerUri);
         return new ResponseEntity<>(null,responseHeaders,HttpStatus.CREATED);
     }
-
-
 }

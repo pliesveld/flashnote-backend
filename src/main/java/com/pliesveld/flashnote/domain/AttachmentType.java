@@ -25,15 +25,22 @@ public enum AttachmentType
     private final static Map<Integer,AttachmentType> intToEnum = new HashMap<>();
 
     static {
-        for(AttachmentType type : values())
+        for (AttachmentType type : values())
         {
             intToEnum.put(type.getId(),type);
         }
     }
 
-    AttachmentType(final int id, final String mime, final MediaType mediatype, final String extension, final AttachmentTypeDataFormat dataFormat) { this.id = id; this.mime = mime; this.mediatype = mediatype; this.extension = extension; this.dataFormat = dataFormat;}
+    AttachmentType(final int id, final String mime, final MediaType mediatype,
+                   final String extension, final AttachmentTypeDataFormat dataFormat) {
+        this.id = id;
+        this.mime = mime;
+        this.mediatype = mediatype;
+        this.extension = extension;
+        this.dataFormat = dataFormat;
+    }
 
-    public String getMime() { return this.mime; };
+    public String getMime() { return this.mime; }
 
     public String getExtension() {
         return extension;
@@ -73,9 +80,9 @@ public enum AttachmentType
 
     public static AttachmentType valueOfMime(final String mime) throws IllegalArgumentException
     {
-        for(AttachmentType type : values())
+        for (AttachmentType type : values())
         {
-            if(type.supportsMimeType(mime))
+            if (type.supportsMimeType(mime))
                 return type;
         }
         return null;
@@ -83,9 +90,9 @@ public enum AttachmentType
 
     public static AttachmentType valueOfFileSuffix(final String filename) throws IllegalArgumentException
     {
-        for(AttachmentType type : values())
+        for (AttachmentType type : values())
         {
-            if(type.supportsFilenameBySuffix(filename))
+            if (type.supportsFilenameBySuffix(filename))
                 return type;
         }
         throw new IllegalArgumentException("Unsupported type: " + filename);

@@ -42,17 +42,17 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
         AttachmentType attachmentType = attachment.getAttachmentType();
         boolean is_valid = true;
 
-        if(attachmentType == null)
+        if (attachmentType == null)
         {
             is_valid = false;
         } else {
 
-            if(attachment.getContents() == null)
+            if (attachment.getContents() == null)
             {
                 is_valid = true;
             } else {
 
-                switch(attachmentType) {
+                switch (attachmentType) {
                     case AUDIO:
                         is_valid = is_valid && validateAudioAttachment(attachment,context);
                         break;
@@ -69,7 +69,7 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
 
         }
 
-        if(!is_valid)
+        if (!is_valid)
         {
             context.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.message}").addConstraintViolation();
         }
@@ -127,19 +127,19 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
         try {
             ImageMetadata metadata = ImageMetadataReader.readImageMetadata(fileName, content, mime);
 
-            if(metadata == null) {
+            if (metadata == null) {
                 errors.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.image.message}").addConstraintViolation();
                 return false;
             } else {
-                if(metadata.getAspectRatio() > validationImageSettings.getMaxAspectRatio() || metadata.getAspectRatio() < validationImageSettings.getMinAspectRatio()) {
+                if (metadata.getAspectRatio() > validationImageSettings.getMaxAspectRatio() || metadata.getAspectRatio() < validationImageSettings.getMinAspectRatio()) {
                     errors.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.image.aspect.message}").addConstraintViolation();
                     return false;
                 }
-                if(metadata.getHeight() > validationImageSettings.getMaxHeight()) {
+                if (metadata.getHeight() > validationImageSettings.getMaxHeight()) {
                     errors.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.image.dimensions.message}").addConstraintViolation();
                     return false;
                 }
-                if(metadata.getWidth() > validationImageSettings.getMaxWidth()) {
+                if (metadata.getWidth() > validationImageSettings.getMaxWidth()) {
                     errors.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.image.dimensions.message}").addConstraintViolation();
                     return false;
                 }
@@ -153,7 +153,7 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
     }
 
     private boolean validateDocumentAttachment(AttachmentBinary attachment, ConstraintValidatorContext errors) {
-        if(!isValidUTF8(attachment.getContents()))
+        if (!isValidUTF8(attachment.getContents()))
         {
             errors.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.document.message}").addConstraintViolation();
             return false;
@@ -196,7 +196,7 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
             cs.decode(ByteBuffer.wrap(input));
             return true;
         }
-        catch(CharacterCodingException e){
+        catch (CharacterCodingException e) {
             return false;
         }
     }

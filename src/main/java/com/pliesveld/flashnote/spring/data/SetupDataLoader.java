@@ -38,7 +38,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     @Override
     public void onApplicationEvent(final ContextRefreshedEvent event) {
-        if(alreadySetup)
+        if (alreadySetup)
             return;
 
         createStudentIfNotFound("new@example.com",     ROLE_ACCOUNT,    "new");
@@ -56,7 +56,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     @Transactional
     private Student createStudentIfNotFound(String email, AccountRole role, String name) {
         Student student = studentRepository.findOneByEmail(email);
-        if( student == null )
+        if ( student == null )
         {
             student = new Student();
             student.setEmail(email);
@@ -74,7 +74,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         parent = categoryRepository.findOne(parent.getId());
         child = categoryRepository.findOne(child.getId());
 
-        if(!child.isParent(parent))
+        if (!child.isParent(parent))
             parent.addChildCategory(child);
 
         categoryRepository.save(child);
@@ -85,7 +85,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     {
         Category category = categoryRepository.findOneByNameEquals(name);
 
-        if( category == null )
+        if ( category == null )
         {
             category = new Category();
             category.setName(name);

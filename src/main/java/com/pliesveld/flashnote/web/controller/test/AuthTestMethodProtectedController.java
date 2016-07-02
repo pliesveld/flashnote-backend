@@ -15,5 +15,4 @@ public class AuthTestMethodProtectedController {
     public ResponseEntity<?> getProtectedGreeting() {
         return ResponseEntity.ok("Greetings from admin protected method!");
     }
-
 }

@@ -47,7 +47,7 @@
         <rest-assured.version>2.9.0</rest-assured.version>
         <start-class>com.pliesveld.flashnote.FlashnoteContainerApplication</start-class>
 
-        <checkstyle.config.location>config/patrick_checks.xml</checkstyle.config.location>
+        <checkstyle.config.location>config/whitespace_only_stylechecks.xml</checkstyle.config.location>
     </properties>
 
     <dependencyManagement>
@@ -507,7 +507,7 @@
                         <configuration>
                             <skip>${checkstyle.skip}</skip>
                             <violationSeverity>warning</violationSeverity>
-                            <configLocation>config/patrick_checks.xml</configLocation>
+                            <configLocation>config/whitespace_only_stylechecks.xml</configLocation>
                             <!--<sourceDirectories>${project.compileSourceRoots}</sourceDirectories>-->
                             <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
                             <encoding>UTF-8</encoding>
@@ -517,13 +517,20 @@
                             <linkXRef>false</linkXRef>
                             <includeResources>false</includeResources>
                             <includeTestResources>false</includeTestResources>
-                            <includeTestSourceDirectory>false</includeTestSourceDirectory>
+                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
                         </configuration>
                         <goals>
                             <goal>check</goal>
                         </goals>
                     </execution>
                 </executions>
+                <dependencies> <!-- because of maven color -->
+					<dependency>
+						<groupId>org.slf4j</groupId>
+						<artifactId>jcl-over-slf4j</artifactId>
+						<version>1.7.5</version>
+					</dependency>
+				</dependencies>
             </plugin>
         </plugins>
 

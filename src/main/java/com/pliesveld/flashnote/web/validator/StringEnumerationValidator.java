@@ -31,7 +31,7 @@ public class StringEnumerationValidator implements ConstraintValidator<StringEnu
         if ( value == null ) {
             return true;
         } else {
-            if(!AVAILABLE_ENUM_NAMES.contains(value)) {
+            if (!AVAILABLE_ENUM_NAMES.contains(value)) {
                 context.disableDefaultConstraintViolation();
                 context.buildConstraintViolationWithTemplate("Value " + value + " was not one of " + AVAILABLE_ENUM_NAMES).addConstraintViolation();
                 return false;
@@ -39,5 +39,4 @@ public class StringEnumerationValidator implements ConstraintValidator<StringEnu
         }
         return true;
     }
-
 }

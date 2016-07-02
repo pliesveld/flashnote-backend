@@ -44,5 +44,4 @@ public class PopulatedQuestionsRepositoryTest extends AbstractPopulatedRepositor
     {
         assertTrue(questionRepository.count() > 0);
     }
-
 }

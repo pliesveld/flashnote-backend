@@ -26,14 +26,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     private void verifyCategoryTerm(String categoryTerm) throws CategorySearchException
     {
-        if(StringUtils.containsWhitespace(categoryTerm))
+        if (StringUtils.containsWhitespace(categoryTerm))
             throw new CategorySearchException(categoryTerm);
     }
 
     @Override
     public Category getCategoryById(int id) throws CategoryNotFoundException {
         Category category = categoryRepository.findOne(id);
-        if(category == null)
+        if (category == null)
         {
             throw new CategoryNotFoundException(id);
         }
@@ -52,7 +52,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> childCategories(int categoryId) {
-        if(!categoryRepository.exists(categoryId))
+        if (!categoryRepository.exists(categoryId))
             throw new CategoryNotFoundException(categoryId);
         return categoryRepository.findByParentCategory_id(categoryId);
     }

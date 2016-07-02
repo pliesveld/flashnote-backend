@@ -172,7 +172,7 @@ public class HibernateSerializationTest extends AbstractDomainEntityUnitTest imp
     }
 
     private ArrayList<DomainBaseEntity> initializeTestClass() {
-//        for(String beanName : ctx.getBeanDefinitionNames()) {
+//        for (String beanName : ctx.getBeanDefinitionNames()) {
 //            LOG.trace(beanName);
 //        }
 
@@ -181,7 +181,7 @@ public class HibernateSerializationTest extends AbstractDomainEntityUnitTest imp
 
         ArrayList<DomainBaseEntity> entityBeans = new ArrayList<>(entityClassList.size());
 
-        for(Class<?> clazz : entityClassList)
+        for (Class<?> clazz : entityClassList)
         {
             try {
                 sessionCounter.clear();
@@ -191,16 +191,16 @@ public class HibernateSerializationTest extends AbstractDomainEntityUnitTest imp
                 entityManager.flush();
 //                entityManager.clear();
 
-                LOG.trace("Saving {} {}", () -> {return clazz.getSimpleName();}, () -> {
+                LOG.trace("Saving {} {}", () -> { return clazz.getSimpleName(); }, () -> {
                     final int ent_cnt = sessionCounter.getEntities();
                     final int col_cnt = sessionCounter.getCollections();
-                    if(ent_cnt == col_cnt && ent_cnt == 0)
+                    if (ent_cnt == col_cnt && ent_cnt == 0)
                         return "";
                     return String.format("[Entities=%d, Collections=%d]",ent_cnt, col_cnt);
                 });
 
 
-                if(DomainBaseEntity.class.isAssignableFrom(clazz))
+                if (DomainBaseEntity.class.isAssignableFrom(clazz))
                 {
                     DomainBaseEntity dbe = (DomainBaseEntity) obj;
                     entityBeans.add(dbe);
@@ -208,7 +208,7 @@ public class HibernateSerializationTest extends AbstractDomainEntityUnitTest imp
                     LOG.info("Got bean; but class {} could not be assigned to DomainBaseEntity.class", clazz);
                 }
 
-            } catch(Exception e) {
+            } catch (Exception e) {
                 LOG.warn("Couldn't persist bean {}", clazz);
 
             }

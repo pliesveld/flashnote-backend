@@ -186,7 +186,7 @@ public abstract class AbstractRepositoryUnitTest
         } catch (JsonProcessingException e) {
 //            e.printStackTrace();
             LOG_DOMAIN.warn("Could not process {}: {}", obj, e.getMessage());
-        } catch(LazyInitializationException lie) {
+        } catch (LazyInitializationException lie) {
             LOG_DOMAIN.warn("failed to serialize: ", lie.getMessage());
         }
     }

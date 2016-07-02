@@ -65,7 +65,7 @@ public class PopulatedQuestionBanksRepositoryTest extends AbstractPopulatedRepos
         LOG_SQL.debug("QuestionBanks returned: {}", qb.size());
 
         qb.forEach(LOG_SQL::debug);
-        qb.forEach((bank) -> {debug(bank); });
+        qb.forEach((bank) -> { debug(bank); });
 
     }
 

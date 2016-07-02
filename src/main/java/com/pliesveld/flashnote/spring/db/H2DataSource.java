@@ -97,8 +97,6 @@ public class H2DataSource {
         return entityManagerFactoryBean.getObject();
     }
 
-
-
     /*
     // Start WebServer, access http://localhost:8082
     @Bean(initMethod = "start", destroyMethod = "stop")

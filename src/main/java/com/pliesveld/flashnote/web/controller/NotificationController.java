@@ -17,7 +17,7 @@ public class NotificationController {
 
     @RequestMapping(value = "/messages", method = RequestMethod.GET)
     public ResponseEntity<?> retrieveStudentNotifications(@CurrentUser StudentPrincipal studentPrincipal) {
-        if(studentPrincipal == null)
+        if (studentPrincipal == null)
         {
             return ResponseEntity.badRequest().build();
         }

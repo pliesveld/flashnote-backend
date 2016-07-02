@@ -182,7 +182,7 @@ public class SharedServiceTest extends AbstractTransactionalServiceUnitTest {
         List<QuestionBank> bankList = bankService.findAllQuestionBanks();
         assertNotNull(bankList);
         assertEquals(1, bankList.size());
-        for(QuestionBank questionBank : bankList )
+        for (QuestionBank questionBank : bankList )
         {
             assertNotNull(questionBank);
             assertNotNull(questionBank.getDescription());
@@ -198,7 +198,7 @@ public class SharedServiceTest extends AbstractTransactionalServiceUnitTest {
         assertNotNull(bankPage);
 
         List<QuestionBank> bankList = bankPage.getContent();
-        for(QuestionBank questionBank : bankList )
+        for (QuestionBank questionBank : bankList )
         {
             assertNotNull(questionBank);
             assertNotNull(questionBank.getDescription());

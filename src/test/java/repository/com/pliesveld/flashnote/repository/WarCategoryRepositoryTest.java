@@ -46,5 +46,4 @@ public class WarCategoryRepositoryTest extends AbstractPopulatedRepositoryUnitTe
         assertNotNull(categoryRepository.findOne(500));
         debugRepository(categoryRepository);
     }
-
 }

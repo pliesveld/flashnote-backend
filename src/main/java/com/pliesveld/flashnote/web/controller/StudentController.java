@@ -33,14 +33,14 @@ public class StudentController {
     private Student verifyStudent(int id) throws StudentNotFoundException
     {
         Student student = studentService.findStudentById(id);
-        if(student == null)
+        if (student == null)
             throw new StudentNotFoundException(id);
 
         return student;
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> removeStudent(@PathVariable Integer id)
     {
         adminService.deleteStudent(id);
@@ -53,7 +53,7 @@ public class StudentController {
         return ResponseEntity.ok(studentService.findAll(page));
     }
 
-    @RequestMapping(value="/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getStudent(@PathVariable Integer id)
     {
         LOG.info("Getting student by id " + id);
@@ -62,7 +62,7 @@ public class StudentController {
         return new ResponseEntity<>(existingStudent,HttpStatus.OK);
     }
 
-    @RequestMapping(value="/{id}/statements", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/statements", method = RequestMethod.GET)
     @ResponseBody
     @ResponseStatus(code = HttpStatus.OK)
     public List<AbstractStatement> retrieveStudentStatements(@PathVariable("id") int student_id)
@@ -71,7 +71,7 @@ public class StudentController {
         return studentService.findStatementsBy(student);
     }
 
-    @RequestMapping(value="/{id}/decks", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/decks", method = RequestMethod.GET)
     @ResponseBody
     @ResponseStatus(code = HttpStatus.OK)
     public List<Deck> retrieveStudentDecks(@PathVariable("id") int student_id)

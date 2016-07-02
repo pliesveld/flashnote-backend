@@ -51,7 +51,7 @@ public class BinaryFileTest
 
     private static byte[] readBytesFromFile(String filePath) throws IOException, IllegalAccessException {
         File inputFile = new File(filePath);
-        if(!inputFile.exists())
+        if (!inputFile.exists())
             throw new IllegalAccessException("File not found: " + inputFile.getAbsolutePath());
         FileInputStream inputStream = new FileInputStream(inputFile);
 
@@ -163,7 +163,7 @@ public class BinaryFileTest
         byte[] dataBytes = new byte[1024];
 
         int nread = 0;
-        while((nread = inputStream.read(dataBytes)) != -1)
+        while ((nread = inputStream.read(dataBytes)) != -1)
         {
             md.update(dataBytes,0,nread);
         }
@@ -171,9 +171,9 @@ public class BinaryFileTest
         byte[] mdbytes = md.digest();
 
         StringBuffer hexString = new StringBuffer();
-    	for (int i=0;i<mdbytes.length;i++) {
-    	  hexString.append(Integer.toHexString(0xFF & mdbytes[i]));
-    	}
+        for (int i = 0;i < mdbytes.length;i++) {
+          hexString.append(Integer.toHexString(0xFF & mdbytes[i]));
+        }
 
         return hexString.toString();
     }
@@ -193,7 +193,7 @@ public class BinaryFileTest
                 String hash2 = computeHash(fis2);
 
                 assertEquals(hash1,hash2);
-            } catch(IOException ioe) {
+            } catch (IOException ioe) {
                 fail(ioe.getMessage());
             }
 

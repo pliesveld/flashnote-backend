@@ -31,7 +31,7 @@ public class AttachmentController  {
     @Autowired
     private AttachmentService attachmentService;
 
-    @RequestMapping(value="/{id}", method = RequestMethod.HEAD)
+    @RequestMapping(value = "/{id}", method = RequestMethod.HEAD)
     public ResponseEntity<?> modifiedSinceAttachment(@PathVariable("id") int id)
     {
         AttachmentHeader header = attachmentService.findAttachmentHeaderById(id);
@@ -43,7 +43,7 @@ public class AttachmentController  {
         return new ResponseEntity<>(null,responseHeaders,HttpStatus.OK);
     }
 
-    @RequestMapping(value="/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> downloadAttachment(@PathVariable("id") int id)
     {
         MediaType content_type = null;
@@ -56,7 +56,7 @@ public class AttachmentController  {
         responseHeaders.setContentType(attachment.getAttachmentType().getMediatype());
         responseHeaders.setDate(attachment.getModifiedOn().toEpochMilli());
 
-        if(attachment.getAttachmentType().isBinary())
+        if (attachment.getAttachmentType().isBinary())
         {
             AttachmentBinary binary = (AttachmentBinary) attachment;
             return new ResponseEntity<>(binary.getContents(),responseHeaders,HttpStatus.OK);
@@ -66,7 +66,7 @@ public class AttachmentController  {
         }
     }
 
-    @RequestMapping(value="/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void deleteAttachment(@PathVariable("id") int id)
     {

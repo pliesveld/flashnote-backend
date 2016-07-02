@@ -55,7 +55,7 @@ public class DeckServiceTest extends AbstractTransactionalServiceUnitTest {
     @Before
     public void givenExistingCategory()
     {
-        if( category_id == null )
+        if ( category_id == null )
         {
             Category category = categoryRepository.findOneByNameEquals("TEST DECK CATEGORY");
             category_id = category.getId();

@@ -34,7 +34,7 @@ public class SimpleErrorController implements ErrorController {
     }
 
     @RequestMapping
-    public Map<String, Object> error(HttpServletRequest aRequest){
+    public Map<String, Object> error(HttpServletRequest aRequest) {
         Map<String, Object> body = getErrorAttributes(aRequest,
                 getTraceParameter(aRequest));
         return body;

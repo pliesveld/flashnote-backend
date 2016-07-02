@@ -15,8 +15,8 @@ import java.util.concurrent.TimeUnit;
 @EnableCaching
 @ComponentScan(basePackages = "com.pliesveld.flashnote.security")
 public class SpringCacheConfig {
-    @Bean(name="localGauvaCaches")
-    public SimpleCacheManager localGuavaCaches(){
+    @Bean(name = "localGauvaCaches")
+    public SimpleCacheManager localGuavaCaches() {
         final SimpleCacheManager simpleCacheManager = new SimpleCacheManager();
         final GuavaCache tokenCache = new GuavaCache(CacheConstants.TOKEN_CACHE, CacheBuilder.newBuilder()
                                                   .concurrencyLevel(3) //Choose per your own will.

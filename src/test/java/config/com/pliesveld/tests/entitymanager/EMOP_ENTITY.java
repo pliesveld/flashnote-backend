@@ -36,7 +36,7 @@ public enum EMOP_ENTITY implements EMOP {
 
     REMOVE {
         public void apply(EntityManager entityManager, DomainBaseEntity entity) {
-            if(! entityManager.isJoinedToTransaction() )
+            if (!entityManager.isJoinedToTransaction() )
                 throw new IllegalStateException("Must be in transaction to call entityManager." + this.toString());
             entityManager.remove(entity);
         }
@@ -45,7 +45,7 @@ public enum EMOP_ENTITY implements EMOP {
     REFRESH {
         @Override
         public void apply(EntityManager entityManager, DomainBaseEntity entity) {
-            if(! entityManager.isJoinedToTransaction() )
+            if (!entityManager.isJoinedToTransaction() )
                 throw new IllegalStateException("Must be in transaction to call entityManager." + this.toString());
             entityManager.refresh(entity);
         }

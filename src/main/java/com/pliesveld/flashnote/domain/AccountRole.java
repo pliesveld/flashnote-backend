@@ -39,7 +39,7 @@ public enum AccountRole
     }
 
     static {
-        for(AccountRole type : values())
+        for (AccountRole type : values())
         {
             intToEnum.put(type.getId(),type);
         }

@@ -17,7 +17,7 @@ final public class AnswerSpecification {
 
     private static String getContainsLikePattern(String searchTerm) {
 
-        if(searchTerm == null || (searchTerm = searchTerm.trim()).isEmpty()) {
+        if (searchTerm == null || (searchTerm = searchTerm.trim()).isEmpty()) {
             return "%";
         } else {
             return "%" + searchTerm.toLowerCase() + "%";

@@ -51,7 +51,7 @@ public class RateLimitServiceImpl implements RateLimitService {
         int attempts = 0;
         try {
             attempts = attemptsCache.get(key);
-        } catch(final ExecutionException e) {
+        } catch (final ExecutionException e) {
             attempts = 0;
         }
         attempts++;

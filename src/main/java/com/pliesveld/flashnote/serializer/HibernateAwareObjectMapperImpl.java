@@ -37,7 +37,7 @@ public class HibernateAwareObjectMapperImpl extends ObjectMapper implements Hibe
         LOG.debug(OBJECT_MAPPER_INIT, "Active View : {}", getSerializationConfig().getActiveView());
 
 
-        for(Hibernate5Module.Feature feature : Hibernate5Module.Feature.values())
+        for (Hibernate5Module.Feature feature : Hibernate5Module.Feature.values())
             LOG.debug(OBJECT_MAPPER_INIT, "{} = {}", feature, jacksonHibernateModule.isEnabled(feature));
 
         registerModule(jacksonHibernateModule);
@@ -85,9 +85,9 @@ public class HibernateAwareObjectMapperImpl extends ObjectMapper implements Hibe
     }
 
     @Override
-    public void writeValue(JsonGenerator g, Object value) throws IOException, JsonGenerationException, JsonMappingException {
+    public void writeValue(JsonGenerator gen, Object value) throws IOException, JsonGenerationException, JsonMappingException {
         LOG.trace(Markers.OBJECT_MAPPER_WRITE, "OBJECT_MAPPER4 {} : {}",this, value.getClass().getName());
-        super.writeValue(g, value);
+        super.writeValue(gen, value);
     }
 
     @Override
@@ -97,9 +97,9 @@ public class HibernateAwareObjectMapperImpl extends ObjectMapper implements Hibe
     }
 
     @Override
-    public void writeValue(Writer w, Object value) throws IOException, JsonGenerationException, JsonMappingException {
+    public void writeValue(Writer writer, Object value) throws IOException, JsonGenerationException, JsonMappingException {
         LOG.trace(Markers.OBJECT_MAPPER_WRITE, "OBJECT_MAPPER6 {} : {}",this, value.getClass().getName());
-        super.writeValue(w, value);
+        super.writeValue(writer, value);
     }
 
     @Override

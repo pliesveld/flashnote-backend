@@ -76,7 +76,7 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
              */
             UserDetails userDetails = jwtTokenCache.findUserByTokenCache(authToken);
 
-            if(userDetails == null)
+            if (userDetails == null)
             {
                 /*
                     Verify that the token has not expired, and that the creation date is not before the
@@ -98,7 +98,7 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
                 User has been successfully authenticated by the jwt token.  Assign an authentication object to the
                 Spring Security context.
              */
-            if(userDetails != null)
+            if (userDetails != null)
              {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
@@ -108,6 +108,4 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
 
         chain.doFilter(request, response);
     }
-
-
 }

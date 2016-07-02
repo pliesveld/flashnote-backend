@@ -46,5 +46,4 @@ public class SingleCategoryRepositoryTest extends AbstractPopulatedRepositoryUni
         assertNotNull(categoryRepository.findOne(500));
         debugRepository(categoryRepository);
     }
-
 }

@@ -115,7 +115,7 @@ public class AuthTests {
     @Before
     public void saveUser()
     {
-        if(null == studentRepository.findOneByEmail("student@example.com"))
+        if (null == studentRepository.findOneByEmail("student@example.com"))
             registrationService.createStudent("newuser","student@example.com","password");
 
         stopWatch.start();
@@ -130,7 +130,7 @@ public class AuthTests {
 
     @Test
     @Repeat(value = 10)
-	public void contextLoad() {
+    public void contextLoad() {
         int port = Integer.valueOf(this.port);
         String URL_BASE = "http://localhost:" + port;
         String URL_AUTH = URL_BASE + "/auth";
@@ -160,7 +160,7 @@ public class AuthTests {
 
         LOG.debug(authorities.getAuthorities());
 
-	}
+    }
 
 }
 

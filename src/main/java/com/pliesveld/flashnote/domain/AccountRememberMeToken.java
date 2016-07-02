@@ -33,7 +33,7 @@ public class AccountRememberMeToken {
 
     @PrePersist
     public void setDefaults() {
-        if(lastUsed == null)
+        if (lastUsed == null)
         {
             lastUsed = Instant.now();
         }

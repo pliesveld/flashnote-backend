@@ -77,5 +77,4 @@ public abstract class AbstractPopulatedRepositoryUnitTest extends AbstractTransa
         entityManager.clear();
 
     }
-
 }

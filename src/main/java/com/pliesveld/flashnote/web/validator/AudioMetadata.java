@@ -9,7 +9,7 @@ public class AudioMetadata {
     private final String mimeContentType;
 
     public AudioMetadata(AudioFileFormat audioFileFormat, AudioFormat audioFormat, String mimeContentType) {
-        if(audioFileFormat == null && audioFormat == null)
+        if (audioFileFormat == null && audioFormat == null)
             throw new NullPointerException("Cannot create AudioMedata both null arguments");
         this.audioFileFormat = audioFileFormat;
         this.audioFormat = audioFormat;

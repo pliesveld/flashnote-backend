@@ -36,7 +36,7 @@ public class AudioMetadataReaderTest {
         LOG.debug(SERVICE_ATTACHMENT,"Could not open file " + baseURL);
         LOG.debug(SERVICE_ATTACHMENT,"Checking for test resources in {}",baseURL);
 
-        for(String audio : AUDIO)
+        for (String audio : AUDIO)
         {
             Resource audioResource = resource.createRelative(audio);
 
@@ -44,7 +44,7 @@ public class AudioMetadataReaderTest {
 
             file = audioResource.getFile();
 
-            if(!file.exists())
+            if (!file.exists())
             {
                 LOG.warn("File {0} does not exist.",file.getAbsoluteFile().getAbsolutePath());
                 continue;
@@ -54,7 +54,7 @@ public class AudioMetadataReaderTest {
 
             try {
                 AudioMetadataReader.readAudioMetadata(file, null);
-            } catch(AudioFormatNotSupportedException afnse) {
+            } catch (AudioFormatNotSupportedException afnse) {
                 LOG.error("reader could not open {}",file.getName());
             }
 
@@ -72,7 +72,7 @@ public class AudioMetadataReaderTest {
 
         LOG.debug(SERVICE_ATTACHMENT,"Checking for test resources in {}",baseURL);
 
-        for(String audio : AUDIO)
+        for (String audio : AUDIO)
         {
             Resource audioResource = resource.createRelative(audio);
 
@@ -80,7 +80,7 @@ public class AudioMetadataReaderTest {
 
             file = audioResource.getFile();
 
-            if(!file.exists())
+            if (!file.exists())
             {
                 LOG.warn("File {0} does not exist.",file.getAbsoluteFile().getAbsolutePath());
                 continue;
@@ -91,7 +91,7 @@ public class AudioMetadataReaderTest {
             try {
                 byte[] contents = IOUtils.toByteArray(new FileInputStream(file));
                 AudioMetadataReader.readAudioMetadata(file.getName(), contents, null);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 LOG.error("Could not read file.");
             }
 

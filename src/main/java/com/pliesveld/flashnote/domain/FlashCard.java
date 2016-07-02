@@ -45,7 +45,7 @@ public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey>
     public FlashCard(Integer questionId, Integer answerId) {
         this();
         /*
-        if(questionId == null || answerId == null)
+        if (questionId == null || answerId == null)
         {
             throw new NullPointerException(String.format("Cannot pass a null %s",questionId == answerId ? "question or answer" : questionId == null ? "question" : "answer"));
         }
@@ -92,6 +92,4 @@ public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey>
         return Objects.equals(getId(), other.getId());
 //        return Objects.equals(getQuestion(), other.getQuestion()) && Objects.equals(getAnswer(), other.getAnswer());
     }
-
-
 }

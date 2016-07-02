@@ -37,7 +37,7 @@ public class AttachmentBinary extends AbstractAttachment implements Serializable
     @PrePersist
     public void prePersist()
     {
-        if(attachmentType == null)
+        if (attachmentType == null)
             attachmentType = AttachmentType.BINARY;
     }
 

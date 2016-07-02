@@ -48,11 +48,11 @@ public class FlashCardPrimaryKey implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
 
-        FlashCardPrimaryKey id = (FlashCardPrimaryKey) o;
+        FlashCardPrimaryKey id = (FlashCardPrimaryKey) other;
 
         return answerId.equals(id.answerId) &&
                 questionId.equals(id.questionId);

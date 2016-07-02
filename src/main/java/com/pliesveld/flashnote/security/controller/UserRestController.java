@@ -32,11 +32,11 @@ public class UserRestController {
 //    public StudentPrincipal getAuthenticatedUser(HttpServletRequest request) {
 //        String token = request.getHeader(tokenHeader);
 //
-//        if(token == null)
+//        if (token == null)
 //            return null;
 //
 //        UserDetails user = null;
-//        if((user = jwtTokenCache.findUserByTokenCache(token)) != null)
+//        if ((user = jwtTokenCache.findUserByTokenCache(token)) != null)
 //        {
 //
 //            return (StudentPrincipal) user;

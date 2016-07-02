@@ -17,17 +17,17 @@ import java.time.Instant;
 @Import(MailSenderAutoConfiguration.class)
 public class SpringMailConfig {
 
-	@Bean
+    @Bean
     @Qualifier("accountVerificationMessage")
-	public SimpleMailMessage templateVerificationMessage() {
-		SimpleMailMessage message = new SimpleMailMessage();
-		message.setFrom(this.systemEmailAddress());
+    public SimpleMailMessage templateVerificationMessage() {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(this.systemEmailAddress());
         message.setReplyTo(this.systemEmailAddress());
         message.setSentDate(Date.from(Instant.now()));
-		message.setSubject("Account Registration Confirmation");
-		message.setText("To complete your registration, visit ");
-		return message;
-	}
+        message.setSubject("Account Registration Confirmation");
+        message.setText("To complete your registration, visit ");
+        return message;
+    }
 
     @Bean
     @Qualifier("accountPasswordResetConfirmationMessage")

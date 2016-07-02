@@ -50,5 +50,4 @@ public class ComplexPopulatedRepositoryTest extends AbstractPopulatedRepositoryU
         debugRepository(questionRepository);
         debugRepository(questionBankRepository);
     }
-
 }

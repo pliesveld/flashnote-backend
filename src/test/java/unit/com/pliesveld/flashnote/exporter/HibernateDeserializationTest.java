@@ -74,7 +74,7 @@ public class HibernateDeserializationTest extends AbstractDomainEntityUnitTest i
     }
 
     private ArrayList<DomainBaseEntity> initializeTestClass() {
-         for(String beanName : ctx.getBeanDefinitionNames()) {
+         for (String beanName : ctx.getBeanDefinitionNames()) {
             LOG.debug(beanName);
         }
 
@@ -83,14 +83,14 @@ public class HibernateDeserializationTest extends AbstractDomainEntityUnitTest i
 
         ArrayList<DomainBaseEntity> entityBeans = new ArrayList<>(entityClassList.size());
 
-        for(Class<?> clazz : entityClassList)
+        for (Class<?> clazz : entityClassList)
         {
             try {
                 Object obj = ctx.getBean(clazz);
                 entityManager.persist(obj);
                 entityManager.flush();
 
-                if(DomainBaseEntity.class.isAssignableFrom(clazz))
+                if (DomainBaseEntity.class.isAssignableFrom(clazz))
                 {
                     DomainBaseEntity dbe = (DomainBaseEntity) obj;
                     entityBeans.add(dbe);
@@ -99,7 +99,7 @@ public class HibernateDeserializationTest extends AbstractDomainEntityUnitTest i
                     LOG.warn("Got bean; but class {} could not be assigned to DomainBaseEntity.class", clazz);
                 }
 
-            } catch(Exception e) {
+            } catch (Exception e) {
                 LOG.debug("Couldn't load bean of class {}",clazz);
 
             }
@@ -173,7 +173,7 @@ public class HibernateDeserializationTest extends AbstractDomainEntityUnitTest i
 //        entityManager.flush();
 //        questionBank.setCategory(category);
 //
-//        for(int i = 0; i < 5; i++)
+//        for (int i = 0; i < 5; i++)
 //        {
 //            Question question = questionBean();
 //            entityManager.persist(question);

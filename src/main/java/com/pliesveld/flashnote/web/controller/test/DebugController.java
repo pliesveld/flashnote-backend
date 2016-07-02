@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RestController
-@RequestMapping(value="/debug")
+@RequestMapping(value = "/debug")
 public class DebugController {
     private static final Logger LOG = LogManager.getLogger();
 
@@ -84,7 +84,7 @@ public class DebugController {
 
             JsonSchema jsonSchema;
 
-            if( validate ) {
+            if ( validate ) {
                 ValidationSchemaFactoryWrapper visitor = new ValidationSchemaFactoryWrapper();
                 objectMapper.acceptJsonFormatVisitor(clazz, visitor);
                 jsonSchema = visitor.finalSchema();
@@ -102,7 +102,7 @@ public class DebugController {
     @RequestMapping(value = {"/log", "/logs"}, method = RequestMethod.GET)
     public ResponseEntity<?> getLogLevels()
     {
-        Map<String,String> settings = Stream.of (DebugRequestJson.LOG_TYPE.values()).map(l -> l.toString()).collect(Collectors.toMap(
+        Map<String,String> settings = Stream.of(DebugRequestJson.LOG_TYPE.values()).map(l -> l.toString()).collect(Collectors.toMap(
                 ((s) -> {
                     return s;
                 }), (m) -> {
@@ -123,7 +123,7 @@ public class DebugController {
 
         updateLog(debugLog, debugLevel);
 
-        Map<String,String> settings = Stream.of (DebugRequestJson.LOG_TYPE.values()).map(l -> l.toString()).collect(Collectors.toMap(
+        Map<String,String> settings = Stream.of(DebugRequestJson.LOG_TYPE.values()).map(l -> l.toString()).collect(Collectors.toMap(
             ((s) -> {
                 return s;
             }), (m) -> {
@@ -157,7 +157,7 @@ public class DebugController {
     {
         updateLog(debugLog.getLog(),debugLog.getLevel());
 
-        Map<String,String> settings = Stream.of (DebugRequestJson.LOG_TYPE.values()).map(l -> l.toString()).collect(Collectors.toMap(
+        Map<String,String> settings = Stream.of(DebugRequestJson.LOG_TYPE.values()).map(l -> l.toString()).collect(Collectors.toMap(
                 ((s) -> {
                     return s;
                 }), (m) -> {
@@ -175,7 +175,7 @@ public class DebugController {
         Map<String,String> prior = getCurrentSettings();
 
         int prior_hc = prior.hashCode();
-        for( DebugRequestJson debugRequestJson : debugLogGroup.getSettings() )
+        for ( DebugRequestJson debugRequestJson : debugLogGroup.getSettings() )
         {
 //            LOG.error("checking {} {}", debugRequestJson.getLog(), debugRequestJson.getLevel());
             updateLog(debugRequestJson.getLog(),debugRequestJson.getLevel());
@@ -189,7 +189,7 @@ public class DebugController {
     }
 
     private Map<String,String> getCurrentSettings() {
-        return Stream.of (DebugRequestJson.LOG_TYPE.values()).map(l -> l.toString()).collect(Collectors.toMap(
+        return Stream.of(DebugRequestJson.LOG_TYPE.values()).map(l -> l.toString()).collect(Collectors.toMap(
                 ((s) -> {
                     return s;
                 }), (m) -> {
@@ -290,10 +290,10 @@ public class DebugController {
 //        });
 
         ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(true)).reconfigure();
-        for(DebugRequestJson.LOG_TYPE log : DebugRequestJson.LOG_TYPE.values()) {
+        for (DebugRequestJson.LOG_TYPE log : DebugRequestJson.LOG_TYPE.values()) {
             //DebugController.updateLog(log, DebugRequestJson.LEVEL.WARN);
             final String level = System.getProperty(log.toString());
-            if(level != null)
+            if (level != null)
                 LOG.debug(Markers.DEBUG, "{} => {}", log, level);
         }
 

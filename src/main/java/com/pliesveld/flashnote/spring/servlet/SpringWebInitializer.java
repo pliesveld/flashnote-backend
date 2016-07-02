@@ -35,7 +35,7 @@ public class SpringWebInitializer extends AbstractAnnotationConfigDispatcherServ
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[] {SpringRootConfig.class, SpringWebConfig.class };
+        return new Class[] { SpringRootConfig.class, SpringWebConfig.class };
     }
 
     @Override
@@ -71,7 +71,7 @@ public class SpringWebInitializer extends AbstractAnnotationConfigDispatcherServ
         String uploadDirectory = ""; //ServiceConfiguration.CRM_STORAGE_UPLOADS_DIRECTORY;
         LOG.debug("Configuring MultiPartFilter witn an upload capacity of {}",maxUploadSizeInMb );
 
-        MultipartConfigElement multipartConf = new MultipartConfigElement(uploadDirectory, maxUploadSizeInMb, maxUploadSizeInMb*2, maxUploadSizeInMb/2);
+        MultipartConfigElement multipartConf = new MultipartConfigElement(uploadDirectory, maxUploadSizeInMb, maxUploadSizeInMb * 2, maxUploadSizeInMb / 2);
         registration.setMultipartConfig(multipartConf);
     }
 

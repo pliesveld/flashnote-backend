@@ -77,10 +77,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
         StringBuilder sb = new StringBuilder();
         int cnt = 0;
-        for(StackTraceElement stack : dive.getStackTrace())
+        for (StackTraceElement stack : dive.getStackTrace())
         {
             sb.append(stack).append("\n");
-            if(cnt++ > 3)
+            if (cnt++ > 3)
                 break;
         }
         errorDetail.setDetail(dive.getMessage());
@@ -111,7 +111,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
         errorDetail.setDetail(ex.getMessage());
 
-        if(ex instanceof MethodArgumentConversionNotSupportedException)
+        if (ex instanceof MethodArgumentConversionNotSupportedException)
         {
             MethodArgumentConversionNotSupportedException macnse = (MethodArgumentConversionNotSupportedException) ex;
             errorDetail.setDeveloperMessage("name: " + macnse.getName() + " parameter: " + macnse.getParameter().getContainingClass().getSimpleName() );
@@ -128,7 +128,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         errorDetail.setTimestamp(Instant.now().toEpochMilli());
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
         String requestPath = (String) request.getAttribute("javax.servlet.error.request_uri");
-        if(requestPath == null)
+        if (requestPath == null)
         {
             requestPath = request.getRequestURI();
         }
@@ -136,7 +136,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         errorDetail.setDetail("Multipart validation failure");
         errorDetail.setDeveloperMessage(me.getClass().getSimpleName());
 
-        if(me instanceof MaxUploadSizeExceededException)
+        if (me instanceof MaxUploadSizeExceededException)
         {
             MaxUploadSizeExceededException musee = (MaxUploadSizeExceededException) me;
             errorDetail.setDeveloperMessage(musee.getClass().getSimpleName());
@@ -154,7 +154,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
 
         List<ValidationError> validationErrors = errorDetail.getErrors();
-        for(ConstraintViolation violation : e.getConstraintViolations())
+        for (ConstraintViolation violation : e.getConstraintViolations())
         {
             //LOG.debug(REST_EXCEPTION, "violation -> " + violation);
             ValidationError error = new ValidationError();
@@ -190,11 +190,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         errorDetail.setDeveloperMessage(ex.getClass().getSimpleName());
 
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
-        for(FieldError fe : fieldErrors)
+        for (FieldError fe : fieldErrors)
         {
             List<ValidationError> validationErrorList = errorDetail.getErrors().get(fe.getField());
 
-            if(validationErrorList == null)
+            if (validationErrorList == null)
             {
                 validationErrorList = new ArrayList<ValidationError>();
                 errorDetail.getErrors().put(fe.getField(),validationErrorList);
