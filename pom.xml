@@ -41,8 +41,13 @@
         <!-- redirect surefire tests std out to file -->
         <test.redirect>false</test.redirect>
 
+        <checkstyle.version>6.19</checkstyle.version>
+        <checkstyle.skip>false</checkstyle.skip>
+
         <rest-assured.version>2.9.0</rest-assured.version>
         <start-class>com.pliesveld.flashnote.FlashnoteContainerApplication</start-class>
+
+        <checkstyle.config.location>config/patrick_checks.xml</checkstyle.config.location>
     </properties>
 
     <dependencyManagement>
@@ -296,74 +301,78 @@
         </dependency>
 
 
-
         <!--  JUNIT DEPENDENCY FOR TESTING -->
+        <dependency>
+            <groupId>com.googlecode.soundlibs</groupId>
+            <artifactId>mp3spi</artifactId>
+            <version>1.9.5-1</version>
+        </dependency>
 
-    <dependency>
-        <groupId>com.googlecode.soundlibs</groupId>
-        <artifactId>mp3spi</artifactId>
-        <version>1.9.5-1</version>
-    </dependency>
-
-    <!-- audio decoder vorbis -->
-    <dependency>
-        <groupId>com.github.trilarion</groupId>
-        <artifactId>vorbis-support</artifactId>
-        <version>1.1.0</version>
-    </dependency>
-
-
-    <dependency>
-        <groupId>com.googlecode.soundlibs</groupId>
-        <artifactId>tritonus-share</artifactId>
-        <version>0.3.7-2</version>
-
-        <exclusions><exclusion>
-            <groupId>net.sourceforge.jaad</groupId>
-            <artifactId>jaad</artifactId>
-        </exclusion></exclusions>
-    </dependency>
-
-    <!-- for unit testing email with Wiser -->
-    <dependency>
-        <groupId>org.subethamail</groupId>
-        <artifactId>subethasmtp</artifactId>
-        <version>${subethamail.version}</version>
-        <scope>test</scope>
-    </dependency>
-
-     <!-- for integration tests -->
-    <dependency>
-        <groupId>org.hamcrest</groupId>
-        <artifactId>hamcrest-core</artifactId>
-        <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.hamcrest</groupId>
-        <artifactId>hamcrest-library</artifactId>
-        <scope>test</scope>
-    </dependency>
+        <!-- audio decoder vorbis -->
+        <dependency>
+            <groupId>com.github.trilarion</groupId>
+            <artifactId>vorbis-support</artifactId>
+            <version>1.1.0</version>
+        </dependency>
 
 
-    <dependency>
-        <groupId>com.jayway.restassured</groupId>
-        <artifactId>rest-assured</artifactId>
-        <version>${rest-assured.version}</version>
-        <scope>test</scope>
-        <exclusions>
-            <exclusion>
-                <artifactId>commons-logging</artifactId>
-                <groupId>commons-logging</groupId>
-            </exclusion>
-        </exclusions>
-    </dependency>
+        <dependency>
+            <groupId>com.googlecode.soundlibs</groupId>
+            <artifactId>tritonus-share</artifactId>
+            <version>0.3.7-2</version>
+
+            <exclusions><exclusion>
+                <groupId>net.sourceforge.jaad</groupId>
+                <artifactId>jaad</artifactId>
+            </exclusion></exclusions>
+        </dependency>
+
+        <!-- for unit testing email with Wiser -->
+        <dependency>
+            <groupId>org.subethamail</groupId>
+            <artifactId>subethasmtp</artifactId>
+            <version>${subethamail.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+         <!-- for integration tests -->
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+            <scope>test</scope>
+        </dependency>
 
 
-    <dependency>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.8</version>
-    </dependency>
+        <dependency>
+            <groupId>com.jayway.restassured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>${rest-assured.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>${checkstyle.version}</version>
+        </dependency>
 
     </dependencies>
 
@@ -480,7 +489,60 @@
                     <redirectTestOutputToFile>${test.redirect}</redirectTestOutputToFile>
                 </configuration>
             </plugin>
+
+            <!-- check style plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.17</version>
+                <executions>
+                    <execution>
+                        <id>verify</id>
+                        <phase>verify</phase>
+
+    <!-- validate phase occurs before compile phase
+                        <id>validate</id>
+                        <phase>validate</phase>
+    -->
+                        <configuration>
+                            <skip>${checkstyle.skip}</skip>
+                            <violationSeverity>warning</violationSeverity>
+                            <configLocation>config/patrick_checks.xml</configLocation>
+                            <!--<sourceDirectories>${project.compileSourceRoots}</sourceDirectories>-->
+                            <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+                            <encoding>UTF-8</encoding>
+                            <consoleOutput>true</consoleOutput>
+                            <failOnViolation>true</failOnViolation>
+                            <failsOnError>true</failsOnError>
+                            <linkXRef>false</linkXRef>
+                            <includeResources>false</includeResources>
+                            <includeTestResources>false</includeTestResources>
+                            <includeTestSourceDirectory>false</includeTestSourceDirectory>
+                        </configuration>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>2.17</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>${checkstyle.version}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
     <profiles>
