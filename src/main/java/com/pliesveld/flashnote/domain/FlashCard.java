@@ -8,12 +8,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @EntityListeners(value = {LogEntityListener.class})
 @Table(name = "FLASHCARD")
-public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey> {
+public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey> implements Serializable {
     private static final Logger LOG = LogManager.getLogger();
 
     @EmbeddedId

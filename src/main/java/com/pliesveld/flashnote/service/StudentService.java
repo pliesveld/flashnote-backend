@@ -36,6 +36,6 @@ public interface StudentService {
     List<Deck> findDecksByOwner(final int id);
 
     @NotNull
-    List<AbstractStatement> findStatementsBy(final Student student);
+    List<AbstractStatement> findStatementsBy(@NotNull final Student student);
 
 }

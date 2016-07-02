@@ -78,11 +78,6 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<AbstractStatement> findStatementsBy(final Student student) throws StudentNotFoundException {
-
-        if (student == null) {
-            throw new StudentNotFoundException(student.getId());
-        }
-
         final String email = student.getEmail();
         final List<AbstractStatement> list = statementRepository.findAllByAuthor(email).collect(Collectors.toList());
         return list;

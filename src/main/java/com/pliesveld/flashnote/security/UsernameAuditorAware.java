@@ -46,7 +46,6 @@ public class UsernameAuditorAware implements AuditorAware<String> {
             LOG.debug(Markers.AUDIT, "Found StudentPrincipal : {} ", studentPrincipal);
             return studentPrincipal.getUsername();
         } else {
-            LOG.debug(Markers.AUDIT, "Principal {} : {}", principal.getClass().getName(), principal);
             return "SYSTEM";
         }
     }

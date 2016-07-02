@@ -42,6 +42,7 @@
         <test.redirect>false</test.redirect>
 
         <checkstyle.version>6.19</checkstyle.version>
+        <findbugs.version>3.0.3</findbugs.version>
         <checkstyle.skip>false</checkstyle.skip>
 
         <rest-assured.version>2.9.0</rest-assured.version>
@@ -369,11 +370,21 @@
             <version>1.8</version>
         </dependency>
 
+        <!-- code analyzers -->
         <dependency>
             <groupId>com.puppycrawl.tools</groupId>
             <artifactId>checkstyle</artifactId>
             <version>${checkstyle.version}</version>
+            <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>findbugs-maven-plugin</artifactId>
+            <version>${findbugs.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
 
     </dependencies>
 
@@ -491,7 +502,8 @@
                 </configuration>
             </plugin>
 
-            <!-- check style plugin -->
+            <!-- code analyzers -->
+            <!-- checkstyle plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
@@ -539,6 +551,25 @@
 				</dependencies>
                 -->
             </plugin>
+            <!-- findbugs -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>${findbugs.version}</version>
+                <configuration>
+                    <effort>Max</effort>
+                    <threshold>Low</threshold>
+                    <xmlOutput>true</xmlOutput>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
 
         <pluginManagement>
@@ -554,6 +585,11 @@
                             <version>${checkstyle.version}</version>
                         </dependency>
                     </dependencies>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>findbugs-maven-plugin</artifactId>
+                    <version>${findbugs.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

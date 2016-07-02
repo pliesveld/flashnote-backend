@@ -140,15 +140,15 @@ public class QuestionBankController {
 
     @RequestMapping(value = "/{bankId}", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity<?> QuestionBank(@PathVariable("bankId") int bankId, @Valid @RequestBody Question question) {
+    public ResponseEntity<?> createQuestionForQuestionBank(@PathVariable("bankId") int bankId, @Valid @RequestBody Question question) {
         QuestionBank questionBank = bankService.findQuestionBankById(bankId);
 
         if (questionBank == null)
             return ResponseEntity.notFound().build();
 
         Integer question_id = question.getId();
-        if (question_id == null) {
 
+        if (question_id == null) {
             bankService.updateQuestionBankAddQuestion(questionBank.getId(), question);
             return ResponseEntity.created(
                     MvcUriComponentsBuilder
@@ -156,7 +156,6 @@ public class QuestionBankController {
                             .path("/{bankId}/{questionId}")
                             .buildAndExpand(bankId, question.getId())
                             .toUri()).build();
-
         }
 
         if ((question = cardService.findQuestionById(question_id)) != null) {

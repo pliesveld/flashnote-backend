@@ -16,10 +16,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -82,7 +79,7 @@ public class DropCreateDatabase {
         return newJdbcUrl;
     }
 
-    class SQLExecutor implements Consumer<String> {
+    static class SQLExecutor implements Consumer<String> {
 
         private final Connection connection;
 
@@ -141,9 +138,8 @@ public class DropCreateDatabase {
             String sql_connections = "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = 'TARGET_DB' AND pid <> pg_backend_pid();"
                     .replaceFirst("TARGET_DB", DB_NAME);
             LOG.info("Dropping active connections to target database");
-            stmt.executeQuery(sql_connections);
-//            if (1/0 == 0)
-//                return;
+            ResultSet result = stmt.executeQuery(sql_connections);
+            result.clearWarnings();
 
             //STEP 5: Execute a query
             LOG.info("Deleting database...");
@@ -227,6 +223,4 @@ public class DropCreateDatabase {
         DropCreateDatabase db = ctx.getBean(DropCreateDatabase.class);
         db.main_real(args);
     }
-
-
 }

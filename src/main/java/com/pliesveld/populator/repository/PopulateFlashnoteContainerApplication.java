@@ -71,21 +71,6 @@ public class PopulateFlashnoteContainerApplication {
         application.run(args);
     }
 
-
-    @Transactional
-    private void populateMessagesFor(Student studentDetails) {
-        List<Notification> list = new ArrayList<>(15);
-
-        for (int i = 0; i < 15; i++) {
-            String message = "This is a sample notification number " + i;
-
-            Notification notification = new Notification(studentDetails, message);
-            list.add(notification);
-        }
-
-        notificationRepository.save(list);
-    }
-
     @Bean
     @Order(8)
     @Transactional
@@ -129,12 +114,9 @@ public class PopulateFlashnoteContainerApplication {
 
                 files.forEach(file -> LOG.debug("Loading file {}", file));
 
-
                 for (File file : files) {
                     resources.add(new FileSystemResource(file));
                 }
-
-
             }
 
             Resource[] resources_array = new Resource[resources.size()];
@@ -164,11 +146,6 @@ public class PopulateFlashnoteContainerApplication {
             } catch (DataIntegrityViolationException dive) {
                 LOG.warn("Failed to save {}", dive.getMessage());
             }
-
-
         };
-
     }
-
-
 }

@@ -65,7 +65,7 @@ public class DDLExport {
     }
 
 
-    public void DDLExport() {
+    public DDLExport() {
     }
 
     public static void main(String[] args) throws IllegalAccessException {
