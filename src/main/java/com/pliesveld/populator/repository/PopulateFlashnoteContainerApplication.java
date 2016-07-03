@@ -1,6 +1,5 @@
 package com.pliesveld.populator.repository;
 
-import com.pliesveld.flashnote.domain.Notification;
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.repository.*;
 import com.pliesveld.flashnote.util.generator.StudentGenerator;
@@ -34,7 +33,6 @@ import javax.validation.ConstraintViolationException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Configuration
 @EnableAutoConfiguration

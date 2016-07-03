@@ -33,7 +33,7 @@ public class RateLimitServiceImpl implements RateLimitService {
 
     @Override
     public boolean isBlocked(String key) {
-        boolean ret = false;
+        boolean ret;
         try {
             ret = attemptsCache.get(key) > 0;
         } catch (ExecutionException e) {
@@ -48,7 +48,7 @@ public class RateLimitServiceImpl implements RateLimitService {
     public void recordRemoteAccess(String key) {
         LOG.debug("Record invocation {}", key);
 
-        int attempts = 0;
+        int attempts;
         try {
             attempts = attemptsCache.get(key);
         } catch (final ExecutionException e) {

@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus;
 
 public class AttachmentUploadException extends ResourceCreateException {
 
+    private static final long serialVersionUID = -5329169291302448814L;
+
     public AttachmentUploadException(String message, Throwable cause) {
         super(message, cause);
     }

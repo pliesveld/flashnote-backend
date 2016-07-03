@@ -60,7 +60,7 @@ public class RegistrationController {
         String name = registrationRequestJson.getName();
         String password = registrationRequestJson.getPassword();
 
-        RegistrationResponseJson response = null;
+        RegistrationResponseJson response;
 
         HttpStatus statusCode = HttpStatus.OK;
 
@@ -117,10 +117,10 @@ public class RegistrationController {
 
         String email = passwordResetRequestJson.getEmail();
 
-        RegistrationResponseJson response = null;
+        RegistrationResponseJson response;
 
         HttpStatus statusCode = HttpStatus.OK;
-        Student student = null;
+        Student student;
 
         if ((student = studentService.findByEmail(email)) == null) {
             throw new StudentNotFoundException(email);
@@ -158,7 +158,7 @@ public class RegistrationController {
     {
         Student student = registrationService.processPasswordResetConfirmation(token);
 
-        RegistrationResponseJson response = null;
+        RegistrationResponseJson response;
         HttpStatus statusCode = HttpStatus.OK;
 
         if (student == null) {

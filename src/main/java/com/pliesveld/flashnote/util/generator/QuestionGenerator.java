@@ -91,7 +91,7 @@ public class QuestionGenerator {
     }
 
     static private String expandQuestion(String sentence) {
-        String tag = null;
+        String tag;
         while ((tag = hasTag(sentence)) != null) {
             String replace_with = randomValue(tagLookup.get(tag));
             sentence = StringUtils.replace(sentence, tag, replace_with);

@@ -24,7 +24,7 @@ import javax.servlet.ServletRegistration;
 public class SpringWebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer implements WebApplicationInitializer {
     private static final Logger LOG = LogManager.getLogger();
 
-    private int maxUploadSizeInMb = 5 * 1024 * 1024; // 5 MB
+    private long maxUploadSizeInMb = 5 * 1024 * 1024; // 5 MB
 
 
     @Override
@@ -70,7 +70,7 @@ public class SpringWebInitializer extends AbstractAnnotationConfigDispatcherServ
         String uploadDirectory = ""; //ServiceConfiguration.CRM_STORAGE_UPLOADS_DIRECTORY;
         LOG.debug("Configuring MultiPartFilter witn an upload capacity of {}", maxUploadSizeInMb);
 
-        MultipartConfigElement multipartConf = new MultipartConfigElement(uploadDirectory, maxUploadSizeInMb, maxUploadSizeInMb * 2, maxUploadSizeInMb / 2);
+        MultipartConfigElement multipartConf = new MultipartConfigElement(uploadDirectory, maxUploadSizeInMb, maxUploadSizeInMb * 2L, (int) (maxUploadSizeInMb / 2));
         registration.setMultipartConfig(multipartConf);
     }
 

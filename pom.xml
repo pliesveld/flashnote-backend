@@ -560,6 +560,8 @@
                     <effort>Max</effort>
                     <threshold>Low</threshold>
                     <xmlOutput>true</xmlOutput>
+                    <excludeFilterFile>config/findbugs-exclude.xml</excludeFilterFile>
+                    <includeFilterFile>config/findbugs-include.xml</includeFilterFile>
                 </configuration>
                 <executions>
                     <execution>

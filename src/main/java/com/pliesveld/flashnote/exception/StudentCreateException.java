@@ -6,6 +6,8 @@ import java.io.Serializable;
 
 public class StudentCreateException extends ResourceCreateException {
 
+    private static final long serialVersionUID = -3530788942030825441L;
+
     public StudentCreateException(Serializable id) {
         super("Student resource " + id + " already exists.");
     }

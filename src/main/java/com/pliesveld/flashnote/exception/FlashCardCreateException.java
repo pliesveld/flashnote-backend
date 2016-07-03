@@ -1,10 +1,10 @@
 package com.pliesveld.flashnote.exception;
 
-import org.springframework.http.HttpStatus;
-
 import java.io.Serializable;
 
 public class FlashCardCreateException extends ResourceCreateException {
+
+    private static final long serialVersionUID = -3457444872126345846L;
 
     @Override
     public String getRepositoryMessage() {

@@ -14,6 +14,7 @@ import java.io.Serializable;
 @PrimaryKeyJoinColumn(name = "ATTACHMENT_ID", foreignKey = @ForeignKey(name = "FK_ATTACHMENT_BINARY"))
 public class AttachmentBinary extends AbstractAttachment implements Serializable {
 
+    private static final long serialVersionUID = -560331548564003003L;
     private byte[] contents;
 
     @NotNull

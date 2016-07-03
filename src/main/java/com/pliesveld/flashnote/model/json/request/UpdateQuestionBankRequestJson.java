@@ -10,6 +10,8 @@ import javax.validation.constraints.NotNull;
 
 @Validated
 public class UpdateQuestionBankRequestJson extends ModelBase implements JsonWebRequestSerializable {
+    private static final long serialVersionUID = 7555833296567415969L;
+
     public enum UpdateOperation {
         ADD_QUESTION,
         REMOVE_QUESTION

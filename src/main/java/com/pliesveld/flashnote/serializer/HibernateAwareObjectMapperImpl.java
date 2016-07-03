@@ -22,6 +22,7 @@ import static com.pliesveld.flashnote.logging.Markers.OBJECT_MAPPER_INIT;
 @Component("hibernateAwareObjectMapper")
 public class HibernateAwareObjectMapperImpl extends ObjectMapper implements HibernateAwareObjectMapper {
     private static final Logger LOG = LogManager.getLogger();
+    private static final long serialVersionUID = 7802582696236537304L;
 
 
     protected HibernateAwareObjectMapperImpl(ObjectMapper src) {

@@ -1,8 +1,8 @@
 package com.pliesveld.flashnote.exception;
 
-import java.io.Serializable;
-
 public class QuestionCreateException extends ResourceCreateException {
+
+    private static final long serialVersionUID = -2784981318138399311L;
 
     public QuestionCreateException() {
         this("Could not create Question");

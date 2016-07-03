@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @JsonInclude(JsonInclude.Include.ALWAYS)
 public class PasswordResetRequestJson extends ModelBase implements JsonWebRequestSerializable {
 
+    private static final long serialVersionUID = -6538202756171883882L;
     @Email
     private String email;
 

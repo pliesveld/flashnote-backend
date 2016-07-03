@@ -21,6 +21,7 @@ import javax.validation.constraints.Size;
 @Component
 @JsonInclude(JsonInclude.Include.ALWAYS)
 public class StudentResponseJson extends ModelBase implements JsonWebRequestSerializable {
+    private static final long serialVersionUID = -7048093094507959326L;
     @NotNull
     @Size(min = 3, max = 32)
     @JsonView(Views.Summary.class)

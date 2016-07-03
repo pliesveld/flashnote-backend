@@ -26,6 +26,7 @@ import java.util.Set;
         uniqueConstraints = @UniqueConstraint(name = "UNIQUE_CATEGORY_NAME", columnNames = {"CATEGORY_NAME"}))
 public class Category extends DomainBaseEntity<Integer> implements Serializable {
 
+    private static final long serialVersionUID = -8686613244259132147L;
     private Integer id;
     private String name;
     private String description;

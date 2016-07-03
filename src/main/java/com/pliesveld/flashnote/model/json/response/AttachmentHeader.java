@@ -17,6 +17,7 @@ import java.time.Instant;
 @JsonInclude(JsonInclude.Include.ALWAYS)
 public class AttachmentHeader extends ModelBase implements JsonWebResponseSerializable {
 
+    private static final long serialVersionUID = 6729054505156673073L;
     @JsonView(Views.Summary.class)
     private AttachmentType contentType;
 

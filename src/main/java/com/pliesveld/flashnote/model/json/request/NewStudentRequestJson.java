@@ -16,6 +16,7 @@ import static com.pliesveld.flashnote.schema.Constants.*;
  */
 
 public class NewStudentRequestJson extends ModelBase implements JsonWebRequestSerializable {
+    private static final long serialVersionUID = -4102711949119140370L;
     @NotNull
     @Size(min = MIN_ACCOUNT_NAME_LENGTH, max = MAX_ACCOUNT_NAME_LENGTH)
     private String name;

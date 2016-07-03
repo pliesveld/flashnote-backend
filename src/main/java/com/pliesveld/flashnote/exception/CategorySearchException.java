@@ -7,6 +7,8 @@ import java.io.Serializable;
 
 public class CategorySearchException extends ResourceRetrieveException {
 
+    private static final long serialVersionUID = -5790732190706536001L;
+
     public CategorySearchException(Serializable id) {
         super(id);
     }

@@ -21,7 +21,6 @@ public class Markers {
     public static final Marker SQL_UPDATE = MarkerManager.getMarker("SQL_UPDATE").addParents(SQL_MARKER);
     public static final Marker SQL_QUERY = MarkerManager.getMarker("SQL_QUERY").addParents(SQL_MARKER);
     public static final Marker SQL_DELETE = MarkerManager.getMarker("SQL_DELETE").addParents(SQL_MARKER);
-    ;
 
     public static final Marker SECURITY = MarkerManager.getMarker("SECURITY");
     public static final Marker SECURITY_INIT = MarkerManager.getMarker("SECURITY_INIT").addParents(SECURITY, INIT);

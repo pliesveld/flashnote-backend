@@ -112,11 +112,11 @@
         </logger>
 
         <logger name="org.springframework.web.servlet.mvc" level="${sys:LOG_MVC_LEVEL}" additivity="false">
-            <AppenderRef ref="SPRING_MVC"/>
+            <AppenderRef ref="CONSOLE_SPRING"/>
         </logger>
 
         <logger name="org.springframework.web.servlet.handler" level="${sys:LOG_MVC_LEVEL}" additivity="false">
-            <AppenderRef ref="SPRING_MVC"/>
+            <AppenderRef ref="CONSOLE_SPRING"/>
         </logger>
 
         <logger name="org.springframework.security" level="${sys:LOG_SECURITY_LEVEL}" additivity="false">
