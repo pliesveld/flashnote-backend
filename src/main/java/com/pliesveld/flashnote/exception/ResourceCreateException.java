@@ -2,9 +2,9 @@ package com.pliesveld.flashnote.exception;
 
 import org.springframework.http.HttpStatus;
 
-import java.io.Serializable;
-
 public abstract class ResourceCreateException extends ResourceRepositoryException {
+
+    private static final long serialVersionUID = 5245022373764555519L;
 
     @Override
     public HttpStatus getRepositoryStatus() {

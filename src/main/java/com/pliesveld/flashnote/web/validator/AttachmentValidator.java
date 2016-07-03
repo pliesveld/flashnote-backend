@@ -162,7 +162,7 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
         String fileName = attachment.getFileName();
         String mime = attachment.getMimeContentType();
 
-        AudioMetadata metadata = null;
+        AudioMetadata metadata;
 
         try {
             metadata = AudioMetadataReader.readAudioMetadata(fileName, content, mime);

@@ -176,6 +176,7 @@ public class DropCreateDatabase {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException se) {
+                LOG.error(se.getMessage());
             }
             try {
                 if (conn != null)

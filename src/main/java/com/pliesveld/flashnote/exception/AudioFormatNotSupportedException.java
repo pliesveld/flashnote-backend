@@ -1,6 +1,8 @@
 package com.pliesveld.flashnote.exception;
 
 public class AudioFormatNotSupportedException extends Exception {
+    private static final long serialVersionUID = 7043457815601134034L;
+
     public AudioFormatNotSupportedException() {
     }
 

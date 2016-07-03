@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 
 public abstract class ResourceRetrieveException extends ResourceRepositoryException {
+    private static final long serialVersionUID = 5631791231193445091L;
     protected Serializable id;
 
     public ResourceRetrieveException(Serializable id) {

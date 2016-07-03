@@ -48,6 +48,8 @@ public class CustomRepositoryPopulatorFactoryBean extends Jackson2RepositoryPopu
     }
 
     static class MyJacksonAnnotationIntrospector extends JacksonAnnotationIntrospector {
+        private static final long serialVersionUID = -2988954748731792197L;
+
         @Override
         public ObjectIdInfo findObjectIdInfo(final Annotated ann) {
             if (DomainBaseEntity.class.isAssignableFrom(ann.getRawType())) {

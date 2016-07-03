@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class StudentNotFoundException extends ResourceNotFoundException {
 
+    private static final long serialVersionUID = 7729335038254854816L;
+
     public StudentNotFoundException(Serializable id) {
         super(id);
     }

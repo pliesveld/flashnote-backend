@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,6 +26,7 @@ import java.util.Objects;
         indexes = {@Index(name = "IDX_DECK_OWNER_ID",
                 columnList = "OWNER_ID")})
 public class Deck extends DomainBaseEntity<Integer> implements Serializable {
+    private static final long serialVersionUID = -3453025116518689500L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "DECK_ID")
@@ -94,9 +96,7 @@ public class Deck extends DomainBaseEntity<Integer> implements Serializable {
     public Deck(final Category category, final String description, FlashCard... cards) {
         this(category, description);
 
-        for (FlashCard fc : cards) {
-            flashcards.add(fc);
-        }
+        Collections.addAll(flashcards, cards);
     }
 
     public String getDescription() {

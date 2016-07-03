@@ -16,6 +16,7 @@ import java.util.Objects;
 @Table(name = "FLASHCARD")
 public class FlashCard extends DomainBaseEntity<FlashCardPrimaryKey> implements Serializable {
     private static final Logger LOG = LogManager.getLogger();
+    private static final long serialVersionUID = -5522216266619098001L;
 
     @EmbeddedId
     private FlashCardPrimaryKey id = new FlashCardPrimaryKey();

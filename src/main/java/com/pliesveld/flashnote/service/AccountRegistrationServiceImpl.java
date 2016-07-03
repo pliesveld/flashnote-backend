@@ -123,7 +123,7 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
     @Override
     public Student processRegistrationConfirmation(String token) {
         AccountRegistrationToken registration = registrationRepository.findByToken(token);
-        Student student = null;
+        Student student;
         if (registration == null || (student = registration.getStudent()) == null)
             return null;
 
@@ -142,7 +142,7 @@ public class AccountRegistrationServiceImpl implements AccountRegistrationServic
     @Override
     public Student processPasswordResetConfirmation(String token) {
         AccountPasswordResetToken resetToken = passwordResetRepository.findByToken(token);
-        Student student = null;
+        Student student;
 
         if (resetToken == null || (student = resetToken.getStudent()) == null)
             return null;

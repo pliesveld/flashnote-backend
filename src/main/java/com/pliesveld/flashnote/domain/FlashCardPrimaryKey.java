@@ -12,6 +12,7 @@ import java.io.Serializable;
 @Embeddable
 public class FlashCardPrimaryKey implements Serializable {
 
+    private static final long serialVersionUID = -493660287515555153L;
     @NotNull
     @Column(name = "QUESTION_ID", nullable = false)
     private Integer questionId;

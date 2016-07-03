@@ -80,7 +80,7 @@ public class SpringSecurityConfig {
                     authorities.forEach((auth) -> sb.append(auth));
                     sb.append(" has reachable roles ");
 
-                    roleHierarchy.getReachableGrantedAuthorities(authorities).forEach((grantedAuthority) -> sb.append(grantedAuthority + " "));
+                    roleHierarchy.getReachableGrantedAuthorities(authorities).forEach((grantedAuthority) -> sb.append(grantedAuthority).append(" "));
                     LOG.debug(SECURITY_INIT, sb.toString());
                 }
             }

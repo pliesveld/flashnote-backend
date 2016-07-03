@@ -77,7 +77,7 @@ public class AttachmentUploadController {
         }
 
 
-        byte[] contents = null;
+        byte[] contents;
 
         try {
             contents = file.getBytes();
@@ -85,9 +85,9 @@ public class AttachmentUploadController {
             throw new AttachmentUploadException("Could not get upload contents.", e);
         }
 
-        int id = 0;
+        int id;
 
-        AbstractAttachment abstractAttachment = null;
+        AbstractAttachment abstractAttachment;
         if (attachmentType.isBinary()) {
             AttachmentBinary attachment = new AttachmentBinary();
             attachment.setContents(contents);

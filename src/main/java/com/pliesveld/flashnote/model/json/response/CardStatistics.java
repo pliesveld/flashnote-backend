@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 @JsonInclude(JsonInclude.Include.ALWAYS)
 public class CardStatistics extends ModelBase implements JsonWebResponseSerializable {
 
+    private static final long serialVersionUID = -7528900725560233327L;
     @JsonView(Views.Summary.class)
     private Long deckCount;
 

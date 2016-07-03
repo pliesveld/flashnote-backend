@@ -43,6 +43,9 @@
         <module name="ParenPad">
             <property name="option" value="nospace"/>
         </module>
+        <module name="WhitespaceAfter">
+            <property name="tokens" value="COMMA, SEMI"/>
+        </module>
         <module name="NoWhitespaceAfter">
             <property name="tokens" value="INC, DEC, UNARY_MINUS, UNARY_PLUS, BNOT, LNOT, DOT, INDEX_OP"/>
             <message key="ws.followed"

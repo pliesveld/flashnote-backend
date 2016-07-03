@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus;
 
 public class ResourceLimitException extends RuntimeException {
 
+    private static final long serialVersionUID = 609497521334775056L;
+
     public String getRepositoryMessage() {
         return this.getMessage();
     }

@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 
 public class RegistrationRequestJson extends ModelBase implements JsonWebRequestSerializable {
 
+    private static final long serialVersionUID = 8676898141823679178L;
     @Size(min = 1)
     private String name;
 
