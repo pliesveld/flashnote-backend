@@ -12,6 +12,7 @@ import org.hibernate.validator.constraints.Email;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
@@ -23,8 +24,9 @@ import static com.pliesveld.flashnote.schema.Constants.*;
                 @UniqueConstraint(name = "UNIQUE_ACCOUNT_EMAIL", columnNames = "STUDENT_EMAIL"),
                 @UniqueConstraint(name = "UNIQUE_ACCOUNT_NAME", columnNames = "STUDENT_NAME")
         })
-public class Student extends DomainBaseEntity<Integer> {
+public class Student extends DomainBaseEntity<Integer> implements Serializable {
 
+    private static final long serialVersionUID = -4487277214521177813L;
     private Integer id;
     private String name;
     private String email;

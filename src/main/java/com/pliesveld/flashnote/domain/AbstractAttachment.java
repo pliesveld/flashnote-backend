@@ -9,14 +9,16 @@ import com.pliesveld.flashnote.schema.Constants;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.Objects;
 
 @Entity
 @Table(name = "ATTACHMENT")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class AbstractAttachment extends AbstractAuditableEntity<Integer> {
+public abstract class AbstractAttachment extends AbstractAuditableEntity<Integer> implements Serializable {
 
+    private static final long serialVersionUID = 1475231744214090102L;
     protected Integer id;
     protected AttachmentType attachmentType;
     protected String fileName;

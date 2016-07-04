@@ -5,14 +5,11 @@
 
 <FindBugsFilter>
     <Match>
-        <Bug category="CORRECTNESS,MT_CORRECTNESS"/>
+        <Bug category="CORRECTNESS,MT_CORRECTNESS,BAD_PRACTICE"/>
     </Match>
 <!--
     <Match>
-        <Bug category="BAD_PRACTICICE,STYLE"/>
-    </Match>
-    <Match>
-        <Bug category="PERFORMANCE"/>
+        <Bug category="STYLE, PERFORMANCE"/>
     </Match>
 -->
 </FindBugsFilter>

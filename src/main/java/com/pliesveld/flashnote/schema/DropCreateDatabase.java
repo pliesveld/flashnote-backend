@@ -125,23 +125,13 @@ public class DropCreateDatabase {
         Statement stmt = null;
 
         try {
-            //STEP 2: Register JDBC driver
             Class.forName(JDBC_DRIVER);
-
-            //STEP 3: Open a connection
             LOG.info("Connecting to a selected database: " + DB_ROOT_URL);
             conn = DriverManager.getConnection(DB_ROOT_URL, USER, PASS);
             LOG.info("Connected database successfully...");
 
-            //STEP 4: DROP ACTIVE DATABASE CONNECTIONS TO TARGET DATABASE
-            stmt = conn.createStatement();
-            String sql_connections = "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = 'TARGET_DB' AND pid <> pg_backend_pid();"
-                    .replaceFirst("TARGET_DB", DB_NAME);
-            LOG.info("Dropping active connections to target database");
-            ResultSet result = stmt.executeQuery(sql_connections);
-            result.clearWarnings();
+            closeCurrentStatement(conn);
 
-            //STEP 5: Execute a query
             LOG.info("Deleting database...");
             stmt = conn.createStatement();
 
@@ -185,6 +175,18 @@ public class DropCreateDatabase {
                 se.printStackTrace();
             }
         }
+    }
+
+    private void closeCurrentStatement(Connection conn) throws SQLException {
+        LOG.info("Dropping current databse connections...");
+
+        Statement stmt = conn.createStatement();
+        String sql_connections = "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = 'TARGET_DB' AND pid <> pg_backend_pid();"
+                .replaceFirst("TARGET_DB", DB_NAME);
+        LOG.info("Dropping active connections to target database");
+        ResultSet result = stmt.executeQuery(sql_connections);
+        result.clearWarnings();
+
     }
 
     private void initializeDB(Resource resource) throws IOException {
