@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Available coarse grained category filters: CORRECTNESS, MT_CORRECTNESS, BAD_PRACTICICE, PERFORMANCE, STYLE -->
+
+
+<FindBugsFilter>
+    <Match>
+        <Bug category="CORRECTNESS,MT_CORRECTNESS,BAD_PRACTICE"/>
+    </Match>
+<!--
+    <Match>
+        <Bug category="STYLE, PERFORMANCE"/>
+    </Match>
+-->
+</FindBugsFilter>

@@ -16,12 +16,12 @@ import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextHierarchy({
-        @ContextConfiguration(name = "REPOSITORY", classes = { PopulatedFlashcardsRepositoryTest.class }, loader = AnnotationConfigContextLoader.class)
+        @ContextConfiguration(name = "REPOSITORY", classes = {PopulatedFlashcardsRepositoryTest.class}, loader = AnnotationConfigContextLoader.class)
 })
 @DirtiesContext
 public class PopulatedFlashcardsRepositoryTest extends AbstractPopulatedRepositoryUnitTest {
@@ -29,7 +29,7 @@ public class PopulatedFlashcardsRepositoryTest extends AbstractPopulatedReposito
 
     @Bean
     public RepositorySettings repositorySettings() {
-        RepositorySettings repositorySettings = new RepositorySettings(new Resource[] {new ClassPathResource("test-data-flashcards.json", this.getClass()) });
+        RepositorySettings repositorySettings = new RepositorySettings(new Resource[]{new ClassPathResource("test-data-flashcards.json", this.getClass())});
         return repositorySettings;
     }
 

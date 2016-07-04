@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/attachments")
-public class AttachmentController  {
+public class AttachmentController {
     private static final Logger LOG = LogManager.getLogger();
 
     @Autowired
@@ -32,20 +32,18 @@ public class AttachmentController  {
     private AttachmentService attachmentService;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.HEAD)
-    public ResponseEntity<?> modifiedSinceAttachment(@PathVariable("id") int id)
-    {
+    public ResponseEntity<?> modifiedSinceAttachment(@PathVariable("id") int id) {
         AttachmentHeader header = attachmentService.findAttachmentHeaderById(id);
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.setContentType(header.getContentType().getMediatype());
         responseHeaders.setContentLength(header.getLength());
         responseHeaders.setDate(header.getModified().toEpochMilli());
-        return new ResponseEntity<>(null,responseHeaders,HttpStatus.OK);
+        return new ResponseEntity<>(null, responseHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> downloadAttachment(@PathVariable("id") int id)
-    {
+    public ResponseEntity<?> downloadAttachment(@PathVariable("id") int id) {
         MediaType content_type = null;
         Object response_data = null;
         long last_modified = 0;
@@ -56,20 +54,18 @@ public class AttachmentController  {
         responseHeaders.setContentType(attachment.getAttachmentType().getMediatype());
         responseHeaders.setDate(attachment.getModifiedOn().toEpochMilli());
 
-        if (attachment.getAttachmentType().isBinary())
-        {
+        if (attachment.getAttachmentType().isBinary()) {
             AttachmentBinary binary = (AttachmentBinary) attachment;
-            return new ResponseEntity<>(binary.getContents(),responseHeaders,HttpStatus.OK);
+            return new ResponseEntity<>(binary.getContents(), responseHeaders, HttpStatus.OK);
         } else {
             AttachmentText text = (AttachmentText) attachment;
-            return new ResponseEntity<>(text.getContents(),responseHeaders,HttpStatus.OK);
+            return new ResponseEntity<>(text.getContents(), responseHeaders, HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
-    public void deleteAttachment(@PathVariable("id") int id)
-    {
+    public void deleteAttachment(@PathVariable("id") int id) {
         attachmentService.removeAttachmentById(id);
     }
 }

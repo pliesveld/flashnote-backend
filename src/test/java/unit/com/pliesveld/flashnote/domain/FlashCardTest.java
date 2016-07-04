@@ -18,16 +18,14 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @BlankEntityTestAnnotations
 @Transactional
-public class FlashCardTest extends AbstractDomainEntityUnitTest
-{
+public class FlashCardTest extends AbstractDomainEntityUnitTest {
     @PersistenceContext
     protected EntityManager entityManager;
 
     protected Serializable flashcard_id;
 
     @Before
-    public void setupEntities()
-    {
+    public void setupEntities() {
         Question question = questionBean();
         Answer answer = answerBean();
 
@@ -36,7 +34,7 @@ public class FlashCardTest extends AbstractDomainEntityUnitTest
 
         entityManager.flush();
 
-        FlashCard flashCard = new FlashCard(question,answer);
+        FlashCard flashCard = new FlashCard(question, answer);
         entityManager.persist(flashCard);
 
         flashcard_id = flashCard.getId();
@@ -45,14 +43,12 @@ public class FlashCardTest extends AbstractDomainEntityUnitTest
     }
 
     @Test
-    public void testTestLoad()
-    {
+    public void testTestLoad() {
 
     }
 
     @Test
-    public void whenContextLoad_thenCorrect()
-    {
+    public void whenContextLoad_thenCorrect() {
         assertNotNull(flashcard_id);
 
         FlashCard fc = flashCardRepository.findAll().iterator().next();
@@ -68,21 +64,18 @@ public class FlashCardTest extends AbstractDomainEntityUnitTest
     }
 
     @Test
-    public void testFlashCardRemoval()
-    {
+    public void testFlashCardRemoval() {
         flashCardRepository.deleteAll();
     }
 
     @Test
-    public void testAnswerRemoval()
-    {
+    public void testAnswerRemoval() {
         flashCardRepository.deleteAll();
         answerRepository.deleteAll();
     }
 
     @Test
-    public void testQuestionRemoval()
-    {
+    public void testQuestionRemoval() {
         flashCardRepository.deleteAll();
         questionRepository.deleteAll();
     }
@@ -140,9 +133,6 @@ public class FlashCardTest extends AbstractDomainEntityUnitTest
 
          
     }*/
-
-
-
 
 
 }

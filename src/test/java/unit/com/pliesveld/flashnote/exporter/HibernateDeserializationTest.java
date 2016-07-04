@@ -61,6 +61,7 @@ public class HibernateDeserializationTest extends AbstractDomainEntityUnitTest i
                 throw new IllegalArgumentException("Could not serialize " + obj.getClass().getName());
             }
         }
+
         public String out(Object obj, Class<?> temp_view_clazz) {
             try {
                 String out = this.objectMapper.writerWithView(temp_view_clazz).writeValueAsString(obj);
@@ -74,7 +75,7 @@ public class HibernateDeserializationTest extends AbstractDomainEntityUnitTest i
     }
 
     private ArrayList<DomainBaseEntity> initializeTestClass() {
-         for (String beanName : ctx.getBeanDefinitionNames()) {
+        for (String beanName : ctx.getBeanDefinitionNames()) {
             LOG.debug(beanName);
         }
 
@@ -83,15 +84,13 @@ public class HibernateDeserializationTest extends AbstractDomainEntityUnitTest i
 
         ArrayList<DomainBaseEntity> entityBeans = new ArrayList<>(entityClassList.size());
 
-        for (Class<?> clazz : entityClassList)
-        {
+        for (Class<?> clazz : entityClassList) {
             try {
                 Object obj = ctx.getBean(clazz);
                 entityManager.persist(obj);
                 entityManager.flush();
 
-                if (DomainBaseEntity.class.isAssignableFrom(clazz))
-                {
+                if (DomainBaseEntity.class.isAssignableFrom(clazz)) {
                     DomainBaseEntity dbe = (DomainBaseEntity) obj;
                     entityBeans.add(dbe);
                     LOG.debug("Got bean of class {}", clazz);
@@ -100,7 +99,7 @@ public class HibernateDeserializationTest extends AbstractDomainEntityUnitTest i
                 }
 
             } catch (Exception e) {
-                LOG.debug("Couldn't load bean of class {}",clazz);
+                LOG.debug("Couldn't load bean of class {}", clazz);
 
             }
 
@@ -118,8 +117,7 @@ public class HibernateDeserializationTest extends AbstractDomainEntityUnitTest i
     String student_name = "";
 
     @Test
-    public void whenContextLoad_thenCorrect()
-    {
+    public void whenContextLoad_thenCorrect() {
 
     }
 

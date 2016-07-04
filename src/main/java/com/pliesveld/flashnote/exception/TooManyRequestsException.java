@@ -6,7 +6,9 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 public class TooManyRequestsException extends ResourceRepositoryException {
+    private static final long serialVersionUID = 7759869897709162318L;
     final String dev_message;
+
     public TooManyRequestsException(int secondsToWait) {
         super("Must wait " + secondsToWait);
         dev_message = Instant.now().plus(secondsToWait, ChronoUnit.SECONDS).toString();

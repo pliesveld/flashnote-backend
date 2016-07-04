@@ -29,8 +29,7 @@ public class NotificationTest extends AbstractDomainEntityUnitTest {
     Serializable message_id = null;
 
     @Before
-    public void setupEntities()
-    {
+    public void setupEntities() {
         Student student = this.studentBean();
         student = studentRepository.save(student);
 
@@ -43,23 +42,20 @@ public class NotificationTest extends AbstractDomainEntityUnitTest {
     }
 
     @Test
-    public void testEntityContext()
-    {
+    public void testEntityContext() {
         assertNotNull(recipient_id);
         assertNotNull(message_id);
     }
 
     @Test
-    public void whenContextLoad_thenCorrect()
-    {
+    public void whenContextLoad_thenCorrect() {
         assertNotNull(entityManager.find(Student.class, recipient_id));
         assertNotNull(entityManager.find(Notification.class, message_id));
         assertNotificationRepositoryCount(1);
     }
 
     @After
-    public void flushAfter()
-    {
+    public void flushAfter() {
         entityManager.flush();
     }
 

@@ -16,11 +16,10 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import static org.junit.Assert.*;
 
 
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextHierarchy({
-        @ContextConfiguration(name = "REPOSITORY", classes = { PopulatedStudentsRepositoryTest.class }, loader = AnnotationConfigContextLoader.class)
+        @ContextConfiguration(name = "REPOSITORY", classes = {PopulatedStudentsRepositoryTest.class}, loader = AnnotationConfigContextLoader.class)
 })
 @DirtiesContext
 public class PopulatedStudentsRepositoryTest extends AbstractPopulatedRepositoryUnitTest {
@@ -37,8 +36,7 @@ public class PopulatedStudentsRepositoryTest extends AbstractPopulatedRepository
     }
 
     @Test
-    public void testFindByEmail()
-    {
+    public void testFindByEmail() {
         final String STUDENT_EMAIL = "student@example.com";
         Student student = studentRepository.findOneByEmail(STUDENT_EMAIL);
         assertNotNull(student);

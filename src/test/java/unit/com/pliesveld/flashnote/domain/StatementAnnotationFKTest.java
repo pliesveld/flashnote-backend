@@ -35,8 +35,7 @@ public class StatementAnnotationFKTest extends AbstractDomainEntityUnitTest {
     Serializable student_id = null;
 
     @Before
-    public void setupEntities()
-    {
+    public void setupEntities() {
         Question question = this.questionBean();
 
         Student student = this.studentBean();
@@ -47,7 +46,7 @@ public class StatementAnnotationFKTest extends AbstractDomainEntityUnitTest {
         student = studentRepository.save(student);
         student_id = student.getId();
 
-        AnnotatedStatement annotatedStatement = new AnnotatedStatement(student,MESSAGE);
+        AnnotatedStatement annotatedStatement = new AnnotatedStatement(student, MESSAGE);
         question.addAnnotation(annotatedStatement);
 
         entityManager.flush();
@@ -55,33 +54,29 @@ public class StatementAnnotationFKTest extends AbstractDomainEntityUnitTest {
     }
 
     @Test
-    public void testEntityContext()
-    {
+    public void testEntityContext() {
         assertNotNull(student_id);
         assertNotNull(question_id);
     }
 
     @Test
-    public void whenContextLoad_thenCorrect()
-    {
+    public void whenContextLoad_thenCorrect() {
         assertNotNull(entityManager.find(Question.class, question_id));
-        assertNotNull(entityManager.find(Student.class,student_id));
+        assertNotNull(entityManager.find(Student.class, student_id));
 
         this.assertQuestionRepositoryCount(1);
         this.assertStatementRepositoryCount(1);
     }
 
     @Test
-    public void testAnnotationRemovalCascade()
-    {
+    public void testAnnotationRemovalCascade() {
         this.questionRepository.deleteAll();
         this.assertQuestionRepositoryCount(0);
         this.assertStatementRepositoryCount(0);
     }
 
     @After
-    public void flushAfter()
-    {
+    public void flushAfter() {
         entityManager.flush();
     }
 

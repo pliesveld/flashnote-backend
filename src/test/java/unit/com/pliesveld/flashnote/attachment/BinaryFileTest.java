@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.*;
-import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
@@ -30,8 +29,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @DefaultEntityTestAnnotations
 @Transactional
-public class BinaryFileTest
-{
+public class BinaryFileTest {
     private static final Logger LOG = LogManager.getLogger();
 
     @PersistenceContext
@@ -44,8 +42,7 @@ public class BinaryFileTest
     AttachmentRepository attachmentRepository;
 
     @Before
-    public void setupSession()
-    {
+    public void setupSession() {
         assertNotNull(entityManager);
     }
 
@@ -91,7 +88,7 @@ public class BinaryFileTest
             attachment.setContents(photoBytes);
 
             attachment = attachmentBinaryRepository.save(attachment);
-            assertEquals(photoBytes.length,attachment.getFileLength());
+            assertEquals(photoBytes.length, attachment.getFileLength());
             id = attachment.getId();
             entityManager.flush();
             entityManager.clear();
@@ -108,13 +105,13 @@ public class BinaryFileTest
             AttachmentBinary attachment2 = attachmentBinaryRepository.findOne(id);
             assertNotNull(attachment2.getAttachmentType());
             assertNotNull(attachment2.getFileName());
-            assertEquals(expected_type,attachment2.getAttachmentType());
-            assertEquals(expected_file,attachment2.getFileName());
+            assertEquals(expected_type, attachment2.getAttachmentType());
+            assertEquals(expected_file, attachment2.getFileName());
             assertNotNull(attachment2.getContents());
 
-            saveBytesToFile(resource_out.getFilename(),attachment2.getContents());
+            saveBytesToFile(resource_out.getFilename(), attachment2.getContents());
 
-            verifyFiles(resource.getFile(),resource_out.getFile());
+            verifyFiles(resource.getFile(), resource_out.getFile());
             // TODO: verify files match
 
             creationTime = attachment2.getModifiedOn();
@@ -144,14 +141,15 @@ public class BinaryFileTest
             assertNotNull(header.getLength());
             assertNotNull(header.getModified());
 
-            assertEquals(attachmentType,header.getContentType());
-            assertEquals(length,header.getLength());
-            assertEquals(creationTime,header.getModified());
+            assertEquals(attachmentType, header.getContentType());
+            assertEquals(length, header.getLength());
+            assertEquals(creationTime, header.getModified());
             entityManager.flush();
             entityManager.clear();
         }
 
     }
+
     private String computeHash(InputStream inputStream) throws IOException {
         MessageDigest md = null;
         try {
@@ -163,16 +161,15 @@ public class BinaryFileTest
         byte[] dataBytes = new byte[1024];
 
         int nread = 0;
-        while ((nread = inputStream.read(dataBytes)) != -1)
-        {
-            md.update(dataBytes,0,nread);
+        while ((nread = inputStream.read(dataBytes)) != -1) {
+            md.update(dataBytes, 0, nread);
         }
 
         byte[] mdbytes = md.digest();
 
         StringBuffer hexString = new StringBuffer();
-        for (int i = 0;i < mdbytes.length;i++) {
-          hexString.append(Integer.toHexString(0xFF & mdbytes[i]));
+        for (int i = 0; i < mdbytes.length; i++) {
+            hexString.append(Integer.toHexString(0xFF & mdbytes[i]));
         }
 
         return hexString.toString();
@@ -183,7 +180,6 @@ public class BinaryFileTest
         assertNotNull(file_out);
 
 
-
         try {
             FileInputStream fis = new FileInputStream(file_in);
             FileInputStream fis2 = new FileInputStream(file_out);
@@ -192,7 +188,7 @@ public class BinaryFileTest
                 String hash1 = computeHash(fis);
                 String hash2 = computeHash(fis2);
 
-                assertEquals(hash1,hash2);
+                assertEquals(hash1, hash2);
             } catch (IOException ioe) {
                 fail(ioe.getMessage());
             }

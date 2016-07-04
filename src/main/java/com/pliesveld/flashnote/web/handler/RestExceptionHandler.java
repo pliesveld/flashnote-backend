@@ -55,8 +55,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     private static final Logger LOG = LogManager.getLogger();
 
     @ExceptionHandler(ResourceRepositoryException.class)
-    public ResponseEntity<?> handleResourceNotFoundException(ResourceRepositoryException rnfe, HttpServletRequest request)
-    {
+    public ResponseEntity<?> handleResourceNotFoundException(ResourceRepositoryException rnfe, HttpServletRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(Instant.now().toEpochMilli());
         HttpStatus status = rnfe.getRepositoryStatus();
@@ -64,12 +63,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         errorDetail.setTitle(rnfe.getRepositoryMessage());
         errorDetail.setDetail(rnfe.getMessage());
         errorDetail.setDeveloperMessage(rnfe.getClass().getSimpleName());
-        return new ResponseEntity<>(errorDetail,null,status);
+        return new ResponseEntity<>(errorDetail, null, status);
     }
 
     @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<?> handlePersistenceError(DataIntegrityViolationException dive, HttpServletRequest request)
-    {
+    public ResponseEntity<?> handlePersistenceError(DataIntegrityViolationException dive, HttpServletRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(Instant.now().toEpochMilli());
         errorDetail.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
@@ -77,15 +75,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
         StringBuilder sb = new StringBuilder();
         int cnt = 0;
-        for (StackTraceElement stack : dive.getStackTrace())
-        {
+        for (StackTraceElement stack : dive.getStackTrace()) {
             sb.append(stack).append("\n");
             if (cnt++ > 3)
                 break;
         }
         errorDetail.setDetail(dive.getMessage());
         errorDetail.setDeveloperMessage(sb.toString());
-        return new ResponseEntity<>(errorDetail,null,HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(errorDetail, null, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
@@ -97,7 +94,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         errorDetail.setTitle("Request parameters");
         errorDetail.setDetail("Parameter validation failed: " + ex.getParameterName() + " type: " + ex.getParameterType());
 
-        request.getHeaderNames().forEachRemaining((s) -> errorDetail.getHeaders().put(s,request.getHeader(s)));
+        request.getHeaderNames().forEachRemaining((s) -> errorDetail.getHeaders().put(s, request.getHeader(s)));
 
         errorDetail.setDeveloperMessage(ex.getMessage());
 
@@ -111,10 +108,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
         errorDetail.setDetail(ex.getMessage());
 
-        if (ex instanceof MethodArgumentConversionNotSupportedException)
-        {
+        if (ex instanceof MethodArgumentConversionNotSupportedException) {
             MethodArgumentConversionNotSupportedException macnse = (MethodArgumentConversionNotSupportedException) ex;
-            errorDetail.setDeveloperMessage("name: " + macnse.getName() + " parameter: " + macnse.getParameter().getContainingClass().getSimpleName() );
+            errorDetail.setDeveloperMessage("name: " + macnse.getName() + " parameter: " + macnse.getParameter().getContainingClass().getSimpleName());
         }
 
         LOG.debug(REST_EXCEPTION, "handleConversionNotSupported");
@@ -122,40 +118,35 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(MultipartException.class)
-    public ResponseEntity<?> handleMultipartError(MultipartException me, HttpServletRequest request)
-    {
+    public ResponseEntity<?> handleMultipartError(MultipartException me, HttpServletRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(Instant.now().toEpochMilli());
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
         String requestPath = (String) request.getAttribute("javax.servlet.error.request_uri");
-        if (requestPath == null)
-        {
+        if (requestPath == null) {
             requestPath = request.getRequestURI();
         }
         errorDetail.setTitle("Multipart");
         errorDetail.setDetail("Multipart validation failure");
         errorDetail.setDeveloperMessage(me.getClass().getSimpleName());
 
-        if (me instanceof MaxUploadSizeExceededException)
-        {
+        if (me instanceof MaxUploadSizeExceededException) {
             MaxUploadSizeExceededException musee = (MaxUploadSizeExceededException) me;
             errorDetail.setDeveloperMessage(musee.getClass().getSimpleName());
             errorDetail.setDetail("Upload exceeded " + musee.getMaxUploadSize());
         }
 
-        return new ResponseEntity<>(errorDetail,null,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorDetail, null, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<?> handleConstraintViolation(ConstraintViolationException e)
-    {
+    public ResponseEntity<?> handleConstraintViolation(ConstraintViolationException e) {
         ConstraintErrorDetail errorDetail = new ConstraintErrorDetail();
         errorDetail.setTimestamp(Instant.now().toEpochMilli());
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
 
         List<ValidationError> validationErrors = errorDetail.getErrors();
-        for (ConstraintViolation violation : e.getConstraintViolations())
-        {
+        for (ConstraintViolation violation : e.getConstraintViolations()) {
             //LOG.debug(REST_EXCEPTION, "violation -> " + violation);
             ValidationError error = new ValidationError();
             error.setCode(violation.getRootBeanClass().getSimpleName());
@@ -163,7 +154,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             validationErrors.add(error);
 
         }
-        return new ResponseEntity<>(errorDetail,null,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorDetail, null, HttpStatus.BAD_REQUEST);
     }
 
     @Override
@@ -190,14 +181,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         errorDetail.setDeveloperMessage(ex.getClass().getSimpleName());
 
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
-        for (FieldError fe : fieldErrors)
-        {
+        for (FieldError fe : fieldErrors) {
             List<ValidationError> validationErrorList = errorDetail.getErrors().get(fe.getField());
 
-            if (validationErrorList == null)
-            {
+            if (validationErrorList == null) {
                 validationErrorList = new ArrayList<ValidationError>();
-                errorDetail.getErrors().put(fe.getField(),validationErrorList);
+                errorDetail.getErrors().put(fe.getField(), validationErrorList);
             }
             ValidationError validationError = new ValidationError();
             validationError.setCode(fe.getCode());

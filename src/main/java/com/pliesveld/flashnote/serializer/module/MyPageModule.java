@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
 import com.fasterxml.jackson.databind.ser.std.BeanSerializerBase;
 
 public class MyPageModule extends SimpleModule {
+    private static final long serialVersionUID = -8017634253884014868L;
+
     @Override
     public void setupModule(SetupContext context) {
         context.addBeanSerializerModifier(new BeanSerializerModifier() {

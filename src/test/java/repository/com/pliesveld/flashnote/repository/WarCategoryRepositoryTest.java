@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextHierarchy({
-        @ContextConfiguration(name = "REPOSITORY", classes = { WarCategoryRepositoryTest.class }, loader = AnnotationConfigContextLoader.class)
+        @ContextConfiguration(name = "REPOSITORY", classes = {WarCategoryRepositoryTest.class}, loader = AnnotationConfigContextLoader.class)
 })
 @DirtiesContext
 @Transactional
@@ -32,7 +32,7 @@ public class WarCategoryRepositoryTest extends AbstractPopulatedRepositoryUnitTe
 
     @Bean
     public RepositorySettings repositorySettings() {
-        RepositorySettings repositorySettings = new RepositorySettings(new Resource[] {new ClassPathResource("test-category-war-1.json", this.getClass()) });
+        RepositorySettings repositorySettings = new RepositorySettings(new Resource[]{new ClassPathResource("test-category-war-1.json", this.getClass())});
         return repositorySettings;
     }
 

@@ -30,8 +30,7 @@ public class SpringTaskConfig implements AsyncConfigurer, SchedulingConfigurer {
 
 
     @Bean
-    public ThreadPoolTaskScheduler taskScheduler()
-    {
+    public ThreadPoolTaskScheduler taskScheduler() {
         LOG.info("Setting up thread pool task scheduler with 20 threads.");
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
         scheduler.setPoolSize(20);
@@ -50,8 +49,7 @@ public class SpringTaskConfig implements AsyncConfigurer, SchedulingConfigurer {
     }
 
     @Override
-    public void configureTasks(ScheduledTaskRegistrar registrar)
-    {
+    public void configureTasks(ScheduledTaskRegistrar registrar) {
         TaskScheduler scheduler = this.taskScheduler();
         LOG.info("Configuring scheduled method executor {}.", scheduler);
         registrar.setTaskScheduler(scheduler);
@@ -66,6 +64,8 @@ public class SpringTaskConfig implements AsyncConfigurer, SchedulingConfigurer {
 
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
-        return (ex, method, params) -> { schedulingLoggerError.warn(method.getName(), ex); };
+        return (ex, method, params) -> {
+            schedulingLoggerError.warn(method.getName(), ex);
+        };
     }
 }

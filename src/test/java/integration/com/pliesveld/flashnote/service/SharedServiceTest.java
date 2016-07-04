@@ -32,14 +32,14 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextHierarchy({
-        @ContextConfiguration(name = "REPOSITORY", classes = { SharedServiceTest.class }, loader = AnnotationConfigContextLoader.class)
+        @ContextConfiguration(name = "REPOSITORY", classes = {SharedServiceTest.class}, loader = AnnotationConfigContextLoader.class)
 })
 @DirtiesContext
-public class SharedServiceTest extends AbstractTransactionalServiceUnitTest {
+public class SharedServiceTest extends com.pliesveld.flashnote.service.AbstractTransactionalServiceUnitTest {
 
     @Bean
     public RepositorySettings repositorySettings() {
-        RepositorySettings repositorySettings = new RepositorySettings(new Resource[] {new ClassPathResource("test-data-shared-question.json", this.getClass()) });
+        RepositorySettings repositorySettings = new RepositorySettings(new Resource[]{new ClassPathResource("test-data-shared-question.json", this.getClass())});
         return repositorySettings;
     }
 
@@ -56,8 +56,7 @@ public class SharedServiceTest extends AbstractTransactionalServiceUnitTest {
     private BankService bankService;
 
     @Test
-    public void whenContextLoad_thenCorrect()
-    {
+    public void whenContextLoad_thenCorrect() {
         assertEquals(1, deckRepository.count());
         assertEquals(1, flashCardRepository.count());
         assertEquals(1, questionBankRepository.count());
@@ -66,8 +65,7 @@ public class SharedServiceTest extends AbstractTransactionalServiceUnitTest {
     }
 
     @Test
-    public void givenContextLoad_whenFindEntitiesByName_thenCorrect()
-    {
+    public void givenContextLoad_whenFindEntitiesByName_thenCorrect() {
         assertNotNull(categoryRepository.findOne(500));
         assertNotNull(questionRepository.findOne(9000));
         assertNotNull(answerRepository.findOne(9001));
@@ -82,7 +80,7 @@ public class SharedServiceTest extends AbstractTransactionalServiceUnitTest {
         Answer answer = answerRepository.findOne(9001);
         assertNotNull(question);
         assertNotNull(answer);
-        FlashCard flashcard = new FlashCard(question,answer);
+        FlashCard flashcard = new FlashCard(question, answer);
         deckService.updateDeckAddFlashCard(2, flashcard);
 
 
@@ -182,8 +180,7 @@ public class SharedServiceTest extends AbstractTransactionalServiceUnitTest {
         List<QuestionBank> bankList = bankService.findAllQuestionBanks();
         assertNotNull(bankList);
         assertEquals(1, bankList.size());
-        for (QuestionBank questionBank : bankList )
-        {
+        for (QuestionBank questionBank : bankList) {
             assertNotNull(questionBank);
             assertNotNull(questionBank.getDescription());
             assertNotNull(questionBank.getId());
@@ -193,13 +190,12 @@ public class SharedServiceTest extends AbstractTransactionalServiceUnitTest {
 
     @Test
     public void whenPagedBank_thenCorrect() {
-        Pageable page = new PageRequest(0,1);
+        Pageable page = new PageRequest(0, 1);
         Page<QuestionBank> bankPage = bankService.browseBanks(page);
         assertNotNull(bankPage);
 
         List<QuestionBank> bankList = bankPage.getContent();
-        for (QuestionBank questionBank : bankList )
-        {
+        for (QuestionBank questionBank : bankList) {
             assertNotNull(questionBank);
             assertNotNull(questionBank.getDescription());
             assertNotNull(questionBank.getId());

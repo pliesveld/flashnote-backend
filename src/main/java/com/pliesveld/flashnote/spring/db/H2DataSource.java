@@ -22,7 +22,7 @@ import static javax.persistence.SharedCacheMode.ENABLE_SELECTIVE;
 
 @Profile(Profiles.INTEGRATION_TEST)
 @Configuration
-@PropertySource(value = { "classpath:test-datasource.properties" })
+@PropertySource(value = {"classpath:test-datasource.properties"})
 public class H2DataSource {
 
     private static final String PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN = "entitymanager.packages.to.scan";
@@ -51,7 +51,7 @@ public class H2DataSource {
 
         try {
             @SuppressWarnings("unchecked")
-                    Class<? extends Driver> classz = (Class<? extends Driver>) Class.forName(driver);
+            Class<? extends Driver> classz = (Class<? extends Driver>) Class.forName(driver);
             dataSource.setDriverClass(classz);
         } catch (ClassNotFoundException e) {
             throw new IllegalStateException("failed to load class: " + driver, e);
@@ -66,11 +66,11 @@ public class H2DataSource {
     // TODO: http://www.jpab.org/Hibernate.html
     private Properties hibernateProperties() {
         Properties properties = new Properties();
-        properties.put("hibernate.dialect",         environment.getRequiredProperty("hibernate.dialect"));
-        properties.put("hibernate.show_sql",        environment.getRequiredProperty("hibernate.show_sql"));
-        properties.put("hibernate.format_sql",      environment.getRequiredProperty("hibernate.format_sql"));
-        properties.put("hibernate.use_sql_comments",environment.getRequiredProperty("hibernate.use_sql_comments"));
-        properties.put("hibernate.hbm2ddl.auto",    environment.getRequiredProperty("hibernate.hbm2ddl.auto"));
+        properties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
+        properties.put("hibernate.show_sql", environment.getRequiredProperty("hibernate.show_sql"));
+        properties.put("hibernate.format_sql", environment.getRequiredProperty("hibernate.format_sql"));
+        properties.put("hibernate.use_sql_comments", environment.getRequiredProperty("hibernate.use_sql_comments"));
+        properties.put("hibernate.hbm2ddl.auto", environment.getRequiredProperty("hibernate.hbm2ddl.auto"));
         return properties;
     }
 

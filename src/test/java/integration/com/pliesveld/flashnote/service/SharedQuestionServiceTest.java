@@ -24,14 +24,14 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextHierarchy({
-        @ContextConfiguration(name = "REPOSITORY", classes = { SharedQuestionServiceTest.class }, loader = AnnotationConfigContextLoader.class)
+        @ContextConfiguration(name = "REPOSITORY", classes = {SharedQuestionServiceTest.class}, loader = AnnotationConfigContextLoader.class)
 })
 @DirtiesContext
 public class SharedQuestionServiceTest extends AbstractTransactionalServiceUnitTest {
 
     @Bean
     public RepositorySettings repositorySettings() {
-        RepositorySettings repositorySettings = new RepositorySettings(new Resource[] {new ClassPathResource("test-data-shared-question-extra.json", this.getClass()) });
+        RepositorySettings repositorySettings = new RepositorySettings(new Resource[]{new ClassPathResource("test-data-shared-question-extra.json", this.getClass())});
         return repositorySettings;
     }
 
@@ -48,8 +48,7 @@ public class SharedQuestionServiceTest extends AbstractTransactionalServiceUnitT
     private BankService bankService;
 
     @Test
-    public void whenContextLoad_thenCorrect()
-    {
+    public void whenContextLoad_thenCorrect() {
         assertEquals(2, deckRepository.count());
         assertEquals(2, flashCardRepository.count());
         assertEquals(1, questionBankRepository.count());
@@ -58,8 +57,7 @@ public class SharedQuestionServiceTest extends AbstractTransactionalServiceUnitT
     }
 
     @Test
-    public void givenContextLoad_whenFindEntitiesByName_thenCorrect()
-    {
+    public void givenContextLoad_whenFindEntitiesByName_thenCorrect() {
         assertNotNull(categoryRepository.findOne(500));
         assertNotNull(questionRepository.findOne(9000));
         assertNotNull(questionRepository.findOne(9001));

@@ -135,8 +135,7 @@ public class BankServiceImpl implements BankService {
     @Override
     public void updateQuestionBankAddQuestion(final int bankId, @NotNull Question question) {
         QuestionBank questionBank = questionBankRepository.getOne(bankId);
-        if (questionBank == null)
-        {
+        if (questionBank == null) {
             throw new QuestionBankNotFoundException(bankId);
         }
 
@@ -173,13 +172,11 @@ public class BankServiceImpl implements BankService {
         for (Question question : questionIds) {
             final Integer questionId = question.getId();
 
-            if ( questionBankRepository.findByQuestionsContaining(question).stream().filter(qb -> qb.getId() != bankId).count() > 0)
-            {
+            if (questionBankRepository.findByQuestionsContaining(question).stream().filter(qb -> qb.getId() != bankId).count() > 0) {
                 continue;
             }
 
-            if ( flashCardRepository.findAllByQuestion_id(questionId).size() > 0)
-            {
+            if (flashCardRepository.findAllByQuestion_id(questionId).size() > 0) {
                 continue;
             }
 
@@ -198,6 +195,6 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public List<QuestionBank> findBanksContainingQuestion(final Question question) {
-            return questionBankRepository.findByQuestionsContaining(question);
+        return questionBankRepository.findByQuestionsContaining(question);
     }
 }

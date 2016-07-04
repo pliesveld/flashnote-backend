@@ -18,9 +18,8 @@ import java.time.ZonedDateTime;
 
 @Configuration
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
-@Import({SpringSerializationTestConfig.class,SpringDataConfig.class,PersistenceContext.class, SpringEntityAuditTestConfig.class})
-public class SpringEntityTestConfig
-{
+@Import({SpringSerializationTestConfig.class, SpringDataConfig.class, PersistenceContext.class, SpringEntityAuditTestConfig.class})
+public class SpringEntityTestConfig {
 
     @Bean
     DateTimeService dateTimeService() {

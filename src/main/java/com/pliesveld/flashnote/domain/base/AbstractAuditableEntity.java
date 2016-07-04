@@ -23,7 +23,7 @@ import static com.fasterxml.jackson.annotation.JsonProperty.Access.READ_ONLY;
  * Entities that inherit from this @MappedSuperclass-annotated class
  * will have have timestamps for when they were created, and when
  * they were last modified.
- *
+ * <p>
  * An Auditing Entity Listener is attached for notification when this entity is created or modified.  The Spring-Data
  * auditing annotations @CreatedDate / @LastModifiedDate / @CreatedBy / @LastModifiedBy update the fields they mark
  * with auditing information.
@@ -54,7 +54,9 @@ public abstract class AbstractAuditableEntity<ID extends Serializable> extends D
     @LastModifiedDate
     @JsonProperty(value = "modified", access = READ_ONLY)
     @JsonView(Views.SummaryDetails.class)
-    public Instant getModifiedOn() { return modifiedOn; }
+    public Instant getModifiedOn() {
+        return modifiedOn;
+    }
 
     @Column(name = "CREATED_BY", updatable = false)
     @CreatedBy

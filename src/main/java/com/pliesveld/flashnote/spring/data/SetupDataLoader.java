@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.pliesveld.flashnote.domain.AccountRole.*;
 
 
-
 @Component
 @Transactional
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
@@ -41,23 +40,22 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         if (alreadySetup)
             return;
 
-        createStudentIfNotFound("new@example.com",     ROLE_ACCOUNT,    "new");
-        createStudentIfNotFound("student@example.com", ROLE_USER,       "basic");
-        createStudentIfNotFound("premium@example.com", ROLE_PREMIUM,    "premium");
-        createStudentIfNotFound("mod@example.com",     ROLE_MODERATOR,  "moderator");
-        createStudentIfNotFound("admin@example.com",   ROLE_ADMIN,      "admin");
+        createStudentIfNotFound("new@example.com", ROLE_ACCOUNT, "new");
+        createStudentIfNotFound("student@example.com", ROLE_USER, "basic");
+        createStudentIfNotFound("premium@example.com", ROLE_PREMIUM, "premium");
+        createStudentIfNotFound("mod@example.com", ROLE_MODERATOR, "moderator");
+        createStudentIfNotFound("admin@example.com", ROLE_ADMIN, "admin");
 
         Category test_category = createCategoryIfNotFound("TEST CATEGORY", "A sample container for testing.");
         Category test_category_nested = createCategoryIfNotFound("TEST SUB CATEGORY", "A sample sub-category for testing.");
-        createCategoryRelationship(test_category,test_category_nested);
+        createCategoryRelationship(test_category, test_category_nested);
         alreadySetup = true;
     }
 
     @Transactional
     private Student createStudentIfNotFound(String email, AccountRole role, String name) {
         Student student = studentRepository.findOneByEmail(email);
-        if ( student == null )
-        {
+        if (student == null) {
             student = new Student();
             student.setEmail(email);
             student.setRole(role);
@@ -81,12 +79,10 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     }
 
     @Transactional
-    private Category createCategoryIfNotFound(String name, String description)
-    {
+    private Category createCategoryIfNotFound(String name, String description) {
         Category category = categoryRepository.findOneByNameEquals(name);
 
-        if ( category == null )
-        {
+        if (category == null) {
             category = new Category();
             category.setName(name);
             category.setDescription(description);

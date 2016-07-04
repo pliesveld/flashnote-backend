@@ -36,8 +36,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void deleteStudent(final int id) throws StudentNotFoundException {
-        if (!studentRepository.exists(id))
-        {
+        if (!studentRepository.exists(id)) {
             throw new StudentNotFoundException(id);
         }
 
@@ -45,15 +44,14 @@ public class AdminServiceImpl implements AdminService {
 
         rememberTokenRepository.deleteTokensForUser(username);
 
-        checkRepositoryAndDelete(registrationRepository,id);
-        checkRepositoryAndDelete(passwordResetRepository,id);
-        checkRepositoryAndDelete(studentRepository,id);
+        checkRepositoryAndDelete(registrationRepository, id);
+        checkRepositoryAndDelete(passwordResetRepository, id);
+        checkRepositoryAndDelete(studentRepository, id);
         studentRepository.delete(id);
     }
 
-    private <ID extends Serializable, R extends CrudRepository<?,ID>> void checkRepositoryAndDelete(final R repository, final ID id) {
-        if (repository.exists(id))
-        {
+    private <ID extends Serializable, R extends CrudRepository<?, ID>> void checkRepositoryAndDelete(final R repository, final ID id) {
+        if (repository.exists(id)) {
             repository.delete(id);
         } else {
             LOG.info("Could not delete {} from {}", id, repository.getClass().getSimpleName());

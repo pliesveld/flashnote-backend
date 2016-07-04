@@ -16,10 +16,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -55,13 +52,11 @@ public class DropCreateDatabase {
         return new PropertySourcesPlaceholderConfigurer();
     }
 
-    public DropCreateDatabase()
-    {
+    public DropCreateDatabase() {
     }
 
     @Autowired
-    public void initFromEnvironment(Environment environment)
-    {
+    public void initFromEnvironment(Environment environment) {
         assert environment != null;
         this.JDBC_DRIVER = environment.getRequiredProperty("jdbc.driverClassName");
         this.DB_URL = environment.getRequiredProperty("jdbc.url");
@@ -69,24 +64,22 @@ public class DropCreateDatabase {
         this.PASS = environment.getRequiredProperty("jdbc.password");
     }
 
-    String trimDB(String jdbcURL)
-    {
+    String trimDB(String jdbcURL) {
         int last_slash = jdbcURL.lastIndexOf("/") + 1;
 
         String db = jdbcURL.substring(last_slash);
         LOG.info("db: " + db);
         DB_NAME = db;
 
-        String newJdbcUrl = jdbcURL.substring(0,last_slash);
+        String newJdbcUrl = jdbcURL.substring(0, last_slash);
 
-        if (jdbcURL.contains("postgres"))
-        {
+        if (jdbcURL.contains("postgres")) {
             newJdbcUrl = newJdbcUrl.concat("postgres");
         }
         return newJdbcUrl;
     }
 
-    class SQLExecutor implements Consumer<String> {
+    static class SQLExecutor implements Consumer<String> {
 
         private final Connection connection;
 
@@ -105,8 +98,8 @@ public class DropCreateDatabase {
 
             } catch (SQLException e) {
                 //e.printStackTrace();
-                LOG.info("{}",sql);
-        //        LOG.catching(Level.ERROR,e);
+                LOG.info("{}", sql);
+                //        LOG.catching(Level.ERROR,e);
             } finally {
                 if (statement != null)
                     try {
@@ -132,24 +125,13 @@ public class DropCreateDatabase {
         Statement stmt = null;
 
         try {
-            //STEP 2: Register JDBC driver
             Class.forName(JDBC_DRIVER);
-
-            //STEP 3: Open a connection
             LOG.info("Connecting to a selected database: " + DB_ROOT_URL);
             conn = DriverManager.getConnection(DB_ROOT_URL, USER, PASS);
             LOG.info("Connected database successfully...");
 
-            //STEP 4: DROP ACTIVE DATABASE CONNECTIONS TO TARGET DATABASE
-            stmt = conn.createStatement();
-            String sql_connections = "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = 'TARGET_DB' AND pid <> pg_backend_pid();"
-                    .replaceFirst("TARGET_DB",DB_NAME);
-            LOG.info("Dropping active connections to target database");
-            stmt.executeQuery(sql_connections);
-//            if (1/0 == 0)
-//                return;
+            closeCurrentStatement(conn);
 
-            //STEP 5: Execute a query
             LOG.info("Deleting database...");
             stmt = conn.createStatement();
 
@@ -161,12 +143,10 @@ public class DropCreateDatabase {
             stmt.executeUpdate(sql);
             LOG.info("Database created successfully...");
 
-            if (StringUtils.hasText(DB_INIT))
-            {
+            if (StringUtils.hasText(DB_INIT)) {
                 Resource resource = new ClassPathResource(DB_INIT);
-                if (!resource.exists())
-                {
-                    LOG.error("Could not find {}",DB_INIT);
+                if (!resource.exists()) {
+                    LOG.error("Could not find {}", DB_INIT);
                 } else {
                     initializeDB(resource);
                 }
@@ -186,6 +166,7 @@ public class DropCreateDatabase {
                 if (stmt != null)
                     stmt.close();
             } catch (SQLException se) {
+                LOG.error(se.getMessage());
             }
             try {
                 if (conn != null)
@@ -194,6 +175,18 @@ public class DropCreateDatabase {
                 se.printStackTrace();
             }
         }
+    }
+
+    private void closeCurrentStatement(Connection conn) throws SQLException {
+        LOG.info("Dropping current databse connections...");
+
+        Statement stmt = conn.createStatement();
+        String sql_connections = "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = 'TARGET_DB' AND pid <> pg_backend_pid();"
+                .replaceFirst("TARGET_DB", DB_NAME);
+        LOG.info("Dropping active connections to target database");
+        ResultSet result = stmt.executeQuery(sql_connections);
+        result.clearWarnings();
+
     }
 
     private void initializeDB(Resource resource) throws IOException {
@@ -207,7 +200,7 @@ public class DropCreateDatabase {
             LOG.info("Running db init", DB_INIT);
 
             List<String> db_init =
-            Files.lines(resource.getFile().toPath()).filter(s -> !s.startsWith("--")).collect(Collectors.toList());
+                    Files.lines(resource.getFile().toPath()).filter(s -> !s.startsWith("--")).collect(Collectors.toList());
 
             db_init.forEach(LOG::info);
 
@@ -233,6 +226,4 @@ public class DropCreateDatabase {
         DropCreateDatabase db = ctx.getBean(DropCreateDatabase.class);
         db.main_real(args);
     }
-
-
 }

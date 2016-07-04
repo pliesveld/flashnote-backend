@@ -12,6 +12,7 @@ import org.hibernate.validator.constraints.Email;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
@@ -19,12 +20,13 @@ import static com.pliesveld.flashnote.schema.Constants.*;
 
 @Entity
 @Table(name = "STUDENT_ACCOUNT",
-    uniqueConstraints = {
-        @UniqueConstraint(name = "UNIQUE_ACCOUNT_EMAIL", columnNames = "STUDENT_EMAIL"),
-        @UniqueConstraint(name = "UNIQUE_ACCOUNT_NAME", columnNames = "STUDENT_NAME")
+        uniqueConstraints = {
+                @UniqueConstraint(name = "UNIQUE_ACCOUNT_EMAIL", columnNames = "STUDENT_EMAIL"),
+                @UniqueConstraint(name = "UNIQUE_ACCOUNT_NAME", columnNames = "STUDENT_NAME")
         })
-public class Student extends DomainBaseEntity<Integer> {
+public class Student extends DomainBaseEntity<Integer> implements Serializable {
 
+    private static final long serialVersionUID = -4487277214521177813L;
     private Integer id;
     private String name;
     private String email;
@@ -37,19 +39,20 @@ public class Student extends DomainBaseEntity<Integer> {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "STUDENT_ID")
     @JsonView(Views.Summary.class)
-    public Integer getId() { return id; }
+    public Integer getId() {
+        return id;
+    }
 
     @NotNull
     @Size(min = Constants.MIN_ACCOUNT_NAME_LENGTH, max = Constants.MAX_ACCOUNT_NAME_LENGTH)
     @Column(name = "STUDENT_NAME", length = Constants.MAX_ACCOUNT_NAME_LENGTH, nullable = false)
     @JsonView(Views.Summary.class)
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
     @NotNull
-    @Size(min = MIN_ACCOUNT_EMAIL_LENGTH,max = MAX_ACCOUNT_EMAIL_LENGTH)
+    @Size(min = MIN_ACCOUNT_EMAIL_LENGTH, max = MAX_ACCOUNT_EMAIL_LENGTH)
     @Email
     @Column(name = "STUDENT_EMAIL", length = MAX_ACCOUNT_EMAIL_LENGTH, nullable = false)
     public String getEmail() {
@@ -98,10 +101,11 @@ public class Student extends DomainBaseEntity<Integer> {
         lastPasswordResetDate = Instant.now();
     }
 
-    public void setId(Integer id) { this.id = id; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 

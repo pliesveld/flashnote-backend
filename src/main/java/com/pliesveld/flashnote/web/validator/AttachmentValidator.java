@@ -42,25 +42,23 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
         AttachmentType attachmentType = attachment.getAttachmentType();
         boolean is_valid = true;
 
-        if (attachmentType == null)
-        {
+        if (attachmentType == null) {
             is_valid = false;
         } else {
 
-            if (attachment.getContents() == null)
-            {
+            if (attachment.getContents() == null) {
                 is_valid = true;
             } else {
 
                 switch (attachmentType) {
                     case AUDIO:
-                        is_valid = is_valid && validateAudioAttachment(attachment,context);
+                        is_valid = is_valid && validateAudioAttachment(attachment, context);
                         break;
                     case TEXT:
-                        is_valid = is_valid && validateDocumentAttachment(attachment,context);
+                        is_valid = is_valid && validateDocumentAttachment(attachment, context);
                         break;
                     case IMAGE:
-                        is_valid = is_valid && validateImageAttachment(attachment,context);
+                        is_valid = is_valid && validateImageAttachment(attachment, context);
                         break;
                 }
 
@@ -69,8 +67,7 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
 
         }
 
-        if (!is_valid)
-        {
+        if (!is_valid) {
             context.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.message}").addConstraintViolation();
         }
 
@@ -153,8 +150,7 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
     }
 
     private boolean validateDocumentAttachment(AttachmentBinary attachment, ConstraintValidatorContext errors) {
-        if (!isValidUTF8(attachment.getContents()))
-        {
+        if (!isValidUTF8(attachment.getContents())) {
             errors.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.document.message}").addConstraintViolation();
             return false;
         }
@@ -166,10 +162,10 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
         String fileName = attachment.getFileName();
         String mime = attachment.getMimeContentType();
 
-        AudioMetadata metadata = null;
+        AudioMetadata metadata;
 
         try {
-            metadata = AudioMetadataReader.readAudioMetadata(fileName,content,mime);
+            metadata = AudioMetadataReader.readAudioMetadata(fileName, content, mime);
         } catch (AudioFormatNotSupportedException e) {
             errors.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.audio.message}").addConstraintViolation();
 
@@ -185,18 +181,17 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
     }
 
     /**
-        Used to verify attachment of text content types do not
-        contain binary data.
+     * Used to verify attachment of text content types do not
+     * contain binary data.
      */
-    public static boolean isValidUTF8( byte[] input ) {
+    public static boolean isValidUTF8(byte[] input) {
 
         CharsetDecoder cs = Charset.forName("UTF-8").newDecoder();
 
         try {
             cs.decode(ByteBuffer.wrap(input));
             return true;
-        }
-        catch (CharacterCodingException e) {
+        } catch (CharacterCodingException e) {
             return false;
         }
     }

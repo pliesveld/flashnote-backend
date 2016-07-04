@@ -1,7 +1,6 @@
 package com.pliesveld.flashnote.web.validator;
 
-public class ImageMetadata
-{
+public class ImageMetadata {
     final private String formatName;
     final private int width;
     final private int height;

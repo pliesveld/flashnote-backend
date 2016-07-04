@@ -26,24 +26,21 @@ public class StatementTest extends AbstractDomainEntityUnitTest {
     Serializable entity_id = null;
 
     @Test
-    public void whenSavingQuestion_thenCorrect()
-    {
+    public void whenSavingQuestion_thenCorrect() {
         Question que = new Question("que?");
         que = questionRepository.save(que);
         assertNotNull(que);
     }
 
     @Test
-    public void whenSavingAnswer_thenCorrect()
-    {
+    public void whenSavingAnswer_thenCorrect() {
         Answer ans = new Answer("Ans.");
         ans = answerRepository.save(ans);
         assertNotNull(ans);
     }
 
     @Test
-    public void findByEmail()
-    {
+    public void findByEmail() {
         Question que = new Question("que?");
         Answer ans = new Answer("Ans.");
 
@@ -56,8 +53,7 @@ public class StatementTest extends AbstractDomainEntityUnitTest {
     }
 
     @After
-    public void flushAfter()
-    {
+    public void flushAfter() {
         entityManager.flush();
     }
 

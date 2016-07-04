@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 @JsonInclude(JsonInclude.Include.ALWAYS)
 public class CardStatistics extends ModelBase implements JsonWebResponseSerializable {
 
+    private static final long serialVersionUID = -7528900725560233327L;
     @JsonView(Views.Summary.class)
     private Long deckCount;
 
@@ -33,7 +34,8 @@ public class CardStatistics extends ModelBase implements JsonWebResponseSerializ
     @JsonView(Views.Summary.class)
     private Long attachmentsCount;
 
-    public CardStatistics() {}
+    public CardStatistics() {
+    }
 
     public void setDeckCount(Long deckCount) {
         this.deckCount = deckCount;
@@ -47,11 +49,17 @@ public class CardStatistics extends ModelBase implements JsonWebResponseSerializ
         this.questionsCount = questionsCount;
     }
 
-    public void setAnswersCount(Long answersCount) { this.answersCount = answersCount; }
+    public void setAnswersCount(Long answersCount) {
+        this.answersCount = answersCount;
+    }
 
-    public void setQuestionBankCount(Long questionBankCount) { this.questionBankCount = questionBankCount; }
+    public void setQuestionBankCount(Long questionBankCount) {
+        this.questionBankCount = questionBankCount;
+    }
 
-    public void setAttachmentsCount(Long attachmentsCount) { this.attachmentsCount = attachmentsCount; }
+    public void setAttachmentsCount(Long attachmentsCount) {
+        this.attachmentsCount = attachmentsCount;
+    }
 
     public Long getDeckCount() {
         return deckCount;
@@ -69,7 +77,11 @@ public class CardStatistics extends ModelBase implements JsonWebResponseSerializ
         return answersCount;
     }
 
-    public Long getQuestionBankCount() { return questionBankCount; }
+    public Long getQuestionBankCount() {
+        return questionBankCount;
+    }
 
-    public Long getAttachmentsCount() { return attachmentsCount; }
+    public Long getAttachmentsCount() {
+        return attachmentsCount;
+    }
 }

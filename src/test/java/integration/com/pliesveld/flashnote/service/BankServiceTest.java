@@ -25,7 +25,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextHierarchy({
-        @ContextConfiguration(name = "REPOSITORY", classes = { PopulatedCategoriesRepositoryTest.class }, loader = AnnotationConfigContextLoader.class)
+        @ContextConfiguration(name = "REPOSITORY", classes = {PopulatedCategoriesRepositoryTest.class}, loader = AnnotationConfigContextLoader.class)
 })
 @DirtiesContext
 public class BankServiceTest extends AbstractTransactionalServiceUnitTest {
@@ -36,8 +36,7 @@ public class BankServiceTest extends AbstractTransactionalServiceUnitTest {
     private Integer category_id;
 
     @Before
-    public void givenExistingCategory()
-    {
+    public void givenExistingCategory() {
         Category category = findFirstCategory();
         category_id = category.getId();
     }

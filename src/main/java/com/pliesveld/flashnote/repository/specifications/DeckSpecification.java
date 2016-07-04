@@ -11,14 +11,16 @@ import javax.persistence.criteria.Path;
 
 final public class DeckSpecification {
     private static final Logger LOG = LogManager.getLogger();
-    private DeckSpecification() {}
+
+    private DeckSpecification() {
+    }
 
     public static Specification<Deck> descriptionOrFlashcardContainsIgnoreCase(String searchTerm) {
 
         return (root, query, cb) -> {
             final String containsLikePattern = getContainsLikePattern(searchTerm);
 
-            ListJoin<Deck,FlashCard> flashCardListJoin = root.join(Deck_.flashcards);
+            ListJoin<Deck, FlashCard> flashCardListJoin = root.join(Deck_.flashcards);
 
             Path<Question> questionExp = flashCardListJoin.<Question>get(FlashCard_.question);
             Path<Answer> answerExp = flashCardListJoin.<Answer>get(FlashCard_.answer);
@@ -28,10 +30,10 @@ final public class DeckSpecification {
 
             query.distinct(true);
 
-           return
-                   cb.or(cb.like(cb.lower(root.<String>get(Deck_.description)), containsLikePattern),
-                           cb.like(cb.lower(questionContentExp), containsLikePattern),
-                           cb.like(cb.lower(answerContentExp), containsLikePattern));
+            return
+                    cb.or(cb.like(cb.lower(root.<String>get(Deck_.description)), containsLikePattern),
+                            cb.like(cb.lower(questionContentExp), containsLikePattern),
+                            cb.like(cb.lower(answerContentExp), containsLikePattern));
         };
     }
 

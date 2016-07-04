@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
@@ -15,9 +16,9 @@ import java.nio.charset.CharsetDecoder;
 @Entity
 @Table(name = "ATTACHMENT_TEXT")
 @PrimaryKeyJoinColumn(name = "ATTACHMENT_ID", foreignKey = @ForeignKey(name = "FK_ATTACHMENT_TEXT"))
-public class AttachmentText extends AbstractAttachment {
+public class AttachmentText extends AbstractAttachment implements Serializable {
 
-
+    private static final long serialVersionUID = 2198784599569918824L;
     private String contents;
 
     @NotNull
@@ -44,8 +45,7 @@ public class AttachmentText extends AbstractAttachment {
     }
 
     @PrePersist
-    public void prePersist()
-    {
+    public void prePersist() {
         if (attachmentType == null)
             attachmentType = AttachmentType.TEXT;
     }

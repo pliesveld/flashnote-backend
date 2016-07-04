@@ -37,18 +37,16 @@ public class CorsFilter implements Filter {
 
         Enumeration<String> params = filterConfig.getInitParameterNames();
         sb.append("With filter params: ").append('\n');
-        while ( params.hasMoreElements() )
-        {
+        while (params.hasMoreElements()) {
             final String param = params.nextElement();
             sb.append(param)
-              .append(" = ")
-              .append(filterConfig.getInitParameter(param)).append('\n');
+                    .append(" = ")
+                    .append(filterConfig.getInitParameter(param)).append('\n');
         }
 
-        LOG.debug(Markers.SERVLET_INIT,sb.toString());
+        LOG.debug(Markers.SERVLET_INIT, sb.toString());
 
     }
-
 
 
     @Override

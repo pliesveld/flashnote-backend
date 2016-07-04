@@ -13,7 +13,7 @@ import java.util.UUID;
         DispatcherType.ASYNC, DispatcherType.ERROR, DispatcherType.FORWARD,
         DispatcherType.INCLUDE, DispatcherType.REQUEST
 })
-public class LoggingFilter implements Filter {    
+public class LoggingFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
@@ -21,14 +21,13 @@ public class LoggingFilter implements Filter {
         if (!ThreadContext.containsKey("id")) {
             clear = true;
             ThreadContext.put("id", UUID.randomUUID().toString());
-            HttpSession session = ((HttpServletRequest)request).getSession(false);
+            HttpSession session = ((HttpServletRequest) request).getSession(false);
             ThreadContext.put("hostName", request.getServerName());
-            if (session != null)
-            {
-                ThreadContext.put("username",(String)session.getAttribute("username"));
+            if (session != null) {
+                ThreadContext.put("username", (String) session.getAttribute("username"));
             }
         }
-        
+
         try {
             chain.doFilter(request, response);
         } finally {
@@ -41,13 +40,14 @@ public class LoggingFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         // TODO Auto-generated method stub
-        
+
     }
+
     @Override
     public void destroy() {
         // TODO Auto-generated method stub
-        
+
     }
-    
+
 
 }

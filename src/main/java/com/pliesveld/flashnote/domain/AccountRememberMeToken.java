@@ -33,26 +33,22 @@ public class AccountRememberMeToken {
 
     @PrePersist
     public void setDefaults() {
-        if (lastUsed == null)
-        {
+        if (lastUsed == null) {
             lastUsed = Instant.now();
         }
     }
 
-    public AccountRememberMeToken()
-    {
+    public AccountRememberMeToken() {
     }
 
-    public AccountRememberMeToken(PersistentRememberMeToken token)
-    {
+    public AccountRememberMeToken(PersistentRememberMeToken token) {
         this.username = token.getUsername();
         this.id = token.getSeries();
         this.token = token.getTokenValue();
         this.lastUsed = token.getDate().toInstant();
     }
 
-    public PersistentRememberMeToken toPersistentRememberMeToken()
-    {
+    public PersistentRememberMeToken toPersistentRememberMeToken() {
         return new PersistentRememberMeToken(this.username, this.id, this.token, Date.from(this.lastUsed));
     }
 
@@ -98,7 +94,7 @@ public class AccountRememberMeToken {
         if (this == obj) {
             return true;
         }
-        if (obj == null || !(obj instanceof  AccountRememberMeToken)) {
+        if (obj == null || !(obj instanceof AccountRememberMeToken)) {
             return false;
         }
         final AccountRememberMeToken other = (AccountRememberMeToken) obj;

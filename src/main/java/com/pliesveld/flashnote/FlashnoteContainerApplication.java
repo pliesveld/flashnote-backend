@@ -9,11 +9,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
-@EnableAutoConfiguration(exclude = {SecurityAutoConfiguration.class, ErrorMvcAutoConfiguration.class })
+@EnableAutoConfiguration(exclude = {SecurityAutoConfiguration.class, ErrorMvcAutoConfiguration.class})
 @ComponentScan
 @EnableScheduling
 public class FlashnoteContainerApplication {
-
 
 
     public static void main(String[] args) {

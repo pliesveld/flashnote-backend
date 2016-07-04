@@ -3,9 +3,7 @@ package com.pliesveld.flashnote.security;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
-
-public class AuthToken
-{
+public class AuthToken {
     @JsonProperty
     private final String password;
 

@@ -15,23 +15,20 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @Component
-public abstract class AbstractRepositoryUnitTest
-{
+public abstract class AbstractRepositoryUnitTest {
     protected static final Logger LOG_SQL = LogManager.getLogger("org.hibernate.SQL");
     protected static final Logger LOG_DOMAIN = LogManager.getLogger("com.pliesveld.flashnote.domain");
 
     private final static String LOG_SQL_LEVEL = "LOG_SQL_LEVEL";
     private final static String LOG_ENTITY_LEVEL = "LOG_ENTITY_LEVEL";
 
-    protected static void disableSQL()
-    {
+    protected static void disableSQL() {
         System.setProperty(LOG_SQL_LEVEL, "ERROR");
         System.setProperty(LOG_ENTITY_LEVEL, "ERROR");
         ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
     }
 
-    protected static void enableSQL()
-    {
+    protected static void enableSQL() {
         System.setProperty(LOG_SQL_LEVEL, "DEBUG");
         System.setProperty(LOG_ENTITY_LEVEL, "DEBUG");
         ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
@@ -83,10 +80,8 @@ public abstract class AbstractRepositoryUnitTest
     protected NotificationRepository notificationRepository;
 
 
-
     @Transactional(readOnly = true)
-    public void testRepositoryLoads()
-    {
+    public void testRepositoryLoads() {
         assertNotNull(answerRepository);
         assertNotNull(attachmentBinaryRepository);
         assertNotNull(attachmentRepository);
@@ -105,70 +100,70 @@ public abstract class AbstractRepositoryUnitTest
     }
 
     @Transactional(readOnly = true)
-    protected void assertAnswerRepositoryCount(long value)
-    {
-            assertEquals("The entity count of AnswerRepository should be " + value, value, answerRepository.count());
+    protected void assertAnswerRepositoryCount(long value) {
+        assertEquals("The entity count of AnswerRepository should be " + value, value, answerRepository.count());
     }
+
     @Transactional(readOnly = true)
-    protected void assertAttachmentBinaryRepositoryCount(long value)
-    {
-            assertEquals("The entity count of AttachmentBinaryRepository should be " + value, value, attachmentBinaryRepository.count());
+    protected void assertAttachmentBinaryRepositoryCount(long value) {
+        assertEquals("The entity count of AttachmentBinaryRepository should be " + value, value, attachmentBinaryRepository.count());
     }
+
     @Transactional(readOnly = true)
-    protected void assertAttachmentRepositoryCount(long value)
-    {
-            assertEquals("The entity count of AttachmentRepository should be " + value, value, attachmentBinaryRepository.count() + attachmentTextRepository.count());
+    protected void assertAttachmentRepositoryCount(long value) {
+        assertEquals("The entity count of AttachmentRepository should be " + value, value, attachmentBinaryRepository.count() + attachmentTextRepository.count());
     }
+
     @Transactional(readOnly = true)
-    protected void assertAttachmentTextRepositoryCount(long value)
-    {
-            assertEquals("The entity count of AttachmentTextRepository should be " + value, value, attachmentTextRepository.count());
+    protected void assertAttachmentTextRepositoryCount(long value) {
+        assertEquals("The entity count of AttachmentTextRepository should be " + value, value, attachmentTextRepository.count());
     }
+
     @Transactional(readOnly = true)
-    protected void assertCategoryRepositoryCount(long value)
-    {
-            assertEquals("The entity count of CategoryRepository should be " + value, value, categoryRepository.count());
+    protected void assertCategoryRepositoryCount(long value) {
+        assertEquals("The entity count of CategoryRepository should be " + value, value, categoryRepository.count());
     }
+
     @Transactional(readOnly = true)
-    protected void assertDeckRepositoryCount(long value)
-    {
-            assertEquals("The entity count of DeckRepository should be " + value, value, deckRepository.count());
+    protected void assertDeckRepositoryCount(long value) {
+        assertEquals("The entity count of DeckRepository should be " + value, value, deckRepository.count());
     }
+
     @Transactional(readOnly = true)
-    protected void assertFlashCardRepositoryCount(long value)
-    {
-            assertEquals("The entity count of FlashCardRepository should be " + value, value, flashCardRepository.count());
+    protected void assertFlashCardRepositoryCount(long value) {
+        assertEquals("The entity count of FlashCardRepository should be " + value, value, flashCardRepository.count());
     }
+
     @Transactional(readOnly = true)
-    protected void assertQuestionRepositoryCount(long value)
-    {
-            assertEquals("The entity count of QuestionRepository should be " + value, value, questionRepository.count());
+    protected void assertQuestionRepositoryCount(long value) {
+        assertEquals("The entity count of QuestionRepository should be " + value, value, questionRepository.count());
     }
+
     @Transactional(readOnly = true)
-    protected void assertQuestionBankRepositoryCount(long value)
-    {
+    protected void assertQuestionBankRepositoryCount(long value) {
         assertEquals("The entity count of QuestionRepository should be " + value, value, questionBankRepository.count());
     }
+
     @Transactional(readOnly = true)
-    protected void assertStatementRepositoryCount(long value)
-    {
-            assertEquals("The entity count of StatementRepository should be " + value, value, questionRepository.count() + answerRepository.count());
+    protected void assertStatementRepositoryCount(long value) {
+        assertEquals("The entity count of StatementRepository should be " + value, value, questionRepository.count() + answerRepository.count());
     }
+
     @Transactional(readOnly = true)
-    protected void assertStudentRepositoryCount(long value)
-    {
-            assertEquals("The entity count of StudentRepository should be " + value, value, studentRepository.count());
+    protected void assertStudentRepositoryCount(long value) {
+        assertEquals("The entity count of StudentRepository should be " + value, value, studentRepository.count());
     }
+
     @Transactional(readOnly = true)
-    protected void assertRegistrationRepositoryCount(long value)
-    {
+    protected void assertRegistrationRepositoryCount(long value) {
         assertEquals("The entity count of RegistrationRepository should be " + value, value, registrationRepository.count());
     }
+
     @Transactional(readOnly = true)
-    protected void assertPasswordResetRepositoryCount(long value)
-    {
+    protected void assertPasswordResetRepositoryCount(long value) {
         assertEquals("The entity count of PasswordResetRepository should be " + value, value, passwordResetRepository.count());
     }
+
     @Transactional(readOnly = true)
     protected void assertNotificationRepositoryCount(long value) {
         assertEquals("The entity count of NotificationRepository should be " + value, value, notificationRepository.count());

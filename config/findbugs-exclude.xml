@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <Match>
+        <Bug category="INTERNATIONALIZATION"/>
+    </Match>
+
+<!-- exclude messages with a rank lower than 16. Ranks range from 1 to 20, where 1 is top and 20 is lowest. -->
+<!--
+    <Match>
+        <Rank value="16" />
+    </Match>
+-->
+
+    <Match>
+        <And>
+            <Bug category="PERFORMANCE"/>
+            <Bug code="UPM"/>
+            <Bug pattern="UPM_UNCALLED_PRIVATE_METHOD"/>
+        </And>
+    </Match>
+
+    <!-- ignore using RV to load hibernate proxies -->
+    <Match>
+<!--
+        <Or>
+            <Class name="~com\.pliesveld\.flashnote\.domain\..*"/>
+            <Class name="~com\.pliesveld\.flashnote\.service\..*"/>
+        </Or>
+        <Method name="~get.*"/>
+-->
+        <And>
+            <Bug category="STYLE"/>
+            <Bug code="RV"/>
+            <Bug pattern="RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT"/>
+        </And>
+    </Match>
+
+    <!-- ignore Hibernate generated static models -->
+    <Match>
+        <Class name="~com\.pliesveld\.flashnote\.[a-z.]+\.[A-Za-z]+_"/>
+    </Match>
+
+    <!-- ignore all bugs in test classes except JUnit bugs (code IJU) -->
+    <Match>
+        <Class name="~.*\.*Test"/>
+        <Not>
+            <Bug code="IJU"/>
+        </Not>
+    </Match>
+</FindBugsFilter>

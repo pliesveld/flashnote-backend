@@ -46,15 +46,14 @@ public class AuthenticationRestController {
     private UserDetailsService userDetailsService;
 
     @RequestMapping(value = "/auth", method = RequestMethod.OPTIONS)
-    public ResponseEntity<?> discoverAuthEndpoint()
-    {
+    public ResponseEntity<?> discoverAuthEndpoint() {
         return ResponseEntity.ok().build();
     }
 
     @RequestMapping(value = "/auth", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequestJson authenticationRequest, HttpServletRequest httpRequest) throws AuthenticationException {
 
-        LOG.debug(SECURITY_AUTH, "Authenticating {} / {}", authenticationRequest.getUsername(),authenticationRequest.getPassword());
+        LOG.debug(SECURITY_AUTH, "Authenticating {} / {}", authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
         UsernamePasswordAuthenticationToken auth_token = new UsernamePasswordAuthenticationToken(
                 authenticationRequest.getUsername(),

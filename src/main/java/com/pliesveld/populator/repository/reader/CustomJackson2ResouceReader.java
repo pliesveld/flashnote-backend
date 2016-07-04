@@ -31,7 +31,7 @@ public class CustomJackson2ResouceReader extends Jackson2ResourceReader {
 
     @Override
     public Object readFrom(Resource resource, ClassLoader classLoader)
-        throws Exception {
+            throws Exception {
 
         InputStream stream = resource.getInputStream();
         JsonNode node = mapper.readerFor(JsonNode.class).readTree(stream);
@@ -54,7 +54,7 @@ public class CustomJackson2ResouceReader extends Jackson2ResourceReader {
 
 
     private Object readSingle(JsonNode node, ClassLoader classLoader)
-        throws IOException {
+            throws IOException {
 
         JsonNode typeNode = node.findValue(typeKey);
         String typeName = typeNode == null ? null : typeNode.asText();
@@ -63,11 +63,10 @@ public class CustomJackson2ResouceReader extends Jackson2ResourceReader {
 
         Object obj = mapper.readerFor(type).readValue(node);
 
-        obj = type.equals(DataSet.class)  ?  extractor.getData(obj)  :  obj;
+        obj = type.equals(DataSet.class) ? extractor.getData(obj) : obj;
 
         return obj;
     }
-
 
 
 }

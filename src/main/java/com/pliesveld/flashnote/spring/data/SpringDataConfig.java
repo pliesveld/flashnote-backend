@@ -9,7 +9,7 @@ import org.springframework.data.web.config.EnableSpringDataWebSupport;
 @Configuration
 @EnableJpaRepositories(basePackageClasses = FlashCardRepository.class)
 @EnableSpringDataWebSupport
-@ComponentScan(basePackageClasses = { FlashCardRepository.class } )
+@ComponentScan(basePackageClasses = {FlashCardRepository.class})
 public class SpringDataConfig {
 
 }

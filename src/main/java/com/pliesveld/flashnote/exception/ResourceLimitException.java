@@ -4,13 +4,13 @@ import org.springframework.http.HttpStatus;
 
 public class ResourceLimitException extends RuntimeException {
 
-    public String getRepositoryMessage()
-    {
+    private static final long serialVersionUID = 609497521334775056L;
+
+    public String getRepositoryMessage() {
         return this.getMessage();
     }
 
-    public HttpStatus getRepositoryStatus()
-    {
+    public HttpStatus getRepositoryStatus() {
         return HttpStatus.BANDWIDTH_LIMIT_EXCEEDED;
     }
 

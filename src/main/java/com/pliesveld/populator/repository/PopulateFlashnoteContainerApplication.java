@@ -1,6 +1,6 @@
 package com.pliesveld.populator.repository;
 
-import com.pliesveld.flashnote.domain.*;
+import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.repository.*;
 import com.pliesveld.flashnote.util.generator.StudentGenerator;
 import com.pliesveld.populator.repository.reader.RepositorySettings;
@@ -33,11 +33,11 @@ import javax.validation.ConstraintViolationException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Configuration
-@EnableAutoConfiguration //(exclude = {SecurityAutoConfiguration.class, WebMvcAutoConfiguration.class, ErrorMvcAutoConfiguration.class, DispatcherServletAutoConfiguration.class, EmbeddedServletContainerAutoConfiguration.class})
-@ComponentScan(basePackages = { "com.pliesveld.flashnote", "com.pliesveld.populator.repository"})
+@EnableAutoConfiguration
+//(exclude = {SecurityAutoConfiguration.class, WebMvcAutoConfiguration.class, ErrorMvcAutoConfiguration.class, DispatcherServletAutoConfiguration.class, EmbeddedServletContainerAutoConfiguration.class})
+@ComponentScan(basePackages = {"com.pliesveld.flashnote", "com.pliesveld.populator.repository"})
 @EnableTransactionManagement
 public class PopulateFlashnoteContainerApplication {
     private static final Logger LOG = LogManager.getLogger("com.pliesveld.flashnote");
@@ -61,28 +61,12 @@ public class PopulateFlashnoteContainerApplication {
 //        System.setProperty("spring.profiles.default", System.getProperty("spring.profiles.default", "local"));
 //        System.setProperty("spring.profiles.active", "local");
         LOG.info("Starting ApplicationContext with initially populated data");
-        LOG.info("Arguments passed: {}", StringUtils.join(args,", "));
+        LOG.info("Arguments passed: {}", StringUtils.join(args, ", "));
 
         SpringApplication application = new SpringApplication(PopulateFlashnoteContainerApplication.class);
         //application.setWebEnvironment(false);
 //        application.addListeners(new ApplicationPidFileWriter("./bin/app.pid"));
         application.run(args);
-    }
-
-
-
-    @Transactional
-    private void populateMessagesFor(Student studentDetails) {
-        List<Notification> list = new ArrayList<>(15);
-
-        for (int i = 0; i < 15; i++) {
-            String message = "This is a sample notification number " + i;
-
-            Notification notification = new Notification(studentDetails, message);
-            list.add(notification);
-        }
-
-        notificationRepository.save(list);
     }
 
     @Bean
@@ -91,7 +75,7 @@ public class PopulateFlashnoteContainerApplication {
     public CommandLineRunner populateStudents() {
         return (args) -> {
             try {
-                for (int i = 0;i < populateSettings.getCountStudents(); i++) {
+                for (int i = 0; i < populateSettings.getCountStudents(); i++) {
                     Student student = StudentGenerator.randomizedStudent();
                     studentRepository.save(student);
                 }
@@ -102,9 +86,8 @@ public class PopulateFlashnoteContainerApplication {
     }
 
     @Bean
-    public RepositorySettings repositorySettingsBean()
-    {
-        RepositorySettings settings = new RepositorySettings(new Resource[] {});
+    public RepositorySettings repositorySettingsBean() {
+        RepositorySettings settings = new RepositorySettings(new Resource[]{});
         return settings;
     }
 
@@ -129,20 +112,16 @@ public class PopulateFlashnoteContainerApplication {
 
                 files.forEach(file -> LOG.debug("Loading file {}", file));
 
-
                 for (File file : files) {
                     resources.add(new FileSystemResource(file));
                 }
-
-
             }
 
             Resource[] resources_array = new Resource[resources.size()];
 
             resources_array = (Resource[]) resources.toArray(resources_array);
 
-            for (Resource res : resources_array)
-            {
+            for (Resource res : resources_array) {
                 LOG.info(res);
             }
 
@@ -165,13 +144,6 @@ public class PopulateFlashnoteContainerApplication {
             } catch (DataIntegrityViolationException dive) {
                 LOG.warn("Failed to save {}", dive.getMessage());
             }
-
-
-
-
         };
-
     }
-
-
 }

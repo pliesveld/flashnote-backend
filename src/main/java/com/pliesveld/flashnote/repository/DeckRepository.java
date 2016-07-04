@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface DeckRepository extends PagingAndSortingRepository<Deck,Integer>, JpaSpecificationExecutor<Deck> {
+public interface DeckRepository extends PagingAndSortingRepository<Deck, Integer>, JpaSpecificationExecutor<Deck> {
     List<Deck> findByOwner(int id);
 
     List<Deck> findByFlashcardsContaining(FlashCard flashCard);

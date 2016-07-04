@@ -17,8 +17,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @BlankEntityTestAnnotations
 @Transactional
-final public class QuestionBankFlashCardDeleteTest extends AbstractTransactionalDomainEntityUnitTest
-{
+final public class QuestionBankFlashCardDeleteTest extends AbstractTransactionalDomainEntityUnitTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -30,8 +29,7 @@ final public class QuestionBankFlashCardDeleteTest extends AbstractTransactional
 
 
     @Before
-    public void givenQuestionBank_givenFlashCard_givenSharedEntityQuestion_givenAnswer()
-    {
+    public void givenQuestionBank_givenFlashCard_givenSharedEntityQuestion_givenAnswer() {
         FlashCard flashCard = flashcardBean();
         entityManager.persist(flashCard);
         assertEntityHasState(flashCard, EntityState.PERSISTENT);
@@ -41,8 +39,8 @@ final public class QuestionBankFlashCardDeleteTest extends AbstractTransactional
         que_id = fc_id.getQuestionId();
         ans_id = fc_id.getAnswerId();
 
-        assertEntityHasState(flashCard.getQuestion(),EntityState.PERSISTENT);
-        assertEntityHasState(flashCard.getAnswer(),EntityState.PERSISTENT);
+        assertEntityHasState(flashCard.getQuestion(), EntityState.PERSISTENT);
+        assertEntityHasState(flashCard.getAnswer(), EntityState.PERSISTENT);
 
         Category category = this.categoryBean();
         category = this.categoryRepository.save(category);
@@ -53,7 +51,7 @@ final public class QuestionBankFlashCardDeleteTest extends AbstractTransactional
         bank.setCategory(category);
         bank = this.questionBankRepository.save(bank);
 
-        assertEntityHasState(bank,EntityState.PERSISTENT);
+        assertEntityHasState(bank, EntityState.PERSISTENT);
 
         qb_id = bank.getId();
 
@@ -62,8 +60,7 @@ final public class QuestionBankFlashCardDeleteTest extends AbstractTransactional
     }
 
     @Test
-    public void whenContext_thenCorrect()
-    {
+    public void whenContext_thenCorrect() {
         assertNotNull(fc_id);
         assertNotNull(que_id);
         assertNotNull(ans_id);
@@ -71,16 +68,14 @@ final public class QuestionBankFlashCardDeleteTest extends AbstractTransactional
     }
 
     @Test
-    public void whenEntityCount_thenCorrect()
-    {
+    public void whenEntityCount_thenCorrect() {
         this.assertQuestionRepositoryCount(1);
         this.assertAnswerRepositoryCount(1);
         this.assertQuestionBankRepositoryCount(1);
     }
 
     @Test
-    public void whenEntityReferenceLoad_thenCorrect()
-    {
+    public void whenEntityReferenceLoad_thenCorrect() {
         Question que = questionRepository.findOne(que_id);
         assertNotNull(que);
         assertTrue(questionBankRepository.findOne(qb_id).getQuestions().contains(que));
@@ -102,15 +97,13 @@ final public class QuestionBankFlashCardDeleteTest extends AbstractTransactional
     }
 
     @Test
-    public void givenFlashCardRemoveAll_whenAnswerRemoveAll_thenCorrect()
-    {
+    public void givenFlashCardRemoveAll_whenAnswerRemoveAll_thenCorrect() {
         flashCardRepository.deleteAll();
         answerRepository.deleteAll();
     }
 
     @Test
-    public void givenFlashCardRemoveAll_whenQuestionRemoveAll_thenFKViolation()
-    {
+    public void givenFlashCardRemoveAll_whenQuestionRemoveAll_thenFKViolation() {
         thrown.expect(PersistenceException.class);
         flashCardRepository.deleteAll();
         questionRepository.deleteAll();

@@ -9,24 +9,22 @@ import java.io.Serializable;
 
 
 public class FlashnoteRepositoryImpl<T, ID extends Serializable>
-    extends SimpleJpaRepository<T,ID>
-    implements FlashnoteRepository<T,ID>
-{
+        extends SimpleJpaRepository<T, ID>
+        implements FlashnoteRepository<T, ID> {
     private Class<T> domainClass;
     private EntityManager entityManager;
 
-    public FlashnoteRepositoryImpl(Class<T> domainClass, EntityManager em) {
-        super(domainClass, em);
+    public FlashnoteRepositoryImpl(Class<T> domainClass, EntityManager entityManager) {
+        super(domainClass, entityManager);
         this.domainClass = domainClass;
         this.entityManager = entityManager;
     }
 
-    FlashnoteRepositoryImpl(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager) {
+    public FlashnoteRepositoryImpl(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager) {
         super(entityInformation, entityManager);
         this.domainClass = entityInformation.getJavaType();
         this.entityManager = entityManager;
     }
-
 
     @Override
     public RepositoryPermissions permissions(StudentPrincipal currentUser, T resource) {

@@ -21,9 +21,9 @@ import java.io.IOException;
  * Custom serializer to include fields of Spring Data Page objects
  * when using @JsonView.
  */
-public class SpringDataPageSerializer extends BeanSerializer
-{
+public class SpringDataPageSerializer extends BeanSerializer {
     private static final Logger LOG = LogManager.getLogger();
+    private static final long serialVersionUID = 8176241218681762278L;
 
     public SpringDataPageSerializer(JavaType type, BeanSerializerBuilder builder, BeanPropertyWriter[] properties, BeanPropertyWriter[] filteredProperties) {
         super(type, builder, properties, filteredProperties);

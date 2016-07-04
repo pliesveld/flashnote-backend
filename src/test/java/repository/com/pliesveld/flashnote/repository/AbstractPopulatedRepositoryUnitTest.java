@@ -2,8 +2,8 @@ package com.pliesveld.flashnote.repository;
 
 import com.pliesveld.flashnote.domain.base.DomainBaseEntity;
 import com.pliesveld.flashnote.spring.Profiles;
-import com.pliesveld.populator.spring.RepositoryPopulatorConfig;
 import com.pliesveld.flashnote.spring.SpringDataTestConfig;
+import com.pliesveld.populator.spring.RepositoryPopulatorConfig;
 import com.pliesveld.tests.AbstractTransactionalRepositoryUnitTest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,16 +17,16 @@ import java.io.Serializable;
 
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
 @ContextHierarchy(value = {
-        @ContextConfiguration(classes = { SpringDataTestConfig.class }, loader = AnnotationConfigContextLoader.class),
-        @ContextConfiguration(name = "REPOSITORY", classes = { DefaultRepositorySettingsConfig.class }, loader = AnnotationConfigContextLoader.class),
-        @ContextConfiguration(classes = { RepositoryPopulatorConfig.class }, loader = AnnotationConfigContextLoader.class)
+        @ContextConfiguration(classes = {SpringDataTestConfig.class}, loader = AnnotationConfigContextLoader.class),
+        @ContextConfiguration(name = "REPOSITORY", classes = {DefaultRepositorySettingsConfig.class}, loader = AnnotationConfigContextLoader.class),
+        @ContextConfiguration(classes = {RepositoryPopulatorConfig.class}, loader = AnnotationConfigContextLoader.class)
 
 })
 public abstract class AbstractPopulatedRepositoryUnitTest extends AbstractTransactionalRepositoryUnitTest {
     private static final Logger LOG = LogManager.getLogger();
 
 
-    protected <T extends DomainBaseEntity<ID>, ID extends Serializable> void debugRepository(CrudRepository<T,ID> repository) {
+    protected <T extends DomainBaseEntity<ID>, ID extends Serializable> void debugRepository(CrudRepository<T, ID> repository) {
 //        Asserts.check(entityManager.isJoinedToTransaction(), "Transaction Required");
         LOG_SQL.info("Repository Count = {}", repository.count());
         repository.findAll().forEach(this::debugEntity);

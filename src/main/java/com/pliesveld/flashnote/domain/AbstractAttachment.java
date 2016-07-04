@@ -9,14 +9,16 @@ import com.pliesveld.flashnote.schema.Constants;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.Objects;
 
 @Entity
 @Table(name = "ATTACHMENT")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class AbstractAttachment extends AbstractAuditableEntity<Integer> {
+public abstract class AbstractAttachment extends AbstractAuditableEntity<Integer> implements Serializable {
 
+    private static final long serialVersionUID = 1475231744214090102L;
     protected Integer id;
     protected AttachmentType attachmentType;
     protected String fileName;
@@ -42,12 +44,16 @@ public abstract class AbstractAttachment extends AbstractAuditableEntity<Integer
     @Size(min = Constants.MIN_ATTACHMENT_FILENAME_LENGTH, max = Constants.MAX_ATTACHMENT_FILENAME_LENGTH)
     @Column(name = "FILENAME", length = Constants.MAX_ATTACHMENT_FILENAME_LENGTH, nullable = false)
     @JsonView(Views.Summary.class)
-    public String getFileName() { return fileName; }
+    public String getFileName() {
+        return fileName;
+    }
 
     @NotNull
     @Column(name = "FILE_LENGTH", nullable = false)
     @JsonView(Views.Summary.class)
-    public int getFileLength() { return fileLength; }
+    public int getFileLength() {
+        return fileLength;
+    }
 
     protected AbstractAttachment() {
         super();
@@ -60,14 +66,22 @@ public abstract class AbstractAttachment extends AbstractAuditableEntity<Integer
         this.id = id;
     }
 
-    public void setAttachmentType(AttachmentType attachmentType) { this.attachmentType = attachmentType; }
+    public void setAttachmentType(AttachmentType attachmentType) {
+        this.attachmentType = attachmentType;
+    }
 
     @Transient
-    public String getMimeContentType() { return attachmentType.getMime(); }
+    public String getMimeContentType() {
+        return attachmentType.getMime();
+    }
 
-    public void setFileName(String fileName) { this.fileName = fileName; }
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
-    protected void setFileLength(int fileLength) { this.fileLength = fileLength; }
+    protected void setFileLength(int fileLength) {
+        this.fileLength = fileLength;
+    }
 
     @Override
     public int hashCode() {

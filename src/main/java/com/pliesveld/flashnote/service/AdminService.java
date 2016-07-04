@@ -14,7 +14,7 @@ import java.util.List;
 public interface AdminService {
 
     @Transactional
-    void deleteStudent(final int id)                        throws StudentNotFoundException;
+    void deleteStudent(final int id) throws StudentNotFoundException;
 
     @Transactional
     Student update(final Student student) throws StudentNotFoundException;

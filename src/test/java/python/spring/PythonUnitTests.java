@@ -69,13 +69,14 @@ public class PythonUnitTests {
 
         }
     }
-/*
-    @Bean
-    EmbeddedServletInitializerListener EmbeddedServletInitializerListenerImpl()
-    {
-        return new EmbeddedServletInitializerListener();
-    }
-*/
+
+    /*
+        @Bean
+        EmbeddedServletInitializerListener EmbeddedServletInitializerListenerImpl()
+        {
+            return new EmbeddedServletInitializerListener();
+        }
+    */
     @Autowired
     Environment environment;
 
@@ -102,14 +103,14 @@ public class PythonUnitTests {
 
         //ProcessBuilder pb = new ProcessBuilder("python3","-m","unittest","tests.test_env");
         //ProcessBuilder pb = new ProcessBuilder("python3","-m","unittest","tests.test_upload");
-        ProcessBuilder pb = new ProcessBuilder("python3","-m","unittest", "tests.test_auth_jwt");
-        Map<String,String> env = pb.environment();
+        ProcessBuilder pb = new ProcessBuilder("python3", "-m", "unittest", "tests.test_auth_jwt");
+        Map<String, String> env = pb.environment();
 
         System.out.println("port=" + port);
-        env.put("INTEGRATION_TEST_PORT",port);
+        env.put("INTEGRATION_TEST_PORT", port);
 
         String profiles = StringUtils.arrayToCommaDelimitedString(environment.getActiveProfiles());
-        env.put("INTEGRATION_TEST_PROFILES",profiles);
+        env.put("INTEGRATION_TEST_PROFILES", profiles);
 
 //        env.put("DEBUG","true");
 
@@ -123,13 +124,10 @@ public class PythonUnitTests {
         in_err.lines().forEach((line) -> System.out.println(line));
 
         int exit_value = p.waitFor();
-        assertEquals(0,exit_value);
+        assertEquals(0, exit_value);
 
 
     }
-
-
-
 
 
 }

@@ -30,8 +30,7 @@ public class AttachmentTextTest extends AbstractDomainEntityUnitTest {
     Serializable attachment_id;
 
     @Before
-    public void setupEntities()
-    {
+    public void setupEntities() {
         AttachmentText attachmentText = attachmentTextBean();
         attachmentText = attachmentTextRepository.save(attachmentText);
         attachment_id = attachmentText.getId();
@@ -40,26 +39,22 @@ public class AttachmentTextTest extends AbstractDomainEntityUnitTest {
     }
 
     @Test
-    public void whenContextLoad_thenCorrect()
-    {
+    public void whenContextLoad_thenCorrect() {
         assertNotNull(entityManager.find(AttachmentText.class, attachment_id));
     }
 
     @Test
-    public void givenTextAttachment_whenLoadingBaseRepositoryById()
-    {
+    public void givenTextAttachment_whenLoadingBaseRepositoryById() {
         assertNotNull(attachmentRepository.findOneById((Integer) attachment_id));
     }
 
     @Test
-    public void givenTextAttachment_whenLoadingTextRepositoryById()
-    {
+    public void givenTextAttachment_whenLoadingTextRepositoryById() {
         assertNotNull(attachmentTextRepository.findOneById((Integer) attachment_id));
     }
 
     @After
-    public void flushAfter()
-    {
+    public void flushAfter() {
         entityManager.flush();
     }
 

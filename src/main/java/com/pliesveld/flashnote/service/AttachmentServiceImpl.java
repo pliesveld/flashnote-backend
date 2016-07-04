@@ -43,8 +43,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Autowired
     private StudentService studentService;
 
-    private Student verifyStudent(final int id) throws StudentNotFoundException
-    {
+    private Student verifyStudent(final int id) throws StudentNotFoundException {
         final Student student = studentService.findStudentById(id);
         if (student == null)
             throw new StudentNotFoundException(id);
@@ -52,17 +51,15 @@ public class AttachmentServiceImpl implements AttachmentService {
         return student;
     }
 
-    private AbstractAttachment verifyAttachment(final int id) throws AttachmentNotFoundException
-    {
+    private AbstractAttachment verifyAttachment(final int id) throws AttachmentNotFoundException {
         final AbstractAttachment attachment = attachmentRepository.findOneById(id);
-        if ( attachment == null )
+        if (attachment == null)
             throw new AttachmentNotFoundException(id);
 
         return attachment;
     }
 
-    private AttachmentBinary verifyAttachmentBinary(final int id) throws AttachmentNotFoundException
-    {
+    private AttachmentBinary verifyAttachmentBinary(final int id) throws AttachmentNotFoundException {
         final AttachmentBinary attachmentBin = attachmentBinaryRepository.findOne(id);
 
         if (attachmentBin == null)
@@ -70,8 +67,7 @@ public class AttachmentServiceImpl implements AttachmentService {
         return attachmentBin;
     }
 
-    private AttachmentText verifyAttachmentText(final int id) throws AttachmentNotFoundException
-    {
+    private AttachmentText verifyAttachmentText(final int id) throws AttachmentNotFoundException {
         final AttachmentText attachmentText = attachmentTextRepository.findOne(id);
 
         if (attachmentText == null)
@@ -99,8 +95,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     public List<AttachmentBinary> findBinaryAttachmentByStudent(final int id) throws StudentNotFoundException {
         final Student student = verifyStudent(id);
         final String email;
-        if (!StringUtils.hasText((email = student.getEmail())))
-        {
+        if (!StringUtils.hasText((email = student.getEmail()))) {
             throw new StudentNotFoundException("No email for student id " + id);
         }
         return findBinaryAttachmentByStudentEmail(email);
@@ -110,8 +105,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     public List<AttachmentText> findTextAttachmentByStudent(final int id) throws StudentNotFoundException {
         final Student student = verifyStudent(id);
         final String email;
-        if (!StringUtils.hasText((email = student.getEmail())))
-        {
+        if (!StringUtils.hasText((email = student.getEmail()))) {
             throw new StudentNotFoundException("No email for student id " + id);
         }
         return findTextAttachmentByStudentEmail(email);
@@ -137,8 +131,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 
     @Override
     public void removeAttachmentById(final int id) throws AttachmentNotFoundException {
-        if (attachmentRepository.exists(id))
-        {
+        if (attachmentRepository.exists(id)) {
             questionRepository.findByAttachmentId(id).forEach((stmt) -> stmt.setAttachment(null));
 
             attachmentRepository.delete(id);
@@ -168,16 +161,16 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public AttachmentBinary storeAttachment(@ValidAttachment final AttachmentBinary attachment) throws AttachmentUploadException {
 
-        LOG.debug(SERVICE_ATTACHMENT,"Storing attachment {} {} {}", attachment.getAttachmentType(),
-                attachment.getFileName(),attachment.getMimeContentType());
+        LOG.debug(SERVICE_ATTACHMENT, "Storing attachment {} {} {}", attachment.getAttachmentType(),
+                attachment.getFileName(), attachment.getMimeContentType());
 
         return attachmentBinaryRepository.save(attachment);
     }
 
     @Override
     public AttachmentText storeAttachment(@ValidAttachment final AttachmentText attachment) throws AttachmentUploadException {
-        LOG.debug(SERVICE_ATTACHMENT,"Storing attachment {} {} {}", attachment.getAttachmentType(),
-                attachment.getFileName(),attachment.getMimeContentType());
+        LOG.debug(SERVICE_ATTACHMENT, "Storing attachment {} {} {}", attachment.getAttachmentType(),
+                attachment.getFileName(), attachment.getMimeContentType());
 
         return attachmentTextRepository.save(attachment);
     }

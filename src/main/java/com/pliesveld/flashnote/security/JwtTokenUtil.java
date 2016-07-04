@@ -70,7 +70,7 @@ public class JwtTokenUtil implements Serializable {
             final Claims claims = getClaimsFromToken(token);
             created = new Date((Long) claims.get(CLAIM_KEY_CREATED));
         } catch (Exception e) {
-            created = null;
+            return null;
         }
         return created.toInstant();
     }
@@ -81,7 +81,7 @@ public class JwtTokenUtil implements Serializable {
             final Claims claims = getClaimsFromToken(token);
             expiration = claims.getExpiration();
         } catch (Exception e) {
-            expiration = null;
+            return null;
         }
         return expiration.toInstant();
     }

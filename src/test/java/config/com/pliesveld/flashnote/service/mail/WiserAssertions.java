@@ -42,17 +42,17 @@ public class WiserAssertions {
 
     public WiserAssertions withContent(String content) {
         findFirstOrElseThrow(m -> {
-            ThrowingSupplier<String> contentAsString = 
-                () -> ((String) getMimeMessage(m).getContent()).trim();
+            ThrowingSupplier<String> contentAsString =
+                    () -> ((String) getMimeMessage(m).getContent()).trim();
             return content.equals(unchecked(contentAsString));
         }, assertionError("No message with content [{0}] found!", content));
         return this;
     }
-    
+
     public WiserAssertions withContentContaining(String content) {
         findFirstOrElseThrow(m -> {
-            ThrowingSupplier<String> contentAsString = 
-                () -> ((String) getMimeMessage(m).getContent()).trim();
+            ThrowingSupplier<String> contentAsString =
+                    () -> ((String) getMimeMessage(m).getContent()).trim();
             return unchecked(contentAsString).contains(content);
         }, assertionError("No message with content [{0}] found!", content));
         return this;

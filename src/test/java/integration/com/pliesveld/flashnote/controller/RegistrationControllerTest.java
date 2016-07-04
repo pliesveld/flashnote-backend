@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(Profiles.INTEGRATION_TEST)
-@ContextConfiguration(classes = { MockServletContext.class, SpringEntityTestConfig.class }, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = {MockServletContext.class, SpringEntityTestConfig.class}, loader = AnnotationConfigContextLoader.class)
 @WebAppConfiguration
 public class RegistrationControllerTest {
     private static final Logger LOG = LogManager.getLogger();
@@ -60,7 +60,7 @@ public class RegistrationControllerTest {
 
     @Before
     public void setUp() throws Exception {
- //       MockHttpServletRequest request = new MockHttpServletRequest();
+        //       MockHttpServletRequest request = new MockHttpServletRequest();
 //        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
         MockitoAnnotations.initMocks(this);
         mockMvc = standaloneSetup(registrationController).build();
@@ -84,7 +84,7 @@ public class RegistrationControllerTest {
         final String JSON_DATA = mapper.writeValueAsString(jsonRequest);
         LOG.info(JSON_DATA);
 
-        when(accountRegistrationService.createStudent(any(String.class),any(String.class),any(String.class))).thenReturn(student);
+        when(accountRegistrationService.createStudent(any(String.class), any(String.class), any(String.class))).thenReturn(student);
         when(accountRegistrationService.createAccountRegistration(any(Student.class))).thenReturn(registration);
         when(studentService.findByName(any(String.class))).thenReturn(null);
         when(studentService.findByEmail(any(String.class))).thenReturn(null);
@@ -94,10 +94,10 @@ public class RegistrationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JSON_DATA))
 
-            .andExpect(status().is2xxSuccessful())
-         //   .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-         //  .andExpect(content().string("{JSON_DATA}"));
-            .andReturn();
+                .andExpect(status().is2xxSuccessful())
+                        //   .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                        //  .andExpect(content().string("{JSON_DATA}"));
+                .andReturn();
 
     }
 

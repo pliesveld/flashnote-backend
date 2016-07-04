@@ -30,47 +30,44 @@ public class RegistrationMailServiceTest {
     private static final Logger LOG = LogManager.getLogger();
 
     private Wiser wiser;
-    
+
     @Autowired
     private MailSender mailSender;
 
     @Autowired
     private SimpleMailMessage templateVerificationMessage;
-    
+
     @Autowired
     AccountRegistrationService accountService;
-    
+
     @Before
-    public void setupMailServer()
-    {
+    public void setupMailServer() {
         wiser = new Wiser();
         wiser.setPort(25252);
         wiser.start();
     }
 
     @After
-    public void shutdownMailServer()
-    {
+    public void shutdownMailServer() {
         wiser.stop();
     }
-    
+
     @Test
-    public void whenMailTemplateSend_thenCorrect() throws Exception
-    {        
+    public void whenMailTemplateSend_thenCorrect() throws Exception {
         String recipient = UUID.randomUUID().toString() + "@example.com";
         String confirmURL = "REGISTRATION TOKEN";
         SimpleMailMessage msg = new SimpleMailMessage(this.templateVerificationMessage);
         msg.setTo(recipient);
         msg.setText(msg.getText() + confirmURL);
-        
+
         mailSender.send(msg);
-        
+
         wiser.getMessages().forEach(LOG::info);
-        
+
         assertReceivedMessage(wiser)
-            .from("flashnote.web@gmail.com")
-            .to(recipient)
-            .withContentContaining(confirmURL);        
+                .from("flashnote.web@gmail.com")
+                .to(recipient)
+                .withContentContaining(confirmURL);
     }
-    
+
 }

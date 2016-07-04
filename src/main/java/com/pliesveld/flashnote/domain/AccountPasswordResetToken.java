@@ -10,7 +10,7 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "ACCOUNT_RESET_TOKEN",
-    indexes = { @Index(name = "IDX_RESET_TOKEN", columnList = "TOKEN") }
+        indexes = {@Index(name = "IDX_RESET_TOKEN", columnList = "TOKEN")}
 )
 public class AccountPasswordResetToken {
 
@@ -19,7 +19,7 @@ public class AccountPasswordResetToken {
 
     @NotNull
     @MapsId
-    @OneToOne(cascade = { CascadeType.REFRESH, CascadeType.MERGE }, fetch = FetchType.EAGER)
+    @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinColumn(name = "STUDENT_ID", foreignKey = @ForeignKey(name = "FK_STUDENT_ACCOUNT_RESET"), nullable = false)
     private Student student;
 
@@ -83,7 +83,7 @@ public class AccountPasswordResetToken {
     public void setExpiration(Instant expiration) {
         this.expiration = expiration;
     }
-    
+
     public Instant getEmailSentOn() {
         return emailSentOn;
     }

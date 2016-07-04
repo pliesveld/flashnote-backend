@@ -6,9 +6,9 @@ import org.hibernate.Hibernate;
 import javax.persistence.EntityManager;
 
 /**
-* @author Patrick Liesveld
-*/
-public enum EMOP_ENTITY implements EMOP {
+ * @author Patrick Liesveld
+ */
+public enum EMOP_ENTITY implements com.pliesveld.tests.entitymanager.EMOP {
     FLUSH {
         @Override
         public void apply(EntityManager entityManager, DomainBaseEntity entity) {
@@ -36,7 +36,7 @@ public enum EMOP_ENTITY implements EMOP {
 
     REMOVE {
         public void apply(EntityManager entityManager, DomainBaseEntity entity) {
-            if (!entityManager.isJoinedToTransaction() )
+            if (!entityManager.isJoinedToTransaction())
                 throw new IllegalStateException("Must be in transaction to call entityManager." + this.toString());
             entityManager.remove(entity);
         }
@@ -45,7 +45,7 @@ public enum EMOP_ENTITY implements EMOP {
     REFRESH {
         @Override
         public void apply(EntityManager entityManager, DomainBaseEntity entity) {
-            if (!entityManager.isJoinedToTransaction() )
+            if (!entityManager.isJoinedToTransaction())
                 throw new IllegalStateException("Must be in transaction to call entityManager." + this.toString());
             entityManager.refresh(entity);
         }
@@ -59,9 +59,9 @@ public enum EMOP_ENTITY implements EMOP {
     };
 
     @Override
-    public void apply(EntityManager entityManager)
-    {
+    public void apply(EntityManager entityManager) {
         throw new IllegalStateException("Need domain entity to apply " + this.toString());
     }
+
     public abstract void apply(EntityManager entityManager, DomainBaseEntity entity);
 }

@@ -35,8 +35,7 @@ public class SpringConfigSerializerTest {
 
 
     @Test
-    public void testContextBeans_withRegisteringSpringDataConfig()
-    {
+    public void testContextBeans_withRegisteringSpringDataConfig() {
         ctx.register(SpringSerializationTestConfig.class);
         ctx.register(TestEntitySerializerConfig.class);
         finalizeContext();
@@ -49,8 +48,7 @@ public class SpringConfigSerializerTest {
     }
 
     @Test
-    public void testContext_withCustomObjectMapperBeans()
-    {
+    public void testContext_withCustomObjectMapperBeans() {
         ctx.register(SpringSerializationTestConfig.class);
         ctx.register(TestEntitySerializerConfigBeans.class);
         finalizeContext();
@@ -60,8 +58,7 @@ public class SpringConfigSerializerTest {
         assertNotNull(testSpringConfig.objectMapperWithSummary);
     }
 
-    private void finalizeContext()
-    {
+    private void finalizeContext() {
         try {
             ctx.refresh();
         } catch (PropertyReferenceException pre) {

@@ -53,8 +53,7 @@ public class AttachmentUploadController {
     public ResponseEntity<?> handleFileupload(
             @RequestParam("file") MultipartFile file,
             @RequestParam(name = "questionId", required = false) Integer questionId,
-            HttpServletRequest request) throws AttachmentUploadException
-    {
+            HttpServletRequest request) throws AttachmentUploadException {
         Principal principal = request.getUserPrincipal();
 
         Question question = null;
@@ -62,7 +61,7 @@ public class AttachmentUploadController {
             question = cardService.findQuestionById(questionId);
         }
 
-        LOG.info("Uploading attachment ip: {} size: {} user: {} file: {} orig: {}", request.getRemoteAddr(),file.getSize() ,principal,file.getName(),file.getOriginalFilename());
+        LOG.info("Uploading attachment ip: {} size: {} user: {} file: {} orig: {}", request.getRemoteAddr(), file.getSize(), principal, file.getName(), file.getOriginalFilename());
 
         String fileContentType = file.getContentType();
         AttachmentType attachmentType = AttachmentType.valueOfMime(fileContentType);
@@ -73,23 +72,22 @@ public class AttachmentUploadController {
 
         String fileName = file.getOriginalFilename();
 
-        if (!StringUtils.hasText(fileName) || !attachmentType.supportsFilenameBySuffix(fileName))
-        {
+        if (!StringUtils.hasText(fileName) || !attachmentType.supportsFilenameBySuffix(fileName)) {
             throw new AttachmentUploadException("Invalid file extension. " + attachmentType + " does not support " + fileName);
         }
 
 
-        byte[] contents = null;
+        byte[] contents;
 
         try {
             contents = file.getBytes();
         } catch (IOException e) {
-            throw new AttachmentUploadException("Could not get upload contents.",e);
+            throw new AttachmentUploadException("Could not get upload contents.", e);
         }
 
-        int id = 0;
+        int id;
 
-        AbstractAttachment abstractAttachment = null;
+        AbstractAttachment abstractAttachment;
         if (attachmentType.isBinary()) {
             AttachmentBinary attachment = new AttachmentBinary();
             attachment.setContents(contents);
@@ -100,9 +98,9 @@ public class AttachmentUploadController {
         } else {
             AttachmentText attachment = new AttachmentText();
             try {
-                attachment.setContents(new String(contents,"UTF-8"));
+                attachment.setContents(new String(contents, "UTF-8"));
             } catch (UnsupportedEncodingException e) {
-                throw new AttachmentUploadException("Could not convert uploaded contents to String",e);
+                throw new AttachmentUploadException("Could not convert uploaded contents to String", e);
             }
             attachment.setAttachmentType(attachmentType);
             attachment.setFileName(fileName);
@@ -111,8 +109,7 @@ public class AttachmentUploadController {
         }
 
 
-        if (question != null )
-        {
+        if (question != null) {
             question.setAttachment(abstractAttachment);
             cardService.update(question);
         }
@@ -126,7 +123,7 @@ public class AttachmentUploadController {
                 .toUri();
 
         responseHeaders.setLocation(newStudentUri);
-        return new ResponseEntity<>(null,responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(null, responseHeaders, HttpStatus.OK);
     }
 
 }

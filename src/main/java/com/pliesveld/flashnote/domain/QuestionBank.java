@@ -18,7 +18,7 @@ import java.util.Set;
 
 
 @Entity
-@EntityListeners(value = { LogEntityListener.class })
+@EntityListeners(value = {LogEntityListener.class})
 @Table(name = "QUESTION_BANK")
 //@Table(name = "QUESTION_BANK", indexes = { @Index(name = "IDX_QUESTION_BANK_OWNER_ID", columnList = "OWNER_ID") })
 public class QuestionBank extends DomainBaseEntity<Integer> {
@@ -47,8 +47,8 @@ public class QuestionBank extends DomainBaseEntity<Integer> {
     @JoinTable(name = "QUESTION_BANK_COLLECTION",
             joinColumns = @JoinColumn(name = "QUESTION_BANK_ID", foreignKey = @ForeignKey(name = "FK_QUESTION_BANK_COLLECTION_QUESTION_BANK_ID")),
             inverseJoinColumns = @JoinColumn(name = "QUESTION_ID", nullable = false,
-                                             referencedColumnName = "QUESTION_ID",
-                                             foreignKey = @ForeignKey(name = "FK_QUESTION_BANK_COLLECTION_QUESTION_ID"))
+                    referencedColumnName = "QUESTION_ID",
+                    foreignKey = @ForeignKey(name = "FK_QUESTION_BANK_COLLECTION_QUESTION_ID"))
 
 //            foreignKey = @ForeignKey(name = "FK_QUESTION_BANK_COLLECTION_QUESTION_BANK_ID"),
 //            inverseForeignKey= @ForeignKey(name = "FK_QUESTION_BANK_COLLECTION_QUESTION_BANK_ID"),
@@ -80,12 +80,12 @@ public class QuestionBank extends DomainBaseEntity<Integer> {
         this.id = id;
     }
 
-//    @JsonSerialize(using = DomainObjectSerializer.class)
+    //    @JsonSerialize(using = DomainObjectSerializer.class)
     public Category getCategory() {
         return category;
     }
 
-//    @JsonDeserialize(using = CategoryDeserializer.class)
+    //    @JsonDeserialize(using = CategoryDeserializer.class)
     public void setCategory(Category category) {
         this.category = category;
     }
@@ -98,12 +98,12 @@ public class QuestionBank extends DomainBaseEntity<Integer> {
         this.description = description;
     }
 
-//    @JsonSerialize(contentUsing = DomainObjectSerializer.class)
+    //    @JsonSerialize(contentUsing = DomainObjectSerializer.class)
     public Set<Question> getQuestions() {
         return questions;
     }
 
-//    @JsonDeserialize(contentUsing = QuestionSetDeserializer.class)
+    //    @JsonDeserialize(contentUsing = QuestionSetDeserializer.class)
     protected void setQuestions(Set<Question> questions) {
         this.questions = questions;
     }

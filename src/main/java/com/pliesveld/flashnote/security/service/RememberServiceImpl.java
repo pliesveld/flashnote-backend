@@ -32,8 +32,7 @@ public class RememberServiceImpl implements RememberService {
         LOG.debug("Updating series: {} to token: {}", series, tokenValue);
 
         AccountRememberMeToken meToken = rememberTokenRepository.findOne(series);
-        if (meToken != null)
-        {
+        if (meToken != null) {
             meToken.setLastUsed(lastUsed.toInstant());
             meToken.setToken(tokenValue);
         } else {
@@ -46,8 +45,7 @@ public class RememberServiceImpl implements RememberService {
     public PersistentRememberMeToken getTokenForSeries(final String seriesId) {
         AccountRememberMeToken token = rememberTokenRepository.findOne(seriesId);
 
-        if (token == null)
-        {
+        if (token == null) {
             LOG.debug("No token found: {}", seriesId);
             throw new ResourceNotFoundException(seriesId);
         }

@@ -36,15 +36,14 @@ public class PasswordResetTokenTest extends AbstractDomainEntityUnitTest {
     String token;
 
     @Before
-    public void setupEntities()
-    {
+    public void setupEntities() {
         Student student = this.studentBean();
         entityManager.persist(student);
         entityManager.flush();
         student_id = student.getId();
         assertNotNull(student_id);
         token = UUID.randomUUID().toString();
-        AccountPasswordResetToken accountPasswordResetToken = new AccountPasswordResetToken(student,token);
+        AccountPasswordResetToken accountPasswordResetToken = new AccountPasswordResetToken(student, token);
 
         entityManager.persist(accountPasswordResetToken);
         token_id = accountPasswordResetToken.getId();
@@ -54,42 +53,37 @@ public class PasswordResetTokenTest extends AbstractDomainEntityUnitTest {
     }
 
     @Test
-    public void testEntityContext()
-    {
+    public void testEntityContext() {
         assertNotNull(student_id);
         assertNotNull(token_id);
-        assertEquals(student_id,token_id);
+        assertEquals(student_id, token_id);
     }
 
     @Test
-    public void whenContextLoad_thenCorrect()
-    {
+    public void whenContextLoad_thenCorrect() {
         assertStudentRepositoryCount(1);
         assertPasswordResetRepositoryCount(1);
     }
 
     @After
-    public void flushAfter()
-    {
+    public void flushAfter() {
         entityManager.flush();
     }
 
     @Test
-    public void testEntityFindToken()
-    {
+    public void testEntityFindToken() {
         assertNotNull(passwordResetRepository.findByToken(token));
     }
 
     @Test
-    public void testEntityFindStudent()
-    {
+    public void testEntityFindStudent() {
         Student student = studentRepository.findOne((Integer) student_id);
         assertNotNull(student);
         assertNotNull(passwordResetRepository.findByStudent_id((Integer) student_id));
     }
+
     @Test
-    public void testEntityFindStudentDetached()
-    {
+    public void testEntityFindStudentDetached() {
         Student student = studentRepository.findOne((Integer) student_id);
         assertNotNull(student);
         entityManager.detach(student);
@@ -99,8 +93,7 @@ public class PasswordResetTokenTest extends AbstractDomainEntityUnitTest {
 
 
     @Test
-    public void testTokenRemoval()
-    {
+    public void testTokenRemoval() {
         passwordResetRepository.delete((Integer) student_id);
         assertStudentRepositoryCount(1);
         assertPasswordResetRepositoryCount(0);
@@ -108,16 +101,14 @@ public class PasswordResetTokenTest extends AbstractDomainEntityUnitTest {
 
 
     @Test
-    public void testStudentRemovalFKViolation()
-    {
+    public void testStudentRemovalFKViolation() {
         thrown.expect(PersistenceException.class);
         studentRepository.delete((Integer) student_id);
     }
 
 
     @Test
-    public void testStudentRemoval()
-    {
+    public void testStudentRemoval() {
         passwordResetRepository.delete((Integer) student_id);
         studentRepository.delete((Integer) student_id);
         assertPasswordResetRepositoryCount(0);
@@ -125,8 +116,7 @@ public class PasswordResetTokenTest extends AbstractDomainEntityUnitTest {
     }
 
     @Test
-    public void testDuplicateToken()
-    {
+    public void testDuplicateToken() {
         Student student = studentRepository.findOne((Integer) student_id);
         AccountPasswordResetToken second_token = new AccountPasswordResetToken(student, UUID.randomUUID().toString());
 

@@ -7,11 +7,15 @@ import java.io.Serializable;
 
 public class ResourceNotFoundException extends ResourceRetrieveException {
 
+    private static final long serialVersionUID = -3025965932881136668L;
+
     public ResourceNotFoundException(Serializable id) {
         super(id);
     }
 
-    public HttpStatus getRepositoryStatus() { return HttpStatus.NOT_FOUND; }
+    public HttpStatus getRepositoryStatus() {
+        return HttpStatus.NOT_FOUND;
+    }
 
     @Override
     public String getRepositoryMessage() {

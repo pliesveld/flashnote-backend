@@ -27,13 +27,12 @@ public class ImageMetadataReader {
     static {
         IIORegistry iioRegistry = IIORegistry.getDefaultInstance();
         iioRegistry.getCategories().forEachRemaining((category) ->
-                iioRegistry.getServiceProviders(category,true).forEachRemaining((it) ->
+                iioRegistry.getServiceProviders(category, true).forEachRemaining((it) ->
 
                 {
-                    LOG.trace("providers {} for category {}",it, category);
+                    LOG.trace("providers {} for category {}", it, category);
 
-                    switch (it.getClass().getPackage().getName())
-                    {
+                    switch (it.getClass().getPackage().getName()) {
                         case "com.sun.imageio.plugins.bmp":
                         case "com.sun.imageio.plugins.gif":
                         case "com.sun.imageio.plugins.wbmp":
@@ -42,7 +41,7 @@ public class ImageMetadataReader {
                             break;
                     }
                 })
-            );
+        );
 
 
         IMAGE_FILE_SUFFIXES = ImageIO.getReaderFileSuffixes();
@@ -51,9 +50,8 @@ public class ImageMetadataReader {
 
 
     /**
-     *
-     * @param name filename
-     * @param contents image data as byte array
+     * @param name      filename
+     * @param contents  image data as byte array
      * @param mime_type content type of image
      * @return Image metadata
      * @throws IOException
@@ -65,10 +63,8 @@ public class ImageMetadataReader {
         Iterator<ImageReader> readers = null;
 
         if (StringUtils.hasText(mime_type)) {
-            for (String mime_supported : IMAGE_MIME_TYPES)
-            {
-                if (mime_supported.equalsIgnoreCase(mime_type))
-                {
+            for (String mime_supported : IMAGE_MIME_TYPES) {
+                if (mime_supported.equalsIgnoreCase(mime_type)) {
                     readers = ImageIO.getImageReadersByMIMEType(mime_type);
                     break;
                 }
@@ -78,27 +74,25 @@ public class ImageMetadataReader {
 
         if (readers == null && StringUtils.hasText(name)) {
             for (String suffix : IMAGE_FILE_SUFFIXES) {
-                if (StringUtils.endsWithIgnoreCase(name,suffix))
-                {
+                if (StringUtils.endsWithIgnoreCase(name, suffix)) {
                     readers = ImageIO.getImageReadersBySuffix(suffix);
                     break;
                 }
             }
         }
 
-        if ( readers == null ) {
+        if (readers == null) {
             readers = ImageIO.getImageReaders(iis);
         }
 
-        if (readers.hasNext())
-        {
+        if (readers.hasNext()) {
             //pick the first available ImageReader
             ImageReader reader = readers.next();
 
             //attach source to reader
-            reader.setInput(iis,true);
+            reader.setInput(iis, true);
 
-            return new ImageMetadata(reader.getFormatName(),reader.getWidth(0),reader.getHeight(0),reader.getAspectRatio(0));
+            return new ImageMetadata(reader.getFormatName(), reader.getWidth(0), reader.getHeight(0), reader.getAspectRatio(0));
 
             // TODO: verify user supplied mime_type is mime type returned by image provider
             // TODO: verify user supplied file suffix is mime type returned by image provider

@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -76,8 +75,7 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
              */
             UserDetails userDetails = jwtTokenCache.findUserByTokenCache(authToken);
 
-            if (userDetails == null)
-            {
+            if (userDetails == null) {
                 /*
                     Verify that the token has not expired, and that the creation date is not before the
                     date last password reset of the user.  If successful cache the token with a timeout of
@@ -87,10 +85,9 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
                 userDetails = this.userDetailsService.loadUserByUsername(username);
                 if (!jwtTokenUtil.validateToken(authToken, userDetails))
                     userDetails = null;
-                else
-                {
+                else {
                     LOG.debug(Markers.SECURITY_AUTH_TOKEN, "Authenticating username {} with jwt {}", username, authToken);
-                    jwtTokenCache.cacheUserByToken(authToken,userDetails);
+                    jwtTokenCache.cacheUserByToken(authToken, userDetails);
                 }
             }
 
@@ -98,8 +95,7 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
                 User has been successfully authenticated by the jwt token.  Assign an authentication object to the
                 Spring Security context.
              */
-            if (userDetails != null)
-             {
+            if (userDetails != null) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
                 SecurityContextHolder.getContext().setAuthentication(authentication);

@@ -22,6 +22,7 @@ import static com.pliesveld.flashnote.logging.Markers.OBJECT_MAPPER_INIT;
 @Component("hibernateAwareObjectMapper")
 public class HibernateAwareObjectMapperImpl extends ObjectMapper implements HibernateAwareObjectMapper {
     private static final Logger LOG = LogManager.getLogger();
+    private static final long serialVersionUID = 7802582696236537304L;
 
 
     protected HibernateAwareObjectMapperImpl(ObjectMapper src) {
@@ -68,43 +69,43 @@ public class HibernateAwareObjectMapperImpl extends ObjectMapper implements Hibe
 
     @Override
     public String writeValueAsString(Object value) throws JsonProcessingException {
-        LOG.trace(Markers.OBJECT_MAPPER_WRITE, "OBJECT_MAPPER1 {} : {}",this, value.getClass().getName());
+        LOG.trace(Markers.OBJECT_MAPPER_WRITE, "OBJECT_MAPPER1 {} : {}", this, value.getClass().getName());
         return super.writeValueAsString(value);
     }
 
     @Override
     public void writeTree(JsonGenerator jgen, JsonNode rootNode) throws IOException, JsonProcessingException {
-        LOG.trace(Markers.OBJECT_MAPPER_WRITE, "OBJECT_MAPPER2 {} : ",this);
+        LOG.trace(Markers.OBJECT_MAPPER_WRITE, "OBJECT_MAPPER2 {} : ", this);
         super.writeTree(jgen, rootNode);
     }
 
     @Override
     public void writeTree(JsonGenerator jgen, TreeNode rootNode) throws IOException, JsonProcessingException {
-        LOG.trace(Markers.OBJECT_MAPPER_WRITE, "OBJECT_MAPPER3 {} : ",this);
+        LOG.trace(Markers.OBJECT_MAPPER_WRITE, "OBJECT_MAPPER3 {} : ", this);
         super.writeTree(jgen, rootNode);
     }
 
     @Override
     public void writeValue(JsonGenerator gen, Object value) throws IOException, JsonGenerationException, JsonMappingException {
-        LOG.trace(Markers.OBJECT_MAPPER_WRITE, "OBJECT_MAPPER4 {} : {}",this, value.getClass().getName());
+        LOG.trace(Markers.OBJECT_MAPPER_WRITE, "OBJECT_MAPPER4 {} : {}", this, value.getClass().getName());
         super.writeValue(gen, value);
     }
 
     @Override
     public void writeValue(OutputStream out, Object value) throws IOException, JsonGenerationException, JsonMappingException {
-        LOG.trace(Markers.OBJECT_MAPPER_WRITE, "OBJECT_MAPPER5 {} : {}",this, value.getClass().getName());
+        LOG.trace(Markers.OBJECT_MAPPER_WRITE, "OBJECT_MAPPER5 {} : {}", this, value.getClass().getName());
         super.writeValue(out, value);
     }
 
     @Override
     public void writeValue(Writer writer, Object value) throws IOException, JsonGenerationException, JsonMappingException {
-        LOG.trace(Markers.OBJECT_MAPPER_WRITE, "OBJECT_MAPPER6 {} : {}",this, value.getClass().getName());
+        LOG.trace(Markers.OBJECT_MAPPER_WRITE, "OBJECT_MAPPER6 {} : {}", this, value.getClass().getName());
         super.writeValue(writer, value);
     }
 
     @Override
     public <T> T readValue(JsonParser jp, Class<T> valueType) throws IOException {
-        LOG.trace(Markers.OBJECT_MAPPER_READ, "OBJECT_MAPPER7 {} : {}",this, valueType.getName());
+        LOG.trace(Markers.OBJECT_MAPPER_READ, "OBJECT_MAPPER7 {} : {}", this, valueType.getName());
         return super.readValue(jp, valueType);
     }
 }

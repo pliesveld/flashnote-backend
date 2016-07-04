@@ -24,16 +24,16 @@ import static com.pliesveld.flashnote.logging.Markers.SQL_INIT;
 
 @Profile(Profiles.LOCAL)
 @Configuration
-@PropertySource(value = { "classpath:dev-datasource.properties" })
-@PropertySource(value = { "classpath:dev-datasource-override.properties" }, ignoreResourceNotFound = true)
+@PropertySource(value = {"classpath:dev-datasource.properties"})
+@PropertySource(value = {"classpath:dev-datasource-override.properties"}, ignoreResourceNotFound = true)
 public class DefaultDataSource {
     private static final Logger LOG = LogManager.getLogger();
     private static final String PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN = "entitymanager.packages.to.scan";
 
-    
+
     @Autowired
     private Environment environment;
-    
+
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -42,8 +42,7 @@ public class DefaultDataSource {
         dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
         dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
 
-        if (LOG.isDebugEnabled())
-        {
+        if (LOG.isDebugEnabled()) {
             LOG.debug(SQL_INIT, "DataSource properties");
             LOG.debug(SQL_INIT, "jdbc.driverClassName = {}", environment.getRequiredProperty("jdbc.driverClassName"));
             LOG.debug(SQL_INIT, "jdbc.url = {}", dataSource.getUrl());
@@ -58,18 +57,18 @@ public class DefaultDataSource {
 
         HikariDataSource hikariDataSource = new HikariDataSource();
         hikariDataSource.setAutoCommit(false);
-        hikariDataSource.setDataSource( dataSource );
+        hikariDataSource.setDataSource(dataSource);
         return hikariDataSource;
-    }    
+    }
 
     // TODO: http://www.jpab.org/Hibernate.html
     private Properties hibernateProperties() {
         Properties properties = new Properties();
-        properties.put("hibernate.dialect",         environment.getRequiredProperty("hibernate.dialect"));
-        properties.put("hibernate.show_sql",        environment.getRequiredProperty("hibernate.show_sql"));
-        properties.put("hibernate.format_sql",      environment.getRequiredProperty("hibernate.format_sql"));
-        properties.put("hibernate.use_sql_comments",environment.getRequiredProperty("hibernate.use_sql_comments"));
-        properties.put("hibernate.hbm2ddl.auto",    environment.getRequiredProperty("hibernate.hbm2ddl.auto"));
+        properties.put("hibernate.dialect", environment.getRequiredProperty("hibernate.dialect"));
+        properties.put("hibernate.show_sql", environment.getRequiredProperty("hibernate.show_sql"));
+        properties.put("hibernate.format_sql", environment.getRequiredProperty("hibernate.format_sql"));
+        properties.put("hibernate.use_sql_comments", environment.getRequiredProperty("hibernate.use_sql_comments"));
+        properties.put("hibernate.hbm2ddl.auto", environment.getRequiredProperty("hibernate.hbm2ddl.auto"));
 
         /*
         properties.put("hibernate.cache.use_second_level_cache",    environment.getRequiredProperty("hibernate.cache.use_second_level_cache"));
@@ -79,7 +78,7 @@ public class DefaultDataSource {
 
         if (LOG.isDebugEnabled()) {
             LOG.debug(SQL_INIT, "Hibernate Properties");
-            properties.entrySet().iterator().forEachRemaining((entry) ->            {
+            properties.entrySet().iterator().forEachRemaining((entry) -> {
                 LOG.debug(SQL_INIT, "{} = {}", entry.getKey(), entry.getValue());
             });
         }

@@ -5,7 +5,10 @@ import org.springframework.http.HttpStatus;
 
 public abstract class ResourceRepositoryException extends RuntimeException {
 
+    private static final long serialVersionUID = -9170992956653259860L;
+
     abstract public String getRepositoryMessage();
+
     abstract public HttpStatus getRepositoryStatus();
 
     public ResourceRepositoryException(String message) {

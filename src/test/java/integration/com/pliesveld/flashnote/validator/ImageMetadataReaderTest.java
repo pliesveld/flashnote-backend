@@ -35,8 +35,7 @@ public class ImageMetadataReaderTest {
     public void ImageMetadataReaderTest() throws IOException {
 
         ClassPathResource classPathResource = new ClassPathResource("/scripts/tests/test-data/image/");
-        if (!classPathResource.exists())
-        {
+        if (!classPathResource.exists()) {
             LOG.error("Classpath not found {}", classPathResource);
             Assert.fail();
             return;
@@ -67,15 +66,13 @@ public class ImageMetadataReaderTest {
             }
         });
 
-        Assert.assertNotEquals(0,image_files.size());
+        Assert.assertNotEquals(0, image_files.size());
         int found = 0;
 
-        for (Path image : image_files)
-        {
+        for (Path image : image_files) {
             File file = image.toFile();
 
-            if (!file.exists())
-            {
+            if (!file.exists()) {
                 LOG.warn("File {0} does not exist.", file);
                 continue;
             }
@@ -103,11 +100,10 @@ public class ImageMetadataReaderTest {
         }
     }
 
-    void logImageSupport()
-    {
+    void logImageSupport() {
         LOG.debug("Image reader supported formats {}", ImageIO.getReaderFormatNames());
-        LOG.debug("Image reader supported file extensions {}",ImageIO.getReaderFileSuffixes());
-        LOG.debug("Image reader supported MIME types {}",ImageIO.getReaderMIMETypes());
+        LOG.debug("Image reader supported file extensions {}", ImageIO.getReaderFileSuffixes());
+        LOG.debug("Image reader supported MIME types {}", ImageIO.getReaderMIMETypes());
     }
 
     private void printMetadata(ImageReader reader) throws IOException {
@@ -121,8 +117,7 @@ public class ImageMetadataReaderTest {
 
         String[] metaDataFormatNames = metadata.getMetadataFormatNames();
 
-        for (String meta : metaDataFormatNames)
-        {
+        for (String meta : metaDataFormatNames) {
             IIOMetadataFormat iioMetadataFormat = metadata.getMetadataFormat(meta);
             LOG.debug("root " + iioMetadataFormat.getRootName());
             Node metaNode = metadata.getAsTree(meta);
@@ -140,8 +135,7 @@ public class ImageMetadataReaderTest {
         NodeList nodeList = node.getChildNodes();
         int length = nodeList.getLength();
 
-        for (int i = 0; i < length; i++)
-        {
+        for (int i = 0; i < length; i++) {
             Node next = nodeList.item(i);
             displayMetadata(next);
         }

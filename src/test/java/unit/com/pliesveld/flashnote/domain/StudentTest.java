@@ -27,8 +27,7 @@ public class StudentTest extends AbstractDomainEntityUnitTest {
     protected String student_email = null;
 
     @Before
-    public void setupEntities()
-    {
+    public void setupEntities() {
         Student student = studentBean();
 
         entityManager.persist(student);
@@ -46,17 +45,15 @@ public class StudentTest extends AbstractDomainEntityUnitTest {
     }
 
     @Test
-    public void whenContextLoad_thenCorrect()
-    {
+    public void whenContextLoad_thenCorrect() {
         assertNotNull(student_id);
         assertNotNull(student_email);
-        assertNotNull(entityManager.getReference(Student.class,student_id));
+        assertNotNull(entityManager.getReference(Student.class, student_id));
         assertStudentRepositoryCount(1);
     }
 
     @Test
-    public void givenStudent_whenFindByEmail()
-    {
+    public void givenStudent_whenFindByEmail() {
         entityManager.flush();
         entityManager.clear();
 
@@ -64,8 +61,7 @@ public class StudentTest extends AbstractDomainEntityUnitTest {
     }
 
     @Test
-    public void givenStudent_whenFindById()
-    {
+    public void givenStudent_whenFindById() {
         entityManager.flush();
         entityManager.clear();
 

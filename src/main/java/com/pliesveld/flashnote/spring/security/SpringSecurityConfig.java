@@ -46,8 +46,7 @@ public class SpringSecurityConfig {
 
     @Bean
     @ConditionalOnMissingBean(PasswordEncoder.class)
-    PasswordEncoder passwordEncoder()
-    {
+    PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
 
@@ -70,10 +69,8 @@ public class SpringSecurityConfig {
             RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
             roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_MODERATOR and ROLE_MODERATOR > ROLE_PREMIUM and ROLE_PREMIUM > ROLE_USER and ROLE_USER > ROLE_ACCOUNT");
 
-            if (LOG.isDebugEnabled(SECURITY_INIT))
-            {
-                for (AccountRole role : AccountRole.values())
-                {
+            if (LOG.isDebugEnabled(SECURITY_INIT)) {
+                for (AccountRole role : AccountRole.values()) {
                     StringBuilder sb = new StringBuilder();
                     sb.append("for Role ");
                     sb.append(role.name());
@@ -83,7 +80,7 @@ public class SpringSecurityConfig {
                     authorities.forEach((auth) -> sb.append(auth));
                     sb.append(" has reachable roles ");
 
-                    roleHierarchy.getReachableGrantedAuthorities(authorities).forEach((grantedAuthority) -> sb.append(grantedAuthority + " "));
+                    roleHierarchy.getReachableGrantedAuthorities(authorities).forEach((grantedAuthority) -> sb.append(grantedAuthority).append(" "));
                     LOG.debug(SECURITY_INIT, sb.toString());
                 }
             }
@@ -93,8 +90,7 @@ public class SpringSecurityConfig {
         }
 
         @Bean
-        public PasswordEncoder passwordEncoder()
-        {
+        public PasswordEncoder passwordEncoder() {
             return new BCryptPasswordEncoder(11);
         }
 
@@ -139,8 +135,8 @@ public class SpringSecurityConfig {
         @Override
         public void configure(WebSecurity web) throws Exception {
             web
-                .debug(debug)
-                .ignoring().antMatchers("/js/**","/css/**","/img/**");
+                    .debug(debug)
+                    .ignoring().antMatchers("/js/**", "/css/**", "/img/**");
         }
 
         @Override
@@ -155,7 +151,7 @@ public class SpringSecurityConfig {
                     .antMatchers(HttpMethod.HEAD, "/categories/**", "/attachments/**").permitAll()
                     .antMatchers(HttpMethod.GET, "/", "/students/**", "/categories/**", "/attachments/**",
                             "/decks/**", "/statements/**", "/questions/**", "/answers/**")
-                .permitAll()
+                    .permitAll()
                     .expressionHandler(webExpressionHandler())
 
                     .antMatchers("/anon/**").permitAll()

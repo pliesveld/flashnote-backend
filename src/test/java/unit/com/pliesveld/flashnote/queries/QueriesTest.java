@@ -5,7 +5,7 @@ package com.pliesveld.flashnote.queries;
 //@ContextHierarchy({
 //        @ContextConfiguration(classes = SpringEntityTestConfig.class, loader = AnnotationConfigContextLoader.class)
 //})
-//@TestPropertySource( locations = "classpath:test-datasource.properties" )
+//@TestPropertySource(locations = "classpath:test-datasource.properties" )
 //@Transactional
 public class QueriesTest {
 //

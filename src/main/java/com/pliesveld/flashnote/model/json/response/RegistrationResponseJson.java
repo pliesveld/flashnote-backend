@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 @JsonInclude(JsonInclude.Include.ALWAYS)
 public class RegistrationResponseJson extends ModelBase implements JsonWebResponseSerializable {
 
+    private static final long serialVersionUID = -7193394683226924063L;
     @JsonView(Views.Summary.class)
     private String status_code;
 

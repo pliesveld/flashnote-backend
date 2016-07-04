@@ -10,27 +10,27 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "ACCOUNT_REGISTRATION_TOKEN",
-    indexes = { @Index(name = "IDX_REGISTER_TOKEN", columnList = "TOKEN") }
+        indexes = {@Index(name = "IDX_REGISTER_TOKEN", columnList = "TOKEN")}
 )
 public class AccountRegistrationToken {
-    
+
     @Id
     private Integer id;
 
     @NotNull
     @MapsId
-    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE })
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
     @JoinColumn(name = "STUDENT_ID", foreignKey = @ForeignKey(name = "FK_STUDENT_ACCOUNT_REGISTRATION"), nullable = false)
     private Student student;
 
     @NotNull
     @Column(name = "TOKEN", nullable = false, length = Constants.MAX_ACCOUNT_TOKEN_LENGTH, unique = true)
     private String token;
-   
+
     @Convert(converter = InstantConverter.class)
     @Column(name = "EXPIRATION", nullable = false)
     private Instant expiration;
-    
+
     @Convert(converter = InstantConverter.class)
     @Column(name = "LAST_EMAIL_SENT")
     private Instant emailSentOn;
@@ -38,7 +38,7 @@ public class AccountRegistrationToken {
     public AccountRegistrationToken() {
         super();
     }
-    
+
     public AccountRegistrationToken(@NotNull Student student, String registration_token) {
         super();
         this.student = student;
@@ -78,7 +78,7 @@ public class AccountRegistrationToken {
     public void setExpiration(Instant expiration) {
         this.expiration = expiration;
     }
-    
+
     public Instant getEmailSentOn() {
         return emailSentOn;
     }
@@ -88,8 +88,7 @@ public class AccountRegistrationToken {
     }
 
     @PrePersist
-    protected void onCreate()
-    {
+    protected void onCreate() {
         expiration = Instant.now().plus(Duration.ofDays(Constants.REGISTRATION_TOKEN_DURATION_DAYS));
     }
 

@@ -4,7 +4,6 @@ import com.pliesveld.flashnote.domain.Answer;
 import com.pliesveld.flashnote.domain.Question;
 import com.pliesveld.flashnote.exception.FlashCardCreateException;
 import com.pliesveld.flashnote.spring.DefaultServiceTestAnnotations;
-import com.pliesveld.tests.AbstractRepositoryUnitTest;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -28,18 +27,16 @@ public class CardServiceTest extends AbstractTransactionalServiceUnitTest {
 
     @Test
     @DirtiesContext
-    public void whenCreatingFlashCard_thenCorrect()
-    {
+    public void whenCreatingFlashCard_thenCorrect() {
         Question que = new Question("que?");
         Answer ans = new Answer("Ans.");
         cardService.createFlashCard(que, ans);
         assertEquals(flashCardRepository.count(), 1);
     }
-    
+
     @Test
     @DirtiesContext
-    public void accoutCreationDuplicate()
-    {
+    public void accoutCreationDuplicate() {
         Question que = new Question("que?");
         Answer ans = new Answer("Ans.");
 
@@ -47,11 +44,10 @@ public class CardServiceTest extends AbstractTransactionalServiceUnitTest {
         cardService.createFlashCard(que, ans);
         assertEquals(2, flashCardRepository.count());
     }
-    
+
     @Test
     @DirtiesContext
-    public void whenCreatingFlashCardFromPersistedStatements()
-    {
+    public void whenCreatingFlashCardFromPersistedStatements() {
         Question que = new Question("que?");
         Answer ans = new Answer("Ans.");
 
@@ -67,8 +63,7 @@ public class CardServiceTest extends AbstractTransactionalServiceUnitTest {
 
     @Test
     @DirtiesContext
-    public void accoutCreationDuplicateByReference()
-    {
+    public void accoutCreationDuplicateByReference() {
         Question que = new Question("que?");
         Answer ans = new Answer("Ans.");
 
@@ -79,8 +74,6 @@ public class CardServiceTest extends AbstractTransactionalServiceUnitTest {
         thrown.expect(FlashCardCreateException.class);
         cardService.createFlashCardReferecingQuestion(que.getId(), ans);
     }
-
-
 
 
 }

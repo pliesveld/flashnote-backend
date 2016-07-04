@@ -24,23 +24,23 @@ public class RateLimitServiceImpl implements RateLimitService {
                 .expireAfterAccess(3, TimeUnit.SECONDS)
                 .removalListener((notification) -> LOG.debug("Removing cached key {}", notification.getKey()))
                 .build(new CacheLoader<String, Integer>() {
-            @Override
-            public Integer load(final String key) {
-                return 1;
-            }
-        });
+                    @Override
+                    public Integer load(final String key) {
+                        return 1;
+                    }
+                });
     }
 
     @Override
     public boolean isBlocked(String key) {
-        boolean ret = false;
+        boolean ret;
         try {
             ret = attemptsCache.get(key) > 0;
         } catch (ExecutionException e) {
             ret = false;
         }
 
-        LOG.debug("Rate limiting access check for {} has returned {}",key,ret);
+        LOG.debug("Rate limiting access check for {} has returned {}", key, ret);
         return ret;
     }
 
@@ -48,13 +48,13 @@ public class RateLimitServiceImpl implements RateLimitService {
     public void recordRemoteAccess(String key) {
         LOG.debug("Record invocation {}", key);
 
-        int attempts = 0;
+        int attempts;
         try {
             attempts = attemptsCache.get(key);
         } catch (final ExecutionException e) {
             attempts = 0;
         }
         attempts++;
-        attemptsCache.put(key,attempts);
+        attemptsCache.put(key, attempts);
     }
 }

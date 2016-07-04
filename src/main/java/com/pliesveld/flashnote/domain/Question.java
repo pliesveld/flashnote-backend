@@ -8,12 +8,12 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@EntityListeners(value = { LogEntityListener.class })
+@EntityListeners(value = {LogEntityListener.class})
 @Table(name = "QUESTION")
 @DiscriminatorValue(value = "QUESTION")
 @PrimaryKeyJoinColumn(name = "QUESTION_ID", foreignKey = @ForeignKey(name = "FK_QUESTION_ID"))
-public class Question extends AbstractStatement implements Serializable
-{
+public class Question extends AbstractStatement implements Serializable {
+    private static final long serialVersionUID = -1806166713975252069L;
     protected AbstractAttachment attachment;
 
     public Question() {

@@ -9,10 +9,10 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 
-
 @Embeddable
 public class FlashCardPrimaryKey implements Serializable {
 
+    private static final long serialVersionUID = -493660287515555153L;
     @NotNull
     @Column(name = "QUESTION_ID", nullable = false)
     private Integer questionId;
@@ -38,7 +38,7 @@ public class FlashCardPrimaryKey implements Serializable {
     public Integer getAnswerId() {
         return answerId;
     }
-       
+
     protected void setQuestionId(Integer questionId) {
         this.questionId = questionId;
     }
@@ -69,6 +69,6 @@ public class FlashCardPrimaryKey implements Serializable {
     public String toString() {
         return "FlashCardPrimaryKey [questionId=" + questionId + ", answerId=" + answerId + "]";
     }
-    
+
 }
 

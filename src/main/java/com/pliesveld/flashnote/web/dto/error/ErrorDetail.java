@@ -13,8 +13,8 @@ public class ErrorDetail {
     private int status;
     private String detail;
     private String developerMessage;
-    private Map<String,List<ValidationError>> errors = new HashMap<>();
-    private Map<String,String> headers = new HashMap<>();
+    private Map<String, List<ValidationError>> errors = new HashMap<>();
+    private Map<String, String> headers = new HashMap<>();
 
     public ErrorDetail() {
     }
@@ -67,7 +67,11 @@ public class ErrorDetail {
         this.errors = errors;
     }
 
-    public Map<String, String> getHeaders() { return headers; }
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
 
-    public void setHeaders(Map<String, String> headers) { this.headers = headers; }
+    public void setHeaders(Map<String, String> headers) {
+        this.headers = headers;
+    }
 }

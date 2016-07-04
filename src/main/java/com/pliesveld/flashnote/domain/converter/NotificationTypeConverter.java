@@ -6,8 +6,7 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 @Converter
-public class NotificationTypeConverter implements AttributeConverter<NotificationType,Integer>
-{
+public class NotificationTypeConverter implements AttributeConverter<NotificationType, Integer> {
     @Override
     public Integer convertToDatabaseColumn(NotificationType attribute) {
         return attribute.getId();
