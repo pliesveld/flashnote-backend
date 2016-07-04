@@ -1,0 +1,13 @@
+.idea/
+log/
+external/
+pythonenv/
+target/
+
+.classpath
+.project
+*.eml
+*.iml
+*.userlibraries
+
+*.*.swp
