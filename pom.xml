@@ -539,7 +539,7 @@
                         </goals>
                     </execution>
                 </executions>
-              
+
                 <!-- because of maven color -->
                 <!--
                 <dependencies>
