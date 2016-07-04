@@ -1,0 +1,56 @@
+{
+    "_class" : "com.pliesveld.populator.repository.reader.DataSet",
+
+    "categories" : [
+        {
+            "@id" : 500,
+            "name" : "TEST CATEGORY ORIGINAL",
+            "description" : "The contents of this category was populated from test-data-deck-update.json"
+        },
+        {
+            "@id" : 501,
+            "name" : "TEST CATEGORY EXPECTED",
+            "description" : "The contents of this category was populated from test-data-deck-update.json"
+        }
+    ],
+    "questions" : [
+        {
+            "@id" : 10000,
+            "content" : "The original shared quesiton."
+        },
+        {
+            "@id" : 10001,
+            "content" : "The original quesitonbank question."
+        }
+    ],
+    "answers" : [
+        {
+            "@id" : 20000,
+            "content" : "The original answer."
+        }
+    ],
+
+    "questionBanks" : [
+        {
+            "category" : 500,
+            "description" : "Basic jUnit interview questions.",
+            "questions" : [10001, 10000]
+        }
+    ],
+    "decks" : [
+        {
+            "id" : 90000,
+            "@id" : 90000,
+            "category" : 500,
+            "description" : "The original deck",
+            "flashcards" : [
+                {
+                    "question" : 10000,
+                    "answer"   : 20000
+                }
+            ]
+        }
+    ]
+
+}
+
