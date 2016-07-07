@@ -7,6 +7,7 @@ import java.util.Collection;
 
 
 public class DataSet {
+    private Collection<AttachmentText> textAttachments = new ArrayList<>();
     private Collection<Question> questions = new ArrayList<>();
     private Collection<Student> students = new ArrayList<>();
     private Collection<Category> categories = new ArrayList<>();
@@ -14,6 +15,10 @@ public class DataSet {
     private Collection<Answer> answers = new ArrayList<>();
     private Collection<FlashCard> flashcards = new ArrayList<>();
     private Collection<Deck> decks = new ArrayList<>();
+
+    public Collection<AttachmentText> getTextAttachments() { return textAttachments; }
+
+    public void setTextAttachments(Collection<AttachmentText> textAttachments) { this.textAttachments = textAttachments; }
 
     public Collection<Question> getQuestions() {
         return questions;

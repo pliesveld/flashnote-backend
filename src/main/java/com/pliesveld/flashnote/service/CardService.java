@@ -53,4 +53,8 @@ public interface CardService {
 
     @Transactional
     void deleteQuestion(int questionId);
+
+    List<Question> findAllQuestions();
+
+    List<Answer> findAllAnswers();
 }

@@ -131,4 +131,13 @@ public class CardServiceImpl implements CardService {
         return createFlashCard(question, answer);
     }
 
+    @Override
+    public List<Question> findAllQuestions() {
+        return questionRepository.findAll();
+    }
+
+    @Override
+    public List<Answer> findAllAnswers() {
+        return answerRepository.findAll();
+    }
 }

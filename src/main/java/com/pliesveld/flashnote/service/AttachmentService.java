@@ -54,4 +54,5 @@ public interface AttachmentService {
     @NotNull
     AttachmentHeader findAttachmentHeaderById(final int id) throws AttachmentNotFoundException;
 
+    List<AbstractAttachment> findAllAttachments();
 }

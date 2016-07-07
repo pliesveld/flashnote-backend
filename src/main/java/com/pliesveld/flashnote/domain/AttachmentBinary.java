@@ -1,5 +1,6 @@
 package com.pliesveld.flashnote.domain;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.schema.Constants;
@@ -12,6 +13,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "ATTACHMENT_BINARY")
 @PrimaryKeyJoinColumn(name = "ATTACHMENT_ID", foreignKey = @ForeignKey(name = "FK_ATTACHMENT_BINARY"))
+@JsonTypeInfo(use = JsonTypeInfo.Id.NONE, visible = false)
 public class AttachmentBinary extends AbstractAttachment implements Serializable {
 
     private static final long serialVersionUID = -560331548564003003L;
