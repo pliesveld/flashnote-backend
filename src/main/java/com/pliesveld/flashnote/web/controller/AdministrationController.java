@@ -1,6 +1,7 @@
 package com.pliesveld.flashnote.web.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.pliesveld.flashnote.domain.AbstractAttachment;
 import com.pliesveld.flashnote.domain.Student;
 import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.model.json.request.NewStudentRequestJson;
@@ -40,6 +41,9 @@ public class AdministrationController {
 
     @Autowired
     private BankService bankService;
+
+    @Autowired
+    private CardService cardService;
 
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/student/create", method = RequestMethod.POST)
@@ -81,6 +85,20 @@ public class AdministrationController {
         adminService.deleteStudent(id);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @RequestMapping(value = "/attachments", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> retrieveAllAttachments() {
+        return ResponseEntity.ok(attachmentService.findAllAttachments());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @RequestMapping(value = "/attachments/{id}", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> retrieveAttachmentById(@PathVariable("id") int id) {
+        AbstractAttachment attachment = attachmentService.findAttachmentById(id);
+        return ResponseEntity.ok(attachment);
+    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping(value = "/questionbanks", method = RequestMethod.GET)
@@ -96,5 +114,20 @@ public class AdministrationController {
     public ResponseEntity<?> retrieveAllQuestionBanks() {
         return ResponseEntity.ok(bankService.findAllQuestionBanks());
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @RequestMapping(value = "/questions", method = RequestMethod.GET)
+    @JsonView(Views.Internal.class)
+    public ResponseEntity<?> retrieveAllQuestions() {
+        return ResponseEntity.ok(cardService.findAllQuestions());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @RequestMapping(value = "/answers", method = RequestMethod.GET)
+    @JsonView(Views.Internal.class)
+    public ResponseEntity<?> retrieveAllAnswers() {
+        return ResponseEntity.ok(cardService.findAllAnswers());
+    }
+
 
 }

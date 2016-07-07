@@ -119,6 +119,29 @@ public class QuestionBankController {
                         .toUri()).body(questionBank);
     }
 
+    @RequestMapping(value = "", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateQuestionBank(@Valid @RequestBody QuestionBank questionBank) {
+        Category category = questionBank.getCategory();
+        if (category == null || category.getId() == null) {
+            throw new CategoryNotFoundException(0);
+        }
+
+        int id = category.getId();
+        if (!categoryService.doesCategoryIdExist(id)) {
+
+            throw new CategoryNotFoundException(id);
+        }
+
+        questionBank = bankService.createQuestionBank(questionBank);
+
+        return ResponseEntity.created(
+                MvcUriComponentsBuilder
+                        .fromController(QuestionBankController.class)
+                        .path("/{id}")
+                        .buildAndExpand(questionBank.getId())
+                        .toUri()).body(questionBank);
+    }
+
     @RequestMapping(value = "/{bankId}", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(Views.SummaryWithCollections.class)

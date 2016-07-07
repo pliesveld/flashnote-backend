@@ -1,14 +1,13 @@
 package com.pliesveld.flashnote.service;
 
+import com.pliesveld.flashnote.domain.Category;
 import com.pliesveld.flashnote.domain.Deck;
 import com.pliesveld.flashnote.domain.FlashCard;
 import com.pliesveld.flashnote.domain.FlashCardPrimaryKey;
+import com.pliesveld.flashnote.exception.CategoryNotFoundException;
 import com.pliesveld.flashnote.exception.DeckNotFoundException;
 import com.pliesveld.flashnote.exception.FlashCardCreateException;
-import com.pliesveld.flashnote.repository.DeckRepository;
-import com.pliesveld.flashnote.repository.FlashCardRepository;
-import com.pliesveld.flashnote.repository.QuestionBankRepository;
-import com.pliesveld.flashnote.repository.QuestionRepository;
+import com.pliesveld.flashnote.repository.*;
 import com.pliesveld.flashnote.repository.specifications.DeckSpecification;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,19 +17,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.tritonus.share.ArraySet;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service("deckService")
 public class DeckServiceImpl implements DeckService {
     private static final Logger LOG = LogManager.getLogger();
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Autowired
     private DeckRepository deckRepository;
@@ -43,6 +42,12 @@ public class DeckServiceImpl implements DeckService {
 
     @Autowired
     private FlashCardRepository flashcardRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public Deck findDeckById(final int id) throws DeckNotFoundException {
@@ -125,6 +130,48 @@ public class DeckServiceImpl implements DeckService {
     @Override
     public Deck createDeck(final Deck deck) {
         return deckRepository.save(deck);
+    }
+
+
+    /**
+     * Updates the stored entity deck with the parameter deck.  The new deck must have a category id that exists.
+     * The collection of Flashcards is then checked for new flashcards.  A new flashcard is one that does not have
+     * an id property assigned.  New flashcards are added to stored deck.  The original deck is loaded.  Any flashcard
+     * entries that are not in the to-be-stored deck, are removed.
+     * @param deck the deck to be stored
+     * @return updated deck
+     */
+    @Override
+    public Deck updateDeck(final Deck deck) {
+
+        int id;
+        if (deck.getId() == null) {
+            throw new DeckNotFoundException("No deck id property");
+        }
+        id = deck.getId();
+
+        final Deck orig = deckRepository.findOne(id);
+
+        int catId = deck.getCategory().getId();
+        if (!categoryRepository.exists(catId)) {
+            throw new CategoryNotFoundException(catId);
+        }
+
+        Category newCategory = categoryRepository.getOne(catId);
+        orig.setCategory(newCategory);
+
+        if (!orig.getDescription().equals(deck.getDescription())) {
+            orig.setDescription(deck.getDescription());
+        }
+
+        Set<FlashCard> newFlashCards = deck.getFlashcards().stream()
+          .filter((flashcard) -> flashcard.getId() == null || flashcard.getQuestion().getId() == null || flashcard.getAnswer().getId() == null)
+          .collect(Collectors.toSet());
+
+        List<FlashCard> flashCards = orig.getFlashcards();
+        flashCards.addAll(newFlashCards);
+
+        return deckRepository.save(orig);
     }
 
     /**

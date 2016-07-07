@@ -51,6 +51,7 @@ public abstract class AbstractStatement extends AbstractAuditableEntity<Integer>
     @NotNull
     @Size(min = Constants.MD5_HASH_LENGTH, max = Constants.MD5_HASH_LENGTH)
     @Column(name = "CONTENT_HASH", length = Constants.MD5_HASH_LENGTH, nullable = false)
+    @JsonView(Views.SummaryWithCollections.class)
     public String getContentHash() {
         return contentHash;
     }

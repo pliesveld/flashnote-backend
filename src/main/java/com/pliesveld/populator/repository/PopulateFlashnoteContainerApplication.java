@@ -68,7 +68,7 @@ public class PopulateFlashnoteContainerApplication {
 //        application.addListeners(new ApplicationPidFileWriter("./bin/app.pid"));
         application.run(args);
     }
-
+/*
     @Bean
     @Order(8)
     @Transactional
@@ -84,7 +84,7 @@ public class PopulateFlashnoteContainerApplication {
             }
         };
     }
-
+*/
     @Bean
     public RepositorySettings repositorySettingsBean() {
         RepositorySettings settings = new RepositorySettings(new Resource[]{});

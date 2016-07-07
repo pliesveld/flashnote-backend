@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -180,4 +181,10 @@ public class AttachmentServiceImpl implements AttachmentService {
         return attachmentRepository.findAttachmentHeaderById(id);
     }
 
+    @Override
+    public List<AbstractAttachment> findAllAttachments() {
+        final ArrayList<AbstractAttachment> attachments = new ArrayList<>();
+        attachmentRepository.findAll().forEach(attachments::add);
+        return attachments;
+    }
 }

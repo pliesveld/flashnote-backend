@@ -9,6 +9,10 @@ public class DataSetExtractor implements DataExtractor {
         DataSet set = (DataSet) obj;
         Collection<Object> data = new ArrayList<Object>();
 
+        for (Object o : set.getTextAttachments()) {
+            data.add(o);
+        }
+
         for (Object o : set.getStudents()) {
             data.add(o);
         }

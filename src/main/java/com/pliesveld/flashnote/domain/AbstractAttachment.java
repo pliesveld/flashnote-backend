@@ -1,5 +1,6 @@
 package com.pliesveld.flashnote.domain;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.pliesveld.flashnote.domain.base.AbstractAuditableEntity;
 import com.pliesveld.flashnote.domain.converter.AttachmentTypeConverter;
@@ -16,6 +17,8 @@ import java.util.Objects;
 @Entity
 @Table(name = "ATTACHMENT")
 @Inheritance(strategy = InheritanceType.JOINED)
+//@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class", visible = false)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 public abstract class AbstractAttachment extends AbstractAuditableEntity<Integer> implements Serializable {
 
     private static final long serialVersionUID = 1475231744214090102L;

@@ -1,14 +1,15 @@
-.idea/
-log/
-external/
-pythonenv/
-target/
-
 .classpath
 .project
 .settings
-*.eml
-*.iml
 *.userlibraries
 
-*.*.swp
+.idea/
+*.eml
+*.iml
+
+pythonenv/
+external/
+target/
+log/
+
+*.swp

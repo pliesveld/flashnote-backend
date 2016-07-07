@@ -1,5 +1,7 @@
 package com.pliesveld.flashnote.domain;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.pliesveld.flashnote.model.json.Views;
 import com.pliesveld.flashnote.schema.Constants;
@@ -16,6 +18,7 @@ import java.nio.charset.CharsetDecoder;
 @Entity
 @Table(name = "ATTACHMENT_TEXT")
 @PrimaryKeyJoinColumn(name = "ATTACHMENT_ID", foreignKey = @ForeignKey(name = "FK_ATTACHMENT_TEXT"))
+@JsonTypeInfo(use = JsonTypeInfo.Id.NONE, visible = false)
 public class AttachmentText extends AbstractAttachment implements Serializable {
 
     private static final long serialVersionUID = 2198784599569918824L;
@@ -29,6 +32,7 @@ public class AttachmentText extends AbstractAttachment implements Serializable {
         return contents;
     }
 
+    @JsonSetter
     public void setContents(String contents) {
         this.contents = contents;
         setFileLength(contents.length());

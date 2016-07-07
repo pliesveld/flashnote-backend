@@ -96,6 +96,27 @@ public class DeckController {
                         .path("/{id}").buildAndExpand(deck.getId()).toUri()).build();
     }
 
+    @RequestMapping(value = "", method = RequestMethod.PUT)
+    @ResponseStatus(code = HttpStatus.OK)
+    public ResponseEntity updateDeck(@Valid @RequestBody Deck deck) {
+        Category category = deck.getCategory();
+        if (category == null || category.getId() == null) {
+            throw new CategoryNotFoundException(0);
+        }
+
+        int id = category.getId();
+        if (!categoryService.doesCategoryIdExist(id)) {
+
+            throw new CategoryNotFoundException(id);
+        }
+
+        deck = deckService.createDeck(deck);
+
+        return ResponseEntity.created(
+                MvcUriComponentsBuilder.fromController(DeckController.class)
+                        .path("/{id}").buildAndExpand(deck.getId()).toUri()).build();
+    }
+
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
