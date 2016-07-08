@@ -4,10 +4,12 @@ package com.pliesveld.flashnote.web.controller;
 import com.pliesveld.flashnote.domain.AbstractAttachment;
 import com.pliesveld.flashnote.domain.AttachmentBinary;
 import com.pliesveld.flashnote.domain.AttachmentText;
+import com.pliesveld.flashnote.domain.AttachmentType;
 import com.pliesveld.flashnote.model.json.response.AttachmentHeader;
 import com.pliesveld.flashnote.service.AttachmentService;
 import com.pliesveld.flashnote.service.CardService;
 import com.pliesveld.flashnote.service.StudentService;
+import com.pliesveld.flashnote.web.dto.ImageScaler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +45,8 @@ public class AttachmentController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> downloadAttachment(@PathVariable("id") int id) {
+    public ResponseEntity<?> downloadAttachment(@PathVariable("id") int id, @RequestParam(value = "width", required = false) int width) {
+
         MediaType content_type = null;
         Object response_data = null;
         long last_modified = 0;
@@ -56,7 +59,18 @@ public class AttachmentController {
 
         if (attachment.getAttachmentType().isBinary()) {
             AttachmentBinary binary = (AttachmentBinary) attachment;
-            return new ResponseEntity<>(binary.getContents(), responseHeaders, HttpStatus.OK);
+
+            if (!attachment.getAttachmentType().equals(AttachmentType.IMAGE)) {
+                return new ResponseEntity<>(binary.getContents(), responseHeaders, HttpStatus.OK);
+            }
+
+            byte[] contents = null;
+            if (width >= 0) {
+                contents = ImageScaler.scaleAttachmentImage(binary, width);
+            } else {
+                contents = binary.getContents();
+            }
+            return new ResponseEntity<>(contents, responseHeaders, HttpStatus.OK);
         } else {
             AttachmentText text = (AttachmentText) attachment;
             return new ResponseEntity<>(text.getContents(), responseHeaders, HttpStatus.OK);
