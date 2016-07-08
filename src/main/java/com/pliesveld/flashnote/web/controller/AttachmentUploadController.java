@@ -108,7 +108,6 @@ public class AttachmentUploadController {
             id = attachmentService.storeAttachment(attachment).getId();
         }
 
-
         if (question != null) {
             question.setAttachment(abstractAttachment);
             cardService.update(question);

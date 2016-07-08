@@ -169,9 +169,9 @@ public class QuestionBankController {
         if (questionBank == null)
             return ResponseEntity.notFound().build();
 
-        Integer question_id = question.getId();
+        Integer questionId = question.getId();
 
-        if (question_id == null) {
+        if (questionId == null) {
             bankService.updateQuestionBankAddQuestion(questionBank.getId(), question);
             return ResponseEntity.created(
                     MvcUriComponentsBuilder
@@ -181,7 +181,7 @@ public class QuestionBankController {
                             .toUri()).build();
         }
 
-        if ((question = cardService.findQuestionById(question_id)) != null) {
+        if ((question = cardService.findQuestionById(questionId)) != null) {
             bankService.updateQuestionBankAddQuestion(questionBank.getId(), question);
         } else {
             return ResponseEntity.notFound().build();
@@ -201,7 +201,6 @@ public class QuestionBankController {
         bankService.updateQuestionBankRemoveQuestion(questionBank, questionId);
         return ResponseEntity.ok().build();
     }
-
 
     @RequestMapping(value = "/{bankId}/{questionId}", method = RequestMethod.GET)
     @ResponseBody
@@ -228,6 +227,5 @@ public class QuestionBankController {
 //        action.get(requestJson.getOperation()).accept(requestJson);
 //        return ResponseEntity.ok().build();
 //    }
-
 
 }
