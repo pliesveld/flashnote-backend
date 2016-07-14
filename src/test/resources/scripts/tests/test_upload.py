@@ -2,137 +2,71 @@ import json
 import requests
 from requests.exceptions import *
 import unittest
-import sys
-import functools
 
-from .settings import URL
-from .settings import loadResource
+from .settings import URL, loadResource, noauthtest
+from .routes import ATTACHMENT_UPLOAD
+from .test_base import BaseTestCase, assert_2xx, assert_not_2xx
 
-## TODO: login
+class GoldieTest(BaseTestCase):
 
-class GoldieTest(unittest.TestCase):
-    RESOURCE = '/attachment/upload'
+    def testFileUploadImage(self):
+        self.url = ATTACHMENT_UPLOAD
+        self.upload = ('image', 'puppy512x512.jpg')
+        self.contenttype = 'image/jpeg'
 
-    def raise_for_status(self,r):
-        "Wrapper around requests.exceptions to print response from server on error"
-        try:
-            r.raise_for_status()
-        except HTTPError:
-            self.fail(r.text)
-            raise
+        req = self.request()
+        r = req(hooks=assert_2xx)
 
+        self.assertTrue('location' in r.headers)
+        url_attachment = r.headers.get('location')
+        r = self.s.request('HEAD', url_attachment)
+        r = self.s.request('DELETE', url_attachment)
 
+    def testFileUploadImageTooLarge(self):
 
-    def testMultiPartFileUploadImage(self):
-        (filepath, filename) = loadResource('image','puppy.jpg')
+        self.url = ATTACHMENT_UPLOAD
+        self.upload = ('image', 'puppy.jpg')
+        self.contenttype = 'image/jpeg'
 
-        with open(filepath,'rb') as fileObj:
-            with requests.Session() as s:
-                try:
-                    url = URL + self.RESOURCE
-                    files = { 'file' : (filename, fileObj, 'image/jpeg' ) }
-                    data = {}
+        req = self.request()
+        r = req(hooks=assert_not_2xx)
 
-                    r = s.request('POST',url,data=data,files=files)
-                    self.raise_for_status(r)
-                    self.assertTrue('location' in r.headers)
-                    url_attachment = r.headers.get('location')
-                    r = s.request('HEAD',url_attachment)
-                    self.raise_for_status(r)
-                    r = s.request('DELETE',url_attachment)
-                    self.raise_for_status(r)
+    def testFileUploadImageReallyUnsupportedBMP(self):
+        self.url = ATTACHMENT_UPLOAD
+        self.upload = ('image', 'puppy.bmp')
+        self._filename = 'puppy.jpg'
+        self.contenttype = 'image/jpeg'
+        req = self.request()
+        r = req(hooks=assert_not_2xx)
 
-                except RequestException as re:
-                    print("Connection to " + URL + " raised an exception. " + str(getattr(re,'request','')) + ' ' + str(getattr(re,'response','')))
-                    raise
+    def testFileUploadSmallBMP(self):
+        self.url = ATTACHMENT_UPLOAD
+        self.upload = ('image', 'dot.bmp')
+        self.contenttype = 'image/jpeg'
+        req = self.request()
+        r = req(hooks=assert_not_2xx)
 
+class AudioTest(BaseTestCase):
 
-    def testMultiPartFileUploadImageReallyUnsupportedBMP(self):
-        (filepath, filename) = loadResource('image','puppy.bmp')
+    def testFileUploadAudioWav(self):
+        self.url = ATTACHMENT_UPLOAD
+        self.upload = ('audio', 'sample.wav')
+        self.contenttype = 'audio/wav'
+        req = self.request()
+        r = req(hooks=assert_2xx)
+        self.assertTrue('location' in r.headers)
+        url_attachment = r.headers.get('location')
+        r = self.s.request('HEAD', url_attachment)
 
-        with open(filepath,'rb') as fileObj:
-            with requests.Session() as s:
-                try:
-                    url = URL + self.RESOURCE
-                    files = { 'file' : (filename, fileObj, 'image/jpeg' ) }
-                    data = {}
-
-                    r = s.request('POST',url,data=data,files=files)
-                    self.assertNotEqual(r.status_code,200)
-                    self.assertNotEqual(r.status_code,201)
-
-                except RequestException as re:
-                    print("Connection to " + URL + " raised an exception. " + str(getattr(re,'request','')) + ' ' + str(getattr(re,'response','')))
-                    raise
-
-
-    def testMultiPartFileUploadSmallBMP(self):
-        (filepath, filename) = loadResource('image','dot.bmp')
-
-        with open(filepath,'rb') as fileObj:
-            with requests.Session() as s:
-                try:
-                    url = URL + self.RESOURCE
-                    files = { 'file' : (filename, fileObj, 'image/jpeg' ) }
-                    data = {}
-
-                    r = s.request('POST',url,data=data,files=files)
-                    self.assertNotEqual(r.status_code,200)
-                    self.assertNotEqual(r.status_code,201)
-
-                except RequestException as re:
-                    print("Connection to " + URL + " raised an exception. " + str(getattr(re,'request','')) + ' ' + str(getattr(re,'response','')))
-                    raise
-
-
-
-    def testMultiPartFileUploadAudioWav(self):
-        (filepath, filename) = loadResource('audio','sample.wav')
-
-        with open(filepath,'rb') as fileObj:
-            with requests.Session() as s:
-                try:
-                    url = URL + self.RESOURCE
-                    files = { 'file' : (filename, fileObj, 'audio/wav' ) }
-                    data = {}
-
-                    r = s.request('POST',url,data=data,files=files)
-                    self.raise_for_status(r)
-                    self.assertTrue('location' in r.headers)
-                    url_attachment = r.headers.get('location')
-                    r = s.request('HEAD',url_attachment)
-                    self.raise_for_status(r)
-                    r = s.request('DELETE',url_attachment)
-                    self.raise_for_status(r)
-
-                except RequestException as re:
-                    print("Connection to " + URL + " raised an exception. " + str(getattr(re,'request','')) + ' ' + str(getattr(re,'response','')))
-                    raise
-
-    def testMultiPartFileUploadAudioMp3(self):
-        (filepath, filename) = loadResource('audio','sample.mp3')
-
-        with open(filepath,'rb') as fileObj:
-            with requests.Session() as s:
-                try:
-                    url = URL + self.RESOURCE
-                    #TODO : change content-type
-                    files = { 'file' : (filename, fileObj, 'audio/wav' ) }
-                    data = {}
-
-                    r = s.request('POST',url,data=data,files=files)
-                    self.raise_for_status(r)
-                    self.assertTrue('location' in r.headers)
-                    url_attachment = r.headers.get('location')
-                    r = s.request('HEAD',url_attachment)
-                    self.raise_for_status(r)
-                    r = s.request('DELETE',url_attachment)
-                    self.raise_for_status(r)
-
-                except RequestException as re:
-                    print("Connection to " + URL + " raised an exception. " + str(getattr(re,'request','')) + ' ' + str(getattr(re,'response','')))
-                    raise
-
+    def testFileUploadAudioMp3(self):
+        self.url = ATTACHMENT_UPLOAD
+        self.upload = ('audio', 'sample.mp3')
+        self.contenttype = 'audio/mp3'
+        req = self.request()
+        r = req(hooks=assert_2xx)
+        self.assertTrue('location' in r.headers)
+        url_attachment = r.headers.get('location')
+        r = self.s.request('HEAD', url_attachment)
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

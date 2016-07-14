@@ -1,32 +1,34 @@
 import os
-import os.path;
+import os.path
 import sys
 import logging as log
+import unittest
 
-SCHEME=os.getenv('INTEGRATION_TEST_SCHEME',"http")
-HOST=os.getenv('INTEGRATION_TEST_HOST',"localhost")
-PORT=os.getenv('INTEGRATION_TEST_PORT',9000)
-PROFILES=os.getenv('INTEGRATION_TEST_PROFILES','')
+SCHEME = os.getenv('INTEGRATION_TEST_SCHEME', "http")
+HOST = os.getenv('INTEGRATION_TEST_HOST', "localhost")
+PORT = os.getenv('INTEGRATION_TEST_PORT', 9000)
+PROFILES = os.getenv('INTEGRATION_TEST_PROFILES', '').split(',')
 
-URL=SCHEME + "://" + HOST + ":" + str(PORT) + "/"
-DATA_DIR="/home/happs/projects/flashnote/src/test/resources/scripts/tests/test-data"
+URL = SCHEME + "://" + HOST + ":" + str(PORT) + "/"
+URL_BASE = SCHEME + "://" + HOST + ":" + str(PORT) + "/"
+DATA_DIR = "/home/happs/projects/flashnote/src/test/resources/scripts/tests/test-data"
 
 
 if os.getenv('DEBUG'):
-    DEBUG=True
+    DEBUG = True
 else:
-    DEBUG=False
+    DEBUG = False
 
-log.basicConfig( stream=sys.stdout, level=log.WARN if DEBUG == False else log.DEBUG)
+log.basicConfig(stream=sys.stdout, level=log.WARN if DEBUG == False else log.DEBUG)
 log.getLogger().setLevel(log.WARN if DEBUG == False else log.DEBUG)
 
 log.debug("__file__" +  __file__)
-log.debug("Spring Profiles: " + PROFILES)
+log.debug("Spring Profiles: " + ','.join(PROFILES))
 log.debug("default url: " + URL)
 
 try:
     root_dir = os.path.dirname(__file__)
-    DATA_DIR = os.path.join(root_dir,'test-data')
+    DATA_DIR = os.path.join(root_dir, 'test-data')
     assert os.path.exists(DATA_DIR)
 except NameError:
     log.warn("Could not determine dir based on __file__")
@@ -35,8 +37,11 @@ except NameError:
 log.debug("Using DATA_DIR: " + DATA_DIR)
 
 def loadResource(*path):
-    new_dir = os.path.join(DATA_DIR,*path)
+    new_dir = os.path.join(DATA_DIR, *path)
     #print("loading ", new_dir)
     assert os.path.exists(new_dir)
     assert os.path.isfile(new_dir)
     return (new_dir, os.path.basename(new_dir))
+
+authtest = unittest.skipIf('auth' not in PROFILES, "Test Requires Auth Profile")
+noauthtest = unittest.skipIf('auth' in PROFILES, "Test Requires Auth Profile Absent")
