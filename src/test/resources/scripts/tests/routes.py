@@ -6,5 +6,5 @@ CAT_SEARCH_RESOURCE = 'categories/search'
 
 ATTACHMENT_UPLOAD = 'attachment/upload'
 
-
+BANK_RESOURCE = 'questionbanks'
 

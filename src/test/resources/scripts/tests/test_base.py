@@ -11,20 +11,6 @@ try:
 except SystemError:
     from settings import URL, DEBUG, DATA_DIR
 
-def print_url(r, *args, **kwargs):
-    print('*'*80)
-    req = r.request.copy()
-    req.body = req.body[:500] + b'...'
-    print(vars(req))
-    print('*'*80)
-
-def print_json(r, *args, **kwargs):
-    try:
-        r_json = r.json()
-        print(json.dumps(r_json, sort_keys=True, indent=4))
-    except ValueError:
-        print(r.text)
-
 def log_json(r, *args, **kwargs):
     try:
         r_json = r.json()
@@ -53,6 +39,22 @@ def assert_2xx(r, *args, **kwargs):
         except HTTPError:
             test.fail(r.text)
             raise
+
+def print_url(r, *args, **kwargs):
+    print('*'*80)
+    req = r.request.copy()
+    req.body = str(req.body[:500]) + '...'
+    print(vars(req))
+    print('*'*80)
+
+def print_json(r, *args, **kwargs):
+    try:
+        r_json = r.json()
+        print(json.dumps(r_json, sort_keys=True, indent=4))
+    except ValueError:
+        print(r.text)
+
+
 
 def _loadResource(*path):
     filepath = os.path.join(DATA_DIR, *path)
@@ -92,6 +94,18 @@ class BaseTestCase(unittest.TestCase):
         self.s = s
 
 
+    def _reset(self):
+        self._query = None
+        self._method = None
+        self._json = None
+
+        # files
+        self.contenttype = None
+        self._filename = None
+        self._data = None
+        self._fileObj = None
+
+
     def tearDown(self):
         self._fileObj = None
         self.s = None
@@ -113,6 +127,10 @@ class BaseTestCase(unittest.TestCase):
     def method(self):
         return 'GET' if self._method is None else self._method
 
+    @method.setter
+    def method(self, value):
+        self._method = value
+
     @query.setter
     def query(self, value):
         log.debug("using query params: " + str(value))
@@ -131,7 +149,7 @@ class BaseTestCase(unittest.TestCase):
     @json.setter
     def json(self, value):
         self._method = 'POST'
-        self._json = json
+        self._json = value
 
     @property
     def data(self):
@@ -161,11 +179,14 @@ class BaseTestCase(unittest.TestCase):
         self.addCleanup(closeFileWrapper)
 
 
-    def request(self):
+    def request(self, clear=False):
         files = self.files
         req = requests.Request(method=self.method, url=self.url,
                                files=self.files, data=self._data,
                                params=self._query, json=self._json)
+
+        if clear:
+            self._reset()
 
         def requestWrapper(hooks=None):
             prepreq = req.prepare()
