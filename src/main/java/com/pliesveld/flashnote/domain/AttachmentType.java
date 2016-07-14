@@ -9,17 +9,17 @@ import java.util.Map;
 import static org.springframework.http.MediaType.*;
 
 public enum AttachmentType {
-    BINARY(1, APPLICATION_OCTET_STREAM_VALUE, APPLICATION_OCTET_STREAM, ".dat", AttachmentTypeDataFormat.BINARY),
-    AUDIO(10, "audio/wav", APPLICATION_OCTET_STREAM, ".wav", AttachmentTypeDataFormat.BINARY),
-    AUDIO_MP3(11, "audio/mp3", APPLICATION_OCTET_STREAM, ".mp3", AttachmentTypeDataFormat.BINARY),
-    IMAGE(50, "image/jpeg", IMAGE_JPEG, ".jpg", AttachmentTypeDataFormat.BINARY),
-    TEXT(100, TEXT_PLAIN_VALUE, TEXT_PLAIN, ".txt", AttachmentTypeDataFormat.TEXT);
+    BINARY(AttachmentCategory.UNSUPPORTED, 1, APPLICATION_OCTET_STREAM_VALUE, APPLICATION_OCTET_STREAM, ".dat"),
+    AUDIO_WAV(AttachmentCategory.AUDIO, 10, "audio/wav", APPLICATION_OCTET_STREAM, ".wav"),
+    AUDIO_MP3(AttachmentCategory.AUDIO, 11, "audio/mp3", APPLICATION_OCTET_STREAM, ".mp3"),
+    IMAGE_JPG(AttachmentCategory.IMAGE, 50, "image/jpeg", IMAGE_JPEG, ".jpg"),
+    DOCUMENT_TEXT(AttachmentCategory.DOCUMENT, 100, TEXT_PLAIN_VALUE, TEXT_PLAIN, ".txt");
 
+    private final AttachmentCategory category;
     private final int id;
     private final String mime;
     private final MediaType mediatype;
     private final String extension;
-    private final AttachmentTypeDataFormat dataFormat;
 
     private final static Map<Integer, AttachmentType> intToEnum = new HashMap<>();
 
@@ -29,14 +29,16 @@ public enum AttachmentType {
         }
     }
 
-    AttachmentType(final int id, final String mime, final MediaType mediatype,
-                   final String extension, final AttachmentTypeDataFormat dataFormat) {
+    AttachmentType(final AttachmentCategory category, final int id, final String mime, final MediaType mediatype,
+                   final String extension) {
         this.id = id;
+        this.category = category;
         this.mime = mime;
         this.mediatype = mediatype;
         this.extension = extension;
-        this.dataFormat = dataFormat;
     }
+
+    public AttachmentCategory getCategory() { return category; }
 
     public String getMime() {
         return this.mime;
@@ -54,12 +56,8 @@ public enum AttachmentType {
         return mediatype;
     }
 
-    public AttachmentTypeDataFormat getDataFormat() {
-        return dataFormat;
-    }
-
     public boolean isBinary() {
-        return dataFormat == AttachmentTypeDataFormat.BINARY;
+        return getCategory().getDataFormat() == AttachmentTypeDataFormat.BINARY;
     }
 
     public static AttachmentType fromInteger(final Integer id) {

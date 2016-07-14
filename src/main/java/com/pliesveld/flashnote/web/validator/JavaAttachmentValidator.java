@@ -54,11 +54,11 @@ public class JavaAttachmentValidator implements Validator {
             return;
 
 
-        switch (attachmentType) {
+        switch (attachmentType.getCategory()) {
             case AUDIO:
                 validateAudioAttachment(attachment, errors);
                 break;
-            case TEXT:
+            case DOCUMENT:
                 validateDocumentAttachment(attachment, errors);
                 break;
             case IMAGE:

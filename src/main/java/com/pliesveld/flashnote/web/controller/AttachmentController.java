@@ -3,8 +3,8 @@ package com.pliesveld.flashnote.web.controller;
 
 import com.pliesveld.flashnote.domain.AbstractAttachment;
 import com.pliesveld.flashnote.domain.AttachmentBinary;
+import com.pliesveld.flashnote.domain.AttachmentCategory;
 import com.pliesveld.flashnote.domain.AttachmentText;
-import com.pliesveld.flashnote.domain.AttachmentType;
 import com.pliesveld.flashnote.model.json.response.AttachmentHeader;
 import com.pliesveld.flashnote.service.AttachmentService;
 import com.pliesveld.flashnote.service.CardService;
@@ -60,7 +60,7 @@ public class AttachmentController {
         if (attachment.getAttachmentType().isBinary()) {
             AttachmentBinary binary = (AttachmentBinary) attachment;
 
-            if (!attachment.getAttachmentType().equals(AttachmentType.IMAGE)) {
+            if (!attachment.getAttachmentType().getCategory().equals(AttachmentCategory.IMAGE)) {
                 return new ResponseEntity<>(binary.getContents(), responseHeaders, HttpStatus.OK);
             }
 

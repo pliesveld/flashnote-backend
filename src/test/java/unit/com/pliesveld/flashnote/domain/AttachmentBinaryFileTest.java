@@ -58,7 +58,7 @@ public class AttachmentBinaryFileTest {
 
     @Test
     public void testStorage() throws IOException, IllegalAccessException {
-        AttachmentType expected_type = AttachmentType.IMAGE;
+        AttachmentType expected_type = AttachmentType.IMAGE_JPG;
         String resource_dir = ClassLoader.getSystemResource(".").getPath();
         String expected_file = "/scripts/tests/test-data/image/puppy.jpg";
 

@@ -50,15 +50,19 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
                 is_valid = true;
             } else {
 
-                switch (attachmentType) {
+                switch (attachmentType.getCategory()) {
                     case AUDIO:
                         is_valid = is_valid && validateAudioAttachment(attachment, context);
                         break;
-                    case TEXT:
+                    case DOCUMENT:
                         is_valid = is_valid && validateDocumentAttachment(attachment, context);
                         break;
                     case IMAGE:
                         is_valid = is_valid && validateImageAttachment(attachment, context);
+                        break;
+                    case UNSUPPORTED:
+                    default:
+                        is_valid = false;
                         break;
                 }
 

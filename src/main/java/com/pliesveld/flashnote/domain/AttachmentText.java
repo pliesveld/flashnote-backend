@@ -51,7 +51,7 @@ public class AttachmentText extends AbstractAttachment implements Serializable {
     @PrePersist
     public void prePersist() {
         if (attachmentType == null)
-            attachmentType = AttachmentType.TEXT;
+            attachmentType = AttachmentType.DOCUMENT_TEXT;
     }
 
 }

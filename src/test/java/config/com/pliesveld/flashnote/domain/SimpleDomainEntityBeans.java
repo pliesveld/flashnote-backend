@@ -40,7 +40,7 @@ public class SimpleDomainEntityBeans {
         String contents = StringUtils.arrayToCommaDelimitedString(new Object[]{UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID()});
         attachmentText.setContents(contents);
         attachmentText.setFileName(UUID.randomUUID().toString().concat(".txt"));
-        attachmentText.setAttachmentType(AttachmentType.TEXT);
+        attachmentText.setAttachmentType(AttachmentType.DOCUMENT_TEXT);
         return attachmentText;
     }
 

@@ -1,7 +1,7 @@
 package com.pliesveld.flashnote.web.dto;
 
 import com.pliesveld.flashnote.domain.AttachmentBinary;
-import com.pliesveld.flashnote.domain.AttachmentType;
+import com.pliesveld.flashnote.domain.AttachmentCategory;
 import com.pliesveld.flashnote.exception.AttachmentDownloadException;
 import org.imgscalr.Scalr;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ public class ImageScaler {
 
     static public byte[] scaleAttachmentImage(AttachmentBinary attachmentBinary, int targetWidth) {
         assert attachmentBinary.getAttachmentType().isBinary();
-        assert attachmentBinary.getAttachmentType() == AttachmentType.IMAGE;
+        assert attachmentBinary.getAttachmentType().getCategory() == AttachmentCategory.IMAGE;
 
         if (targetWidth < 50) {
             targetWidth = 50;

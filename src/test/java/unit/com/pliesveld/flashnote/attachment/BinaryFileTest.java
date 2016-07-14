@@ -67,7 +67,7 @@ public class BinaryFileTest {
 
     @Test
     public void testStorage() throws IOException, IllegalAccessException {
-        AttachmentType expected_type = AttachmentType.IMAGE;
+        AttachmentType expected_type = AttachmentType.IMAGE_JPG;
 
         String expected_file = "puppy.jpg";
         String output_file = "puppy.jpg";
