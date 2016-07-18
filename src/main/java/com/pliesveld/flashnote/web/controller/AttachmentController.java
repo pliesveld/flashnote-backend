@@ -45,7 +45,7 @@ public class AttachmentController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> downloadAttachment(@PathVariable("id") int id, @RequestParam(value = "width", required = false) int width) {
+    public ResponseEntity<?> downloadAttachment(@PathVariable("id") int id, @RequestParam(value = "width", defaultValue = "0") int width) {
 
         MediaType content_type = null;
         Object response_data = null;
@@ -65,7 +65,7 @@ public class AttachmentController {
             }
 
             byte[] contents = null;
-            if (width >= 0) {
+            if (width > 0) {
                 contents = ImageScaler.scaleAttachmentImage(binary, width);
             } else {
                 contents = binary.getContents();
