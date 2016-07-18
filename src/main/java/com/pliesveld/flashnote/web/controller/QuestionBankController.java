@@ -2,7 +2,6 @@ package com.pliesveld.flashnote.web.controller;
 
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pliesveld.flashnote.domain.*;
 import com.pliesveld.flashnote.exception.CategoryNotFoundException;
@@ -81,19 +80,18 @@ public class QuestionBankController {
         return ResponseEntity.ok().build();
     }
 
-    @RequestMapping(value = "", method = RequestMethod.GET, params = "!categoryId")
+    @RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseStatus(code = HttpStatus.OK)
     @JsonView(Views.Summary.class)
-    public Page<QuestionBank> retrieveAllBankss(Pageable pageRequest) {
-        return bankService.browseBanks(pageRequest);
-    }
+    public Page<QuestionBank> retrieveAllBanksInCategory(
+            @RequestParam(value = "categoryId", required = false) Integer categoryId,
+            @RequestParam(value = "desc", required = false) String descTerm,
+            @RequestParam(value = "content", required = false) String quesTerm,
+            @RequestParam(value = "questionId", required = false) Integer questionId,
+            Pageable pageRequest) {
 
-    @RequestMapping(value = "", method = RequestMethod.GET, params = "categoryId")
-    @ResponseStatus(code = HttpStatus.OK)
-    @JsonView(Views.Summary.class)
-    public Page<QuestionBank> retrieveAllBanksInCategory(@RequestParam("categoryId") int categoryId, Pageable pageRequest) {
-        final Specification<QuestionBank> spec = QuestionBankSpecification.hasCategory(categoryId);
-        return bankService.browseBanksWithSpec(spec, pageRequest);
+        final Specification<QuestionBank> spec = QuestionBankSpecification.getFilterSpec(categoryId, descTerm, quesTerm, questionId);
+        return bankService.browseBanks(spec, pageRequest);
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
@@ -105,12 +103,9 @@ public class QuestionBankController {
 
         int id = category.getId();
         if (!categoryService.doesCategoryIdExist(id)) {
-
             throw new CategoryNotFoundException(id);
         }
-
         questionBank = bankService.createQuestionBank(questionBank);
-
         return ResponseEntity.created(
                 MvcUriComponentsBuilder
                         .fromController(QuestionBankController.class)
@@ -145,7 +140,7 @@ public class QuestionBankController {
     @RequestMapping(value = "/{bankId}", method = RequestMethod.GET)
     @ResponseBody
     @JsonView(Views.SummaryWithCollections.class)
-    public ResponseEntity<?> retrieveQuestionBank(@PathVariable("bankId") int bankId) throws JsonProcessingException {
+    public ResponseEntity<?> retrieveQuestionBank(@PathVariable("bankId") int bankId) {
         QuestionBank questionBank = bankService.findQuestionBankById(bankId);
 
         if (questionBank == null)
@@ -213,10 +208,11 @@ public class QuestionBankController {
         return ResponseEntity.ok(question);
     }
 
-    @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public Page<QuestionBank> findBySearchTerm(@RequestParam("query") String searchTerm, Pageable pageRequest) {
-        return bankService.findBySearchTerm(searchTerm, pageRequest);
-    }
+
+//    @RequestMapping(value = "/search", method = RequestMethod.GET)
+//    public Page<QuestionBank> findBySearchTerm(@RequestParam("query") String searchTerm, Pageable pageRequest) {
+//        return bankService.findBySearchTerm(searchTerm, pageRequest);
+//    }
 
 //
 //    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)

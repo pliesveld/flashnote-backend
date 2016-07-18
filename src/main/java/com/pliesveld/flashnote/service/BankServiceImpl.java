@@ -22,7 +22,10 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service("bankService")
@@ -91,7 +94,7 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public Page<QuestionBank> browseBanksWithSpec(Specification<QuestionBank> spec, Pageable pageRequest) {
+    public Page<QuestionBank> browseBanks(Specification<QuestionBank> spec, Pageable pageRequest) {
         return questionBankRepository.findAll(spec, pageRequest);
     }
 
@@ -185,12 +188,6 @@ public class BankServiceImpl implements BankService {
         }
         questionBankRepository.delete(questionBank);
         orphanQuestions.forEach(questionRepository::delete);
-    }
-
-    @Override
-    @Deprecated
-    public List<QuestionBank> findByContainsQuestion(final int questionId) {
-        return new ArrayList<>();
     }
 
     @Override

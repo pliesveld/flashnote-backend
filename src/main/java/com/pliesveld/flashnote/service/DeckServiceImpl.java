@@ -17,12 +17,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.tritonus.share.ArraySet;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -62,6 +60,7 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Override
+    @Deprecated
     public Page<Deck> findBySearchTerm(final String searchTerm, final Pageable pageRequest) {
         final Specification<Deck> spec = DeckSpecification.descriptionOrFlashcardContainsIgnoreCase(searchTerm);
         return deckRepository.findAll(spec, pageRequest);
@@ -73,7 +72,7 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Override
-    public Page<Deck> browseDecksWithSpec(Specification<Deck> specification, Pageable pageRequest) {
+    public Page<Deck> browseDecks(Specification<Deck> specification, Pageable pageRequest) {
         return deckRepository.findAll(specification, pageRequest);
     }
 

@@ -70,7 +70,7 @@ class AnonTest(AuthBaseTest):
 
     def testAnonAccess(self):
         super().invoke_request(ANON_RESOURCE,200)
-     
+
     def testUserAccess(self):
         super().invoke_request(USER_RESOURCE,401)
 
@@ -86,7 +86,7 @@ class AuthTest(AuthBaseTest):
 
     def testAnonAccess(self):
         super().invoke_request(ANON_RESOURCE,200)
-         
+
     def testUserAccess(self):
         super().invoke_request(USER_RESOURCE,200)
 
@@ -102,10 +102,10 @@ class AdminTest(AuthBaseTest):
 
     def testAnonAccess(self):
         super().invoke_request(ANON_RESOURCE,200)
-     
+
     def testUserAccess(self):
         super().invoke_request(USER_RESOURCE,200)
-        
+
     def testAdminAccess(self):
         super().invoke_request(ADMIN_RESOURCE,200)
 

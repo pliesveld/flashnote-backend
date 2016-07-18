@@ -10,7 +10,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -25,13 +24,11 @@ public interface BankService {
 
     Page<QuestionBank> browseBanks(final Pageable pageRequest);
 
-    Page<QuestionBank> browseBanksWithSpec(final Specification<QuestionBank> spec, final Pageable pageRequest);
+    Page<QuestionBank> browseBanks(final Specification<QuestionBank> spec, final Pageable pageRequest);
 
     QuestionBank findQuestionBankById(final int bankId) throws QuestionBankNotFoundException;
 
     Page<QuestionBank> findBySearchTerm(final String searchTerm, final Pageable pageRequest);
-
-    List<QuestionBank> findByContainsQuestion(final int questionId);
 
     @Transactional
     QuestionBank createQuestionBank(final QuestionBank questionBank);

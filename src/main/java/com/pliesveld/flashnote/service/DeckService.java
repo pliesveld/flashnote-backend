@@ -23,7 +23,7 @@ public interface DeckService {
 
     Page<Deck> browseDecks(final Pageable pageRequest);
 
-    Page<Deck> browseDecksWithSpec(final Specification<Deck> specification, final Pageable pageRequest);
+    Page<Deck> browseDecks(final Specification<Deck> specification, final Pageable pageRequest);
 
     Page<Deck> findByCategory(final Integer id, final Pageable pageRequest);
 
@@ -42,6 +42,5 @@ public interface DeckService {
 
     @Transactional
     void deleteDeck(final int id);
-
 
 }

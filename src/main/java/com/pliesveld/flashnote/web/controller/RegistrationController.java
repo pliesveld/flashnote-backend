@@ -45,8 +45,7 @@ public class RegistrationController {
     @RequestMapping(path = "/sign-up", method = RequestMethod.OPTIONS)
     @CrossOrigin
     @ResponseStatus(HttpStatus.OK)
-    public void discoverOptions() {
-    }
+    public void discoverOptions() {}
 
     @RequestMapping(path = "/sign-up", method = RequestMethod.POST)
     public ResponseEntity<RegistrationResponseJson> processRegistrationMessage(@Valid @RequestBody RegistrationRequestJson registrationRequestJson, HttpServletRequest request) {
@@ -59,44 +58,32 @@ public class RegistrationController {
         String email = registrationRequestJson.getEmail();
         String name = registrationRequestJson.getName();
         String password = registrationRequestJson.getPassword();
-
         RegistrationResponseJson response;
-
         HttpStatus statusCode = HttpStatus.OK;
 
         if (studentService.findByEmail(email) != null) {
             response = new RegistrationResponseJson(EMAIL_TAKEN, "Email address has already been registered");
-            statusCode = HttpStatus.FORBIDDEN;
-
+            statusCode = HttpStatus.CONFLICT;
         } else if (studentService.findByName(name) != null) {
             response = new RegistrationResponseJson(NAME_TAKEN, "Name has already been registered");
-            statusCode = HttpStatus.FORBIDDEN;
+            statusCode = HttpStatus.CONFLICT;
         } else {
-
             Student student = registrationService.createStudent(name, email, password);
-
             AccountRegistrationToken registration = registrationService.createAccountRegistration(student);
-
             String token = registration.getToken();
-
             String confirmURL = MvcUriComponentsBuilder
                     .fromController(RegistrationController.class)
                     .path("/confirm")
                     .queryParam("token", token)
                     .build().toUriString();
-
-
             registrationService.emailVerificationConfirmationURLtoAccountHolder(student, confirmURL);
             response = new RegistrationResponseJson(EMAIL_SENT, "A confirmation email has been sent to your address " + email);
         }
-
-
         return new ResponseEntity<>(response, statusCode);
     }
 
     @RequestMapping(path = "/confirm", method = RequestMethod.GET)
-    public ResponseEntity<?> processRegistrationConfirmation(@Valid
-                                                             @RequestParam(value = "token", required = true) String token) {
+    public ResponseEntity<?> processRegistrationConfirmation(@Valid @RequestParam(value = "token", required = true) String token) {
         LOG.debug("Checking token={}", token);
         Student student = registrationService.processRegistrationConfirmation(token);
         if (student != null) {
@@ -106,19 +93,15 @@ public class RegistrationController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-
     @RequestMapping(path = "/reset", method = RequestMethod.POST)
     public ResponseEntity<RegistrationResponseJson> processAccountPasswordResetRequest(@Valid @RequestBody PasswordResetRequestJson passwordResetRequestJson, HttpServletRequest request) {
         String ipAddr = request.getHeader("X-FORWARDED-FOR");
         if (ipAddr == null)
             ipAddr = request.getRemoteAddr();
 
-        LOG.info("from {} Processing registration request {}", ipAddr, passwordResetRequestJson);
-
+        LOG.info("From {} Processing registration request {}", ipAddr, passwordResetRequestJson);
         String email = passwordResetRequestJson.getEmail();
-
         RegistrationResponseJson response;
-
         HttpStatus statusCode = HttpStatus.OK;
         Student student;
 
@@ -127,13 +110,12 @@ public class RegistrationController {
         }
 
         AccountPasswordResetToken resetToken = registrationService.findOrCreatePasswordResetToken(student);
-
         Instant last_email = resetToken.getEmailSentOn();
         Instant email_threshold = Instant.now().plus(3L, ChronoUnit.HOURS);
 
         if (last_email != null) {
             if (last_email.isBefore(email_threshold)) {
-                LOG.info("refusing to send email before {}", email_threshold);
+                LOG.info("Refusing to send email before {}", email_threshold);
                 throw new ResourceLimitException("Cannot resend email until " + email_threshold);
             }
         }
@@ -146,16 +128,11 @@ public class RegistrationController {
 
         registrationService.emailPasswordResetToAccountHolder(email, confirmURL);
         response = new RegistrationResponseJson(EMAIL_SENT, "A password reset confirmation link has been sent to your email address " + email);
-
         return new ResponseEntity<>(response, statusCode);
     }
 
-
     @RequestMapping(path = "/reset/confirm", method = RequestMethod.GET)
-    public ResponseEntity<RegistrationResponseJson> processResetConfirmMessage(
-            @RequestParam(value = "token", required = true) String token)
-
-    {
+    public ResponseEntity<RegistrationResponseJson> processResetConfirmMessage(@RequestParam(value = "token", required = true) String token) {
         Student student = registrationService.processPasswordResetConfirmation(token);
 
         RegistrationResponseJson response;
@@ -168,11 +145,8 @@ public class RegistrationController {
 
         String email = student.getEmail();
         String temp_password = student.getPassword();
-
         registrationService.emailTemporaryPasswordToAccountHolder(email, temp_password);
         response = new RegistrationResponseJson(EMAIL_SENT, "A temporary password has been sent to your address email address " + email);
-
         return new ResponseEntity<>(response, statusCode);
     }
-
 }

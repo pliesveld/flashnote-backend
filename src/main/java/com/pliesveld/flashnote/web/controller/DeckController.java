@@ -49,7 +49,6 @@ public class DeckController {
         Student student = studentService.findStudentById(id);
         if (student == null)
             throw new StudentNotFoundException(id);
-
         return student;
     }
 
@@ -60,19 +59,17 @@ public class DeckController {
         return deck;
     }
 
-    @RequestMapping(value = "", method = RequestMethod.GET, params = "!categoryId")
+    @RequestMapping(value = "", method = RequestMethod.GET)
     @ResponseStatus(code = HttpStatus.OK)
     @JsonView(Views.Summary.class)
-    public Page<Deck> retrieveAllDecks(Pageable pageRequest) {
-        return deckService.browseDecks(pageRequest);
-    }
+    public Page<Deck> retrieveAllDecksInCategory(
+            @RequestParam(value = "categoryId", required = false) Integer categoryId,
+            @RequestParam(value = "desc", required = false) String descTerm,
+            @RequestParam(value = "flashcards", required = false) String cardTerm,
+            Pageable pageRequest) {
 
-    @RequestMapping(value = "", method = RequestMethod.GET, params = "categoryId")
-    @ResponseStatus(code = HttpStatus.OK)
-    @JsonView(Views.Summary.class)
-    public Page<Deck> retrieveAllDecksInCategory(@RequestParam("categoryId") int categoryId, Pageable pageRequest) {
-        final Specification<Deck> spec = DeckSpecification.hasCategory(categoryId);
-        return deckService.browseDecksWithSpec(spec, pageRequest);
+        final Specification<Deck> spec = DeckSpecification.getFilterSpec(categoryId, descTerm, cardTerm);
+        return deckService.browseDecks(spec, pageRequest);
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST)
@@ -85,12 +82,9 @@ public class DeckController {
 
         int id = category.getId();
         if (!categoryService.doesCategoryIdExist(id)) {
-
             throw new CategoryNotFoundException(id);
         }
-
         deck = deckService.createDeck(deck);
-
         return ResponseEntity.created(
                 MvcUriComponentsBuilder.fromController(DeckController.class)
                         .path("/{id}").buildAndExpand(deck.getId()).toUri()).build();
@@ -106,17 +100,14 @@ public class DeckController {
 
         int id = category.getId();
         if (!categoryService.doesCategoryIdExist(id)) {
-
             throw new CategoryNotFoundException(id);
         }
 
         deck = deckService.createDeck(deck);
-
         return ResponseEntity.created(
                 MvcUriComponentsBuilder.fromController(DeckController.class)
                         .path("/{id}").buildAndExpand(deck.getId()).toUri()).build();
     }
-
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
