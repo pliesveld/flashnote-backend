@@ -80,8 +80,8 @@ class Crud(object):
         if payload:
             request_params.update({'method': 'POST', 'json': payload})
 
-        if 'verb' in kwargs:
-            request_params.update({'method': kwargs.get('verb')})
+        if 'method' in kwargs:
+            request_params['method'] = kwargs.get('method')
 
         req = requests.Request(**request_params)
 
@@ -189,6 +189,7 @@ parser.add_argument("--token", help="Use JWT in token.json", action="store_const
 parser.add_argument("--login", action="store_const", const=True, default=False)
 parser.add_argument("--admin", action="store_const", dest="user", const='admin@example.com', default=argparse.SUPPRESS)
 
+parser.add_argument("--method", help="Overload the HTTP method used", choices=['GET', 'POST', 'PUT', 'TRACE', 'HEAD', 'OPTIONS', 'DELETE'], default=argparse.SUPPRESS)
 parser.add_argument("resource", type=str, action="store")
 
 parser.add_argument("--params", help="Parameters to append to URL request", dest="query_params", type=json.loads, action="store", default=argparse.SUPPRESS)
