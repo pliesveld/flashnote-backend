@@ -12,12 +12,12 @@ try:
     from .test_base import BaseTestCase, assert_2xx
     from .routes import BANK_RESOURCE, ATTACHMENT_UPLOAD
 except SystemError:
-    from test_base import BaseTestCase
+    from test_base import BaseTestCase, assert_2xx
     from settings import *
-    from routes import BANK_RESOURCE
+    from routes import BANK_RESOURCE, ATTACHMENT_UPLOAD
 
 class QuestionBankCreateTest(BaseTestCase):
-    
+
     category = {'category': {'id': 500}}
     bank = {'description': 'a test question bank'}
 
@@ -83,7 +83,7 @@ class QuestionBankUpdateCategoryAndDescriptionTest(BaseTestCase):
         self.assertEqual(self.bankId, bank.get('id'))
 
 class QuestionBankSharedQuestionTest(BaseTestCase):
-    
+
     category = {'category': {'id': 500}}
     bank = {'description': 'Adding question to existing questionbank'}
     question = {'content': 'A blank question.'}
@@ -113,7 +113,7 @@ class QuestionBankSharedQuestionTest(BaseTestCase):
         questions = self.bank2.get('questions')
         self.assertEqual(1, len(questions))
         questionId = questions[0]['id']
-       
+
         bank_shared = {'description': 'A bank with a shared question',
                 'questions': [{'id': questionId}]}
         bank_shared.update(self.category)
@@ -128,13 +128,13 @@ class QuestionBankSharedQuestionTest(BaseTestCase):
 
         print(self.s.request('GET', URL + BANK_RESOURCE + '/' +
             str(sharedBankId)).json())
- 
+
 
 class QuestionBankUpdateTest(BaseTestCase):
-    
+
     category = {'category': {'id': 500}}
     bank = {'description': 'Adding question to existing questionbank'}
-    question = {'content': 'A blank question.'}
+    question = {'content': 'A test question bank.'}
 
     def setUp(self):
         super().setUp()
@@ -150,15 +150,19 @@ class QuestionBankUpdateTest(BaseTestCase):
         questions = self.bank2.get('questions')
         self.assertEqual(1, len(questions))
         self.questionId = questions[0]['id']
-       
+
 
     def testUpdateQuestion(self):
         self.assertIn('questions', self.bank2)
         questions = self.bank2.get('questions')
-        questions.append({'content': 'A new question'})
+        questions.append({'content': 'A new question with an image attachment'})
         self.json = self.bank2
         req = self.request()
         r = req(hooks=assert_2xx)
+        bank = r.json()
+        bankId = bank.get('id')
+        questions = bank.get('questions')
+        questionId = questions[0]['id']
 
         self.url = ATTACHMENT_UPLOAD
         self.query = {'questionId': self.questionId}
@@ -175,6 +179,6 @@ class QuestionBankListTest(BaseTestCase):
         self.url = BANK_RESOURCE
         req = self.request()
         r = req(hooks=assert_2xx)
-    
+
 
 
