@@ -2,8 +2,9 @@ package com.pliesveld.flashnote.web.dto;
 
 import com.pliesveld.flashnote.domain.AttachmentBinary;
 import com.pliesveld.flashnote.domain.AttachmentCategory;
-import com.pliesveld.flashnote.exception.AttachmentDownloadException;
+import com.pliesveld.flashnote.exception.AttachmentNotSupportedException;
 import org.imgscalr.Scalr;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
@@ -15,28 +16,24 @@ import java.io.IOException;
 @Component("imageScaler")
 public class ImageScaler {
 
-    static public byte[] scaleAttachmentImage(AttachmentBinary attachmentBinary, int targetWidth) {
-        assert attachmentBinary.getAttachmentType().isBinary();
-        assert attachmentBinary.getAttachmentType().getCategory() == AttachmentCategory.IMAGE;
+    static public byte[] scaleImage(byte[] imageData, MediaType mimeType, int targetWidth) {
 
-        if (targetWidth < 50) {
-            targetWidth = 50;
-        }
-
+        targetWidth = boundedTargetWidth(targetWidth);
         BufferedImage origImage = null;
         try {
-            origImage = ImageIO.read(new ByteArrayInputStream(attachmentBinary.getContents()));
+            origImage = ImageIO.read(new ByteArrayInputStream(imageData));
         } catch (IOException e) {
-            throw new AttachmentDownloadException("Could not read attachment", e);
+            throw new AttachmentNotSupportedException("Could not read attachment", e);
         }
 
+        String imageFormat = mimeType.getSubtype().toLowerCase();
         byte[] scaledImageInByte = null;
         ByteArrayOutputStream baos = null;
 
         try {
             BufferedImage scaledImage = Scalr.resize(origImage, Scalr.Method.AUTOMATIC, Scalr.Mode.FIT_TO_WIDTH, targetWidth);
             baos = new ByteArrayOutputStream();
-            ImageIO.write(scaledImage, "jpg", baos);
+            ImageIO.write(scaledImage, imageFormat, baos);
             baos.flush();
             scaledImageInByte = baos.toByteArray();
             baos.close();
@@ -48,10 +45,25 @@ public class ImageScaler {
                     e = e1;
                 }
 
-            throw new AttachmentDownloadException("Could not convert attachment", e);
+            throw new AttachmentNotSupportedException("Could not convert attachment", e);
         }
 
         return scaledImageInByte;
     }
 
+    static public byte[] scaleAttachmentImage(AttachmentBinary attachmentBinary, int targetWidth) {
+        assert attachmentBinary.getAttachmentType().isBinary();
+        assert attachmentBinary.getAttachmentType().getCategory() == AttachmentCategory.IMAGE;
+        targetWidth = boundedTargetWidth(targetWidth);
+        return ImageScaler.scaleImage(attachmentBinary.getContents(), attachmentBinary.getAttachmentType().getMediatype(), targetWidth);
+    }
+
+    private static int boundedTargetWidth(int targetWidth) {
+        if (targetWidth < 50) {
+            return 50;
+        } else if (targetWidth > 800) {
+            return 800;
+        }
+        return targetWidth;
+    }
 }

@@ -6,6 +6,9 @@ import com.pliesveld.flashnote.exception.AttachmentUploadException;
 import com.pliesveld.flashnote.service.AttachmentService;
 import com.pliesveld.flashnote.service.CardService;
 import com.pliesveld.flashnote.service.StudentService;
+import com.pliesveld.flashnote.web.dto.ImageScaler;
+import com.pliesveld.flashnote.web.validator.ImageMetadata;
+import com.pliesveld.flashnote.web.validator.ImageMetadataReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,20 +72,23 @@ public class AttachmentUploadController {
         if (attachmentType == null)
             throw new AttachmentUploadException("Unknown content-type: " + fileContentType);
 
-
         String fileName = file.getOriginalFilename();
 
         if (!StringUtils.hasText(fileName) || !attachmentType.supportsFilenameBySuffix(fileName)) {
             throw new AttachmentUploadException("Invalid file extension. " + attachmentType + " does not support " + fileName);
         }
 
-
         byte[] contents;
 
         try {
             contents = file.getBytes();
+            if (attachmentType.getCategory() == AttachmentCategory.IMAGE) {
+                ImageMetadata imageMetadata = ImageMetadataReader.readImageMetaData(contents, attachmentType.getMime());
+                contents = ImageScaler.scaleImage(contents, attachmentType.getMediatype(), imageMetadata.getWidth());
+            }
+
         } catch (IOException e) {
-            throw new AttachmentUploadException("Could not get upload contents.", e);
+            throw new AttachmentUploadException("Could not get attachment contents.", e);
         }
 
         int id;

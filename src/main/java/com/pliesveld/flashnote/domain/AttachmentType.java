@@ -6,14 +6,13 @@ import org.springframework.util.StringUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.springframework.http.MediaType.*;
-
 public enum AttachmentType {
-    BINARY(AttachmentCategory.UNSUPPORTED, 1, APPLICATION_OCTET_STREAM_VALUE, APPLICATION_OCTET_STREAM, ".dat"),
-    AUDIO_WAV(AttachmentCategory.AUDIO, 10, "audio/wav", APPLICATION_OCTET_STREAM, ".wav"),
-    AUDIO_MP3(AttachmentCategory.AUDIO, 11, "audio/mp3", APPLICATION_OCTET_STREAM, ".mp3"),
-    IMAGE_JPG(AttachmentCategory.IMAGE, 50, "image/jpeg", IMAGE_JPEG, ".jpg"),
-    DOCUMENT_TEXT(AttachmentCategory.DOCUMENT, 100, TEXT_PLAIN_VALUE, TEXT_PLAIN, ".txt");
+    BINARY(AttachmentCategory.UNSUPPORTED, 1, MediaType.APPLICATION_OCTET_STREAM_VALUE, MediaType.APPLICATION_OCTET_STREAM, ".dat"),
+    AUDIO_WAV(AttachmentCategory.AUDIO, 10, "audio/wav", MediaType.APPLICATION_OCTET_STREAM, ".wav"),
+    AUDIO_MP3(AttachmentCategory.AUDIO, 11, "audio/mp3", MediaType.APPLICATION_OCTET_STREAM, ".mp3"),
+    IMAGE_JPG(AttachmentCategory.IMAGE, 50, "image/jpeg", MediaType.IMAGE_JPEG, ".jpg"),
+    IMAGE_PNG(AttachmentCategory.IMAGE, 51, "image/png", MediaType.IMAGE_PNG, ".png"),
+    DOCUMENT_TEXT(AttachmentCategory.DOCUMENT, 100, MediaType.TEXT_PLAIN_VALUE, MediaType.TEXT_PLAIN, ".txt");
 
     private final AttachmentCategory category;
     private final int id;

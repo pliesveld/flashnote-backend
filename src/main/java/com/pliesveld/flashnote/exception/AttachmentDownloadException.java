@@ -6,7 +6,7 @@ public class AttachmentDownloadException extends ResourceRepositoryException {
 
     @Override
     public String getRepositoryMessage() {
-        return getMessage() != null ? getMessage() : "Incountered error while processing attachment for download";
+        return getMessage() != null ? getMessage() : "Encountered error while processing attachment for download";
     }
 
     @Override
