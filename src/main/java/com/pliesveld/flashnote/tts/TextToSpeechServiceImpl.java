@@ -17,13 +17,31 @@ public class TextToSpeechServiceImpl implements TextToSpeechService {
     @Autowired
     private TextToSpeechConfiguration speechConfiguration;
 
+    private static final int MAX_MESSAGE_LENGTH = 1024 * 2;
+
+    private static final int MAX_WORD_LENGTH = 12;
+
     @Override
-    public byte[] synthesizeText(final String origmessage) {
+    public byte[] synthesizeText(final String originalMessage) {
 
-        String message = origmessage.replaceAll("'s", " is").replaceAll("n't", " not").replaceAll("[\"'(){}<>]", " ");
+        String message = originalMessage.replaceAll("'s", " is")
+                .replaceAll("n't", " not")
+                .replaceAll("[\"'(){}<>]", " ")
+                .replaceAll("_", "-");
 
-        if (!message.matches("[- ,.?A-Za-z0-9]+")) {
+        if (message.length() > MAX_MESSAGE_LENGTH) {
+            throw new SpeechException("Message is too long.");
+        }
+
+        if (!message.matches("[- ,:;.?A-Za-z0-9]+")) {
             throw new SpeechException("Message contained invalid characters.");
+        }
+
+        final String[] words = message.split("[.,-?\\d\\s]");
+        for (final String word : words) {
+            if (word.length() > MAX_WORD_LENGTH) {
+                throw new SpeechException("Message contained word longer than " + MAX_WORD_LENGTH + " characters");
+            }
         }
 
         LOG.debug("Synthesizing: " + message);
