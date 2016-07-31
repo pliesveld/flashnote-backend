@@ -12,7 +12,8 @@ public enum AttachmentType {
     AUDIO_MP3(AttachmentCategory.AUDIO, 11, "audio/mp3", MediaType.APPLICATION_OCTET_STREAM, ".mp3"),
     IMAGE_JPG(AttachmentCategory.IMAGE, 50, "image/jpeg", MediaType.IMAGE_JPEG, ".jpg"),
     IMAGE_PNG(AttachmentCategory.IMAGE, 51, "image/png", MediaType.IMAGE_PNG, ".png"),
-    DOCUMENT_TEXT(AttachmentCategory.DOCUMENT, 100, MediaType.TEXT_PLAIN_VALUE, MediaType.TEXT_PLAIN, ".txt");
+    DOCUMENT_TEXT(AttachmentCategory.DOCUMENT, 100, MediaType.TEXT_PLAIN_VALUE, MediaType.TEXT_PLAIN, ".java");
+
 
     private final AttachmentCategory category;
     private final int id;

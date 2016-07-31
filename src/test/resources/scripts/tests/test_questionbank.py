@@ -172,6 +172,27 @@ class QuestionBankUpdateTest(BaseTestCase):
         req = self.request()
         r = req(hooks=assert_2xx)
 
+    def testUpdateQuestionUploadText(self):
+        self.assertIn('questions', self.bank2)
+        questions = self.bank2.get('questions')
+        questions.append({'content': 'A new question with an source code attachment'})
+        self.json = self.bank2
+        req = self.request()
+        r = req(hooks=assert_2xx)
+        bank = r.json()
+        bankId = bank.get('id')
+        questions = bank.get('questions')
+        questionId = questions[0]['id']
+
+        self.url = ATTACHMENT_UPLOAD
+        self.query = {'questionId': self.questionId}
+        self.upload = ('text', 'generics.java')
+        self.contenttype = 'text/plain'
+
+        req = self.request()
+        r = req(hooks=assert_2xx)
+
+
 class QuestionBankListTest(BaseTestCase):
 
     def testQuestionBankList(self):

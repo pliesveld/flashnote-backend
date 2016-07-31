@@ -12,10 +12,6 @@ import org.springframework.stereotype.Component;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.charset.CharacterCodingException;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
 
 @Component
 public class AttachmentValidator implements ConstraintValidator<ValidAttachment, AttachmentBinary> {
@@ -54,9 +50,6 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
                     case AUDIO:
                         is_valid = is_valid && validateAudioAttachment(attachment, context);
                         break;
-                    case DOCUMENT:
-                        is_valid = is_valid && validateDocumentAttachment(attachment, context);
-                        break;
                     case IMAGE:
                         is_valid = is_valid && validateImageAttachment(attachment, context);
                         break;
@@ -65,8 +58,6 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
                         is_valid = false;
                         break;
                 }
-
-
             }
 
         }
@@ -153,14 +144,6 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
         return true;
     }
 
-    private boolean validateDocumentAttachment(AttachmentBinary attachment, ConstraintValidatorContext errors) {
-        if (!isValidUTF8(attachment.getContents())) {
-            errors.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.document.message}").addConstraintViolation();
-            return false;
-        }
-        return true;
-    }
-
     private boolean validateAudioAttachment(AttachmentBinary attachment, ConstraintValidatorContext errors) {
         byte[] content = attachment.getContents();
         String fileName = attachment.getFileName();
@@ -184,19 +167,28 @@ public class AttachmentValidator implements ConstraintValidator<ValidAttachment,
         return true;
     }
 
+
+//    private boolean validateDocumentAttachment(AttachmentBinary attachment, ConstraintValidatorContext errors) {
+//        if (!isValidUTF8(attachment.getContents())) {
+//            errors.buildConstraintViolationWithTemplate("{com.pliesveld.flashnote.web.validator.ValidAttachment.document.message}").addConstraintViolation();
+//            return false;
+//        }
+//        return true;
+//    }
+
     /**
      * Used to verify attachment of text content types do not
      * contain binary data.
      */
-    public static boolean isValidUTF8(byte[] input) {
-
-        CharsetDecoder cs = Charset.forName("UTF-8").newDecoder();
-
-        try {
-            cs.decode(ByteBuffer.wrap(input));
-            return true;
-        } catch (CharacterCodingException e) {
-            return false;
-        }
-    }
+//    public static boolean isValidUTF8(byte[] input) {
+//
+//        CharsetDecoder cs = Charset.forName("UTF-8").newDecoder();
+//
+//        try {
+//            cs.decode(ByteBuffer.wrap(input));
+//            return true;
+//        } catch (CharacterCodingException e) {
+//            return false;
+//        }
+//    }
 }
