@@ -21,6 +21,9 @@ import java.util.Set;
 @EntityListeners(value = {LogEntityListener.class})
 @Table(name = "QUESTION_BANK")
 //@Table(name = "QUESTION_BANK", indexes = { @Index(name = "IDX_QUESTION_BANK_OWNER_ID", columnList = "OWNER_ID") })
+@NamedEntityGraph(name = "graph.QuestionBank.annotations",
+    attributeNodes = @NamedAttributeNode(value = "questions", subgraph = "questions"),
+    subgraphs = @NamedSubgraph(name = "questions", attributeNodes = @NamedAttributeNode("annotations")))
 public class QuestionBank extends DomainBaseEntity<Integer> {
 
     @Id

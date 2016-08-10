@@ -57,14 +57,12 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public QuestionBank findQuestionBankById(final int bankId) {
-        QuestionBank questionBank = questionBankRepository.findOne(bankId);
+        QuestionBank questionBank = questionBankRepository.getById(bankId);
         if (questionBank == null) {
             throw new QuestionBankNotFoundException(bankId);
         }
         questionBank.getId();
         questionBank.getDescription();
-        Hibernate.initialize(questionBank.getQuestions());
-
         return questionBank;
     }
 
