@@ -1,0 +1,155 @@
+{
+ "_class": "com.pliesveld.populator.repository.reader.DataSet",
+ "categories": [
+  {
+   "@id": 500,
+   "description": "Commonly asked questions when working with a Linux machine.  Topics include filesystem layout, enivornment, and command-line tools.",
+   "name": "Operating a Linux System"
+  }
+ ],
+ "questionBanks": [
+  {
+   "category": 500,
+   "description": "Test Bank",
+   "questions": [
+    90000,
+    90001,
+    90002,
+    90003,
+    90004,
+    90005,
+    90006,
+    90007,
+    90008,
+    90009,
+    90010,
+    90011,
+    90012,
+    90013,
+    90014,
+    90015,
+    90016,
+    90017,
+    90018,
+    90019,
+    90020,
+    90021,
+    90022,
+    90023,
+    90024,
+    90025,
+    90026
+   ]
+  }
+ ],
+ "questions": [
+  {
+   "@id": 90000,
+   "content": "What are some common linux filesystem navigation commands?"
+  },
+  {
+   "@id": 90001,
+   "content": "What is the difference between a relative path and an absolute path?"
+  },
+  {
+   "@id": 90002,
+   "content": "What file permissions exist, and what commands manage them?"
+  },
+  {
+   "@id": 90003,
+   "content": "What is a symbolic link?"
+  },
+  {
+   "@id": 90004,
+   "content": "What is the command to display the currently running processes?"
+  },
+  {
+   "@id": 90005,
+   "content": "How do you terminate a process?"
+  },
+  {
+   "@id": 90006,
+   "content": "What directories are specified in the Linux Filesystem Hierarchy?"
+  },
+  {
+   "@id": 90007,
+   "content": "What is the purpose of grub?"
+  },
+  {
+   "@id": 90008,
+   "content": "What are kernel modules, and what commands manage them?"
+  },
+  {
+   "@id": 90009,
+   "content": "What is the difference between sudo and su?"
+  },
+  {
+   "@id": 90010,
+   "content": "What files are commonly found in /etc?"
+  },
+  {
+   "@id": 90011,
+   "content": "Where are system log files found?"
+  },
+  {
+   "@id": 90012,
+   "content": "How do you find a file?"
+  },
+  {
+   "@id": 90013,
+   "content": "In a debian-like system; How do you install an application from a repository?"
+  },
+  {
+   "@id": 90014,
+   "content": "What are the common instructions for installing an application or library from source?"
+  },
+  {
+   "@id": 90015,
+   "content": "What is the difference between a virtual console and X11? and how do you switch between them?"
+  },
+  {
+   "@id": 90016,
+   "content": "What is the tar command?"
+  },
+  {
+   "@id": 90017,
+   "content": "What is the grep command?"
+  },
+  {
+   "@id": 90018,
+   "content": "What is the sed command?"
+  },
+  {
+   "@id": 90019,
+   "content": "What is the environment variable $PATH, and how do you locate commands?"
+  },
+  {
+   "@id": 90020,
+   "content": "What is .bashrc?"
+  },
+  {
+   "@id": 90021,
+   "content": "How do you suspend a task?"
+  },
+  {
+   "@id": 90022,
+   "content": "How do you background a task?"
+  },
+  {
+   "@id": 90023,
+   "content": "What is stdin, stdout, stderr?"
+  },
+  {
+   "@id": 90024,
+   "content": "How do you redirect the standard streams?"
+  },
+  {
+   "@id": 90025,
+   "content": "What are environment variables?"
+  },
+  {
+   "@id": 90026,
+   "content": "What is the difference between concatinating commands with | ; && || ?"
+  }
+ ]
+}

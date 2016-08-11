@@ -1,0 +1,80 @@
+{
+    "_class" : "com.pliesveld.populator.repository.reader.DataSet",
+
+    "questions" : [
+
+        {
+            "@id" : 90000,
+            "content" : "What is a RESTful web service?"
+        },
+        {
+            "@id" : 90001,
+            "content" : "What is a Cross-Origin-Request?"
+        },
+        {
+            "@id" : 90002,
+            "content" : "Give an example of a stateless request."
+        },
+        {
+            "@id" : 90100,
+            "content" : "What is encapsulation?"
+        },
+        {
+            "@id" : 90101,
+            "content" : "What is composition?"
+        },
+        {
+            "@id" : 90102,
+            "content" : "What is inheritance?"
+        },
+        {
+            "@id" : 90103,
+            "content" : "What is an object?"
+        }
+    ],
+    "students" : [
+    ],
+    "categories" : [
+        {
+            "@id" : 5,
+            "name" :  "Software Development",
+            "description" : "The software development category focuses on the application of computer technology in the workplace.   Study common libraries and web development frameworks.  Software development theory includes topics like: object oriented programming, design patterns, user experience, and agile development.",
+            "childCategories" : [ 50 ]
+        },
+        {
+            "@id" : 50,
+            "name" : "Web Development",
+            "description" : "Discusses the topics of web servers, browsers and the HTTP specification",
+            "parentCategory" : 5
+        }
+    ],
+    "questionBanks" : [
+        {
+            "category" :  50,
+            "description" : "Commonly asked web developer questions.",
+            "questions" : [90000,90001,9002]
+        },
+        {
+            "category" :  5,
+            "description" : "Object Oriented Programming",
+            "questions" : [90100,90101,90102,90103]
+        }
+    ],
+    "decks" : [
+        {
+            "category" : 50,
+            "name" : "Basic HTTP flashnotes",
+            "description" : "Discusses the topic of web servers, browsers and the HTTP specificatinon.",
+            "flashcards" : [
+                {
+                    "question" : { "content" : "What is the difference between a HTTP Redirect and a HTTP Forward?"},
+                    "answer" : { "content" : "In an HTTP forward control is processed internally by the server.   A redirect instructs the browser to a different url, potentially on another host."}
+                },                {
+                    "question" : { "content" : "Describe the HTTP status code categories: 1xx, 2xx, 3xx, 4xx, 5xx"},
+                    "answer" : { "content" : "1xx informational\n2xx success\n 3xx redirection\n4xx client error\n5xx server error"}
+                }
+            ]
+        }
+    ]
+}
+
